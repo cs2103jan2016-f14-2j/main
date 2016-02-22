@@ -18,7 +18,7 @@ public class UI extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("JimplePlanner");
         Button btn = new Button();
-        btn.setText("Say 'Hello World'");
+        btn.setText("Do Not Press");
         btn.setOnAction(new EventHandler<ActionEvent>() {
  
             @Override
