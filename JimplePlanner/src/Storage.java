@@ -115,6 +115,7 @@ public class Storage {
 		tempWriter.close();
 	}
 	
+	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
 	private static boolean isSaveToFile(){
 		File file = createFile(DEFAULT_FILE_NAME);
 		File tempFile = createFile(DEFAULT_TEMP_FILE_NAME);
@@ -126,7 +127,6 @@ public class Storage {
 		}
 	}
 	
-	//@TODO implement a getEvents method
 	public static LinkedList<Event> getEvents() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
 		LinkedList<Event> events = new LinkedList<Event>();
