@@ -52,7 +52,7 @@ public class Storage {
 	}
 
 	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
-	private static String extractEventToString(Event event){
+	public static String extractEventToString(Event event){
 		String lineString = event.getTitle();
 		if(isDescriptionExist(event)){
 			lineString = lineString + TAGS_DESCRIPTION + event.getDescription();
