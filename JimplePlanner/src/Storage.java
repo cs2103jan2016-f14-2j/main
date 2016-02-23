@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Storage {
 	public static String DEFAULT_FILE_NAME = "planner.jim";
@@ -17,6 +19,8 @@ public class Storage {
 	public static String TAGS_DESCRIPTION = " :desc:";
 	public static String TAGS_FROM_TIME = " :from:";
 	public static String TAGS_TO_TIME = " :to:";
+	public static String TAGS_LINE_FIELD_SEPARATOR = "/";
+	public static String EMPTY_STRING = "";
 	
 	
 	private static File createFile(String fileName) {
@@ -53,15 +57,19 @@ public class Storage {
 
 	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
 	private static String extractEventToString(Event event){
-		String lineString = event.getTitle();
+		String lineString = formatToSaveString(event.getTitle());
 		if(isDescriptionExist(event)){
-			lineString = lineString + TAGS_DESCRIPTION + event.getDescription();
+			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());
+			lineString = lineString + descriptionString;
 		} else if(isCategoryExist(event)) {
-			lineString = lineString + TAGS_CATEGORY + event.getCategory();
+			String categoryString = formatToSaveString(TAGS_CATEGORY + event.getCategory());
+			lineString = lineString + categoryString;
 		} else if (isFromTimeExist(event)){
-			lineString = lineString + TAGS_FROM_TIME; //@TODO check implementation for LocalDateTime
+			String fromTimeString = formatToSaveString(TAGS_FROM_TIME);
+			lineString = lineString + fromTimeString; //@TODO check implementation for LocalDateTime
 		} else if (isToTimeExist(event)){
-			lineString = lineString + TAGS_TO_TIME;	//@TODO check implementation for LocalDateTime
+			String fromToString = formatToSaveString(TAGS_TO_TIME);
+			lineString = lineString + fromToString;	//@TODO check implementation for LocalDateTime
 		}
 		return lineString;
 	}
@@ -80,6 +88,11 @@ public class Storage {
 	
 	private static boolean isToTimeExist(Event event){
 		return !(event.getToTime()==null);
+	}
+	
+	//Minor formatting of string such that each "field" is enclosed with a "/"
+	private static String formatToSaveString(String string){
+		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
 	public static boolean isSaved(ArrayList<Event> events) throws IOException{
@@ -110,9 +123,77 @@ public class Storage {
 	}
 	
 	//@TODO implement a getEvents method
-	/*public static ArrayList<Event> getEvents() throws FileNotFoundException{
+	public static ArrayList<Event> getEvents() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
-		for
-	}*/
+		ArrayList<Event> events = new ArrayList<Event>();
+		String fileLineContent;
+		while ((fileLineContent = defaultFileReader.readLine()) != null) {
+			Event event = getEventFromLine(fileLineContent);
+			events.add(event);
+		}
+		return events;
+	}
 	
+	private static LinkedList<String> getSeparateFields(String fileLineContent){
+		LinkedList<String> separatedContents = new LinkedList<String>(Arrays.asList(fileLineContent.split(TAGS_LINE_FIELD_SEPARATOR)));
+		return separatedContents;
+	}
+	
+	private static Event getEventFromLine(String fileLineContent){
+		LinkedList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
+		String title = getTitleString(fileLineContentSeparated);
+		Event event = new Event(title);
+		for(String field: fileLineContentSeparated){
+			
+		}
+		return event;
+	}
+	
+	private static String getTitleString(LinkedList<String> fileLineContentSeparated){
+		return fileLineContentSeparated.remove();
+	}
+	private static void setTags(Event event, String field){
+		if(isCategory(field)){
+			String catField = getRemovedCategoryTagString(field);
+			event.setCategory(catField);
+		} else if(isDescription(field)){
+			String descField = getRemovedDescriptionTagString(field);
+		}
+	}
+	
+	private static boolean isCategory(String field){
+		return field.contains(TAGS_CATEGORY);
+	}
+	
+	private static boolean isDescription(String field){
+		return field.contains(TAGS_DESCRIPTION);
+	}
+	
+	private static boolean isFromTime(String field){
+		return field.contains(TAGS_FROM_TIME);
+	}
+	
+	private static boolean isToTime(String field){
+		return field.contains(TAGS_TO_TIME);
+	}
+	
+	private static String getRemovedCategoryTagString(String field){
+		String removedTag = field.replace(TAGS_CATEGORY, EMPTY_STRING);
+		return removedTag;
+	}
+	
+	private static String getRemovedDescriptionTagString(String field){
+		String removedTag = field.replace(TAGS_DESCRIPTION, EMPTY_STRING);
+		return removedTag;
+	}
+	
+	private static String getRemovedFromTagString(String field){
+		String removedTag = field.replace(TAGS_FROM_TIME, EMPTY_STRING);
+		return removedTag;
+	}
+	
+	private static String getRemovedToTagString(String field){
+		String removedTag = field.replace(TAGS_TO_TIME, EMPTY_STRING);
+		return removedTag;
+	}
 }
