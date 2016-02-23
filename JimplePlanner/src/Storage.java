@@ -19,6 +19,7 @@ public class Storage {
 	public static String TAGS_DESCRIPTION = ":desc:";
 	public static String TAGS_FROM_TIME = ":from:";
 	public static String TAGS_TO_TIME = ":to:";
+	public static String TAGS_TITLE = ":title:";
 	public static String TAGS_LINE_FIELD_SEPARATOR = "/";
 	public static String EMPTY_STRING = "";
 	
@@ -57,7 +58,7 @@ public class Storage {
 
 	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
 	public static String extractEventToString(Event event){
-		String lineString = formatToSaveString(event.getTitle());
+		String lineString = formatToSaveString(TAGS_TITLE + event.getTitle());
 		if(isDescriptionExist(event)){
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());
 			lineString = lineString + descriptionString;
@@ -67,12 +68,12 @@ public class Storage {
 			lineString = lineString + categoryString;
 		} 
 		if (isFromTimeExist(event)){
-			String fromTimeString = formatToSaveString(TAGS_FROM_TIME);
-			lineString = lineString + fromTimeString; //@TODO check implementation for LocalDateTime
+			String fromTimeString = formatToSaveString(TAGS_FROM_TIME + event.getFromTime());
+			lineString = lineString + fromTimeString;
 		} 
 		if (isToTimeExist(event)){
-			String fromToString = formatToSaveString(TAGS_TO_TIME);
-			lineString = lineString + fromToString;	//@TODO check implementation for LocalDateTime
+			String fromToString = formatToSaveString(TAGS_TO_TIME + event.getToTime());
+			lineString = lineString + fromToString;
 		}
 		return lineString;
 	}
@@ -126,9 +127,9 @@ public class Storage {
 	}
 	
 	//@TODO implement a getEvents method
-	public static ArrayList<Event> getEvents() throws IOException{
+	public static LinkedList<Event> getEvents() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
-		ArrayList<Event> events = new ArrayList<Event>();
+		LinkedList<Event> events = new LinkedList<Event>();
 		String fileLineContent;
 		while ((fileLineContent = defaultFileReader.readLine()) != null) {
 			Event event = getEventFromLine(fileLineContent);
@@ -145,10 +146,9 @@ public class Storage {
 	
 	private static Event getEventFromLine(String fileLineContent){
 		LinkedList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
-		String title = getTitleString(fileLineContentSeparated);
-		Event event = new Event(title);
+		Event event = new Event(EMPTY_STRING);
 		for(String field: fileLineContentSeparated){
-			setTags(event, field);
+			setFields(event, field);
 		}
 		return event;
 	}
@@ -158,11 +158,11 @@ public class Storage {
 		return getEventFromLine(fileLineContent);
 	}
 	
-	private static String getTitleString(LinkedList<String> fileLineContentSeparated){
-		return fileLineContentSeparated.remove();
-	}
-	private static void setTags(Event event, String field){
-		if(isCategory(field)){
+	private static void setFields(Event event, String field){
+		if(isTitle(field)){
+			String titleString = getRemovedTitleTagString(field);
+			event.setTitle(titleString);
+		} else if(isCategory(field)){
 			String catField = getRemovedCategoryTagString(field);
 			event.setCategory(catField);
 		} else if(isDescription(field)){
@@ -175,6 +175,10 @@ public class Storage {
 			String toField = getRemovedToTagString(field);
 			event.setToDate(toField);
 		}
+	}
+	
+	private static boolean isTitle(String field){
+		return field.contains(TAGS_TITLE);
 	}
 	
 	private static boolean isCategory(String field){
@@ -191,6 +195,11 @@ public class Storage {
 	
 	private static boolean isToTime(String field){
 		return field.contains(TAGS_TO_TIME);
+	}
+	
+	private static String getRemovedTitleTagString(String field){
+		String removedTag = field.replace(TAGS_TITLE, EMPTY_STRING);
+		return removedTag;
 	}
 	
 	private static String getRemovedCategoryTagString(String field){
