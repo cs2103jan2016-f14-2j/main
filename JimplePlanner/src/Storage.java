@@ -15,10 +15,10 @@ import java.util.LinkedList;
 public class Storage {
 	public static String DEFAULT_FILE_NAME = "planner.jim";
 	public static String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
-	public static String TAGS_CATEGORY = " :cat:";
-	public static String TAGS_DESCRIPTION = " :desc:";
-	public static String TAGS_FROM_TIME = " :from:";
-	public static String TAGS_TO_TIME = " :to:";
+	public static String TAGS_CATEGORY = ":cat:";
+	public static String TAGS_DESCRIPTION = ":desc:";
+	public static String TAGS_FROM_TIME = ":from:";
+	public static String TAGS_TO_TIME = ":to:";
 	public static String TAGS_LINE_FIELD_SEPARATOR = "/";
 	public static String EMPTY_STRING = "";
 	
@@ -61,13 +61,16 @@ public class Storage {
 		if(isDescriptionExist(event)){
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());
 			lineString = lineString + descriptionString;
-		} else if(isCategoryExist(event)) {
+		} 
+		if(isCategoryExist(event)) {
 			String categoryString = formatToSaveString(TAGS_CATEGORY + event.getCategory());
 			lineString = lineString + categoryString;
-		} else if (isFromTimeExist(event)){
+		} 
+		if (isFromTimeExist(event)){
 			String fromTimeString = formatToSaveString(TAGS_FROM_TIME);
 			lineString = lineString + fromTimeString; //@TODO check implementation for LocalDateTime
-		} else if (isToTimeExist(event)){
+		} 
+		if (isToTimeExist(event)){
 			String fromToString = formatToSaveString(TAGS_TO_TIME);
 			lineString = lineString + fromToString;	//@TODO check implementation for LocalDateTime
 		}
@@ -83,11 +86,11 @@ public class Storage {
 	}
 	
 	private static boolean isFromTimeExist(Event event){
-		return !(event.getFromTime()==null);
+		return !(event.getFromTime().length()==0);
 	}
 	
 	private static boolean isToTimeExist(Event event){
-		return !(event.getToTime()==null);
+		return !(event.getToTime().length()==0);
 	}
 	
 	//Minor formatting of string such that each "field" is enclosed with a "/"
@@ -131,6 +134,7 @@ public class Storage {
 			Event event = getEventFromLine(fileLineContent);
 			events.add(event);
 		}
+		defaultFileReader.close();
 		return events;
 	}
 	
@@ -144,9 +148,14 @@ public class Storage {
 		String title = getTitleString(fileLineContentSeparated);
 		Event event = new Event(title);
 		for(String field: fileLineContentSeparated){
-			
+			setTags(event, field);
 		}
 		return event;
+	}
+	
+	//This method is purely for test purposes only
+	public static Event testGetEventFromLine(String fileLineContent){
+		return getEventFromLine(fileLineContent);
 	}
 	
 	private static String getTitleString(LinkedList<String> fileLineContentSeparated){
@@ -158,6 +167,13 @@ public class Storage {
 			event.setCategory(catField);
 		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
+			event.setDescription(descField);
+		} else if(isFromTime(field)){
+			String fromField = getRemovedFromTagString(field);
+			event.setFromDate(fromField);
+		} else if (isToTime(field)){
+			String toField = getRemovedToTagString(field);
+			event.setToDate(toField);
 		}
 	}
 	

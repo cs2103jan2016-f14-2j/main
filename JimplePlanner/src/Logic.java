@@ -20,6 +20,9 @@ class Event {
 	}
 
 	public String getFromTime() {
+		if(fromDateTime == null){
+			return "";
+		}
 		return fromDateTime.toString();
 	}
 	
@@ -28,6 +31,9 @@ class Event {
 	}
 	
 	public String getToTime() {
+		if(toDateTime == null){
+			return "";
+		}
 		return toDateTime.toString();
 	}
 	
