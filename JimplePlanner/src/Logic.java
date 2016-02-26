@@ -15,34 +15,34 @@ class Event {
 	// Constructors
 	public Event(String aTitle) {
 		this.setTitle(aTitle);
-		this.setDescription(new String());
-		this.setCategory(new String());
+		this.setDescription(new String(""));
+		this.setCategory(new String(""));
 		this.fromDateTime = null;
 		this.toDateTime = null;
 	}
 
 	public String getFromTime() {
-		if(fromDateTime == null){
+		if (fromDateTime == null) {
 			return "";
 		}
 		return fromDateTime.toString();
 	}
-	
+
 	public void setFromDate(String dateTime) {
-		this.fromDateTime =  LocalDateTime.parse(dateTime);
+		this.fromDateTime = LocalDateTime.parse(dateTime);
 	}
-	
+
 	public String getToTime() {
-		if(toDateTime == null){
+		if (toDateTime == null) {
 			return "";
 		}
 		return toDateTime.toString();
 	}
-	
-	public void setToDate(String dateTime)	{
+
+	public void setToDate(String dateTime) {
 		this.toDateTime = LocalDateTime.parse(dateTime);
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -66,7 +66,7 @@ class Event {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
+
 }
 
 public class Logic {
@@ -75,7 +75,7 @@ public class Logic {
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
 	private String DISPLAY_HELP_HEADER = "Display all tasks:\n";
 	private String DELETE_HELP_HEADER = "Delete a task:\n";
-	
+
 	private String ADD_COMMAND_BY = "type \"add\" + <your event> by <time>\n";
 	private String ADD_COMMAND_AT = "type \"add\" + <your event> at <time>\n";
 	private String ADD_COMMAND_FROMTO = "type \"add\" + <your event> from <time> to <time>\n";
@@ -93,12 +93,21 @@ public class Logic {
 		temporaryHistory = new ArrayList<Event>();
 	}
 
-	public void execute(String inputString) {
+	public void execute(String inputString) throws IOException {
 		InputStruct parsedInput = parser.parseInput(inputString);
-
+		switch (parsedInput.variableArray.length) {
+		case 1:
+			break;
+		case 5:
+			addToTaskList(parsedInput.variableArray, inputString);
+			store.isSaved(temporaryHistory);
+			break;
+		case 6:
+			break;
+		}
 	}
-	
-	//puts task into the Event object
+
+	// puts task into the Event object
 	private void addToTaskList(String[] parsedInput, String originalInput) throws IOException {
 		Event newTask = new Event(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
@@ -122,23 +131,22 @@ public class Logic {
 			}
 		}
 		temporaryHistory.add(newTask);
-		store.isSaved(temporaryHistory);
 	}
-	
-	public String helpCommand(String[] parsedInput)	{
+
+	public String helpCommand(String[] parsedInput) {
 		String listOfCommands = new String();
 		listOfCommands += ADD_HELP_HEADER;
 		listOfCommands += ADD_COMMAND_BY;
 		listOfCommands += ADD_COMMAND_AT;
 		listOfCommands += ADD_COMMAND_FROMTO;
-		
+
 		listOfCommands += EDIT_HELP_HEADER;
 		listOfCommands += EDIT_COMMAND_ONE_TIMING;
 		listOfCommands += EDIT_COMMAND_TWO_TIMINGS;
-		
+
 		listOfCommands += DISPLAY_HELP_HEADER;
 		listOfCommands += DISPLAY_COMMAND;
-		
+
 		listOfCommands += DELETE_HELP_HEADER;
 		listOfCommands += DELETE_COMMAND;
 		return listOfCommands;
