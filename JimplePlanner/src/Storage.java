@@ -99,7 +99,7 @@ public class Storage {
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	public boolean isSaved(ArrayList<Event> events) throws IOException{
+	public static boolean isSaved(ArrayList<Event> events) throws IOException{
 		forceCreateDefaultFiles();
 		writeToFile(events);
 		return isSaveToFile();
