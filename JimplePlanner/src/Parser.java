@@ -8,18 +8,18 @@ public class Parser {
 	 * String[]: Stores the possible extended command strings for each command.
 	 * int[]: Stores the index on InputStruct which each extended command string affects.
 	 */
-	private final static String[] EXTENDED_COMMANDS_ADD = {"at", "from", "by", "to"};
-	private final static int[] EXTENDED_COMMANDS_ADD_INDEX = {2, 2, 3, 3};
-	private final static String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "from", "to", "cat"};
-	private final static int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 4, 5};
+	private final String[] EXTENDED_COMMANDS_ADD = {"at", "from", "by", "to"};
+	private final int[] EXTENDED_COMMANDS_ADD_INDEX = {2, 2, 3, 3};
+	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "from", "to", "cat"};
+	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 4, 5};
 	
 	/* ---------|
 	 * HASHMAPS |
 	 * ---------|
 	 * Stores the extended command strings with the index for easy access.
 	 */
-	private static HashMap<String, Integer> extendedCommandsAdd;
-	private static HashMap<String, Integer> extendedCommandsEdit;
+	private HashMap<String, Integer> extendedCommandsAdd;
+	private HashMap<String, Integer> extendedCommandsEdit;
 	
 	/* 
 	 *  Stores the extended commands variables into the respective hashmaps.
@@ -40,7 +40,7 @@ public class Parser {
 	 * The main method that other components use.
 	 * Returns an InputStruct containing the variables of the user input.
 	 */
-	public static InputStruct parseInput(String userInput) {
+	public InputStruct parseInput(String userInput) {
 		String[] splitUserInput = userInput.split(" ");
 		switch (getCommandString(splitUserInput)) {
 			case "add" :
@@ -57,7 +57,7 @@ public class Parser {
 	/*
 	 * Detects and stores the variables in the user input.
 	 */
-	private static InputStruct getStruct(String[] userInputStringArray, HashMap<String, Integer> inputExtendedCommandsHashMap) {
+	private InputStruct getStruct(String[] userInputStringArray, HashMap<String, Integer> inputExtendedCommandsHashMap) {
 		
 		// Creates the InputStruct to be returned.
 		InputStruct outputAddStruct = new InputStruct(getCommandString(userInputStringArray));
@@ -90,7 +90,7 @@ public class Parser {
 		return outputAddStruct;
 	}
 	
-	public static String getCommandString(String[] userInputStringArray) {
+	public String getCommandString(String[] userInputStringArray) {
 		return userInputStringArray[0];		
 	}
 	
