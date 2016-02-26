@@ -13,6 +13,16 @@ public class Parser {
 	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "from", "to", "cat"};
 	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 4, 5};
 	
+	/* ----------------|
+	 * FINAL VARIABLES |
+	 * ----------------|
+	 */
+	private final int INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT = 0; 
+	private final int STRING_INDEX_START = 0;
+	private final int STRING_INDEX_TRIM_LAST_SPACE_SIZE = 1;
+	private final int USER_INPUT_INDEX_COMMAND_STRING = 0;
+	private final String EMPTY_STRING = "";
+	
 	/* ---------|
 	 * HASHMAPS |
 	 * ---------|
@@ -63,10 +73,10 @@ public class Parser {
 		InputStruct outputAddStruct = new InputStruct(getCommandString(userInputStringArray));
 		
 		// currIndex is the index on the InputStruct that the strings currently being read affects.
-		int currIndex = 0;
+		int currIndex = INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT;
 		
 		// userInputString is the string currently being read. Updates while the next extended command is not found.
-		String userInputString = "";
+		String userInputString = EMPTY_STRING;
 		
 		for (int i = 1; i < userInputStringArray.length; i++) {
 			
@@ -77,21 +87,21 @@ public class Parser {
 			} else {
 				
 				//When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex".
-				outputAddStruct.currStringArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
+				outputAddStruct.variableArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
 				
 				//Updates the "currIndex" to the index related to the extended command.
 				currIndex = inputExtendedCommandsHashMap.get(currString);
 				
 				//Resets the "userInputString".
-				userInputString = "";
+				userInputString = EMPTY_STRING;
 			}
 		}
-		outputAddStruct.currStringArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
+		outputAddStruct.variableArray[currIndex] = userInputString.substring(STRING_INDEX_START, userInputString.length()-STRING_INDEX_TRIM_LAST_SPACE_SIZE);
 		return outputAddStruct;
 	}
 	
 	public String getCommandString(String[] userInputStringArray) {
-		return userInputStringArray[0];		
+		return userInputStringArray[USER_INPUT_INDEX_COMMAND_STRING];		
 	}
 	
 }
@@ -104,27 +114,33 @@ public class Parser {
  */
 class InputStruct {
 	
+	/* ----------------|
+	 * SIZE VARIABLES |
+	 * ----------------|
+	 * Variables containing the intended size of the variable array for each command.
+	 */
+	private final int ARRAY_SIZE_ADD = 5;
+	private final int ARRAY_SIZE_EDIT = 6;
+	private final int ARRAY_SIZE_DELETE = 1;
+	
 	public String commandString;
 	
 	// The string array being used, according to commandString.
-	public String[] currStringArray;
+	public String[] variableArray;
 	
 	public InputStruct(String inputCommandString) {
 		commandString = inputCommandString;
 		
-		// Inits the corresponding array according to the inputCommandString. Possible to use a single array, but it's neater this way.
+		// Initializes the size of the variable array according to the commandString. 
 		switch (commandString) {
 			case "add" :
-				addArray = new String[5];
-				currStringArray = addArray;
+				variableArray = new String[ARRAY_SIZE_ADD];
 				break;
 			case "edit" :
-				editArray = new String[6];
-				currStringArray = editArray;
+				variableArray = new String[ARRAY_SIZE_EDIT];
 				break;
 			case "delete" :
-				deleteArray = new String[1];
-				currStringArray = deleteArray;
+				variableArray = new String[ARRAY_SIZE_DELETE];
 				break;
 			default :
 				break;
@@ -140,7 +156,6 @@ class InputStruct {
 	 * Index 3: Event Time (To)
 	 * Index 4: Event Category
 	 */
-	public String[] addArray;
 	
 	/* --------------|
 	 * EDIT VARIABLES|
@@ -152,12 +167,11 @@ class InputStruct {
 	 * Index 4: Event Time (To)
 	 * Index 5: Event Category
 	 */
-	public String[] editArray;
 	
 	/* ----------------|
 	 * DELETE VARIABLE |
 	 * ----------------|
 	 * Index 0: Event Index
 	 */
-	public String[] deleteArray;
+	
 }
