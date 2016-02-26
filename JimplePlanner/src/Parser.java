@@ -2,46 +2,91 @@ import java.util.HashMap;
 
 public class Parser {
 	
-	private static HashMap<String, Integer> extendedCommandsAdd;
-	private final static String[] AVAILABLE_EXTENDED_COMMANDS_ARRAY = {"at", "by", "from", "to"};
-	private final static int[] AVAILABLE_EXTENDED_COMMANDS_INDEX_ARRAY = {2, 3, 2, 3};
+	/* ----------------------------|
+	 * EXTENDED COMMANDS VARIABLES |
+	 * ----------------------------|
+	 * String[]: Stores the possible extended command strings for each command.
+	 * int[]: Stores the index on InputStruct which each extended command string affects.
+	 */
+	private final static String[] EXTENDED_COMMANDS_ADD = {"at", "from", "by", "to"};
+	private final static int[] EXTENDED_COMMANDS_ADD_INDEX = {2, 2, 3, 3};
+	private final static String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "from", "to", "cat"};
+	private final static int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 4, 5};
 	
+	/* ---------|
+	 * HASHMAPS |
+	 * ---------|
+	 * Stores the extended command strings with the index for easy access.
+	 */
+	private static HashMap<String, Integer> extendedCommandsAdd;
+	private static HashMap<String, Integer> extendedCommandsEdit;
+	
+	/* 
+	 *  Stores the extended commands variables into the respective hashmaps.
+	 */
 	public Parser() {
 		extendedCommandsAdd = new HashMap<String, Integer>();
-		for (int i = 0; i < AVAILABLE_EXTENDED_COMMANDS_ARRAY.length; i++) {
-			extendedCommandsAdd.put(AVAILABLE_EXTENDED_COMMANDS_ARRAY[i], AVAILABLE_EXTENDED_COMMANDS_INDEX_ARRAY[i]);
+		extendedCommandsEdit = new HashMap<String, Integer>();
+		
+		for (int i = 0; i < EXTENDED_COMMANDS_ADD.length; i++) {
+			extendedCommandsAdd.put(EXTENDED_COMMANDS_ADD[i], EXTENDED_COMMANDS_ADD_INDEX[i]);
+		}
+		for (int i = 0; i < EXTENDED_COMMANDS_EDIT.length; i++) {
+			extendedCommandsEdit.put(EXTENDED_COMMANDS_EDIT[i], EXTENDED_COMMANDS_EDIT_INDEX[i]);
 		}
 	}
 	
+	/*
+	 * The main method that other components use.
+	 * Returns an InputStruct containing the variables of the user input.
+	 */
 	public static InputStruct parseInput(String userInput) {
 		String[] splitUserInput = userInput.split(" ");
 		switch (getCommandString(splitUserInput)) {
 			case "add" :
-				return getAddStruct(splitUserInput);
+				return getStruct(splitUserInput, extendedCommandsAdd);
 			case "delete" :
 				return null;
 			case "edit" :
-				return null;
+				return getStruct(splitUserInput, extendedCommandsEdit);
 			default :
 				return null;
 		}
 	}
 	
-	private static InputStruct getAddStruct(String[] userInputStringArray) {
-		InputStruct outputAddStruct = new InputStruct(userInputStringArray[0]);
+	/*
+	 * Detects and stores the variables in the user input.
+	 */
+	private static InputStruct getStruct(String[] userInputStringArray, HashMap<String, Integer> inputExtendedCommandsHashMap) {
+		
+		// Creates the InputStruct to be returned.
+		InputStruct outputAddStruct = new InputStruct(getCommandString(userInputStringArray));
+		
+		// currIndex is the index on the InputStruct that the strings currently being read affects.
 		int currIndex = 0;
+		
+		// userInputString is the string currently being read. Updates while the next extended command is not found.
 		String userInputString = "";
+		
 		for (int i = 1; i < userInputStringArray.length; i++) {
+			
+			//Updates userInputString if word being read is not an extended command.
 			String currString = userInputStringArray[i];
-			if (!extendedCommandsAdd.containsKey(currString)) {
+			if (!inputExtendedCommandsHashMap.containsKey(currString)) {
 				userInputString += currString + " ";
 			} else {
-				outputAddStruct.addArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
-				currIndex = extendedCommandsAdd.get(currString);
+				
+				//When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex".
+				outputAddStruct.currStringArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
+				
+				//Updates the "currIndex" to the index related to the extended command.
+				currIndex = inputExtendedCommandsHashMap.get(currString);
+				
+				//Resets the "userInputString".
 				userInputString = "";
 			}
 		}
-		outputAddStruct.addArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
+		outputAddStruct.currStringArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
 		return outputAddStruct;
 	}
 	
@@ -51,18 +96,35 @@ public class Parser {
 	
 }
 
+/* ------------|
+ * INPUTSTRUCT |
+ * ------------|
+ * This class is the output of the Parser. It contains the command string and all possible variables for all commands in the Jimple Planner.
+ * Stores the variables detected in the user input.
+ */
 class InputStruct {
 	
 	public String commandString;
 	
+	// The string array being used, according to commandString.
+	public String[] currStringArray;
+	
 	public InputStruct(String inputCommandString) {
 		commandString = inputCommandString;
+		
+		// Inits the corresponding array according to the inputCommandString. Possible to use a single array, but it's neater this way.
 		switch (commandString) {
 			case "add" :
 				addArray = new String[5];
+				currStringArray = addArray;
 				break;
 			case "edit" :
 				editArray = new String[6];
+				currStringArray = editArray;
+				break;
+			case "delete" :
+				deleteArray = new String[1];
+				currStringArray = deleteArray;
 				break;
 			default :
 				break;
@@ -77,18 +139,25 @@ class InputStruct {
 	 * Index 2: Event Time (From)
 	 * Index 3: Event Time (To)
 	 * Index 4: Event Category
-	 * --------------------------- */
+	 */
 	public String[] addArray;
 	
 	/* --------------|
 	 * EDIT VARIABLES|
 	 * --------------|
-	 * Index 0
+	 * Index 0: Event Index
 	 * Index 1: Event Name
 	 * Index 2: Event Description
 	 * Index 3: Event Time (From)
 	 * Index 4: Event Time (To)
 	 * Index 5: Event Category
-	 * --------------------------- */
+	 */
 	public String[] editArray;
+	
+	/* ----------------|
+	 * DELETE VARIABLE |
+	 * ----------------|
+	 * Index 0: Event Index
+	 */
+	public String[] deleteArray;
 }
