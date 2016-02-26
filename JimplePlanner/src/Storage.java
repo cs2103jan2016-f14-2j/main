@@ -82,7 +82,7 @@ public class Storage {
 		return !(event.getToTime()==null);
 	}
 	
-	public static boolean isSaved(ArrayList<Event> events) throws IOException{
+	public boolean isSaved(ArrayList<Event> events) throws IOException{
 		forceCreateDefaultFiles();
 		writeToFile(events);
 		return isSaveToFile();

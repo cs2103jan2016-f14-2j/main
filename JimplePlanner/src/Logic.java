@@ -1,4 +1,6 @@
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -76,13 +78,13 @@ public class Logic {
 	private String DISPLAY_COMMAND = "type \"display\"";
 	private String DELETE_COMMAND = "type \"delete\" <event name>";
 
-	private Stack<String> temporaryHistory;
+	private ArrayList<Event> temporaryHistory;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	// Constructor
 	public Logic() {
-		temporaryHistory = new Stack<String>();
+		temporaryHistory = new ArrayList<Event>();
 	}
 
 	public void execute(String inputString) {
@@ -91,7 +93,7 @@ public class Logic {
 	}
 	
 	//puts task into the Event object
-	private void addToTaskList(String[] parsedInput, String originalInput) {
+	private void addToTaskList(String[] parsedInput, String originalInput) throws IOException {
 		Event newTask = new Event(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
 			if (parsedInput[i] != "") {
@@ -113,8 +115,8 @@ public class Logic {
 				}
 			}
 		}
-		store.extractEventToString(newTask);
-		temporaryHistory.push(originalInput);
+		temporaryHistory.add(newTask);
+		store.isSaved(temporaryHistory);
 	}
 	
 	public String helpCommand(String[] parsedInput)	{
