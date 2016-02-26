@@ -63,11 +63,18 @@ class Event {
 
 public class Logic {
 
-	private String ADD_COMMAND = "add";
-	private String EDIT_COMMAND = "edit";
-	private String DISPLAY_COMMAND = "display";
-	private String DELETE_COMMAND = "delete";
-	private String HELP_COMMAND = "help";
+	private String ADD_HELP_HEADER = "Add a new task:\n";
+	private String EDIT_HELP_HEADER = "Edit a current task:\n";
+	private String DISPLAY_HELP_HEADER = "Display all tasks:\n";
+	private String DELETE_HELP_HEADER = "Delete a task:\n";
+	
+	private String ADD_COMMAND_BY = "type \"add\" + <your event> by <time>\n";
+	private String ADD_COMMAND_AT = "type \"add\" + <your event> at <time>\n";
+	private String ADD_COMMAND_FROMTO = "type \"add\" + <your event> from <time> to <time>\n";
+	private String EDIT_COMMAND_ONE_TIMING = "type \"edit\" + <your event> to <time>\n";
+	private String EDIT_COMMAND_TWO_TIMINGS = "type \"edit\" + <your event> from <time> to <time>\n";
+	private String DISPLAY_COMMAND = "type \"display\"";
+	private String DELETE_COMMAND = "type \"delete\" <event name>";
 
 	private Stack<String> temporaryHistory;
 	Parser parser = new Parser();
@@ -108,5 +115,24 @@ public class Logic {
 		}
 		store.extractEventToString(newTask);
 		temporaryHistory.push(originalInput);
+	}
+	
+	public String helpCommand(String[] parsedInput)	{
+		String listOfCommands = new String();
+		listOfCommands += ADD_HELP_HEADER;
+		listOfCommands += ADD_COMMAND_BY;
+		listOfCommands += ADD_COMMAND_AT;
+		listOfCommands += ADD_COMMAND_FROMTO;
+		
+		listOfCommands += EDIT_HELP_HEADER;
+		listOfCommands += EDIT_COMMAND_ONE_TIMING;
+		listOfCommands += EDIT_COMMAND_TWO_TIMINGS;
+		
+		listOfCommands += DISPLAY_HELP_HEADER;
+		listOfCommands += DISPLAY_COMMAND;
+		
+		listOfCommands += DELETE_HELP_HEADER;
+		listOfCommands += DELETE_COMMAND;
+		return listOfCommands;
 	}
 }
