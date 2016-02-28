@@ -89,18 +89,23 @@ public class Logic {
 	private String ADDED_FEEDBACK = "task added to planner\n";
 	private String EDITED_FEEDBACK = "task edited in planner\n";
 	
-	private String EDITED_FEEDBACK_ERROR = "task not found\n";
-	private String ADDED_FEEDBACK_ERROR = "could not add to task list\n";
-
+	private String ERROR_EDIT_FEEDBACK = "task not found\n";
+	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
+	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
+	
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	// Constructor
-	public Logic() throws IOException {
+	public Logic() {
 		temporaryHistory = new ArrayList<Event>();
-		currentListOfTasksInFile = store.getEvents();
+		try {
+			currentListOfTasksInFile = store.getEvents();
+		} catch (IOException e) {
+			System.out.print(ERROR_FILE_NOT_FOUND);
+		}
 	}
 
 	public String execute(String inputString) throws IOException {
@@ -147,7 +152,7 @@ public class Logic {
 		if (store.isSaved(currentListOfTasksInFile))	{
 			return ADDED_FEEDBACK;
 		}
-		return ADDED_FEEDBACK_ERROR;
+		return ERROR_ADDED_FEEDBACK;
 	}
 	
 	/**
@@ -181,7 +186,7 @@ public class Logic {
 				return EDITED_FEEDBACK;
 			}
 		}
-		return EDITED_FEEDBACK_ERROR;
+		return ERROR_EDIT_FEEDBACK;
 	}
 	
 	/**
