@@ -31,7 +31,10 @@ class Event {
 	}
 
 	public void setFromDate(String dateTime) {
-		this.fromDateTime = LocalDateTime.parse(dateTime);
+		if (dateTime.equals("")) {
+		} else {
+			this.fromDateTime = LocalDateTime.parse(dateTime);
+		}
 	}
 
 	public String getToTime() {
@@ -42,7 +45,10 @@ class Event {
 	}
 
 	public void setToDate(String dateTime) {
-		this.toDateTime = LocalDateTime.parse(dateTime);
+		if (dateTime.equals("")) {	
+		} else {
+			this.toDateTime = LocalDateTime.parse(dateTime);
+		}
 	}
 
 	public String getTitle() {
@@ -88,17 +94,16 @@ public class Logic {
 
 	private String ADDED_FEEDBACK = "task added to planner\n";
 	private String EDITED_FEEDBACK = "task edited in planner\n";
-	
+
 	private String ERROR_EDIT_FEEDBACK = "task not found\n";
 	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
 	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
-	
+
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
-	// Constructor
 	public Logic() {
 		temporaryHistory = new ArrayList<Event>();
 		try {
@@ -107,7 +112,11 @@ public class Logic {
 			System.out.print(ERROR_FILE_NOT_FOUND);
 		}
 	}
-
+	
+	/**
+	 *function is for the UI to call when a user inputs a string 
+	 *
+	 */
 	public String execute(String inputString) throws IOException {
 		String feedback = new String("");
 		InputStruct parsedInput = parser.parseInput(inputString);
@@ -125,7 +134,7 @@ public class Logic {
 	}
 
 	// adds task into the Event object
-	private String addToTaskList(String[] parsedInput, String originalInput) throws IOException {
+	public String addToTaskList(String[] parsedInput, String originalInput) throws IOException {
 		Event newTask = new Event(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
 			if (parsedInput[i] != "") {
@@ -149,17 +158,16 @@ public class Logic {
 		}
 		temporaryHistory.add(newTask);
 		currentListOfTasksInFile.add(newTask);
-		if (store.isSaved(currentListOfTasksInFile))	{
+		if (store.isSaved(currentListOfTasksInFile)) {
 			return ADDED_FEEDBACK;
 		}
 		return ERROR_ADDED_FEEDBACK;
 	}
-	
+
 	/**
-	 * edit a task
-	 * Condition: can only edit with line number
+	 * edit a task Condition: can only edit with line number
 	 */
-	
+
 	public String editTask(String[] parsedInput) throws IOException {
 		int taskNumber = Integer.parseInt(parsedInput[0]);
 		if (currentListOfTasksInFile.get(taskNumber) != null) {
@@ -182,13 +190,13 @@ public class Logic {
 					break;
 				}
 			}
-			if (store.isSaved(currentListOfTasksInFile))	{
+			if (store.isSaved(currentListOfTasksInFile)) {
 				return EDITED_FEEDBACK;
 			}
 		}
 		return ERROR_EDIT_FEEDBACK;
 	}
-	
+
 	/**
 	 * returns total number of word matches compared to an event
 	 * 
@@ -228,7 +236,11 @@ public class Logic {
 		}
 		return count;
 	}
-
+	
+	/**
+	 *gets a list of help commands for user to refer to 
+	 *
+	 */
 	public String helpCommand(String[] parsedInput) {
 		String listOfCommands = new String();
 		listOfCommands += ADD_HELP_HEADER;
