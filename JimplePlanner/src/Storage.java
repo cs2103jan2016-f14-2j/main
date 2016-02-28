@@ -35,11 +35,6 @@ public class Storage {
 		return file;
 	}
 	
-	private static void forceCreateDefaultFiles(){
-		createFile(DEFAULT_FILE_NAME);
-		createFile(DEFAULT_TEMP_FILE_NAME);
-	}
-	
 	private static BufferedReader createDefaultFileReader() throws FileNotFoundException {
 		File file = createFile(DEFAULT_FILE_NAME);
 		FileInputStream fileIn = new FileInputStream(file);
@@ -100,9 +95,9 @@ public class Storage {
 	}
 	
 	public static boolean isSaved(ArrayList<Event> events) throws IOException{
-		forceCreateDefaultFiles();
 		writeToFile(events);
-		return isSaveToFile();
+		boolean saveStatus = isSaveToFile();
+		return saveStatus;
 	}
 	
 	private static void writeToFile(ArrayList<Event> events) throws IOException  {
