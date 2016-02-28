@@ -66,7 +66,7 @@ public class StorageTest {
 	
 	@Test
 	public void testGetEvents() throws IOException{
-		LinkedList<Event> events = Storage.getEvents();
+		ArrayList<Event> events = Storage.getEvents();
 		if(events.size()!=0){
 			String desc1 = events.get(0).getDescription();
 			assertEquals("true if same", "at cousin's place", desc1);

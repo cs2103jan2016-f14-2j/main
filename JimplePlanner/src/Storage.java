@@ -10,7 +10,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 public class Storage {
 	public static String DEFAULT_FILE_NAME = "planner.jim";
@@ -33,11 +32,6 @@ public class Storage {
 			e.printStackTrace();
 		}
 		return file;
-	}
-	
-	private static void forceCreateDefaultFiles(){
-		createFile(DEFAULT_FILE_NAME);
-		createFile(DEFAULT_TEMP_FILE_NAME);
 	}
 	
 	private static BufferedReader createDefaultFileReader() throws FileNotFoundException {
@@ -100,9 +94,9 @@ public class Storage {
 	}
 	
 	public static boolean isSaved(ArrayList<Event> events) throws IOException{
-		forceCreateDefaultFiles();
 		writeToFile(events);
-		return isSaveToFile();
+		boolean saveStatus = isSaveToFile();
+		return saveStatus;
 	}
 	
 	private static void writeToFile(ArrayList<Event> events) throws IOException  {
@@ -127,9 +121,9 @@ public class Storage {
 		}
 	}
 	
-	public static LinkedList<Event> getEvents() throws IOException{
+	public static ArrayList<Event> getEvents() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
-		LinkedList<Event> events = new LinkedList<Event>();
+		ArrayList<Event> events = new ArrayList<Event>();
 		String fileLineContent;
 		while ((fileLineContent = defaultFileReader.readLine()) != null) {
 			Event event = getEventFromLine(fileLineContent);
@@ -139,13 +133,13 @@ public class Storage {
 		return events;
 	}
 	
-	private static LinkedList<String> getSeparateFields(String fileLineContent){
-		LinkedList<String> separatedContents = new LinkedList<String>(Arrays.asList(fileLineContent.split(TAGS_LINE_FIELD_SEPARATOR)));
+	private static ArrayList<String> getSeparateFields(String fileLineContent){
+		ArrayList<String> separatedContents = new ArrayList<String>(Arrays.asList(fileLineContent.split(TAGS_LINE_FIELD_SEPARATOR)));
 		return separatedContents;
 	}
 	
 	private static Event getEventFromLine(String fileLineContent){
-		LinkedList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
+		ArrayList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
 		Event event = new Event(EMPTY_STRING);
 		for(String field: fileLineContentSeparated){
 			setFields(event, field);
