@@ -1,3 +1,4 @@
+package org.jimple.planner;
 import java.util.HashMap;
 
 public class Parser {
@@ -10,8 +11,8 @@ public class Parser {
 	 */
 	private final String[] EXTENDED_COMMANDS_ADD = {"desc", "at", "from", "by", "to", "cat"};
 	private final int[] EXTENDED_COMMANDS_ADD_INDEX = {1, 2, 2, 3, 3, 4};
-	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "at", "from", "by", "to", "cat"};
-	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 3, 4, 4, 5};
+	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "from", "to", "cat"};
+	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 4, 5};
 	
 	/* ----------------|
 	 * FINAL VARIABLES |

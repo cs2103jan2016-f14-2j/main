@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.Controller">
    <children>
       <VBox prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -69,7 +69,7 @@
             </TabPane>
             <HBox spacing="10.0">
                <children>
-                  <TextField prefHeight="25.0" prefWidth="715.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="commandBox" onAction="#enterButtonClicked" prefHeight="25.0" prefWidth="715.0" promptText="enter command here" HBox.hgrow="ALWAYS" />
                   <Button fx:id="enterButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#enterButtonClicked" text="Enter" />
                </children>
                <VBox.margin>
