@@ -8,10 +8,10 @@ public class Parser {
 	 * String[]: Stores the possible extended command strings for each command.
 	 * int[]: Stores the index on InputStruct which each extended command string affects.
 	 */
-	private final String[] EXTENDED_COMMANDS_ADD = {"at", "from", "by", "to"};
-	private final int[] EXTENDED_COMMANDS_ADD_INDEX = {2, 2, 3, 3};
-	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "from", "to", "cat"};
-	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 4, 5};
+	private final String[] EXTENDED_COMMANDS_ADD = {"desc", "at", "from", "by", "to", "cat"};
+	private final int[] EXTENDED_COMMANDS_ADD_INDEX = {1, 2, 2, 3, 3, 4};
+	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "desc", "at", "from", "by", "to", "cat"};
+	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = {1, 2, 3, 3, 4, 4, 5};
 	
 	/* ----------------|
 	 * FINAL VARIABLES |
