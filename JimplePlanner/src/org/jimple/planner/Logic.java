@@ -240,33 +240,45 @@ public class Logic {
 		String formattedDate = new String("");
 		switch (dateTime) {
 		case "january":
+			formattedDate = "1";
 			break;
 		case "february":
+			formattedDate = "2";
 			break;
 		case "march":
+			formattedDate = "3";
 			break;
 		case "april":
+			formattedDate = "4";
 			break;
 		case "may":
+			formattedDate = "5";
 			break;
 		case "june":
+			formattedDate = "6";
 			break;
 		case "july":
+			formattedDate = "7";
 			break;
 		case "august":
+			formattedDate = "8";
 			break;
 		case "september":
+			formattedDate = "9";
 			break;
 		case "october":
+			formattedDate = "10";
 			break;
 		case "november":
+			formattedDate = "11";
 			break;
 		case "december":
+			formattedDate = "12";
 			break;
 		default:
 			break;
 		}
-		return null;
+		return formattedDate;
 	}
 
 	private String checkDay(String dateTime) {
