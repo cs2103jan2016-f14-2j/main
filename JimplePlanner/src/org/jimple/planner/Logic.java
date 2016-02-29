@@ -18,9 +18,9 @@ class Event {
 
 	// Constructors
 	public Event(String aTitle) {
-		this.setTitle(aTitle);
-		this.setDescription(new String(""));
-		this.setCategory(new String(""));
+		this.title = new String("");
+		this.description = new String("");
+		this.category = new String("");
 		this.fromDateTime = null;
 		this.toDateTime = null;
 	}
