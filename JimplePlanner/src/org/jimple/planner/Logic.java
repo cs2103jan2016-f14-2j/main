@@ -18,7 +18,7 @@ class Event {
 
 	// Constructors
 	public Event(String aTitle) {
-		this.title = new String("");
+		this.title = aTitle;
 		this.description = new String("");
 		this.category = new String("");
 		this.fromDateTime = null;
