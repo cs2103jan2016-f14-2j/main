@@ -12,18 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Storage {
-	public static String DEFAULT_FILE_NAME = "planner.jim";
-	public static String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
-	public static String TAGS_CATEGORY = ":cat:";
-	public static String TAGS_DESCRIPTION = ":desc:";
-	public static String TAGS_FROM_TIME = ":from:";
-	public static String TAGS_TO_TIME = ":to:";
-	public static String TAGS_TITLE = ":title:";
-	public static String TAGS_LINE_FIELD_SEPARATOR = "/";
-	public static String EMPTY_STRING = "";
+	private static final String DEFAULT_FILE_NAME = "planner.jim";
+	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
+	private static final String TAGS_CATEGORY = ":cat:";
+	private static final String TAGS_DESCRIPTION = ":desc:";
+	private static final String TAGS_FROM_TIME = ":from:";
+	private static final String TAGS_TO_TIME = ":to:";
+	private static final String TAGS_TITLE = ":title:";
+	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
+	private static final String EMPTY_STRING = "";
 	
-	
-	private static File createFile(String fileName) {
+	private File createFile(String fileName) {
 		File file = new File(fileName);
 		try {
 			file.createNewFile();
@@ -34,7 +33,7 @@ public class Storage {
 		return file;
 	}
 	
-	private static BufferedReader createDefaultFileReader() throws FileNotFoundException {
+	private BufferedReader createDefaultFileReader() throws FileNotFoundException {
 		File file = createFile(DEFAULT_FILE_NAME);
 		FileInputStream fileIn = new FileInputStream(file);
 		InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
@@ -42,7 +41,7 @@ public class Storage {
 		return reader;
 	}
 	
-	private static BufferedWriter createTempFileWriter() throws FileNotFoundException {
+	private BufferedWriter createTempFileWriter() throws FileNotFoundException {
 		File file = createFile(DEFAULT_TEMP_FILE_NAME);
 		FileOutputStream fileOut = new FileOutputStream(file);
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
@@ -51,7 +50,7 @@ public class Storage {
 	}
 
 	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
-	public static String extractEventToString(Event event){
+	public String extractEventToString(Event event){
 		String lineString = formatToSaveString(TAGS_TITLE + event.getTitle());
 		if(isDescriptionExist(event)){
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());
@@ -72,34 +71,34 @@ public class Storage {
 		return lineString;
 	}
 	
-	private static boolean isDescriptionExist(Event event){
+	private boolean isDescriptionExist(Event event){
 		return !(event.getDescription().length()==0);
 	}
 	
-	private static boolean isCategoryExist(Event event){
+	private boolean isCategoryExist(Event event){
 		return !(event.getCategory().length()==0);
 	}
 	
-	private static boolean isFromTimeExist(Event event){
+	private boolean isFromTimeExist(Event event){
 		return !(event.getFromTime().length()==0);
 	}
 	
-	private static boolean isToTimeExist(Event event){
+	private boolean isToTimeExist(Event event){
 		return !(event.getToTime().length()==0);
 	}
 	
 	//Minor formatting of string such that each "field" is enclosed with a "/"
-	private static String formatToSaveString(String string){
+	private String formatToSaveString(String string){
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	public static boolean isSaved(ArrayList<Event> events) throws IOException{
+	public boolean isSaved(ArrayList<Event> events) throws IOException{
 		writeToFile(events);
 		boolean saveStatus = isSaveToFile();
 		return saveStatus;
 	}
 	
-	private static void writeToFile(ArrayList<Event> events) throws IOException  {
+	private void writeToFile(ArrayList<Event> events) throws IOException  {
 		BufferedWriter tempWriter = createTempFileWriter();
 		for(Event event: events){
 			String lineString = extractEventToString(event);
@@ -110,7 +109,7 @@ public class Storage {
 	}
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
-	private static boolean isSaveToFile(){
+	private boolean isSaveToFile(){
 		File file = createFile(DEFAULT_FILE_NAME);
 		File tempFile = createFile(DEFAULT_TEMP_FILE_NAME);
 
@@ -121,7 +120,7 @@ public class Storage {
 		}
 	}
 	
-	public static ArrayList<Event> getEvents() throws IOException{
+	public ArrayList<Event> getEvents() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
 		ArrayList<Event> events = new ArrayList<Event>();
 		String fileLineContent;
@@ -133,12 +132,12 @@ public class Storage {
 		return events;
 	}
 	
-	private static ArrayList<String> getSeparateFields(String fileLineContent){
+	private ArrayList<String> getSeparateFields(String fileLineContent){
 		ArrayList<String> separatedContents = new ArrayList<String>(Arrays.asList(fileLineContent.split(TAGS_LINE_FIELD_SEPARATOR)));
 		return separatedContents;
 	}
 	
-	private static Event getEventFromLine(String fileLineContent){
+	private Event getEventFromLine(String fileLineContent){
 		ArrayList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
 		Event event = new Event(EMPTY_STRING);
 		for(String field: fileLineContentSeparated){
@@ -148,11 +147,11 @@ public class Storage {
 	}
 	
 	//This method is purely for test purposes only
-	public static Event testGetEventFromLine(String fileLineContent){
+	public Event testGetEventFromLine(String fileLineContent){
 		return getEventFromLine(fileLineContent);
 	}
 	
-	private static void setFields(Event event, String field){
+	private void setFields(Event event, String field){
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
 			event.setTitle(titleString);
@@ -171,47 +170,47 @@ public class Storage {
 		}
 	}
 	
-	private static boolean isTitle(String field){
+	private boolean isTitle(String field){
 		return field.contains(TAGS_TITLE);
 	}
 	
-	private static boolean isCategory(String field){
+	private boolean isCategory(String field){
 		return field.contains(TAGS_CATEGORY);
 	}
 	
-	private static boolean isDescription(String field){
+	private boolean isDescription(String field){
 		return field.contains(TAGS_DESCRIPTION);
 	}
 	
-	private static boolean isFromTime(String field){
+	private boolean isFromTime(String field){
 		return field.contains(TAGS_FROM_TIME);
 	}
 	
-	private static boolean isToTime(String field){
+	private boolean isToTime(String field){
 		return field.contains(TAGS_TO_TIME);
 	}
 	
-	private static String getRemovedTitleTagString(String field){
+	private String getRemovedTitleTagString(String field){
 		String removedTag = field.replace(TAGS_TITLE, EMPTY_STRING);
 		return removedTag;
 	}
 	
-	private static String getRemovedCategoryTagString(String field){
+	private String getRemovedCategoryTagString(String field){
 		String removedTag = field.replace(TAGS_CATEGORY, EMPTY_STRING);
 		return removedTag;
 	}
 	
-	private static String getRemovedDescriptionTagString(String field){
+	private String getRemovedDescriptionTagString(String field){
 		String removedTag = field.replace(TAGS_DESCRIPTION, EMPTY_STRING);
 		return removedTag;
 	}
 	
-	private static String getRemovedFromTagString(String field){
+	private String getRemovedFromTagString(String field){
 		String removedTag = field.replace(TAGS_FROM_TIME, EMPTY_STRING);
 		return removedTag;
 	}
 	
-	private static String getRemovedToTagString(String field){
+	private String getRemovedToTagString(String field){
 		String removedTag = field.replace(TAGS_TO_TIME, EMPTY_STRING);
 		return removedTag;
 	}
