@@ -11,7 +11,8 @@ public class UI extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("JimpleUI.fxml"));
-			Scene scene = new Scene(root,800,600);
+			Scene scene = new Scene(root,800,600); 
+            primaryStage.setTitle("Jimple Planner");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -19,7 +20,7 @@ public class UI extends Application {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public void begin(String[] args) {
 		launch(args);
 	}
 }
