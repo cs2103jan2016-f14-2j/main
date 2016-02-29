@@ -10,6 +10,7 @@ public class StorageTest {
 	@Test
 	public void testIsSaved() throws IOException {
 		ArrayList<Event> events = new ArrayList<Event>();
+		Storage storage = new Storage();
 		Event event1 = new Event("Makan here for chap goh mei");
 		event1.setDescription("at cousin's place");
 		event1.setCategory("family time");
@@ -25,7 +26,7 @@ public class StorageTest {
 		events.add(event2);
 		events.add(event3);
 		
-		assertTrue("this should return true if saved", Storage.isSaved(events));
+		assertTrue("this should return true if saved", storage.isSaved(events));
 	}
 	
 	@Test
@@ -35,9 +36,11 @@ public class StorageTest {
 		String line1 = "/:title:Makan here for chap goh mei//:desc:at cousin's place//:cat:family time/";
 		String line2 = "/:title:Go exercise, you fatty//:cat:Keep fit/";
 		String line3 = "/:title:Do 2100 assignment//:desc:due very soon//:cat:Homework/";
-		events.add(Storage.testGetEventFromLine(line1));
-		events.add(Storage.testGetEventFromLine(line2));
-		events.add(Storage.testGetEventFromLine(line3));
+		
+		Storage storage = new Storage();
+		events.add(storage.testGetEventFromLine(line1));
+		events.add(storage.testGetEventFromLine(line2));
+		events.add(storage.testGetEventFromLine(line3));
 		
 		if(events.size()!=0){
 			String desc1 = events.get(0).getDescription();
@@ -66,7 +69,8 @@ public class StorageTest {
 	
 	@Test
 	public void testGetEvents() throws IOException{
-		ArrayList<Event> events = Storage.getEvents();
+		Storage storage = new Storage();
+		ArrayList<Event> events = storage.getEvents();
 		if(events.size()!=0){
 			String desc1 = events.get(0).getDescription();
 			assertEquals("true if same", "at cousin's place", desc1);
