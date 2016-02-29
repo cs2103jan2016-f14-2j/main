@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Storage {
-	private static String DEFAULT_FILE_NAME = "planner.jim";
-	private static String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
-	private static String TAGS_CATEGORY = ":cat:";
-	private static String TAGS_DESCRIPTION = ":desc:";
-	private static String TAGS_FROM_TIME = ":from:";
-	private static String TAGS_TO_TIME = ":to:";
-	private static String TAGS_TITLE = ":title:";
-	private static String TAGS_LINE_FIELD_SEPARATOR = "/";
-	private static String EMPTY_STRING = "";
+	private static final String DEFAULT_FILE_NAME = "planner.jim";
+	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
+	private static final String TAGS_CATEGORY = ":cat:";
+	private static final String TAGS_DESCRIPTION = ":desc:";
+	private static final String TAGS_FROM_TIME = ":from:";
+	private static final String TAGS_TO_TIME = ":to:";
+	private static final String TAGS_TITLE = ":title:";
+	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
+	private static final String EMPTY_STRING = "";
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
