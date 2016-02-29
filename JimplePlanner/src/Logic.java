@@ -120,13 +120,13 @@ public class Logic {
 	public String execute(String inputString) throws IOException {
 		String feedback = new String("");
 		InputStruct parsedInput = parser.parseInput(inputString);
-		switch (parsedInput.variableArray.length) {
-		case 1:
+		switch (parsedInput.commandString) {
+		case "delete":
 			break;
-		case 5:
+		case "add":
 			feedback += addToTaskList(parsedInput.variableArray, inputString);
 			break;
-		case 6:
+		case "edit":
 			feedback += editTask(parsedInput.variableArray);
 			break;
 		}
@@ -180,6 +180,7 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
+					String formattedDate = formatDate(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
 					break;
 				case 4:
@@ -196,7 +197,13 @@ public class Logic {
 		}
 		return ERROR_EDIT_FEEDBACK;
 	}
-
+	
+	private String formatDate(String unformatedDate)	{
+		
+		
+		return unformatedDate;
+	}
+	
 	/**
 	 * returns total number of word matches compared to an event
 	 * 

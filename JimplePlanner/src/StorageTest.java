@@ -35,9 +35,9 @@ public class StorageTest {
 		String line1 = "/:title:Makan here for chap goh mei//:desc:at cousin's place//:cat:family time/";
 		String line2 = "/:title:Go exercise, you fatty//:cat:Keep fit/";
 		String line3 = "/:title:Do 2100 assignment//:desc:due very soon//:cat:Homework/";
-		events.add(Storage.testGetEventFromLine(line1));
-		events.add(Storage.testGetEventFromLine(line2));
-		events.add(Storage.testGetEventFromLine(line3));
+		events.add(testGetEventFromLine(line1));
+		events.add(testGetEventFromLine(line2));
+		events.add(testGetEventFromLine(line3));
 		
 		if(events.size()!=0){
 			String desc1 = events.get(0).getDescription();
