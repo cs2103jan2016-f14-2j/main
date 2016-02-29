@@ -1,4 +1,5 @@
 package org.jimple.planner;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ class Event {
 	}
 
 	public void setToDate(String dateTime) {
-		if (dateTime.equals("")) {	
+		if (dateTime.equals("")) {
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -113,9 +114,9 @@ public class Logic {
 			System.out.print(ERROR_FILE_NOT_FOUND);
 		}
 	}
-	
+
 	/**
-	 *function is for the UI to call when a user inputs a string 
+	 * function is for the UI to call when a user inputs a string
 	 *
 	 */
 	public String execute(String inputString) throws IOException {
@@ -170,7 +171,7 @@ public class Logic {
 	 */
 
 	public String editTask(String[] parsedInput) throws IOException {
-		int taskNumber = Integer.parseInt(parsedInput[0]);
+		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
 		if (currentListOfTasksInFile.get(taskNumber) != null) {
 			for (int i = 0; i < parsedInput.length; i++) {
 				switch (i) {
@@ -198,13 +199,84 @@ public class Logic {
 		}
 		return ERROR_EDIT_FEEDBACK;
 	}
-	
-	private String formatDate(String unformatedDate)	{
-		
-		
-		return unformatedDate;
+
+	private String formatDate(String unformattedDate) {
+		String[] dividedDates = unformattedDate.split(" ");
+		String formattedDateTime = new String("");
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkYear(dateTime);
+		}
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkMonth(dateTime);
+		}
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkDay(dateTime);
+		}
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkTime(dateTime);
+		}
+		return formattedDateTime;
 	}
-	
+
+	private String checkYear(String dateTime) {
+		String formattedYear = new String("");
+		if (dateTime.equals(" ")) {
+
+		} 
+		else if (dateTime.equals("today"))	{
+			formattedYear += LocalDateTime.now().getYear();
+			formattedYear += "-";
+			formattedYear += LocalDateTime.now().getMonthValue();
+			formattedYear += "-";
+			formattedYear += LocalDateTime.now().getDayOfMonth();
+		}
+		else {
+			formattedYear = Integer.toString(LocalDateTime.now().getYear());
+		}
+		return formattedYear;
+	}
+
+	private String checkMonth(String dateTime) {
+		String formattedDate = new String("");
+		switch (dateTime) {
+		case "january":
+			break;
+		case "february":
+			break;
+		case "march":
+			break;
+		case "april":
+			break;
+		case "may":
+			break;
+		case "june":
+			break;
+		case "july":
+			break;
+		case "august":
+			break;
+		case "september":
+			break;
+		case "october":
+			break;
+		case "november":
+			break;
+		case "december":
+			break;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private String checkDay(String dateTime) {
+		return null;
+	}
+
+	private String checkTime(String dateTime) {
+		return null;
+	}
+
 	/**
 	 * returns total number of word matches compared to an event
 	 * 
@@ -244,9 +316,9 @@ public class Logic {
 		}
 		return count;
 	}
-	
+
 	/**
-	 *gets a list of help commands for user to refer to 
+	 * gets a list of help commands for user to refer to
 	 *
 	 */
 	public String helpCommand(String[] parsedInput) {
