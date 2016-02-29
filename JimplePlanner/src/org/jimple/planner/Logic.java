@@ -62,6 +62,9 @@ class Event {
 	}
 
 	public String getDescription() {
+		if (description == null)	{
+			return "";
+		}
 		return description;
 	}
 
@@ -70,6 +73,9 @@ class Event {
 	}
 
 	public String getCategory() {
+		if (category == null)	{
+			return "";
+		}
 		return category;
 	}
 
