@@ -20,5 +20,11 @@ public class LogicTest {
 		String[] parsedInput = {"1", "go school", "that means NUS", "2016-02-29T12:00", "", ""};
 		assertEquals("task is edited", "task edited in planner\n", testLogic.editTask(parsedInput));
 	}
+	
+	@Test
+	public void ShouldReturnFeedbackFromExecute()	{
+		String input = "add something";
+		//assertEquals("returns feedback", "taskEd")
+	}
 
 }

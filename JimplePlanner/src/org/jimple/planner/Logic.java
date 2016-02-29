@@ -33,7 +33,7 @@ class Event {
 	}
 
 	public void setFromDate(String dateTime) {
-		if (dateTime.equals("")) {
+		if (dateTime==null) {
 		} else {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -47,7 +47,7 @@ class Event {
 	}
 
 	public void setToDate(String dateTime) {
-		if (dateTime.equals("")) {
+		if (dateTime==null) {
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
