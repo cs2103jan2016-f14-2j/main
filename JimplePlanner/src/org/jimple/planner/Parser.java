@@ -56,8 +56,6 @@ public class Parser {
 		switch (getCommandString(splitUserInput)) {
 			case "add" :
 				return getStruct(splitUserInput, extendedCommandsAdd);
-			case "delete" :
-				return null;
 			case "edit" :
 				return getStruct(splitUserInput, extendedCommandsEdit);
 			default :
@@ -123,6 +121,7 @@ class InputStruct {
 	private final int ARRAY_SIZE_ADD = 5;
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
+	private final int ARRAY_SIZE_SEARCH = 1;
 	
 	public String commandString;
 	
@@ -142,6 +141,9 @@ class InputStruct {
 				break;
 			case "delete" :
 				variableArray = new String[ARRAY_SIZE_DELETE];
+				break;
+			case "search" :
+				variableArray = new String[ARRAY_SIZE_SEARCH];
 				break;
 			default :
 				break;
