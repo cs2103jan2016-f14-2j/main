@@ -177,4 +177,16 @@ class InputStruct {
 	 * Index 0: Event Index
 	 */
 	
+	/* ----------------|
+	 * SEARCH VARIABLE |
+	 * ----------------|
+	 * Index 0: String to Search
+	 */
+	
+	/* ---------------|
+	 * HELP VARIABLES |
+	 * ---------------|
+	 * N/A
+	 */
+	
 }
