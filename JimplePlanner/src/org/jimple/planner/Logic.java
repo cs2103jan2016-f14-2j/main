@@ -3,6 +3,7 @@ package org.jimple.planner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ class Event {
 	}
 
 	public void setFromDate(String dateTime) {
-		if (dateTime==null) {
+		if (dateTime == null) {
 		} else {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -47,7 +48,7 @@ class Event {
 	}
 
 	public void setToDate(String dateTime) {
-		if (dateTime==null) {
+		if (dateTime == null) {
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -62,7 +63,7 @@ class Event {
 	}
 
 	public String getDescription() {
-		if (description == null)	{
+		if (description == null) {
 			return "";
 		}
 		return description;
@@ -73,7 +74,7 @@ class Event {
 	}
 
 	public String getCategory() {
-		if (category == null)	{
+		if (category == null) {
 			return "";
 		}
 		return category;
@@ -109,11 +110,25 @@ public class Logic {
 
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
+	private HashMap<String, String> listOfMonths;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	public Logic() {
 		temporaryHistory = new ArrayList<Event>();
+		listOfMonths = new HashMap<String, String>();
+		listOfMonths.put("january", "1");
+		listOfMonths.put("february", "2");
+		listOfMonths.put("march", "3");
+		listOfMonths.put("april", "4");
+		listOfMonths.put("may", "5");
+		listOfMonths.put("june", "6");
+		listOfMonths.put("july", "7");
+		listOfMonths.put("august", "8");
+		listOfMonths.put("september", "9");
+		listOfMonths.put("october", "10");
+		listOfMonths.put("november", "11");
+		listOfMonths.put("december", "12");
 		try {
 			currentListOfTasksInFile = store.getEvents();
 		} catch (IOException e) {
@@ -151,6 +166,7 @@ public class Logic {
 					newTask.setDescription(parsedInput[i]);
 					break;
 				case 2:
+					//String formattedFromDate = formatTime(parsedInput[i]);
 					newTask.setFromDate(parsedInput[i]);
 					break;
 				case 3:
@@ -188,7 +204,7 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					String formattedDate = formatDate(parsedInput[i]);
+					//String formattedFromDate = formatTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
 					break;
 				case 4:
@@ -206,93 +222,147 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private String formatDate(String unformattedDate) {
-		String[] dividedDates = unformattedDate.split(" ");
-		String formattedDateTime = new String("");
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkYear(dateTime);
+	private String formatTime(String unformattedDate) {
+		if (unformattedDate != null) {
+			String[] dividedDates = unformattedDate.split(" ");
+			String formattedDateTime = new String("");
+			for (String dateTime : dividedDates) {
+				if (checkYear(dateTime).equals("")) {
+				} else {
+					formattedDateTime += checkYear(dateTime);
+					break;
+				}
+			}
+			for (String dateTime : dividedDates) {
+				if (checkYear(dateTime).equals("")) {
+				} else {
+					formattedDateTime += checkMonth(dateTime);
+					break;
+				}
+			}
+			for (String dateTime : dividedDates) {
+				if (checkYear(dateTime).equals("")) {
+				} else {
+					formattedDateTime += checkDay(dateTime);
+					break;
+				}
+			}
+			for (String dateTime : dividedDates) {
+				formattedDateTime += checkTime(dateTime);
+			}
+			return formattedDateTime;
 		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkMonth(dateTime);
-		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkDay(dateTime);
-		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkTime(dateTime);
-		}
-		return formattedDateTime;
+		return unformattedDate;
 	}
 
 	private String checkYear(String dateTime) {
 		String formattedYear = new String("");
-		if (dateTime.equals(" ")) {
-
-		} 
-		else if (dateTime.equals("today"))	{
+		if (isYearInteger(dateTime)) {
+			formattedYear += Integer.parseInt(dateTime);
+			formattedYear += "-";
+		} else if (dateTime.equals("today")) {
 			formattedYear += LocalDateTime.now().getYear();
 			formattedYear += "-";
-			formattedYear += LocalDateTime.now().getMonthValue();
-			formattedYear += "-";
-			formattedYear += LocalDateTime.now().getDayOfMonth();
-		}
-		else {
-			formattedYear = Integer.toString(LocalDateTime.now().getYear());
 		}
 		return formattedYear;
 	}
 
+	private boolean isYearInteger(String dateTime) {
+		boolean isInt = true;
+		try {
+			int unknownInt = Integer.parseInt(dateTime);
+			if ((unknownInt - 1000) < 0) {
+				isInt = false;
+			}
+		} catch (NumberFormatException e) {
+			isInt = false;
+		}
+		return isInt;
+	}
+
 	private String checkMonth(String dateTime) {
 		String formattedDate = new String("");
-		switch (dateTime) {
-		case "january":
-			formattedDate = "1";
-			break;
-		case "february":
-			formattedDate = "2";
-			break;
-		case "march":
-			formattedDate = "3";
-			break;
-		case "april":
-			formattedDate = "4";
-			break;
-		case "may":
-			formattedDate = "5";
-			break;
-		case "june":
-			formattedDate = "6";
-			break;
-		case "july":
-			formattedDate = "7";
-			break;
-		case "august":
-			formattedDate = "8";
-			break;
-		case "september":
-			formattedDate = "9";
-			break;
-		case "october":
-			formattedDate = "10";
-			break;
-		case "november":
-			formattedDate = "11";
-			break;
-		case "december":
-			formattedDate = "12";
-			break;
-		default:
-			break;
+		if (listOfMonths.containsKey(dateTime.toLowerCase())) {
+			formattedDate = listOfMonths.get(dateTime);
+			formattedDate += "-";
+		} else if (dateTime.equals("today")) {
+			formattedDate += LocalDateTime.now().getMonthValue();
+			formattedDate += "-";
 		}
 		return formattedDate;
 	}
 
-	private String checkDay(String dateTime) {
-		return null;
+	public String checkDay(String dateTime) {
+		String formattedDay = new String("");
+		if (isDayInteger(dateTime)) {
+			if (Integer.parseInt(dateTime) < 10)	{
+				formattedDay += "0";
+			}
+			formattedDay += dateTime;
+			formattedDay += "T";
+		} else if (dateTime.equals("today")) {
+			if (LocalDateTime.now().getDayOfMonth() < 10)	{
+				formattedDay += "0";
+			}
+			formattedDay += LocalDateTime.now().getDayOfMonth();
+			formattedDay += "T";
+		}
+		return formattedDay;
 	}
 
-	private String checkTime(String dateTime) {
-		return null;
+	private boolean isDayInteger(String dateTime) {
+		boolean isInt = true;
+		try {
+			int unknownInt = Integer.parseInt(dateTime);
+			if ((unknownInt - 1000) > 0) {
+				isInt = false;
+			}
+		} catch (NumberFormatException e) {
+			isInt = false;
+		}
+		return isInt;
+	}
+
+	public String checkTime(String dateTime) {
+		String time = new String("");
+		if (dateTime.contains("pm")) {
+			time = formatHoursMinutes(dateTime.substring(0, dateTime.length() - 2), "pm");
+
+		} else if (dateTime.contains("am")) {
+			time = formatHoursMinutes(dateTime.substring(0, dateTime.length() - 2), "am");
+		}
+
+		return time;
+	}
+
+	public String formatHoursMinutes(String hours, String timeOfDay) {
+		String[] hourMinute = hours.split("\\.");
+		String formattedHourMinute = new String("");
+		if (timeOfDay.equals("pm")) {
+			int twentyFourHourTime = Integer.parseInt(hourMinute[0]) + 12;
+			formattedHourMinute += twentyFourHourTime;
+			formattedHourMinute += ":";
+			if (hourMinute.length == 1) {
+				formattedHourMinute += "00";	
+			} else {
+				formattedHourMinute += hourMinute[1];
+			}
+		} else if (timeOfDay.equals("am")) {
+			if (Integer.parseInt(hourMinute[0]) < 10)	{
+				formattedHourMinute += "0";
+			}
+			else if (Integer.parseInt(hourMinute[0]) == 12)	{
+				hourMinute[0] = "00";
+			}
+			formattedHourMinute += hourMinute[0];
+			formattedHourMinute += ":";
+			if (hourMinute.length == 1) {
+				formattedHourMinute += "00";	
+			} else {
+				formattedHourMinute += hourMinute[1];
+			}
+		}
+		return formattedHourMinute;
 	}
 
 	/**
