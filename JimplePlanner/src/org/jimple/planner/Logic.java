@@ -3,10 +3,12 @@ package org.jimple.planner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.TreeMap;
 
@@ -26,11 +28,26 @@ class Event {
 		this.toDateTime = null;
 	}
 
+	public LocalDateTime getLocalFromTime() {
+		return fromDateTime;
+	}
+
+	public LocalDateTime getLocalToTime() {
+		return toDateTime;
+	}
+
 	public String getFromTime() {
 		if (fromDateTime == null) {
 			return "";
 		}
 		return fromDateTime.toString();
+	}
+
+	public String getToTime() {
+		if (toDateTime == null) {
+			return "";
+		}
+		return toDateTime.toString();
 	}
 
 	public void setFromDate(String dateTime) {
@@ -39,13 +56,6 @@ class Event {
 		} else {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
-	}
-
-	public String getToTime() {
-		if (toDateTime == null) {
-			return "";
-		}
-		return toDateTime.toString();
 	}
 
 	public void setToDate(String dateTime) {
@@ -97,6 +107,44 @@ class Event {
 
 }
 
+class timeComparator implements Comparator<Event> {
+	public int compare(Event i, Event j) {
+		if (i.getLocalFromTime() != null && j.getLocalFromTime() != null) {
+			if (i.getLocalFromTime().compareTo(j.getLocalFromTime()) < 0) {
+				return 1;
+			} else if (i.getLocalFromTime().compareTo(j.getLocalFromTime()) > 0) {
+				return -1;
+			}
+			return 0;
+		}
+		else if (i.getLocalToTime() != null && j.getLocalToTime() != null)	{
+			if (i.getLocalToTime().compareTo(j.getLocalToTime()) < 0) {
+				return 1;
+			} else if (i.getLocalToTime().compareTo(j.getLocalToTime()) > 0) {
+				return -1;
+			}
+			return 0;
+		}
+		else if (i.getLocalToTime() != null){
+			if (i.getLocalToTime().compareTo(j.getLocalFromTime()) < 0) {
+				return 1;
+			} else if (i.getLocalToTime().compareTo(j.getLocalFromTime()) > 0) {
+				return -1;
+			}
+			return 0;
+		}
+		else if (i.getLocalFromTime() != null){
+			if (i.getLocalFromTime().compareTo(j.getLocalToTime()) < 0) {
+				return 1;
+			} else if (i.getLocalFromTime().compareTo(j.getLocalToTime()) > 0) {
+				return -1;
+			}
+			return 0;
+		}
+		return -2;
+	}
+}
+
 public class Logic {
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
@@ -112,14 +160,14 @@ public class Logic {
 	private String DISPLAY_COMMAND = "type \"display\"";
 	private String DELETE_COMMAND = "type \"delete\" <event name>";
 
-	private String ADDED_FEEDBACK = "task added to planner\n";
-	private String EDITED_FEEDBACK = "task edited in planner\n";
-	private String DELETED_FEEDBACK = "task deleted\n";
+	private String ADDED_FEEDBACK = "task added to planner";
+	private String EDITED_FEEDBACK = "task edited in planner";
+	private String DELETED_FEEDBACK = "task deleted";
 
-	private String ERROR_EDIT_FEEDBACK = "task not found\n";
-	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
-	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
-	private String ERROR_DELETED_FEEDBACK = "task not found\n";
+	private String ERROR_EDIT_FEEDBACK = "task not found";
+	private String ERROR_ADDED_FEEDBACK = "could not add to task list";
+	private String ERROR_FILE_NOT_FOUND = "could not find file";
+	private String ERROR_DELETED_FEEDBACK = "task not found";
 
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
@@ -250,7 +298,17 @@ public class Logic {
 		}
 		return ERROR_DELETED_FEEDBACK;
 	}
-	
+
+	public Queue<Event> display(String type) {
+		Queue<Event> events = new LinkedList<Event>();
+		if (type.equals("agenda")) {
+
+		} else if (type.equals("todo")) {
+
+		}
+
+		return events;
+	}
 
 	public String formatTime(String unformattedDate) {
 		if (unformattedDate != null) {
