@@ -117,15 +117,15 @@ public class Logic {
 	public Logic() {
 		temporaryHistory = new ArrayList<Event>();
 		listOfMonths = new HashMap<String, String>();
-		listOfMonths.put("january", "1");
-		listOfMonths.put("february", "2");
-		listOfMonths.put("march", "3");
-		listOfMonths.put("april", "4");
-		listOfMonths.put("may", "5");
-		listOfMonths.put("june", "6");
-		listOfMonths.put("july", "7");
-		listOfMonths.put("august", "8");
-		listOfMonths.put("september", "9");
+		listOfMonths.put("january", "01");
+		listOfMonths.put("february", "02");
+		listOfMonths.put("march", "03");
+		listOfMonths.put("april", "04");
+		listOfMonths.put("may", "05");
+		listOfMonths.put("june", "06");
+		listOfMonths.put("july", "07");
+		listOfMonths.put("august", "08");
+		listOfMonths.put("september", "09");
 		listOfMonths.put("october", "10");
 		listOfMonths.put("november", "11");
 		listOfMonths.put("december", "12");
@@ -166,7 +166,7 @@ public class Logic {
 					newTask.setDescription(parsedInput[i]);
 					break;
 				case 2:
-					//String formattedFromDate = formatTime(parsedInput[i]);
+					// String formattedFromDate = formatTime(parsedInput[i]);
 					newTask.setFromDate(parsedInput[i]);
 					break;
 				case 3:
@@ -204,7 +204,7 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					//String formattedFromDate = formatTime(parsedInput[i]);
+					// String formattedFromDate = formatTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
 					break;
 				case 4:
@@ -222,49 +222,46 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private String formatTime(String unformattedDate) {
+	public String formatTime(String unformattedDate) {
 		if (unformattedDate != null) {
 			String[] dividedDates = unformattedDate.split(" ");
-			String formattedDateTime = new String("");
+			String formattedDateTime = Integer.toString(LocalDateTime.now().getYear());
 			for (String dateTime : dividedDates) {
-				if (checkYear(dateTime).equals("")) {
-				} else {
-					formattedDateTime += checkYear(dateTime);
+				if (checkYear(dateTime) != null) {
+					formattedDateTime = checkYear(dateTime);
 					break;
 				}
 			}
 			for (String dateTime : dividedDates) {
-				if (checkYear(dateTime).equals("")) {
-				} else {
+				if (!checkMonth(dateTime).equals("")) {
 					formattedDateTime += checkMonth(dateTime);
 					break;
 				}
 			}
 			for (String dateTime : dividedDates) {
-				if (checkYear(dateTime).equals("")) {
-				} else {
+				if (!checkDay(dateTime).equals("")) {
 					formattedDateTime += checkDay(dateTime);
 					break;
 				}
 			}
 			for (String dateTime : dividedDates) {
-				formattedDateTime += checkTime(dateTime);
+				if (!checkTime(dateTime).equals("")) {
+					formattedDateTime += checkTime(dateTime);
+					break;
+				}
 			}
 			return formattedDateTime;
 		}
 		return unformattedDate;
 	}
 
-	private String checkYear(String dateTime) {
-		String formattedYear = new String("");
+	public String checkYear(String dateTime) {
 		if (isYearInteger(dateTime)) {
-			formattedYear += Integer.parseInt(dateTime);
-			formattedYear += "-";
+			return dateTime;
 		} else if (dateTime.equals("today")) {
-			formattedYear += LocalDateTime.now().getYear();
-			formattedYear += "-";
+			return Integer.toString(LocalDateTime.now().getYear());
 		}
-		return formattedYear;
+		return null;
 	}
 
 	private boolean isYearInteger(String dateTime) {
@@ -280,12 +277,17 @@ public class Logic {
 		return isInt;
 	}
 
-	private String checkMonth(String dateTime) {
+	public String checkMonth(String dateTime) {
 		String formattedDate = new String("");
 		if (listOfMonths.containsKey(dateTime.toLowerCase())) {
-			formattedDate = listOfMonths.get(dateTime);
+			formattedDate += "-";
+			formattedDate += listOfMonths.get(dateTime.toLowerCase());
 			formattedDate += "-";
 		} else if (dateTime.equals("today")) {
+			formattedDate += "-";
+			if (LocalDateTime.now().getMonthValue() < 10) {
+				formattedDate += "0";
+			}
 			formattedDate += LocalDateTime.now().getMonthValue();
 			formattedDate += "-";
 		}
@@ -295,13 +297,13 @@ public class Logic {
 	public String checkDay(String dateTime) {
 		String formattedDay = new String("");
 		if (isDayInteger(dateTime)) {
-			if (Integer.parseInt(dateTime) < 10)	{
+			if (Integer.parseInt(dateTime) < 10) {
 				formattedDay += "0";
 			}
 			formattedDay += dateTime;
 			formattedDay += "T";
 		} else if (dateTime.equals("today")) {
-			if (LocalDateTime.now().getDayOfMonth() < 10)	{
+			if (LocalDateTime.now().getDayOfMonth() < 10) {
 				formattedDay += "0";
 			}
 			formattedDay += LocalDateTime.now().getDayOfMonth();
@@ -343,21 +345,20 @@ public class Logic {
 			formattedHourMinute += twentyFourHourTime;
 			formattedHourMinute += ":";
 			if (hourMinute.length == 1) {
-				formattedHourMinute += "00";	
+				formattedHourMinute += "00";
 			} else {
 				formattedHourMinute += hourMinute[1];
 			}
 		} else if (timeOfDay.equals("am")) {
-			if (Integer.parseInt(hourMinute[0]) < 10)	{
+			if (Integer.parseInt(hourMinute[0]) < 10) {
 				formattedHourMinute += "0";
-			}
-			else if (Integer.parseInt(hourMinute[0]) == 12)	{
+			} else if (Integer.parseInt(hourMinute[0]) == 12) {
 				hourMinute[0] = "00";
 			}
 			formattedHourMinute += hourMinute[0];
 			formattedHourMinute += ":";
 			if (hourMinute.length == 1) {
-				formattedHourMinute += "00";	
+				formattedHourMinute += "00";
 			} else {
 				formattedHourMinute += hourMinute[1];
 			}
