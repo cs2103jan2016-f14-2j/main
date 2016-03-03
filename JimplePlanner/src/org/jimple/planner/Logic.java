@@ -107,6 +107,34 @@ class Event {
 
 }
 
+class ListOfMonths	{
+	private HashMap<String, String> listOfMonths;
+	
+	public ListOfMonths()	{
+		listOfMonths = new HashMap<String , String>();
+		listOfMonths.put("january", "01");
+		listOfMonths.put("february", "02");
+		listOfMonths.put("march", "03");
+		listOfMonths.put("april", "04");
+		listOfMonths.put("may", "05");
+		listOfMonths.put("june", "06");
+		listOfMonths.put("july", "07");
+		listOfMonths.put("august", "08");
+		listOfMonths.put("september", "09");
+		listOfMonths.put("october", "10");
+		listOfMonths.put("november", "11");
+		listOfMonths.put("december", "12");
+	}
+	
+	public boolean contain(String month)	{
+		return listOfMonths.containsKey(month.toLowerCase());
+	}
+	
+	public String monthDigit(String month)	{
+		return listOfMonths.get(month.toLowerCase());
+	}
+}
+
 class timeComparator implements Comparator<Event> {
 	public int compare(Event i, Event j) {
 		if (i.getLocalFromTime() != null && j.getLocalFromTime() != null) {
@@ -171,25 +199,14 @@ public class Logic {
 
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
-	private HashMap<String, String> listOfMonths;
+	private ListOfMonths listOfMonths;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	public Logic() {
 		temporaryHistory = new ArrayList<Event>();
-		listOfMonths = new HashMap<String, String>();
-		listOfMonths.put("january", "01");
-		listOfMonths.put("february", "02");
-		listOfMonths.put("march", "03");
-		listOfMonths.put("april", "04");
-		listOfMonths.put("may", "05");
-		listOfMonths.put("june", "06");
-		listOfMonths.put("july", "07");
-		listOfMonths.put("august", "08");
-		listOfMonths.put("september", "09");
-		listOfMonths.put("october", "10");
-		listOfMonths.put("november", "11");
-		listOfMonths.put("december", "12");
+		listOfMonths = new ListOfMonths();
+		
 		try {
 			currentListOfTasksInFile = store.getEvents();
 		} catch (IOException e) {
@@ -302,7 +319,7 @@ public class Logic {
 	public Queue<Event> display(String type) {
 		Queue<Event> events = new LinkedList<Event>();
 		if (type.equals("agenda")) {
-
+			
 		} else if (type.equals("todo")) {
 
 		}
@@ -367,9 +384,9 @@ public class Logic {
 
 	public String checkMonth(String dateTime) {
 		String formattedDate = new String("");
-		if (listOfMonths.containsKey(dateTime.toLowerCase())) {
+		if (listOfMonths.contain(dateTime.toLowerCase())) {
 			formattedDate += "-";
-			formattedDate += listOfMonths.get(dateTime.toLowerCase());
+			formattedDate += listOfMonths.monthDigit(dateTime.toLowerCase());
 			formattedDate += "-";
 		} else if (dateTime.equals("today")) {
 			formattedDate += "-";
