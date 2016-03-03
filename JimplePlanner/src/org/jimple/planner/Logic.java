@@ -35,6 +35,7 @@ class Event {
 
 	public void setFromDate(String dateTime) {
 		if (dateTime == null) {
+			fromDateTime = null;
 		} else {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -49,6 +50,7 @@ class Event {
 
 	public void setToDate(String dateTime) {
 		if (dateTime == null) {
+			fromDateTime = null;
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -59,7 +61,10 @@ class Event {
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		if (title == null) {
+		} else {
+			this.title = title;
+		}
 	}
 
 	public String getDescription() {
@@ -70,7 +75,10 @@ class Event {
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		if (description == null) {
+		} else {
+			this.description = description;
+		}
 	}
 
 	public String getCategory() {
@@ -81,7 +89,10 @@ class Event {
 	}
 
 	public void setCategory(String category) {
-		this.category = category;
+		if (category == null) {
+		} else {
+			this.category = category;
+		}
 	}
 
 }
@@ -103,10 +114,12 @@ public class Logic {
 
 	private String ADDED_FEEDBACK = "task added to planner\n";
 	private String EDITED_FEEDBACK = "task edited in planner\n";
+	private String DELETED_FEEDBACK = "task deleted\n";
 
 	private String ERROR_EDIT_FEEDBACK = "task not found\n";
 	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
 	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
+	private String ERROR_DELETED_FEEDBACK = "task not found\n";
 
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
@@ -145,6 +158,7 @@ public class Logic {
 		InputStruct parsedInput = parser.parseInput(inputString);
 		switch (parsedInput.commandString) {
 		case "delete":
+			feedback += deleteTask(parsedInput.variableArray);
 			break;
 		case "add":
 			feedback += addToTaskList(parsedInput.variableArray);
@@ -196,7 +210,7 @@ public class Logic {
 	public String editTask(String[] parsedInput) throws IOException {
 		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
 		if (currentListOfTasksInFile.get(taskNumber) != null) {
-			for (int i = 0; i < parsedInput.length; i++) {
+			for (int i = 1; i < parsedInput.length; i++) {
 				switch (i) {
 				case 1:
 					currentListOfTasksInFile.get(taskNumber).setTitle(parsedInput[i]);
@@ -205,11 +219,12 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					//String formattedFromDate = formatTime(parsedInput[i]);
-					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
+					String formattedFromDate = formatTime(parsedInput[i]);
+					currentListOfTasksInFile.get(taskNumber).setFromDate(formattedFromDate);
 					break;
 				case 4:
-					currentListOfTasksInFile.get(taskNumber).setToDate(parsedInput[i]);
+					String formattedToDate = formatTime(parsedInput[i]);
+					currentListOfTasksInFile.get(taskNumber).setToDate(formattedToDate);
 					break;
 				case 5:
 					currentListOfTasksInFile.get(taskNumber).setCategory(parsedInput[i]);
@@ -222,6 +237,20 @@ public class Logic {
 		}
 		return ERROR_EDIT_FEEDBACK;
 	}
+
+	public String deleteTask(String[] line) throws IOException {
+		if (Integer.parseInt(line[0]) <= currentListOfTasksInFile.size()) {
+			for (int i = 0; i < currentListOfTasksInFile.size(); i++) {
+				if (i == Integer.parseInt(line[0]) - 1) {
+					currentListOfTasksInFile.remove(i);
+				}
+			}
+			store.isSaved(currentListOfTasksInFile);
+			return DELETED_FEEDBACK;
+		}
+		return ERROR_DELETED_FEEDBACK;
+	}
+	
 
 	public String formatTime(String unformattedDate) {
 		if (unformattedDate != null) {
