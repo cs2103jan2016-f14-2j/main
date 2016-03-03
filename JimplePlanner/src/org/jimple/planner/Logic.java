@@ -147,7 +147,7 @@ public class Logic {
 		case "delete":
 			break;
 		case "add":
-			feedback += addToTaskList(parsedInput.variableArray, inputString);
+			feedback += addToTaskList(parsedInput.variableArray);
 			break;
 		case "edit":
 			feedback += editTask(parsedInput.variableArray);
@@ -157,7 +157,7 @@ public class Logic {
 	}
 
 	// adds task into the Event object
-	public String addToTaskList(String[] parsedInput, String originalInput) throws IOException {
+	public String addToTaskList(String[] parsedInput) throws IOException {
 		Event newTask = new Event(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
 			if (parsedInput[i] != "") {
@@ -166,11 +166,12 @@ public class Logic {
 					newTask.setDescription(parsedInput[i]);
 					break;
 				case 2:
-					// String formattedFromDate = formatTime(parsedInput[i]);
-					newTask.setFromDate(parsedInput[i]);
+					String formattedFromDate = formatTime(parsedInput[i]);
+					newTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
-					newTask.setToDate(parsedInput[i]);
+					String formattedToDate = formatTime(parsedInput[i]);
+					newTask.setToDate(formattedToDate);
 					break;
 				case 4:
 					newTask.setCategory(parsedInput[i]);
@@ -204,7 +205,7 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					// String formattedFromDate = formatTime(parsedInput[i]);
+					//String formattedFromDate = formatTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
 					break;
 				case 4:
