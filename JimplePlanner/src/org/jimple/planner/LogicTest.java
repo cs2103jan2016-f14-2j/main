@@ -10,15 +10,27 @@ public class LogicTest {
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String originalInput = "add finish 2103 homework by ";
-		String[] parsedInput = {"finish 2103 homework", "", "", "2007-12-03T00:00", ""};
-		assertEquals("task is added to file", "task added to planner\n", testLogic.addToTaskList(parsedInput));
+		String originalInput = "add finish 2103 homework by today 9.30pm";
+		String[] parsedInput1 = {"finish 2103 homework", null, null, "today 9.30pm", null};
+		String[] parsedInput2 = {"some stuff", null, null, null, null};
+		String[] parsedInput3 = {"more homework", null, "11 may 2018 8.45am", "12 may 2018 8.45am", null};
+		assertEquals("task is added to file", "task added to planner\n", testLogic.addToTaskList(parsedInput1));
+		assertEquals("task is added to file", "task added to planner\n", testLogic.addToTaskList(parsedInput2));
+		assertEquals("task is added to file", "task added to planner\n", testLogic.addToTaskList(parsedInput3));
 	}
 	
 	@Test
 	public void EditShouldReturnFeedback() throws IOException	{
-		String[] parsedInput = {"1", "go school", "that means NUS", "2016-02-25T12:00", null, null};
+		String[] parsedInput = {"2", "go school", "that means NUS", "4 may 10am", null, null};
 		assertEquals("task is edited", "task edited in planner\n", testLogic.editTask(parsedInput));
+	}
+	
+	@Test
+	public void DeleteShouldReturnFeedback() throws IOException	{
+		String[] parsedInput1 = {"1"};
+		String[] parsedInput2 = {"some stuff", null, null, null, null};
+		testLogic.addToTaskList(parsedInput2);
+		assertEquals("task is deleted", "task deleted\n", testLogic.deleteTask(parsedInput1));
 	}
 	
 	@Test
