@@ -12,7 +12,7 @@ public class LogicTest {
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
 		String originalInput = "add finish 2103 homework by tomorrow";
-		String[] parsedInput = {"finish 2103 homework", "", "", "3 december 2017 12am", ""};
+		String[] parsedInput = {"finish 2103 homework", null, null, "3 december 2017 12am", null};
 		assertEquals("task is added to file", "task added to planner\n", testLogic.testAddToTaskList(parsedInput));
 	}
 	
