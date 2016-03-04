@@ -81,34 +81,6 @@ class Task {
 
 }
 
-class ListOfMonths {
-	private HashMap<String, String> listOfMonths;
-
-	public ListOfMonths() {
-		listOfMonths = new HashMap<String, String>();
-		listOfMonths.put("january", "01");
-		listOfMonths.put("february", "02");
-		listOfMonths.put("march", "03");
-		listOfMonths.put("april", "04");
-		listOfMonths.put("may", "05");
-		listOfMonths.put("june", "06");
-		listOfMonths.put("july", "07");
-		listOfMonths.put("august", "08");
-		listOfMonths.put("september", "09");
-		listOfMonths.put("october", "10");
-		listOfMonths.put("november", "11");
-		listOfMonths.put("december", "12");
-	}
-
-	public boolean contain(String month) {
-		return listOfMonths.containsKey(month.toLowerCase());
-	}
-
-	public String monthDigit(String month) {
-		return listOfMonths.get(month.toLowerCase());
-	}
-}
-
 public class Logic {
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
@@ -136,12 +108,12 @@ public class Logic {
 	private ArrayList<Task> temporaryHistory;
 	private ArrayList<Task> wholeDay;
 	private ArrayList<Task> toDo;
-	private ArrayList<Task> agenda;
+	private ArrayList<Task> events;
 	private ArrayList<Task> currentListOfTasksInFile;
 	private Formatter data = new Formatter();
 	private int editMode;
 	Parser parser = new Parser();
-	Storage store = new Storage();
+	StorageStub store = new StorageStub();
 	Formatter formatter = new Formatter();
 
 	public Logic() {
@@ -149,11 +121,9 @@ public class Logic {
 		data.listOfMonths = new ListOfMonths();
 		editMode = 0;
 		try {
-			/*
-			 * agenda = store.getAgendaEvents(); 
-			 * wholeDay = store.getWholeDay();
-			 * toDo = store.getTodoEvents();
-			 */
+			wholeDay = new ArrayList<Task>();
+			toDo = new ArrayList<Task>();
+			events = new ArrayList<Task>();
 			currentListOfTasksInFile = store.getEvents();
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
@@ -230,19 +200,19 @@ public class Logic {
 		else if (newTask.getFromTime().equals("00:00") && newTask.getToTime().equals("23:59")) {
 			wholeDay.add(newTask);
 		} else {
-			agenda.add(newTask);
+			events.add(newTask);
 		}
 		allTasksArray.add(toDo);
 		allTasksArray.add(wholeDay);
-		allTasksArray.add(agenda);
-		store.isSaved(toDo);
+		allTasksArray.add(events);
+		store.Saved(allTasksArray);
 	}
 
 	/**
 	 * edit a task Condition: can only edit with line number
 	 */
 
-	public String editTask(String[] parsedInput) throws IOException {
+	private String editTask(String[] parsedInput) throws IOException {
 		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
 		if (currentListOfTasksInFile.get(taskNumber) != null) {
 			for (int i = 0; i < parsedInput.length; i++) {
@@ -273,7 +243,6 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	
 	/**
 	 * returns total number of word matches compared to an event
 	 * 
@@ -318,7 +287,7 @@ public class Logic {
 	 * gets a list of help commands for user to refer to
 	 *
 	 */
-	public String helpCommand(String[] parsedInput) {
+	private String helpCommand(String[] parsedInput) {
 		String listOfCommands = new String();
 		listOfCommands += ADD_HELP_HEADER;
 		listOfCommands += ADD_COMMAND_BY;
@@ -395,8 +364,8 @@ public class Logic {
 		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
 		return (isTitleSearched || isDescSearched || isCategorySearched);
 	}
-	
-	public String testAddToTaskList(String[] parsedInput) throws IOException	{
+
+	public String testAddToTaskList(String[] parsedInput) throws IOException {
 		return addToTaskList(parsedInput);
 	}
 }
