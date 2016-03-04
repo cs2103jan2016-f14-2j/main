@@ -5,13 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 
-class Event {
+class Task {
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
@@ -19,7 +20,7 @@ class Event {
 	private String category;
 
 	// Constructors
-	public Event(String aTitle) {
+	public Task(String aTitle) {
 		this.title = aTitle;
 		this.description = new String("");
 		this.category = new String("");
@@ -87,6 +88,34 @@ class Event {
 
 }
 
+class ListOfMonths {
+	private HashMap<String, String> listOfMonths;
+
+	public ListOfMonths() {
+		listOfMonths = new HashMap<String, String>();
+		listOfMonths.put("january", "01");
+		listOfMonths.put("february", "02");
+		listOfMonths.put("march", "03");
+		listOfMonths.put("april", "04");
+		listOfMonths.put("may", "05");
+		listOfMonths.put("june", "06");
+		listOfMonths.put("july", "07");
+		listOfMonths.put("august", "08");
+		listOfMonths.put("september", "09");
+		listOfMonths.put("october", "10");
+		listOfMonths.put("november", "11");
+		listOfMonths.put("december", "12");
+	}
+
+	public boolean contain(String month) {
+		return listOfMonths.containsKey(month.toLowerCase());
+	}
+
+	public String monthDigit(String month) {
+		return listOfMonths.get(month.toLowerCase());
+	}
+}
+
 public class Logic {
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
@@ -102,23 +131,34 @@ public class Logic {
 	private String DISPLAY_COMMAND = "type \"display\"";
 	private String DELETE_COMMAND = "type \"delete\" <event name>";
 
-	private String ADDED_FEEDBACK = "task added to planner\n";
-	private String EDITED_FEEDBACK = "task edited in planner\n";
+	private String ADDED_FEEDBACK = "task added to planner";
+	private String EDITED_FEEDBACK = "task edited in planner";
 	private String SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
-	private String SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner\n";
+	private String SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 
-	private String ERROR_EDIT_FEEDBACK = "task not found\n";
-	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
-	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
+	private String ERROR_EDIT_FEEDBACK = "task not found";
+	private String ERROR_ADDED_FEEDBACK = "could not add to task list";
+	private String ERROR_FILE_NOT_FOUND = "could not find file";
+	private String ERROR_DELETED_FEEDBACK = "could not find deleted file";
 
-	private ArrayList<Event> temporaryHistory;
-	private ArrayList<Event> currentListOfTasksInFile;
+	private ArrayList<Task> temporaryHistory;
+	private ArrayList<Task> wholeDay;
+	private ArrayList<Task> toDo;
+	private ArrayList<Task> agenda;
+	private ArrayList<Task> currentListOfTasksInFile;
+	private ListOfMonths listOfMonths;
+	private int editMode;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	public Logic() {
-		temporaryHistory = new ArrayList<Event>();
+		temporaryHistory = new ArrayList<Task>();
+		listOfMonths = new ListOfMonths();
+		editMode = 0;
 		try {
+			/*agenda = store.getAgendaEvents();
+			wholeDay = store.getWholeDay();
+			toDo = store.getTodoEvents();*/
 			currentListOfTasksInFile = store.getEvents();
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
@@ -132,28 +172,34 @@ public class Logic {
 	public String execute(String inputString) throws IOException {
 		String feedback = new String("");
 		InputStruct parsedInput = parser.parseInput(inputString);
-		switch (parsedInput.commandString) {
+		switch (parsedInput.getCommand()) {
 		case "delete":
+			feedback += deleteTask(parsedInput.getVariableArray());
 			break;
 		case "add":
-			feedback += addToTaskList(parsedInput.variableArray, inputString);
+			feedback += addToTaskList(parsedInput.getVariableArray());
 			break;
 		case "edit":
-			feedback += editTask(parsedInput.variableArray);
+			feedback += editTask(parsedInput.getVariableArray());
 			break;
 		case "search":
-			ArrayList<String> searchResults = searchWord(parsedInput.variableArray);
+			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray());
 			feedback += "";
 			break;
 		}
 		return feedback;
 	}
 
+	private String deleteTask(String[] variableArray) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	// adds task into the Event object
-	public String addToTaskList(String[] parsedInput, String originalInput) throws IOException {
-		Event newTask = new Event(parsedInput[0]);
+	public String addToTaskList(String[] parsedInput) throws IOException {
+		Task newTask = new Task(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
-			if (parsedInput[i] != "") {
+			if (parsedInput[i] != null) {
 				switch (i) {
 				case 1:
 					newTask.setDescription(parsedInput[i]);
@@ -172,12 +218,29 @@ public class Logic {
 				}
 			}
 		}
+
+		allocateCorrectTime(newTask);
 		temporaryHistory.add(newTask);
-		currentListOfTasksInFile.add(newTask);
-		if (store.isSaved(currentListOfTasksInFile)) {
-			return ADDED_FEEDBACK;
+
+		return ADDED_FEEDBACK;
+	}
+
+	private void allocateCorrectTime(Task newTask) throws IOException {
+		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
+		// check if null
+		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
+			toDo.add(newTask);
 		}
-		return ERROR_ADDED_FEEDBACK;
+		// check if whole day task
+		else if (newTask.getFromTime().equals("00:00") && newTask.getToTime().equals("23:59")) {
+			wholeDay.add(newTask);
+		} else {
+			agenda.add(newTask);
+		}
+		allTasksArray.add(toDo);
+		allTasksArray.add(wholeDay);
+		allTasksArray.add(agenda);
+		store.isSaved(toDo);
 	}
 
 	/**
@@ -226,11 +289,9 @@ public class Logic {
 		for (String dateTime : dividedDates) {
 			formattedDateTime += checkDay(dateTime);
 		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkTime(dateTime);
-		}
-		return formattedDateTime;
+		return ERROR_DELETED_FEEDBACK;
 	}
+
 
 	private String checkYear(String dateTime) {
 		String formattedYear = new String("");
@@ -307,7 +368,7 @@ public class Logic {
 	 * returns total number of word matches compared to an event
 	 * 
 	 */
-	private int matchingWordCount(String[] parsedInput, Event task) {
+	private int matchingWordCount(String[] parsedInput, Task task) {
 		int count = 0;
 		for (int i = 0; i < parsedInput.length; i++) {
 			switch (i) {
@@ -390,7 +451,7 @@ public class Logic {
 		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
 		int eventListSize = currentListOfTasksInFile.size();
 		for(int i = 0; i < eventListSize; i++){
-			Event currentEvent = currentListOfTasksInFile.get(i);
+			Task currentEvent = currentListOfTasksInFile.get(i);
 			if(isContainKeyword(currentEvent, wordToBeSearched)){
 				indexesOfWordInstanceFound.add(String.valueOf(i));
 			}
@@ -417,7 +478,7 @@ public class Logic {
 	    return false;
 	}
 	
-	private boolean isContainKeyword(Event event, String keyword){
+	private boolean isContainKeyword(Task event, String keyword){
 		boolean isTitleSearched = isContainSubstring(event.getTitle(), keyword);
 		boolean isDescSearched = isContainSubstring(event.getDescription(), keyword);
 		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);

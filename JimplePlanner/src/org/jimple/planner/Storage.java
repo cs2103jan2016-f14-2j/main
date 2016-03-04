@@ -55,7 +55,7 @@ public class Storage {
 		BufferedWriter writer = new BufferedWriter(outputStreamWriter);
 		return writer;
 	}
-	
+
 	//This method extracts all relevant fields from an Task and stores them as a String, each String line is an Task
 	private String extractTaskToString(Task task){
 		String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
@@ -85,7 +85,7 @@ public class Storage {
 	private boolean isCategoryExist(Task task){
 		return !(task.getCategory().length()==0);
 	}
-	
+
 	private boolean isFromTimeExist(Task task){
 		return !(task.getFromTime().length()==0);
 	}
