@@ -130,7 +130,6 @@ public class Logic {
 	private String SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 
 	private String ERROR_EDIT_FEEDBACK = "task not found";
-	private String ERROR_ADDED_FEEDBACK = "could not add to task list";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_DELETED_FEEDBACK = "could not find deleted file";
 
@@ -139,18 +138,20 @@ public class Logic {
 	private ArrayList<Task> toDo;
 	private ArrayList<Task> agenda;
 	private ArrayList<Task> currentListOfTasksInFile;
-	private ListOfMonths listOfMonths;
+	private Formatter data = new Formatter();
 	private int editMode;
 	Parser parser = new Parser();
 	Storage store = new Storage();
+	Formatter formatter = new Formatter();
 
 	public Logic() {
 		temporaryHistory = new ArrayList<Task>();
-		listOfMonths = new ListOfMonths();
+		data.listOfMonths = new ListOfMonths();
 		editMode = 0;
 		try {
 			/*
-			 * agenda = store.getAgendaEvents(); wholeDay = store.getWholeDay();
+			 * agenda = store.getAgendaEvents(); 
+			 * wholeDay = store.getWholeDay();
 			 * toDo = store.getTodoEvents();
 			 */
 			currentListOfTasksInFile = store.getEvents();
@@ -190,7 +191,7 @@ public class Logic {
 	}
 
 	// adds task into the Event object
-	public String addToTaskList(String[] parsedInput) throws IOException {
+	private String addToTaskList(String[] parsedInput) throws IOException {
 		Task newTask = new Task(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
 			if (parsedInput[i] != null) {
@@ -199,11 +200,11 @@ public class Logic {
 					newTask.setDescription(parsedInput[i]);
 					break;
 				case 2:
-					String formattedFromDate = formatDateTime(parsedInput[i]);
+					String formattedFromDate = formatter.formatDateTime(parsedInput[i]);
 					newTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
-					String formattedToDate = formatDateTime(parsedInput[i]);
+					String formattedToDate = formatter.formatDateTime(parsedInput[i]);
 					newTask.setToDate(formattedToDate);
 					break;
 				case 4:
@@ -253,11 +254,11 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					String formattedFromDate = formatDateTime(parsedInput[i]);
+					String formattedFromDate = formatter.formatDateTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setFromDate(formattedFromDate);
 					break;
 				case 4:
-					String formattedToDate = formatDateTime(parsedInput[i]);
+					String formattedToDate = formatter.formatDateTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setToDate(formattedToDate);
 					break;
 				case 5:
@@ -272,166 +273,7 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private String formatDateTime(String unformattedDate) {
-		if (unformattedDate != null) {
-			String[] dividedDates = unformattedDate.split(" ");
-			String formattedDateTime = Integer.toString(LocalDateTime.now().getYear());
-			for (String dateTime : dividedDates) {
-				if (checkYear(dateTime) != null) {
-					formattedDateTime = checkYear(dateTime);
-					break;
-				}
-			}
-			for (String dateTime : dividedDates) {
-				if (!checkMonth(dateTime).equals("")) {
-					formattedDateTime += checkMonth(dateTime);
-					break;
-				}
-			}
-			for (String dateTime : dividedDates) {
-				if (!checkDay(dateTime).equals("")) {
-					formattedDateTime += checkDay(dateTime);
-					break;
-				}
-			}
-			for (String dateTime : dividedDates) {
-				if (!checkTime(dateTime).equals("")) {
-					formattedDateTime += checkTime(dateTime);
-					break;
-				}
-			}
-			return formattedDateTime;
-		}
-		return unformattedDate;
-	}
-
-	private String checkYear(String dateTime) {
-		if (isYear(dateTime)) {
-			return dateTime;
-		} else if (dateTime.equals("today")) {
-			return Integer.toString(LocalDateTime.now().getYear());
-		}
-		return null;
-	}
-
-	private boolean isYear(String dateTime) {
-		try {
-			if (Integer.parseInt(dateTime) - 1000 > 0) {
-				return true;
-			}
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		return false;
-	}
-
-	private String checkMonth(String dateTime) {
-		String formattedMonth = new String("");
-		if (listOfMonths.contain(dateTime)) {
-			formattedMonth += "-";
-			formattedMonth += listOfMonths.monthDigit(dateTime);
-			formattedMonth += "-";
-		} else if (dateTime.equals("today")) {
-			formattedMonth += "-";
-			if (lessThanTen(LocalDateTime.now().getMonthValue())) {
-				formattedMonth += "0";
-			}
-			formattedMonth += Integer.toString(LocalDateTime.now().getMonthValue());
-			formattedMonth += "-";
-		}
-		return formattedMonth;
-	}
-
-	private String checkDay(String dateTime) {
-		String formattedDay = new String("");
-		if (isDay(dateTime)) {
-			if (lessThanTen(Integer.parseInt(dateTime))) {
-				formattedDay += "0";
-			}
-			formattedDay += dateTime;
-			formattedDay += "T";
-		} else if (dateTime.equals("today")) {
-			if (lessThanTen(LocalDateTime.now().getDayOfMonth())) {
-				formattedDay += "0";
-			}
-			formattedDay += Integer.toString(LocalDateTime.now().getDayOfMonth());
-			formattedDay += "T";
-		}
-		return formattedDay;
-	}
-
-	private boolean lessThanTen(int dateTime) {
-		if (dateTime < 10) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isDay(String dateTime) {
-		try {
-			if (Integer.parseInt(dateTime) - 1000 < 0) {
-				return true;
-			}
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		return false;
-	}
-
-	private String checkTime(String dateTime) {
-		String formattedHoursMinutes = new String("");
-		if (dateTime.contains("am")) {
-			dateTime = dateTime.substring(0, dateTime.length() - 2);
-			String[] time = dateTime.split("\\.");
-			formattedHoursMinutes += formatHourAM(time);
-			formattedHoursMinutes += ":";
-			formattedHoursMinutes += formatMinutes(time);
-		} else if (dateTime.contains("pm")) {
-			dateTime = dateTime.substring(0, dateTime.length() - 2);
-			String[] time = dateTime.split("\\.");
-			formattedHoursMinutes += formatHourPM(time);
-			formattedHoursMinutes += ":";
-			formattedHoursMinutes += formatMinutes(time);
-		}
-		return formattedHoursMinutes;
-	}
-
-	private String formatHourPM(String[] time) {
-		String formattedHour = new String("");
-		if (time[0].equals("12")) {
-			formattedHour = time[0];
-		} else {
-			formattedHour += Integer.parseInt(time[0]) + 12;
-		}
-		return formattedHour;
-	}
-
-	private String formatHourAM(String[] time) {
-		String formattedHour = new String("");
-		if (lessThanTen(Integer.parseInt(time[0]))) {
-			formattedHour += "0";
-		}
-		if (time[0].equals("12")) {
-			formattedHour += "00";
-		} else {
-			formattedHour += time[0];
-		}
-		return formattedHour;
-	}
-
-	private String formatMinutes(String[] time) {
-		String formattedMinutes = new String("");
-		if (time.length > 1) {
-			if (lessThanTen(Integer.parseInt(time[1]))) {
-				formattedMinutes += "0";
-			}
-			formattedMinutes += time[1];
-		} else {
-			formattedMinutes += "00";
-		}
-		return formattedMinutes;
-	}
-
+	
 	/**
 	 * returns total number of word matches compared to an event
 	 * 
@@ -553,23 +395,8 @@ public class Logic {
 		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
 		return (isTitleSearched || isDescSearched || isCategorySearched);
 	}
-
-	public String testCheckYear(String dateTime) {
-		return checkYear(dateTime);
-	}
-
-	public String testCheckMonth(String dateTime) {
-		return checkMonth(dateTime);
-	}
-
-	public String testCheckDay(String dateTime) {
-		return checkDay(dateTime);
-	}
-
-	public String testCheckTime(String dateTime) {
-		return checkTime(dateTime);
-	}
-	public String testFormatTime(String unformattedDate)	{
-		return formatDateTime(unformattedDate);
+	
+	public String testAddToTaskList(String[] parsedInput) throws IOException	{
+		return addToTaskList(parsedInput);
 	}
 }
