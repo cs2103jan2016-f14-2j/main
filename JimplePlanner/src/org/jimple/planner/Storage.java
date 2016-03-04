@@ -50,7 +50,7 @@ public class Storage {
 		return writer;
 	}
 
-	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
+	//This method extracts all relevant fields from a task and stores them as a String, each String line is an Event
 	public String extractEventToString(Task event){
 		String lineString = formatToSaveString(TAGS_TITLE + event.getTitle());
 		if(isDescriptionExist(event)){
