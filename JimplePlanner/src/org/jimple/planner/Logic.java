@@ -109,7 +109,6 @@ public class Logic {
 	private ArrayList<Task> wholeDay;
 	private ArrayList<Task> toDo;
 	private ArrayList<Task> events;
-	private ArrayList<Task> currentListOfTasksInFile;
 	private Formatter data = new Formatter();
 	private int editMode;
 	Parser parser = new Parser();
@@ -121,10 +120,9 @@ public class Logic {
 		data.listOfMonths = new ListOfMonths();
 		editMode = 0;
 		try {
-			wholeDay = new ArrayList<Task>();
-			toDo = new ArrayList<Task>();
-			events = new ArrayList<Task>();
-			currentListOfTasksInFile = store.getEvents();
+			toDo = store.getTasks().get(0);
+			wholeDay = store.getTasks().get(1);
+			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
 		}
@@ -145,7 +143,6 @@ public class Logic {
 			feedback += addToTaskList(parsedInput.getVariableArray());
 			break;
 		case "edit":
-			feedback += editTask(parsedInput.getVariableArray());
 			break;
 		case "search":
 			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray());
@@ -205,43 +202,9 @@ public class Logic {
 		allTasksArray.add(toDo);
 		allTasksArray.add(wholeDay);
 		allTasksArray.add(events);
-		store.Saved(allTasksArray);
+		store.isSaved(allTasksArray);
 	}
 
-	/**
-	 * edit a task Condition: can only edit with line number
-	 */
-
-	private String editTask(String[] parsedInput) throws IOException {
-		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
-		if (currentListOfTasksInFile.get(taskNumber) != null) {
-			for (int i = 0; i < parsedInput.length; i++) {
-				switch (i) {
-				case 1:
-					currentListOfTasksInFile.get(taskNumber).setTitle(parsedInput[i]);
-					break;
-				case 2:
-					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
-					break;
-				case 3:
-					String formattedFromDate = formatter.formatDateTime(parsedInput[i]);
-					currentListOfTasksInFile.get(taskNumber).setFromDate(formattedFromDate);
-					break;
-				case 4:
-					String formattedToDate = formatter.formatDateTime(parsedInput[i]);
-					currentListOfTasksInFile.get(taskNumber).setToDate(formattedToDate);
-					break;
-				case 5:
-					currentListOfTasksInFile.get(taskNumber).setCategory(parsedInput[i]);
-					break;
-				}
-			}
-			if (store.isSaved(currentListOfTasksInFile)) {
-				return EDITED_FEEDBACK;
-			}
-		}
-		return ERROR_EDIT_FEEDBACK;
-	}
 
 	/**
 	 * returns total number of word matches compared to an event
@@ -311,27 +274,27 @@ public class Logic {
 	public ArrayList<String> searchWord(String[] variableArray) {
 		String wordToBeSearched = variableArray[0];
 		ArrayList<String> searchWordResults;
-		if (currentListOfTasksInFile.isEmpty()) {
+		if (toDo.isEmpty() && wholeDay.isEmpty() && events.isEmpty()) {
 			searchWordResults = new ArrayList<String>();
 			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
 		} else {
-			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
+			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, toDo);
 			if (searchWordResults.isEmpty()) {
 				searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
 			} else {
 				String searchResultFeedback = "search result for \"" + wordToBeSearched + "\"";
-				searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
+				searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, toDo);
 				searchWordResults.add(0, searchResultFeedback);
 			}
 		}
 		return searchWordResults;
 	}
 
-	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched) {
+	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched, ArrayList<Task> list) {
 		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
-		int eventListSize = currentListOfTasksInFile.size();
+		int eventListSize = list.size();
 		for (int i = 0; i < eventListSize; i++) {
-			Task currentEvent = currentListOfTasksInFile.get(i);
+			Task currentEvent = list.get(i);
 			if (isContainKeyword(currentEvent, wordToBeSearched)) {
 				indexesOfWordInstanceFound.add(String.valueOf(i));
 			}
