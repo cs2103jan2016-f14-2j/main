@@ -215,4 +215,8 @@ public class Storage {
 		String removedTag = field.replace(TAGS_TO_TIME, EMPTY_STRING);
 		return removedTag;
 	}
+
+	public boolean Saved(ArrayList<ArrayList<Task>> tasks) {
+		return true;
+	}
 }
