@@ -1,5 +1,7 @@
 package org.jimple.planner;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -102,6 +104,8 @@ public class Logic {
 
 	private String ADDED_FEEDBACK = "task added to planner\n";
 	private String EDITED_FEEDBACK = "task edited in planner\n";
+	private String SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
+	private String SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner\n";
 
 	private String ERROR_EDIT_FEEDBACK = "task not found\n";
 	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
@@ -136,6 +140,10 @@ public class Logic {
 			break;
 		case "edit":
 			feedback += editTask(parsedInput.variableArray);
+			break;
+		case "search":
+			ArrayList<String> searchResults = searchWord(parsedInput.variableArray);
+			feedback += "";
 			break;
 		}
 		return feedback;
@@ -356,5 +364,63 @@ public class Logic {
 		listOfCommands += DELETE_HELP_HEADER;
 		listOfCommands += DELETE_COMMAND;
 		return listOfCommands;
+	}
+	
+	//Index 0 will always yield a feedback, indexes 1 onwards will give the Indexes of Events that has the keyword
+	public ArrayList<String> searchWord(String[] variableArray) {
+		String wordToBeSearched = variableArray[0];
+		ArrayList<String> searchWordResults;
+		if(currentListOfTasksInFile.isEmpty()){
+			searchWordResults = new ArrayList<String>();
+			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
+		} else {
+			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
+			if(searchWordResults.isEmpty()){
+				searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+			} else {
+				String searchResultFeedback = "search result for \"" + wordToBeSearched + "\"";
+				searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
+				searchWordResults.add(0, searchResultFeedback);	
+			}
+		}
+		return searchWordResults;
+	}
+	
+	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched){
+		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
+		int eventListSize = currentListOfTasksInFile.size();
+		for(int i = 0; i < eventListSize; i++){
+			Event currentEvent = currentListOfTasksInFile.get(i);
+			if(isContainKeyword(currentEvent, wordToBeSearched)){
+				indexesOfWordInstanceFound.add(String.valueOf(i));
+			}
+		}
+		return indexesOfWordInstanceFound;
+	}
+	
+	private boolean isContainSubstring(String sourceString, String substring) {
+	    int substringLength = substring.length();
+	    if (substringLength == 0){
+	        return true;
+	    }
+	    char subStringFirstLowerCaseChar = Character.toLowerCase(substring.charAt(0));
+	    char subStringFirstUpperCaseChar = Character.toUpperCase(substring.charAt(0));
+	    for (int i = sourceString.length() - substringLength; i >= 0; i--) {
+	        char sourceCharacterAt = sourceString.charAt(i);
+	        if (sourceCharacterAt != subStringFirstLowerCaseChar && sourceCharacterAt != subStringFirstUpperCaseChar){
+	            continue;
+	        }
+	        if (sourceString.regionMatches(true, i, substring, 0, substringLength)){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	private boolean isContainKeyword(Event event, String keyword){
+		boolean isTitleSearched = isContainSubstring(event.getTitle(), keyword);
+		boolean isDescSearched = isContainSubstring(event.getDescription(), keyword);
+		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
+		return (isTitleSearched || isDescSearched || isCategorySearched);
 	}
 }
