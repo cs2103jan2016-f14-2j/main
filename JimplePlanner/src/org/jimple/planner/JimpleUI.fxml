@@ -2,16 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.Controller">
    <children>
@@ -25,7 +23,7 @@
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="526.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Text fx:id="textArea" layoutX="13.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="754.13671875" />
+                                    <Pane layoutX="14.0" layoutY="80.0" prefHeight="506.0" prefWidth="780.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -69,17 +67,6 @@
                   </Tab>
               </tabs>
             </TabPane>
-            <VBox VBox.vgrow="ALWAYS">
-               <children>
-                  <HBox>
-                     <children>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Label fx:id="messagePrompt" contentDisplay="CENTER" textAlignment="CENTER" />
-                        <Region HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
             <HBox spacing="10.0">
                <children>
                   <TextField fx:id="commandBox" onAction="#enterButtonClicked" prefHeight="25.0" prefWidth="715.0" promptText="enter command here" HBox.hgrow="ALWAYS" />

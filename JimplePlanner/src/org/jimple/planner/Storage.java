@@ -51,7 +51,7 @@ public class Storage {
 	}
 
 	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
-	public String extractEventToString(Event event){
+	private String extractEventToString(Event event){
 		String lineString = formatToSaveString(TAGS_TITLE + event.getTitle());
 		if(isDescriptionExist(event)){
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());

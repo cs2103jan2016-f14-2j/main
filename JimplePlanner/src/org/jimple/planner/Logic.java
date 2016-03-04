@@ -1,14 +1,13 @@
 package org.jimple.planner;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Stack;
 import java.util.TreeMap;
 
@@ -28,19 +27,18 @@ class Event {
 		this.toDateTime = null;
 	}
 
-	public LocalDateTime getLocalFromTime() {
-		return fromDateTime;
-	}
-
-	public LocalDateTime getLocalToTime() {
-		return toDateTime;
-	}
-
 	public String getFromTime() {
 		if (fromDateTime == null) {
 			return "";
 		}
 		return fromDateTime.toString();
+	}
+
+	public void setFromDate(String dateTime) {
+		if (dateTime==null) {
+		} else {
+			this.fromDateTime = LocalDateTime.parse(dateTime);
+		}
 	}
 
 	public String getToTime() {
@@ -50,17 +48,8 @@ class Event {
 		return toDateTime.toString();
 	}
 
-	public void setFromDate(String dateTime) {
-		if (dateTime == null) {
-			fromDateTime = null;
-		} else {
-			this.fromDateTime = LocalDateTime.parse(dateTime);
-		}
-	}
-
 	public void setToDate(String dateTime) {
-		if (dateTime == null) {
-			fromDateTime = null;
+		if (dateTime==null) {
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
@@ -71,106 +60,31 @@ class Event {
 	}
 
 	public void setTitle(String title) {
-		if (title == null) {
-		} else {
-			this.title = title;
-		}
+		this.title = title;
 	}
 
 	public String getDescription() {
-		if (description == null) {
+		if (description == null)	{
 			return "";
 		}
 		return description;
 	}
 
 	public void setDescription(String description) {
-		if (description == null) {
-		} else {
-			this.description = description;
-		}
+		this.description = description;
 	}
 
 	public String getCategory() {
-		if (category == null) {
+		if (category == null)	{
 			return "";
 		}
 		return category;
 	}
 
 	public void setCategory(String category) {
-		if (category == null) {
-		} else {
-			this.category = category;
-		}
+		this.category = category;
 	}
 
-}
-
-class ListOfMonths	{
-	private HashMap<String, String> listOfMonths;
-	
-	public ListOfMonths()	{
-		listOfMonths = new HashMap<String , String>();
-		listOfMonths.put("january", "01");
-		listOfMonths.put("february", "02");
-		listOfMonths.put("march", "03");
-		listOfMonths.put("april", "04");
-		listOfMonths.put("may", "05");
-		listOfMonths.put("june", "06");
-		listOfMonths.put("july", "07");
-		listOfMonths.put("august", "08");
-		listOfMonths.put("september", "09");
-		listOfMonths.put("october", "10");
-		listOfMonths.put("november", "11");
-		listOfMonths.put("december", "12");
-	}
-	
-	public boolean contain(String month)	{
-		return listOfMonths.containsKey(month.toLowerCase());
-	}
-	
-	public String monthDigit(String month)	{
-		return listOfMonths.get(month.toLowerCase());
-	}
-}
-
-class timeComparator implements Comparator<Event> {
-	public int compare(Event i, Event j) {
-		if (i.getLocalFromTime() != null && j.getLocalFromTime() != null) {
-			if (i.getLocalFromTime().compareTo(j.getLocalFromTime()) < 0) {
-				return 1;
-			} else if (i.getLocalFromTime().compareTo(j.getLocalFromTime()) > 0) {
-				return -1;
-			}
-			return 0;
-		}
-		else if (i.getLocalToTime() != null && j.getLocalToTime() != null)	{
-			if (i.getLocalToTime().compareTo(j.getLocalToTime()) < 0) {
-				return 1;
-			} else if (i.getLocalToTime().compareTo(j.getLocalToTime()) > 0) {
-				return -1;
-			}
-			return 0;
-		}
-		else if (i.getLocalToTime() != null){
-			if (i.getLocalToTime().compareTo(j.getLocalFromTime()) < 0) {
-				return 1;
-			} else if (i.getLocalToTime().compareTo(j.getLocalFromTime()) > 0) {
-				return -1;
-			}
-			return 0;
-		}
-		else if (i.getLocalFromTime() != null){
-			if (i.getLocalFromTime().compareTo(j.getLocalToTime()) < 0) {
-				return 1;
-			} else if (i.getLocalFromTime().compareTo(j.getLocalToTime()) > 0) {
-				return -1;
-			}
-			return 0;
-		}
-		return -2;
-	}
 }
 
 public class Logic {
@@ -188,25 +102,22 @@ public class Logic {
 	private String DISPLAY_COMMAND = "type \"display\"";
 	private String DELETE_COMMAND = "type \"delete\" <event name>";
 
-	private String ADDED_FEEDBACK = "task added to planner";
-	private String EDITED_FEEDBACK = "task edited in planner";
-	private String DELETED_FEEDBACK = "task deleted";
+	private String ADDED_FEEDBACK = "task added to planner\n";
+	private String EDITED_FEEDBACK = "task edited in planner\n";
+	private String SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
+	private String SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner\n";
 
-	private String ERROR_EDIT_FEEDBACK = "task not found";
-	private String ERROR_ADDED_FEEDBACK = "could not add to task list";
-	private String ERROR_FILE_NOT_FOUND = "could not find file";
-	private String ERROR_DELETED_FEEDBACK = "task not found";
+	private String ERROR_EDIT_FEEDBACK = "task not found\n";
+	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
+	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
 
 	private ArrayList<Event> temporaryHistory;
 	private ArrayList<Event> currentListOfTasksInFile;
-	private ListOfMonths listOfMonths;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	public Logic() {
 		temporaryHistory = new ArrayList<Event>();
-		listOfMonths = new ListOfMonths();
-		
 		try {
 			currentListOfTasksInFile = store.getEvents();
 		} catch (IOException e) {
@@ -223,20 +134,23 @@ public class Logic {
 		InputStruct parsedInput = parser.parseInput(inputString);
 		switch (parsedInput.commandString) {
 		case "delete":
-			feedback += deleteTask(parsedInput.variableArray);
 			break;
 		case "add":
-			feedback += addToTaskList(parsedInput.variableArray);
+			feedback += addToTaskList(parsedInput.variableArray, inputString);
 			break;
 		case "edit":
 			feedback += editTask(parsedInput.variableArray);
+			break;
+		case "search":
+			ArrayList<String> searchResults = searchWord(parsedInput.variableArray);
+			feedback += "";
 			break;
 		}
 		return feedback;
 	}
 
 	// adds task into the Event object
-	public String addToTaskList(String[] parsedInput) throws IOException {
+	public String addToTaskList(String[] parsedInput, String originalInput) throws IOException {
 		Event newTask = new Event(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
 			if (parsedInput[i] != "") {
@@ -245,12 +159,10 @@ public class Logic {
 					newTask.setDescription(parsedInput[i]);
 					break;
 				case 2:
-					String formattedFromDate = formatTime(parsedInput[i]);
-					newTask.setFromDate(formattedFromDate);
+					newTask.setFromDate(parsedInput[i]);
 					break;
 				case 3:
-					String formattedToDate = formatTime(parsedInput[i]);
-					newTask.setToDate(formattedToDate);
+					newTask.setToDate(parsedInput[i]);
 					break;
 				case 4:
 					newTask.setCategory(parsedInput[i]);
@@ -275,7 +187,7 @@ public class Logic {
 	public String editTask(String[] parsedInput) throws IOException {
 		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
 		if (currentListOfTasksInFile.get(taskNumber) != null) {
-			for (int i = 1; i < parsedInput.length; i++) {
+			for (int i = 0; i < parsedInput.length; i++) {
 				switch (i) {
 				case 1:
 					currentListOfTasksInFile.get(taskNumber).setTitle(parsedInput[i]);
@@ -284,12 +196,11 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					String formattedFromDate = formatTime(parsedInput[i]);
-					currentListOfTasksInFile.get(taskNumber).setFromDate(formattedFromDate);
+					String formattedDate = formatDate(parsedInput[i]);
+					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
 					break;
 				case 4:
-					String formattedToDate = formatTime(parsedInput[i]);
-					currentListOfTasksInFile.get(taskNumber).setToDate(formattedToDate);
+					currentListOfTasksInFile.get(taskNumber).setToDate(parsedInput[i]);
 					break;
 				case 5:
 					currentListOfTasksInFile.get(taskNumber).setCategory(parsedInput[i]);
@@ -303,172 +214,93 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	public String deleteTask(String[] line) throws IOException {
-		if (Integer.parseInt(line[0]) <= currentListOfTasksInFile.size()) {
-			for (int i = 0; i < currentListOfTasksInFile.size(); i++) {
-				if (i == Integer.parseInt(line[0]) - 1) {
-					currentListOfTasksInFile.remove(i);
-				}
-			}
-			store.isSaved(currentListOfTasksInFile);
-			return DELETED_FEEDBACK;
+	private String formatDate(String unformattedDate) {
+		String[] dividedDates = unformattedDate.split(" ");
+		String formattedDateTime = new String("");
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkYear(dateTime);
 		}
-		return ERROR_DELETED_FEEDBACK;
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkMonth(dateTime);
+		}
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkDay(dateTime);
+		}
+		for (String dateTime : dividedDates) {
+			formattedDateTime += checkTime(dateTime);
+		}
+		return formattedDateTime;
 	}
 
-	public Queue<Event> display(String type) {
-		Queue<Event> events = new LinkedList<Event>();
-		if (type.equals("agenda")) {
-			
-		} else if (type.equals("todo")) {
+	private String checkYear(String dateTime) {
+		String formattedYear = new String("");
+		if (dateTime.equals(" ")) {
 
+		} 
+		else if (dateTime.equals("today"))	{
+			formattedYear += LocalDateTime.now().getYear();
+			formattedYear += "-";
+			formattedYear += LocalDateTime.now().getMonthValue();
+			formattedYear += "-";
+			formattedYear += LocalDateTime.now().getDayOfMonth();
 		}
-
-		return events;
+		else {
+			formattedYear = Integer.toString(LocalDateTime.now().getYear());
+		}
+		return formattedYear;
 	}
 
-	public String formatTime(String unformattedDate) {
-		if (unformattedDate != null) {
-			String[] dividedDates = unformattedDate.split(" ");
-			String formattedDateTime = Integer.toString(LocalDateTime.now().getYear());
-			for (String dateTime : dividedDates) {
-				if (checkYear(dateTime) != null) {
-					formattedDateTime = checkYear(dateTime);
-					break;
-				}
-			}
-			for (String dateTime : dividedDates) {
-				if (!checkMonth(dateTime).equals("")) {
-					formattedDateTime += checkMonth(dateTime);
-					break;
-				}
-			}
-			for (String dateTime : dividedDates) {
-				if (!checkDay(dateTime).equals("")) {
-					formattedDateTime += checkDay(dateTime);
-					break;
-				}
-			}
-			for (String dateTime : dividedDates) {
-				if (!checkTime(dateTime).equals("")) {
-					formattedDateTime += checkTime(dateTime);
-					break;
-				}
-			}
-			return formattedDateTime;
-		}
-		return unformattedDate;
-	}
-
-	public String checkYear(String dateTime) {
-		if (isYearInteger(dateTime)) {
-			return dateTime;
-		} else if (dateTime.equals("today")) {
-			return Integer.toString(LocalDateTime.now().getYear());
-		}
-		return null;
-	}
-
-	private boolean isYearInteger(String dateTime) {
-		boolean isInt = true;
-		try {
-			int unknownInt = Integer.parseInt(dateTime);
-			if ((unknownInt - 1000) < 0) {
-				isInt = false;
-			}
-		} catch (NumberFormatException e) {
-			isInt = false;
-		}
-		return isInt;
-	}
-
-	public String checkMonth(String dateTime) {
+	private String checkMonth(String dateTime) {
 		String formattedDate = new String("");
-		if (listOfMonths.contain(dateTime.toLowerCase())) {
-			formattedDate += "-";
-			formattedDate += listOfMonths.monthDigit(dateTime.toLowerCase());
-			formattedDate += "-";
-		} else if (dateTime.equals("today")) {
-			formattedDate += "-";
-			if (LocalDateTime.now().getMonthValue() < 10) {
-				formattedDate += "0";
-			}
-			formattedDate += LocalDateTime.now().getMonthValue();
-			formattedDate += "-";
+		switch (dateTime) {
+		case "january":
+			formattedDate = "1";
+			break;
+		case "february":
+			formattedDate = "2";
+			break;
+		case "march":
+			formattedDate = "3";
+			break;
+		case "april":
+			formattedDate = "4";
+			break;
+		case "may":
+			formattedDate = "5";
+			break;
+		case "june":
+			formattedDate = "6";
+			break;
+		case "july":
+			formattedDate = "7";
+			break;
+		case "august":
+			formattedDate = "8";
+			break;
+		case "september":
+			formattedDate = "9";
+			break;
+		case "october":
+			formattedDate = "10";
+			break;
+		case "november":
+			formattedDate = "11";
+			break;
+		case "december":
+			formattedDate = "12";
+			break;
+		default:
+			break;
 		}
 		return formattedDate;
 	}
 
-	public String checkDay(String dateTime) {
-		String formattedDay = new String("");
-		if (isDayInteger(dateTime)) {
-			if (Integer.parseInt(dateTime) < 10) {
-				formattedDay += "0";
-			}
-			formattedDay += dateTime;
-			formattedDay += "T";
-		} else if (dateTime.equals("today")) {
-			if (LocalDateTime.now().getDayOfMonth() < 10) {
-				formattedDay += "0";
-			}
-			formattedDay += LocalDateTime.now().getDayOfMonth();
-			formattedDay += "T";
-		}
-		return formattedDay;
+	private String checkDay(String dateTime) {
+		return null;
 	}
 
-	private boolean isDayInteger(String dateTime) {
-		boolean isInt = true;
-		try {
-			int unknownInt = Integer.parseInt(dateTime);
-			if ((unknownInt - 1000) > 0) {
-				isInt = false;
-			}
-		} catch (NumberFormatException e) {
-			isInt = false;
-		}
-		return isInt;
-	}
-
-	public String checkTime(String dateTime) {
-		String time = new String("");
-		if (dateTime.contains("pm")) {
-			time = formatHoursMinutes(dateTime.substring(0, dateTime.length() - 2), "pm");
-
-		} else if (dateTime.contains("am")) {
-			time = formatHoursMinutes(dateTime.substring(0, dateTime.length() - 2), "am");
-		}
-
-		return time;
-	}
-
-	public String formatHoursMinutes(String hours, String timeOfDay) {
-		String[] hourMinute = hours.split("\\.");
-		String formattedHourMinute = new String("");
-		if (timeOfDay.equals("pm")) {
-			int twentyFourHourTime = Integer.parseInt(hourMinute[0]) + 12;
-			formattedHourMinute += twentyFourHourTime;
-			formattedHourMinute += ":";
-			if (hourMinute.length == 1) {
-				formattedHourMinute += "00";
-			} else {
-				formattedHourMinute += hourMinute[1];
-			}
-		} else if (timeOfDay.equals("am")) {
-			if (Integer.parseInt(hourMinute[0]) < 10) {
-				formattedHourMinute += "0";
-			} else if (Integer.parseInt(hourMinute[0]) == 12) {
-				hourMinute[0] = "00";
-			}
-			formattedHourMinute += hourMinute[0];
-			formattedHourMinute += ":";
-			if (hourMinute.length == 1) {
-				formattedHourMinute += "00";
-			} else {
-				formattedHourMinute += hourMinute[1];
-			}
-		}
-		return formattedHourMinute;
+	private String checkTime(String dateTime) {
+		return null;
 	}
 
 	/**
@@ -532,5 +364,63 @@ public class Logic {
 		listOfCommands += DELETE_HELP_HEADER;
 		listOfCommands += DELETE_COMMAND;
 		return listOfCommands;
+	}
+	
+	//Index 0 will always yield a feedback, indexes 1 onwards will give the Indexes of Events that has the keyword
+	public ArrayList<String> searchWord(String[] variableArray) {
+		String wordToBeSearched = variableArray[0];
+		ArrayList<String> searchWordResults;
+		if(currentListOfTasksInFile.isEmpty()){
+			searchWordResults = new ArrayList<String>();
+			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
+		} else {
+			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
+			if(searchWordResults.isEmpty()){
+				searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+			} else {
+				String searchResultFeedback = "search result for \"" + wordToBeSearched + "\"";
+				searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
+				searchWordResults.add(0, searchResultFeedback);	
+			}
+		}
+		return searchWordResults;
+	}
+	
+	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched){
+		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
+		int eventListSize = currentListOfTasksInFile.size();
+		for(int i = 0; i < eventListSize; i++){
+			Event currentEvent = currentListOfTasksInFile.get(i);
+			if(isContainKeyword(currentEvent, wordToBeSearched)){
+				indexesOfWordInstanceFound.add(String.valueOf(i));
+			}
+		}
+		return indexesOfWordInstanceFound;
+	}
+	
+	private boolean isContainSubstring(String sourceString, String substring) {
+	    int substringLength = substring.length();
+	    if (substringLength == 0){
+	        return true;
+	    }
+	    char subStringFirstLowerCaseChar = Character.toLowerCase(substring.charAt(0));
+	    char subStringFirstUpperCaseChar = Character.toUpperCase(substring.charAt(0));
+	    for (int i = sourceString.length() - substringLength; i >= 0; i--) {
+	        char sourceCharacterAt = sourceString.charAt(i);
+	        if (sourceCharacterAt != subStringFirstLowerCaseChar && sourceCharacterAt != subStringFirstUpperCaseChar){
+	            continue;
+	        }
+	        if (sourceString.regionMatches(true, i, substring, 0, substringLength)){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	private boolean isContainKeyword(Event event, String keyword){
+		boolean isTitleSearched = isContainSubstring(event.getTitle(), keyword);
+		boolean isDescSearched = isContainSubstring(event.getDescription(), keyword);
+		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
+		return (isTitleSearched || isDescSearched || isCategorySearched);
 	}
 }
