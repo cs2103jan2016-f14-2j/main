@@ -6,6 +6,7 @@ public class Formatter {
 	public ListOfMonths listOfMonths;
 
 	public Formatter() {
+		listOfMonths = new ListOfMonths();
 	}
 
 	public String formatDateTime(String unformattedDate) {
