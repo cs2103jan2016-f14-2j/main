@@ -199,11 +199,11 @@ public class Logic {
 					newTask.setDescription(parsedInput[i]);
 					break;
 				case 2:
-					String formattedFromDate = formatDate(parsedInput[i]);
+					String formattedFromDate = formatDateTime(parsedInput[i]);
 					newTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
-					String formattedToDate = formatDate(parsedInput[i]);
+					String formattedToDate = formatDateTime(parsedInput[i]);
 					newTask.setToDate(formattedToDate);
 					break;
 				case 4:
@@ -214,10 +214,8 @@ public class Logic {
 				}
 			}
 		}
-
 		allocateCorrectTime(newTask);
 		temporaryHistory.add(newTask);
-
 		return ADDED_FEEDBACK;
 	}
 
@@ -255,11 +253,11 @@ public class Logic {
 					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
 					break;
 				case 3:
-					String formattedFromDate = formatDate(parsedInput[i]);
+					String formattedFromDate = formatDateTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setFromDate(formattedFromDate);
 					break;
 				case 4:
-					String formattedToDate = formatDate(parsedInput[i]);
+					String formattedToDate = formatDateTime(parsedInput[i]);
 					currentListOfTasksInFile.get(taskNumber).setToDate(formattedToDate);
 					break;
 				case 5:
@@ -274,34 +272,37 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private String formatDate(String unformattedDate) {
-		String[] dividedDates = unformattedDate.split(" ");
-		String formattedDateTime = Integer.toString(LocalDateTime.now().getYear());
-		for (String dateTime : dividedDates) {
-			if (checkYear(dateTime) != null) {
-				formattedDateTime = checkYear(dateTime);
-				break;
+	private String formatDateTime(String unformattedDate) {
+		if (unformattedDate != null) {
+			String[] dividedDates = unformattedDate.split(" ");
+			String formattedDateTime = Integer.toString(LocalDateTime.now().getYear());
+			for (String dateTime : dividedDates) {
+				if (checkYear(dateTime) != null) {
+					formattedDateTime = checkYear(dateTime);
+					break;
+				}
 			}
-		}
-		for (String dateTime : dividedDates) {
-			if (checkMonth(dateTime) != "") {
-				formattedDateTime += checkMonth(dateTime);
-				break;
+			for (String dateTime : dividedDates) {
+				if (!checkMonth(dateTime).equals("")) {
+					formattedDateTime += checkMonth(dateTime);
+					break;
+				}
 			}
-		}
-		for (String dateTime : dividedDates) {
-			if (checkDay(dateTime) != "") {
-				formattedDateTime += checkDay(dateTime);
-				break;
+			for (String dateTime : dividedDates) {
+				if (!checkDay(dateTime).equals("")) {
+					formattedDateTime += checkDay(dateTime);
+					break;
+				}
 			}
-		}
-		for (String dateTime : dividedDates) {
-			if (checkTime(dateTime) != "") {
-				formattedDateTime += checkTime(dateTime);
-				break;
+			for (String dateTime : dividedDates) {
+				if (!checkTime(dateTime).equals("")) {
+					formattedDateTime += checkTime(dateTime);
+					break;
+				}
 			}
+			return formattedDateTime;
 		}
-		return ERROR_DELETED_FEEDBACK;
+		return unformattedDate;
 	}
 
 	private String checkYear(String dateTime) {
@@ -567,5 +568,8 @@ public class Logic {
 
 	public String testCheckTime(String dateTime) {
 		return checkTime(dateTime);
+	}
+	public String testFormatTime(String unformattedDate)	{
+		return formatDateTime(unformattedDate);
 	}
 }

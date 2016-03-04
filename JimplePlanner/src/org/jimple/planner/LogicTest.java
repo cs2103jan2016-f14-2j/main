@@ -8,12 +8,12 @@ import org.junit.Test;
 public class LogicTest {
 	Logic testLogic = new Logic();
 	
-	/*@Test
+	@Test
 	public void AddShouldReturnFeedback() throws IOException {
 		String originalInput = "add finish 2103 homework by tomorrow";
 		String[] parsedInput = {"finish 2103 homework", "", "", "3 december 2017 12am", ""};
 		assertEquals("task is added to file", "task added to planner\n", testLogic.addToTaskList(parsedInput));
-	}*/
+	}
 	
 	/*@Test
 	public void EditShouldReturnFeedback() throws IOException	{
@@ -23,7 +23,9 @@ public class LogicTest {
 	
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
-		
+		assertEquals("return formated date", "2016-05-12T16:00", testLogic.testFormatTime("12 May 4pm"));
+		assertEquals("return formated date", "2016-03-04T14:30", testLogic.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2018-12-18T00:00", testLogic.testFormatTime("2018 12am 18 december"));
 	}
 	
 	@Test
