@@ -10,16 +10,16 @@ import org.junit.Test;
 public class StorageTest {
 	@Test
 	public void testIsSaved() throws IOException {
-		ArrayList<Event> events = new ArrayList<Event>();
+		ArrayList<Task> events = new ArrayList<Task>();
 		Storage storage = new Storage();
-		Event event1 = new Event("Makan here for chap goh mei");
+		Task event1 = new Task("Makan here for chap goh mei");
 		event1.setDescription("at cousin's place");
 		event1.setCategory("family time");
 		
-		Event event2 = new Event("Go exercise, you fatty");
+		Task event2 = new Task("Go exercise, you fatty");
 		event2.setCategory("Keep fit");
 		
-		Event event3 = new Event("Do 2100 assignment");
+		Task event3 = new Task("Do 2100 assignment");
 		event3.setDescription("due very soon");
 		event3.setCategory("Homework");
 		
@@ -32,7 +32,7 @@ public class StorageTest {
 	
 	@Test
 	public void testGetEventFromLine() throws IOException{
-		LinkedList<Event> events = new LinkedList<Event>();
+		LinkedList<Task> events = new LinkedList<Task>();
 		
 		String line1 = "/:title:Makan here for chap goh mei//:desc:at cousin's place//:cat:family time/";
 		String line2 = "/:title:Go exercise, you fatty//:cat:Keep fit/";
@@ -71,7 +71,7 @@ public class StorageTest {
 	@Test
 	public void testGetEvents() throws IOException{
 		Storage storage = new Storage();
-		ArrayList<Event> events = storage.getEvents();
+		ArrayList<Task> events = storage.getEvents();
 		if(events.size()!=0){
 			String desc1 = events.get(0).getDescription();
 			assertEquals("true if same", "at cousin's place", desc1);

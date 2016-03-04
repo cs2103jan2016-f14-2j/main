@@ -12,7 +12,7 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.TreeMap;
 
-class Event {
+class Task {
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
@@ -20,7 +20,7 @@ class Event {
 	private String category;
 
 	// Constructors
-	public Event(String aTitle) {
+	public Task(String aTitle) {
 		this.title = aTitle;
 		this.description = new String("");
 		this.category = new String("");
@@ -107,11 +107,11 @@ class Event {
 
 }
 
-class ListOfMonths	{
+class ListOfMonths {
 	private HashMap<String, String> listOfMonths;
-	
-	public ListOfMonths()	{
-		listOfMonths = new HashMap<String , String>();
+
+	public ListOfMonths() {
+		listOfMonths = new HashMap<String, String>();
 		listOfMonths.put("january", "01");
 		listOfMonths.put("february", "02");
 		listOfMonths.put("march", "03");
@@ -125,18 +125,18 @@ class ListOfMonths	{
 		listOfMonths.put("november", "11");
 		listOfMonths.put("december", "12");
 	}
-	
-	public boolean contain(String month)	{
+
+	public boolean contain(String month) {
 		return listOfMonths.containsKey(month.toLowerCase());
 	}
-	
-	public String monthDigit(String month)	{
+
+	public String monthDigit(String month) {
 		return listOfMonths.get(month.toLowerCase());
 	}
 }
 
-class timeComparator implements Comparator<Event> {
-	public int compare(Event i, Event j) {
+class timeComparator implements Comparator<Task> {
+	public int compare(Task i, Task j) {
 		if (i.getLocalFromTime() != null && j.getLocalFromTime() != null) {
 			if (i.getLocalFromTime().compareTo(j.getLocalFromTime()) < 0) {
 				return 1;
@@ -144,24 +144,21 @@ class timeComparator implements Comparator<Event> {
 				return -1;
 			}
 			return 0;
-		}
-		else if (i.getLocalToTime() != null && j.getLocalToTime() != null)	{
+		} else if (i.getLocalToTime() != null && j.getLocalToTime() != null) {
 			if (i.getLocalToTime().compareTo(j.getLocalToTime()) < 0) {
 				return 1;
 			} else if (i.getLocalToTime().compareTo(j.getLocalToTime()) > 0) {
 				return -1;
 			}
 			return 0;
-		}
-		else if (i.getLocalToTime() != null){
+		} else if (i.getLocalToTime() != null) {
 			if (i.getLocalToTime().compareTo(j.getLocalFromTime()) < 0) {
 				return 1;
 			} else if (i.getLocalToTime().compareTo(j.getLocalFromTime()) > 0) {
 				return -1;
 			}
 			return 0;
-		}
-		else if (i.getLocalFromTime() != null){
+		} else if (i.getLocalFromTime() != null) {
 			if (i.getLocalFromTime().compareTo(j.getLocalToTime()) < 0) {
 				return 1;
 			} else if (i.getLocalFromTime().compareTo(j.getLocalToTime()) > 0) {
@@ -197,18 +194,23 @@ public class Logic {
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_DELETED_FEEDBACK = "task not found";
 
-	private ArrayList<Event> temporaryHistory;
-	private ArrayList<Event> currentListOfTasksInFile;
+	private ArrayList<Task> temporaryHistory;
+	private ArrayList<Task> wholeDay;
+	private ArrayList<Task> toDo;
+	private ArrayList<Task> agenda;
 	private ListOfMonths listOfMonths;
+	private int editMode;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 
 	public Logic() {
-		temporaryHistory = new ArrayList<Event>();
+		temporaryHistory = new ArrayList<Task>();
 		listOfMonths = new ListOfMonths();
-		
+		editMode = 0;
 		try {
-			currentListOfTasksInFile = store.getEvents();
+			agenda = store.getAgendaEvents();
+			wholeDay = store.getWholeDay();
+			toDo = store.getTodoEvents();
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
 		}
@@ -221,15 +223,20 @@ public class Logic {
 	public String execute(String inputString) throws IOException {
 		String feedback = new String("");
 		InputStruct parsedInput = parser.parseInput(inputString);
-		switch (parsedInput.commandString) {
+		switch (parsedInput.getCommandString()) {
 		case "delete":
-			feedback += deleteTask(parsedInput.variableArray);
+			feedback += deleteTask(parsedInput.getVariableArray());
 			break;
 		case "add":
-			feedback += addToTaskList(parsedInput.variableArray);
+			feedback += addToTaskList(parsedInput.getVariableArray());
 			break;
 		case "edit":
-			feedback += editTask(parsedInput.variableArray);
+			feedback += editTask(parsedInput.getVariableArray());
+			break;
+		case "search":
+			String[] searchTaskResult = searchTask(parsedInput.getVariableArray());
+			feedback += searchTaskResult[0];
+
 			break;
 		}
 		return feedback;
@@ -237,9 +244,9 @@ public class Logic {
 
 	// adds task into the Event object
 	public String addToTaskList(String[] parsedInput) throws IOException {
-		Event newTask = new Event(parsedInput[0]);
+		Task newTask = new Task(parsedInput[0]);
 		for (int i = 1; i < parsedInput.length; i++) {
-			if (parsedInput[i] != "") {
+			if (parsedInput[i] != null) {
 				switch (i) {
 				case 1:
 					newTask.setDescription(parsedInput[i]);
@@ -260,12 +267,29 @@ public class Logic {
 				}
 			}
 		}
+
+		allocateCorrectTime(newTask);
 		temporaryHistory.add(newTask);
-		currentListOfTasksInFile.add(newTask);
-		if (store.isSaved(currentListOfTasksInFile)) {
-			return ADDED_FEEDBACK;
+
+		return ADDED_FEEDBACK;
+	}
+
+	private void allocateCorrectTime(Task newTask) {
+		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
+		// check if null
+		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
+			toDo.add(newTask);
 		}
-		return ERROR_ADDED_FEEDBACK;
+		// check if whole day task
+		else if (newTask.getFromTime().equals("00:00") && newTask.getToTime().equals("23:59")) {
+			wholeDay.add(newTask);
+		} else {
+			agenda.add(newTask);
+		}
+		allTasksArray.add(toDo);
+		allTasksArray.add(wholeDay);
+		allTasksArray.add(agenda);
+		store.isSaved(allTasksArray);
 	}
 
 	/**
@@ -274,7 +298,7 @@ public class Logic {
 
 	public String editTask(String[] parsedInput) throws IOException {
 		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
-		if (currentListOfTasksInFile.get(taskNumber) != null) {
+		if (.get(taskNumber) != null) {
 			for (int i = 1; i < parsedInput.length; i++) {
 				switch (i) {
 				case 1:
@@ -316,15 +340,15 @@ public class Logic {
 		return ERROR_DELETED_FEEDBACK;
 	}
 
-	public Queue<Event> display(String type) {
-		Queue<Event> events = new LinkedList<Event>();
+	public ArrayList<Task> display(String type) {
+		ArrayList<Task> 
 		if (type.equals("agenda")) {
 			
 		} else if (type.equals("todo")) {
 
 		}
 
-		return events;
+		return ;
 	}
 
 	public String formatTime(String unformattedDate) {
@@ -475,7 +499,7 @@ public class Logic {
 	 * returns total number of word matches compared to an event
 	 * 
 	 */
-	private int matchingWordCount(String[] parsedInput, Event task) {
+	private int matchingWordCount(String[] parsedInput, Task task) {
 		int count = 0;
 		for (int i = 0; i < parsedInput.length; i++) {
 			switch (i) {

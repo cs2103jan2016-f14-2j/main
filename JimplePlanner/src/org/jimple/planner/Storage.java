@@ -51,7 +51,7 @@ public class Storage {
 	}
 
 	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
-	public String extractEventToString(Event event){
+	public String extractEventToString(Task event){
 		String lineString = formatToSaveString(TAGS_TITLE + event.getTitle());
 		if(isDescriptionExist(event)){
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());
@@ -72,19 +72,19 @@ public class Storage {
 		return lineString;
 	}
 	
-	private boolean isDescriptionExist(Event event){
+	private boolean isDescriptionExist(Task event){
 		return !(event.getDescription().length()==0);
 	}
 	
-	private boolean isCategoryExist(Event event){
+	private boolean isCategoryExist(Task event){
 		return !(event.getCategory().length()==0);
 	}
 	
-	private boolean isFromTimeExist(Event event){
+	private boolean isFromTimeExist(Task event){
 		return !(event.getFromTime().length()==0);
 	}
 	
-	private boolean isToTimeExist(Event event){
+	private boolean isToTimeExist(Task event){
 		return !(event.getToTime().length()==0);
 	}
 	
@@ -93,15 +93,15 @@ public class Storage {
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	public boolean isSaved(ArrayList<Event> events) throws IOException{
+	public boolean isSaved(ArrayList<Task> events) throws IOException{
 		writeToFile(events);
 		boolean saveStatus = isSaveToFile();
 		return saveStatus;
 	}
 	
-	private void writeToFile(ArrayList<Event> events) throws IOException  {
+	private void writeToFile(ArrayList<Task> events) throws IOException  {
 		BufferedWriter tempWriter = createTempFileWriter();
-		for(Event event: events){
+		for(Task event: events){
 			String lineString = extractEventToString(event);
 			tempWriter.write(lineString);
 			tempWriter.newLine();
@@ -121,12 +121,12 @@ public class Storage {
 		}
 	}
 	
-	public ArrayList<Event> getEvents() throws IOException{
+	public ArrayList<Task> getEvents() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
-		ArrayList<Event> events = new ArrayList<Event>();
+		ArrayList<Task> events = new ArrayList<Task>();
 		String fileLineContent;
 		while ((fileLineContent = defaultFileReader.readLine()) != null) {
-			Event event = getEventFromLine(fileLineContent);
+			Task event = getEventFromLine(fileLineContent);
 			events.add(event);
 		}
 		defaultFileReader.close();
@@ -138,9 +138,9 @@ public class Storage {
 		return separatedContents;
 	}
 	
-	private Event getEventFromLine(String fileLineContent){
+	private Task getEventFromLine(String fileLineContent){
 		ArrayList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
-		Event event = new Event(EMPTY_STRING);
+		Task event = new Task(EMPTY_STRING);
 		for(String field: fileLineContentSeparated){
 			setFields(event, field);
 		}
@@ -148,11 +148,11 @@ public class Storage {
 	}
 	
 	//This method is purely for test purposes only
-	public Event testGetEventFromLine(String fileLineContent){
+	public Task testGetEventFromLine(String fileLineContent){
 		return getEventFromLine(fileLineContent);
 	}
 	
-	private void setFields(Event event, String field){
+	private void setFields(Task event, String field){
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
 			event.setTitle(titleString);
