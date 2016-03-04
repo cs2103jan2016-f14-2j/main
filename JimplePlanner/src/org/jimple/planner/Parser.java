@@ -71,13 +71,14 @@ public class Parser {
 	private InputStruct getStruct(String[] userInputStringArray, HashMap<String, Integer> inputExtendedCommandsHashMap) {
 		
 		// Creates the InputStruct to be returned.
-		InputStruct outputAddStruct = new InputStruct(getCommandString(userInputStringArray));
+		InputStruct outputStruct = new InputStruct(getCommandString(userInputStringArray));
 		
 		// currIndex is the index on the InputStruct that the strings currently being read affects.
 		int currIndex = INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT;
 		
 		// userInputString is the string currently being read. Updates while the next extended command is not found.
 		String userInputString = EMPTY_STRING;
+		String[] currVariableArray = outputStruct.getVariableArray();
 		
 		for (int i = 1; i < userInputStringArray.length; i++) {
 			
@@ -88,7 +89,7 @@ public class Parser {
 			} else {
 				
 				//When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex".
-				outputAddStruct.variableArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
+				currVariableArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
 				
 				//Updates the "currIndex" to the index related to the extended command.
 				currIndex = inputExtendedCommandsHashMap.get(currString);
@@ -97,8 +98,8 @@ public class Parser {
 				userInputString = EMPTY_STRING;
 			}
 		}
-		outputAddStruct.variableArray[currIndex] = userInputString.substring(STRING_INDEX_START, userInputString.length()-STRING_INDEX_TRIM_LAST_SPACE_SIZE);
-		return outputAddStruct;
+		currVariableArray[currIndex] = userInputString.substring(STRING_INDEX_START, userInputString.length()-STRING_INDEX_TRIM_LAST_SPACE_SIZE);
+		return outputStruct;
 	}
 	
 	public String getCommandString(String[] userInputStringArray) {
@@ -125,10 +126,18 @@ class InputStruct {
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
 	
-	public String commandString;
+	private String commandString;
 	
 	// The string array being used, according to commandString.
-	public String[] variableArray;
+	private String[] variableArray;
+	
+	public String getCommand() {
+		return commandString;
+	}
+	
+	public String[] getVariableArray() {
+		return variableArray;
+	}
 	
 	public InputStruct(String inputCommandString) {
 		commandString = inputCommandString;
