@@ -49,6 +49,10 @@ public class Logic {
 			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
+		} catch (IndexOutOfBoundsException d)	{
+			toDo = new ArrayList<Task>();
+			wholeDay = new ArrayList<Task>();
+			events = new ArrayList<Task>();
 		}
 	}
 
@@ -96,7 +100,12 @@ public class Logic {
 					break;
 				case 3:
 					String formattedToDate = formatter.formatDateTime(parsedInput[i]);
-					newTask.setToDate(formattedToDate);
+					if (isContainsValidTime(formattedToDate))	{
+						newTask.setToDate(formattedToDate);
+					} else {
+						newTask.setFromDate(formattedToDate.concat("00:00"));
+						newTask.setToDate(formattedToDate.concat("23:59"));
+					}
 					break;
 				case 4:
 					newTask.setCategory(parsedInput[i]);
@@ -106,12 +115,19 @@ public class Logic {
 				}
 			}
 		}
-		allocateCorrectTime(newTask);
+		allocateCorrectTimeArray(newTask);
 		temporaryHistory.add(newTask);
 		return ADDED_FEEDBACK;
 	}
 
-	private void allocateCorrectTime(Task newTask) throws IOException {
+	private boolean isContainsValidTime(String formattedDateTime) {
+		if (formattedDateTime.endsWith("T")) {
+			return false;
+		}
+		return true;
+	}
+
+	private void allocateCorrectTimeArray(Task newTask) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		// check if null
 		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
@@ -128,7 +144,6 @@ public class Logic {
 		allTasksArray.add(events);
 		store.isSaved(allTasksArray);
 	}
-
 
 	/**
 	 * returns total number of word matches compared to an event
