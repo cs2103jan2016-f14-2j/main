@@ -118,7 +118,7 @@ public class Logic {
 			toDo.add(newTask);
 		}
 		// check if whole day task
-		else if (newTask.getFromTime().equals("00:00") && newTask.getToTime().equals("23:59")) {
+		else if (newTask.getFromTimeString().equals("00:00") && newTask.getToTimeString().equals("23:59")) {
 			wholeDay.add(newTask);
 		} else {
 			events.add(newTask);
@@ -149,12 +149,12 @@ public class Logic {
 				}
 				break;
 			case 3:
-				if (task.getFromTime().contains(parsedInput[i])) {
+				if (task.getFromTimeString().contains(parsedInput[i])) {
 					count++;
 				}
 				break;
 			case 4:
-				if (task.getToTime().contains(parsedInput[i])) {
+				if (task.getToTimeString().contains(parsedInput[i])) {
 					count++;
 				}
 				break;

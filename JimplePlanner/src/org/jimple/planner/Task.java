@@ -2,7 +2,7 @@ package org.jimple.planner;
 
 import java.time.LocalDateTime;
 
-class Task {
+class Task implements Comparable<Task>{
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
@@ -18,13 +18,17 @@ class Task {
 		this.toDateTime = null;
 	}
 
-	public String getFromTime() {
+	public String getFromTimeString() {
 		if (fromDateTime == null) {
 			return "";
 		}
 		return fromDateTime.toString();
 	}
 
+	public LocalDateTime getFromTime(){
+		return fromDateTime;
+	}
+	
 	public void setFromDate(String dateTime) {
 		if (dateTime == null) {
 		} else {
@@ -32,13 +36,17 @@ class Task {
 		}
 	}
 
-	public String getToTime() {
+	public String getToTimeString() {
 		if (toDateTime == null) {
 			return "";
 		}
 		return toDateTime.toString();
 	}
 
+	public LocalDateTime getToTime(){
+		return toDateTime;
+	}
+	
 	public void setToDate(String dateTime) {
 		if (dateTime == null) {
 		} else {
@@ -76,4 +84,7 @@ class Task {
 		this.category = category;
 	}
 
+	public int compareTo(Task task){
+		return 0;
+	}
 }
