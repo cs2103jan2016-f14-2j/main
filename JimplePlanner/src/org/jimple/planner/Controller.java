@@ -7,19 +7,15 @@ import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -68,8 +64,9 @@ public class Controller implements Initializable {
 		String inputStr = getInputCommand();
 		if (!isEmpty(inputStr)) {
 			// System.out.println(inputStr);
-			String messageOutput = logic.execute(inputStr);
-			System.out.println(messageOutput);
+			String[] feedbackArr = logic.execute(inputStr);
+			String messageOutput = feedbackArr[0];
+			System.out.println(feedbackArr[1]);
 			messagePrompt.setText(messageOutput);
 			
 			FadeTransition ft = new FadeTransition(Duration.millis(3000), messagePrompt);
