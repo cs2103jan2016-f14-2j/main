@@ -16,11 +16,12 @@ public class ParserTest {
 	
 	private void test1() {
 		InputStruct testStruct = testParser.parseInput("add Learn Double Dream Hands from 8AM to 10AM");
-		assertEquals("Learn Double Dream Hands", testStruct.variableArray[0]);
-		assertEquals(null, testStruct.variableArray[1]);
-		assertEquals("8AM", testStruct.variableArray[2]);
-		assertEquals("10AM", testStruct.variableArray[3]);
-		assertEquals(null, testStruct.variableArray[4]);
+		String[]variableArray = testStruct.getVariableArray();
+		assertEquals("Learn Double Dream Hands", variableArray[0]);
+		assertEquals(null, variableArray[1]);
+		assertEquals("8AM", variableArray[2]);
+		assertEquals("10AM", variableArray[3]);
+		assertEquals(null, variableArray[4]);
 	}
 
 }
