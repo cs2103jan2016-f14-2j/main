@@ -35,7 +35,6 @@ public class Logic {
 	Parser parser = new Parser();
 	StorageStub store = new StorageStub();
 	Formatter formatter = new Formatter();
-	
 
 	public Logic() {
 		listOfMonths = new ListOfMonths();
@@ -46,7 +45,7 @@ public class Logic {
 			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
-		} catch (IndexOutOfBoundsException d)	{
+		} catch (IndexOutOfBoundsException d) {
 			toDo = new ArrayList<Task>();
 			wholeDay = new ArrayList<Task>();
 			events = new ArrayList<Task>();
@@ -70,26 +69,73 @@ public class Logic {
 		case "edit":
 			break;
 		case "search":
-			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray());
+			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray(), toDo, wholeDay, events);
 			feedback[1] = formatter.formatSearchString(searchResults);
 			feedback[0] = "";
 			break;
 		}
 		return feedback;
 	}
-	
-	private String editTask(String[] variableArray)	{
-		int totalListSize = toDo.size() + wholeDay.size() + events.size();
-		int sizeCount = 0;
-		sizeCount = findTaskToEdit(toDo, totalListSize, sizeCount);
-		return EDITED_FEEDBACK;
+
+	private String editTask(String[] variableArray) {
+		boolean isToDoEditted = findTaskToEdit(toDo, variableArray, 0);
+		boolean isWholeDayEditted = findTaskToEdit(wholeDay, variableArray, toDo.size());
+		boolean isEventsEditted = findTaskToEdit(events, variableArray, toDo.size() + wholeDay.size());
+		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
+			return EDITED_FEEDBACK;
+		}
+		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private int findTaskToEdit(ArrayList<Task> list, int totalListSize, int sizeCount) {
-		for (int i=0;i<list.size();i++)	{
-			
+	private boolean findTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
+		for (int i = 0; i < list.size(); i++) {
+			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
+				doEdit(arrayWithoutEditIndex(variableArray), list.get(i));
+				return true;
+			}
 		}
-		return sizeCount;
+		return false;
+	}
+
+	private String[] arrayWithoutEditIndex(String[] variableArray) {
+		String[] parsedInput = new String[4];
+		for (int i=1;i<variableArray.length;i++)	{
+			parsedInput[i-1] = variableArray[i];
+		}
+		return parsedInput;
+	}
+
+	private Task doEdit(String[] variableArray, Task aTask) {
+		for (int i = 0; i < variableArray.length; i++) {
+			if (variableArray[i] != null) {
+				switch (i) {
+				case 0:
+					aTask.setTitle(variableArray[0]);
+				case 1:
+					aTask.setDescription(variableArray[i]);
+					break;
+				case 2:
+					String formattedFromDate = formatter.formatDateTime(variableArray[i]);
+					aTask.setFromDate(formattedFromDate);
+					break;
+				case 3:
+					String formattedToDate = formatter.formatDateTime(variableArray[i]);
+					if (isContainsValidTime(formattedToDate)) {
+						aTask.setToDate(formattedToDate);
+					} else {
+						aTask.setFromDate(formattedToDate.concat("00:00"));
+						aTask.setToDate(formattedToDate.concat("23:59"));
+					}
+					break;
+				case 4:
+					aTask.setCategory(variableArray[i]);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		return aTask;
 	}
 
 	private String deleteTask(String[] variableArray) {
@@ -99,34 +145,8 @@ public class Logic {
 
 	// adds task into the Event object
 	private String addToTaskList(String[] parsedInput) throws IOException {
-		Task newTask = new Task(parsedInput[0]);
-		for (int i = 1; i < parsedInput.length; i++) {
-			if (parsedInput[i] != null) {
-				switch (i) {
-				case 1:
-					newTask.setDescription(parsedInput[i]);
-					break;
-				case 2:
-					String formattedFromDate = formatter.formatDateTime(parsedInput[i]);
-					newTask.setFromDate(formattedFromDate);
-					break;
-				case 3:
-					String formattedToDate = formatter.formatDateTime(parsedInput[i]);
-					if (isContainsValidTime(formattedToDate))	{
-						newTask.setToDate(formattedToDate);
-					} else {
-						newTask.setFromDate(formattedToDate.concat("00:00"));
-						newTask.setToDate(formattedToDate.concat("23:59"));
-					}
-					break;
-				case 4:
-					newTask.setCategory(parsedInput[i]);
-					break;
-				default:
-					break;
-				}
-			}
-		}
+		Task newTask = new Task("");
+		newTask = doEdit(parsedInput, newTask);
 		allocateCorrectTimeArray(newTask);
 		tempHistory.add(newTask);
 		return ADDED_FEEDBACK;
@@ -222,15 +242,16 @@ public class Logic {
 
 	// Index 0 will always yield a feedback, indexes 1 onwards will give the
 	// Indexes of Events that has the keyword
-	public ArrayList<String> searchWord(String[] variableArray) {
+	public ArrayList<String> searchWord(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
+			ArrayList<Task> three) {
 		String wordToBeSearched = variableArray[0];
 		ArrayList<String> searchWordResults = new ArrayList<String>();
-		if (toDo.isEmpty() && wholeDay.isEmpty() && events.isEmpty()) {
+		if (one.isEmpty() && two.isEmpty() && three.isEmpty()) {
 			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
 		} else {
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, toDo, 0));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, wholeDay, toDo.size()));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, events, toDo.size() + wholeDay.size()));		
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, one, 0));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, two, one.size()));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, three, one.size() + two.size()));
 		}
 		return searchWordResults;
 	}
@@ -239,7 +260,7 @@ public class Logic {
 		ArrayList<String> searchWordResults;
 		searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
 		if (searchWordResults.isEmpty()) {
-			searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+			// searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
 		} else {
 			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
 		}
@@ -287,8 +308,16 @@ public class Logic {
 	public String testAddToTaskList(String[] parsedInput) throws IOException {
 		return addToTaskList(parsedInput);
 	}
-	
-	public boolean testIsContainKeyword(Task event, String keyword)	{
+
+	public boolean testIsContainKeyword(Task event, String keyword) {
 		return isContainKeyword(event, keyword);
+	}
+
+	public ArrayList<String> testSearchWord(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
+			ArrayList<Task> three) {
+		return searchWord(variableArray, one, two, three);
+	}
+	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes)	{
+		return findTaskToEdit(list, variableArray, previousSizes);
 	}
 }
