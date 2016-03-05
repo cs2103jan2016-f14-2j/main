@@ -45,7 +45,11 @@ public class Formatter {
 
 	public String formatSearchString(ArrayList<String> searchResults) {
 		String formattedResult = new String("");
-		return null;
+		for (String result : searchResults)	{
+			formattedResult += result;
+			formattedResult += "\n";
+		}
+		return formattedResult;
 	}
 	
 	private String checkYear(String dateTime) {
