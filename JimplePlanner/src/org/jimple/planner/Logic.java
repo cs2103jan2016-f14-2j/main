@@ -273,19 +273,24 @@ public class Logic {
 	// Indexes of Events that has the keyword
 	public ArrayList<String> searchWord(String[] variableArray) {
 		String wordToBeSearched = variableArray[0];
-		ArrayList<String> searchWordResults;
+		ArrayList<String> searchWordResults = new ArrayList<String>();
 		if (toDo.isEmpty() && wholeDay.isEmpty() && events.isEmpty()) {
-			searchWordResults = new ArrayList<String>();
 			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
 		} else {
-			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, toDo);
-			if (searchWordResults.isEmpty()) {
-				searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
-			} else {
-				String searchResultFeedback = "search result for \"" + wordToBeSearched + "\"";
-				searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, toDo);
-				searchWordResults.add(0, searchResultFeedback);
-			}
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, toDo));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, wholeDay));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, events));
+		}
+		return searchWordResults;
+	}
+
+	private ArrayList<String> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list) {
+		ArrayList<String> searchWordResults;
+		searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list);
+		if (searchWordResults.isEmpty()) {
+			searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+		} else {
+			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list);
 		}
 		return searchWordResults;
 	}
