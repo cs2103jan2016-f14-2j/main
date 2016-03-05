@@ -89,11 +89,11 @@ public class Storage {
 	}
 
 	private boolean isFromTimeExist(Task task){
-		return !(task.getFromTime().length()==0);
+		return !(task.getFromTimeString().length()==0);
 	}
 	
 	private boolean isToTimeExist(Task task){
-		return !(task.getToTime().length()==0);
+		return !(task.getToTimeString().length()==0);
 	}
 	
 	//Minor formatting of string such that each "field" is enclosed with a "/"
