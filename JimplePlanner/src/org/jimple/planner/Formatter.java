@@ -10,6 +10,14 @@ public class Formatter {
 		listOfMonths = new ListOfMonths();
 	}
 
+	public String formatTaskForDisplay(ArrayList<Task> list)	{
+		String formattedTasks = new String("");
+		for (Task aTask : list)	{
+			formattedTasks += aTask.getTitle().concat("\n");
+		}
+		return null;
+	}
+	
 	public String formatDateTime(String unformattedDate) {
 		if (unformattedDate != null) {
 			String[] dividedDates = unformattedDate.split(" ");
