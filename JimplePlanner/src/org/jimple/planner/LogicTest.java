@@ -2,12 +2,40 @@ package org.jimple.planner;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
 public class LogicTest {
 	Formatter testformatter = new Formatter();
 	Logic testLogic = new Logic();
+	ArrayList<Task>	floating = new ArrayList<Task>();
+	ArrayList<Task>	deadlines = new ArrayList<Task>();
+	ArrayList<Task>	events = new ArrayList<Task>();
+	
+	/*@Test
+	public void EditShouldReturnFeedback() throws IOException	{
+		String[] parsedInput = {"1", "go school", "that means NUS", "29 february 12pm", "", ""};
+		assertEquals("task is edited", "task edited in planner\n", testLogic.editTask(parsedInput));
+	}*/
+	
+	public void initializeThreeArrays()	{
+		Task event1 = new Task("a test only one");
+		Task event2 = new Task("a test only two");
+		Task event3 = new Task("a test only three");
+		Task event4 = new Task("a test four");
+		floating.add(event1);
+		deadlines.add(event2);
+		events.add(event3);
+		events.add(event4);
+	}
+	
+	@Test
+	public void ShouldReturnTrueAfterCheckThreeArrayToEdit() throws IOException	{
+		String[] variableArray = {"3", "task one", null, null, "today", null};
+		initializeThreeArrays();
+		assertEquals("return same string", "task edited in planner", testLogic.testEditTask(variableArray, floating, deadlines, events));
+	}
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
@@ -19,14 +47,32 @@ public class LogicTest {
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput3));
 	}
 	
-	/*@Test
-	public void EditShouldReturnFeedback() throws IOException	{
-		String[] parsedInput = {"1", "go school", "that means NUS", "29 february 12pm", "", ""};
-		assertEquals("task is edited", "task edited in planner\n", testLogic.editTask(parsedInput));
-	}*/
+	@Test
+	public void ShouldReturnTrueAfterEditting()	{
+		String[] variableArray = {"1", "task one", null, null, "today", null};
+		ArrayList<Task> testArray = new ArrayList<Task>();
+		Task event1 = new Task("first");
+		Task event2 = new Task("second");
+		Task event3 = new Task("third");
+		testArray.add(event1);
+		testArray.add(event2);
+		testArray.add(event3);
+		assertTrue("return true after editting", testLogic.testFindTaskToEdit(testArray, variableArray, 0));
+	}
+	
 	@Test
 	public void ShouldReturnArrayListOfLineIndex()	{
-		
+		ArrayList<String> expected = new ArrayList<String>();
+		String[] variableArray = {"only"};
+		expected.add("planner is empty");
+		assertEquals("should be same", expected, testLogic.testSearchWord(variableArray, floating, deadlines, events));
+		initializeThreeArrays();
+		expected.remove(0);
+		expected.add("00");
+		expected.add("01");
+		expected.add("02");
+		assertEquals("should be same", expected, testLogic.testSearchWord(variableArray, floating, deadlines, events));
+		assertEquals("String should be same", "00\n01\n02\n", testformatter.formatSearchString(testLogic.testSearchWord(variableArray, floating, deadlines, events)));
 	}
 	
 	@Test
@@ -77,7 +123,7 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnCorrectTim()	{
+	public void ShouldReturnCorrectTime()	{
 		assertEquals("return time", "00:00", testformatter.testCheckTime("12am"));
 		assertEquals("return time", "09:00", testformatter.testCheckTime("9am"));
 		assertEquals("return time", "12:30", testformatter.testCheckTime("12.30pm"));
