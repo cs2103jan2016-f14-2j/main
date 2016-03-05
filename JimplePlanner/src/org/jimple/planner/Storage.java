@@ -28,7 +28,9 @@ public class Storage {
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
+		File dir = new File(DEFAULT_FILE_DIRECTORY);
 		try {
+			dir.mkdirs();
 			file.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -121,8 +123,10 @@ public class Storage {
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
 	private boolean isSaveToFile(){
-		File file = createFile(DEFAULT_FILE_NAME);
-		File tempFile = createFile(DEFAULT_TEMP_FILE_NAME);
+		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
+		File file = createFile(filePath);
+		String tempFilePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
+		File tempFile = createFile(tempFilePath);
 
 		if(!file.delete() || !tempFile.renameTo(file)){
 			return false;
