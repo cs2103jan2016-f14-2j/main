@@ -8,17 +8,16 @@ import java.util.LinkedList;
 import org.junit.Test;
 
 public class StorageTest {
-	@Test
-	public void testIsSaved() throws IOException {
+	private ArrayList<ArrayList<Task>> getTasksStub(){
 		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
-		Storage storage = new Storage();
-		
 		ArrayList<Task> todo = new ArrayList<Task>();
+		ArrayList<Task> deadline = new ArrayList<Task>();
+		ArrayList<Task> event = new ArrayList<Task>();
+		
 		Task task1 = new Task("Go exercise, you fatty");
 		task1.setCategory("Keep fit");
 		todo.add(task1);
 		
-		ArrayList<Task> deadline = new ArrayList<Task>();
 		Task task2 = new Task("Do 2100 assignment");
 		task2.setDescription("due very soon");
 		task2.setCategory("Homework");
@@ -26,7 +25,6 @@ public class StorageTest {
 		task2.setToDate("2016-02-29T23:59");
 		deadline.add(task2);
 		
-		ArrayList<Task> event = new ArrayList<Task>();
 		Task task3 = new Task("Makan here for chap goh mei");
 		task3.setDescription("at cousin's place");
 		task3.setCategory("family time");
@@ -37,6 +35,14 @@ public class StorageTest {
 		tasks.add(todo);
 		tasks.add(deadline);
 		tasks.add(event);
+		return tasks;
+	}
+	
+	@Test
+	public void testIsSaved() throws IOException {
+		ArrayList<ArrayList<Task>> tasks = getTasksStub();
+		Storage storage = new Storage();
+		
 		assertTrue("this should return true if saved", storage.isSaved(tasks));
 	}
 	
