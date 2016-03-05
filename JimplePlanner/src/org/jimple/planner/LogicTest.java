@@ -24,6 +24,22 @@ public class LogicTest {
 		String[] parsedInput = {"1", "go school", "that means NUS", "29 february 12pm", "", ""};
 		assertEquals("task is edited", "task edited in planner\n", testLogic.editTask(parsedInput));
 	}*/
+	@Test
+	public void ShouldReturnArrayListOfLineIndex()	{
+		
+	}
+	
+	@Test
+	public void ShouldReturnTrueIfContainKeyword()	{
+		Task event = new Task("a test only");
+		event.setDescription("good stuff");
+		event.setCategory("food");
+		assertTrue("returns true", testLogic.testIsContainKeyword(event, "good"));
+		assertTrue("returns true", testLogic.testIsContainKeyword(event, "a test only"));
+		assertFalse("returns false", testLogic.testIsContainKeyword(event, "wrong"));
+		assertFalse("returns false", testLogic.testIsContainKeyword(event, "good food"));
+		assertFalse("returns false", testLogic.testIsContainKeyword(event, "a only"));
+	}
 	
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
