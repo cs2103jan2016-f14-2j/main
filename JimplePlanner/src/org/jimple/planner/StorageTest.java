@@ -18,13 +18,13 @@ public class StorageTest {
 		task1.setCategory("Keep fit");
 		todo.add(task1);
 		
-		ArrayList<Task> wholeday = new ArrayList<Task>();
+		ArrayList<Task> deadline = new ArrayList<Task>();
 		Task task2 = new Task("Do 2100 assignment");
 		task2.setDescription("due very soon");
 		task2.setCategory("Homework");
 		task2.setFromDate("2016-02-29T00:00");
 		task2.setToDate("2016-02-29T23:59");
-		wholeday.add(task2);
+		deadline.add(task2);
 		
 		ArrayList<Task> event = new ArrayList<Task>();
 		Task task3 = new Task("Makan here for chap goh mei");
@@ -35,7 +35,7 @@ public class StorageTest {
 		event.add(task3);
 		
 		tasks.add(todo);
-		tasks.add(wholeday);
+		tasks.add(deadline);
 		tasks.add(event);
 		assertTrue("this should return true if saved", storage.isSaved(tasks));
 	}
@@ -85,12 +85,12 @@ public class StorageTest {
 			String cat1 = todo.get(0).getCategory();
 			assertEquals("true if same", "Keep fit", cat1);
 			
-			ArrayList<Task> wholeday = tasks.get(1);
-			String title2 = wholeday.get(0).getTitle();
+			ArrayList<Task> deadline = tasks.get(1);
+			String title2 = deadline.get(0).getTitle();
 			assertEquals("true if same", "Do 2100 assignment", title2);
-			String desc2 = wholeday.get(0).getDescription();
+			String desc2 = deadline.get(0).getDescription();
 			assertEquals("true if same", "due very soon", desc2);
-			String cat2 = wholeday.get(0).getCategory();
+			String cat2 = deadline.get(0).getCategory();
 			assertEquals("true if same", "Homework", cat2);
 			
 			ArrayList<Task> event = tasks.get(2);
@@ -102,6 +102,7 @@ public class StorageTest {
 			assertEquals("true if same", "Makan here for chap goh mei", title3);
 		} else{
 			assertTrue("just a short confirmation that it is truly empty", tasks.isEmpty());
+			System.out.println("HERE REACHED FILE WAS EMPTY");
 		}
 	}
 }
