@@ -1,9 +1,7 @@
 package org.jimple.planner;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Logic {
 
@@ -29,20 +27,19 @@ public class Logic {
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_DELETED_FEEDBACK = "could not find deleted file";
 
-	private ArrayList<Task> temporaryHistory;
 	private ArrayList<Task> wholeDay;
 	private ArrayList<Task> toDo;
 	private ArrayList<Task> events;
-	private Formatter data = new Formatter();
-	private int editMode;
+	private ArrayList<Task> tempHistory;
+	ListOfMonths listOfMonths;
 	Parser parser = new Parser();
 	StorageStub store = new StorageStub();
 	Formatter formatter = new Formatter();
+	
 
 	public Logic() {
-		temporaryHistory = new ArrayList<Task>();
-		data.listOfMonths = new ListOfMonths();
-		editMode = 0;
+		listOfMonths = new ListOfMonths();
+		tempHistory = new ArrayList<Task>();
 		try {
 			toDo = store.getTasks().get(0);
 			wholeDay = store.getTasks().get(1);
@@ -60,24 +57,39 @@ public class Logic {
 	 * function is for the UI to call when a user inputs a string
 	 *
 	 */
-	public String execute(String inputString) throws IOException {
-		String feedback = new String("");
+	public String[] execute(String inputString) throws IOException {
+		String[] feedback = new String[2];
 		InputStruct parsedInput = parser.parseInput(inputString);
 		switch (parsedInput.getCommand()) {
 		case "delete":
-			feedback += deleteTask(parsedInput.getVariableArray());
+			feedback[0] = deleteTask(parsedInput.getVariableArray());
 			break;
 		case "add":
-			feedback += addToTaskList(parsedInput.getVariableArray());
+			feedback[0] = addToTaskList(parsedInput.getVariableArray());
 			break;
 		case "edit":
 			break;
 		case "search":
 			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray());
-			feedback += "";
+			feedback[1] = formatter.formatSearchString(searchResults);
+			feedback[0] = "";
 			break;
 		}
 		return feedback;
+	}
+	
+	private String editTask(String[] variableArray)	{
+		int totalListSize = toDo.size() + wholeDay.size() + events.size();
+		int sizeCount = 0;
+		sizeCount = findTaskToEdit(toDo, totalListSize, sizeCount);
+		return EDITED_FEEDBACK;
+	}
+
+	private int findTaskToEdit(ArrayList<Task> list, int totalListSize, int sizeCount) {
+		for (int i=0;i<list.size();i++)	{
+			
+		}
+		return sizeCount;
 	}
 
 	private String deleteTask(String[] variableArray) {
@@ -116,7 +128,7 @@ public class Logic {
 			}
 		}
 		allocateCorrectTimeArray(newTask);
-		temporaryHistory.add(newTask);
+		tempHistory.add(newTask);
 		return ADDED_FEEDBACK;
 	}
 
@@ -216,31 +228,31 @@ public class Logic {
 		if (toDo.isEmpty() && wholeDay.isEmpty() && events.isEmpty()) {
 			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
 		} else {
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, toDo));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, wholeDay));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, events));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, toDo, 0));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, wholeDay, toDo.size()));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, events, toDo.size() + wholeDay.size()));		
 		}
 		return searchWordResults;
 	}
 
-	private ArrayList<String> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list) {
+	private ArrayList<String> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list, int size) {
 		ArrayList<String> searchWordResults;
-		searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list);
+		searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
 		if (searchWordResults.isEmpty()) {
 			searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
 		} else {
-			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list);
+			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
 		}
 		return searchWordResults;
 	}
 
-	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched, ArrayList<Task> list) {
+	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched, ArrayList<Task> list, int size) {
 		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
 		int eventListSize = list.size();
 		for (int i = 0; i < eventListSize; i++) {
 			Task currentEvent = list.get(i);
 			if (isContainKeyword(currentEvent, wordToBeSearched)) {
-				indexesOfWordInstanceFound.add(String.valueOf(i));
+				indexesOfWordInstanceFound.add(String.valueOf(i) + size);
 			}
 		}
 		return indexesOfWordInstanceFound;
@@ -274,5 +286,9 @@ public class Logic {
 
 	public String testAddToTaskList(String[] parsedInput) throws IOException {
 		return addToTaskList(parsedInput);
+	}
+	
+	public boolean testIsContainKeyword(Task event, String keyword)	{
+		return isContainKeyword(event, keyword);
 	}
 }
