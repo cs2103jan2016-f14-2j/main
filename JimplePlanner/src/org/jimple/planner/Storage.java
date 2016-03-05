@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Storage {
+	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
 	private static final String DEFAULT_FILE_NAME = "planner.jim";
 	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
 	private static final String TAGS_CATEGORY = ":cat:";
@@ -22,10 +24,13 @@ public class Storage {
 	private static final String TAGS_TITLE = ":title:";
 	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
 	private static final String EMPTY_STRING = "";
+	private static final String FILE_SECTION_SEPARATOR = ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<";
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
+		File dir = new File(DEFAULT_FILE_DIRECTORY);
 		try {
+			dir.mkdirs();
 			file.createNewFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -34,8 +39,10 @@ public class Storage {
 		return file;
 	}
 	
+	//Methods for creating filereaders and filewriters
 	private BufferedReader createDefaultFileReader() throws FileNotFoundException {
-		File file = createFile(DEFAULT_FILE_NAME);
+		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
+		File file = createFile(filePath);
 		FileInputStream fileIn = new FileInputStream(file);
 		InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
 		BufferedReader reader = new BufferedReader(inputStreamReader);
@@ -43,49 +50,50 @@ public class Storage {
 	}
 	
 	private BufferedWriter createTempFileWriter() throws FileNotFoundException {
-		File file = createFile(DEFAULT_TEMP_FILE_NAME);
+		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
+		File file = createFile(filePath);
 		FileOutputStream fileOut = new FileOutputStream(file);
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
 		BufferedWriter writer = new BufferedWriter(outputStreamWriter);
 		return writer;
 	}
 
-	//This method extracts all relevant fields from an Event and stores them as a String, each String line is an Event
-	public String extractEventToString(Event event){
-		String lineString = formatToSaveString(TAGS_TITLE + event.getTitle());
-		if(isDescriptionExist(event)){
-			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + event.getDescription());
+	//This method extracts all relevant fields from an Task and stores them as a String, each String line is an Task
+	private String extractTaskToString(Task task){
+		String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
+		if(isDescriptionExist(task)){
+			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + task.getDescription());
 			lineString = lineString + descriptionString;
 		} 
-		if(isCategoryExist(event)) {
-			String categoryString = formatToSaveString(TAGS_CATEGORY + event.getCategory());
+		if(isCategoryExist(task)) {
+			String categoryString = formatToSaveString(TAGS_CATEGORY + task.getCategory());
 			lineString = lineString + categoryString;
 		} 
-		if (isFromTimeExist(event)){
-			String fromTimeString = formatToSaveString(TAGS_FROM_TIME + event.getFromTime());
+		if (isFromTimeExist(task)){
+			String fromTimeString = formatToSaveString(TAGS_FROM_TIME + task.getFromTime());
 			lineString = lineString + fromTimeString;
 		} 
-		if (isToTimeExist(event)){
-			String fromToString = formatToSaveString(TAGS_TO_TIME + event.getToTime());
+		if (isToTimeExist(task)){
+			String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
 			lineString = lineString + fromToString;
 		}
 		return lineString;
 	}
 	
-	private boolean isDescriptionExist(Event event){
-		return !(event.getDescription().length()==0);
+	private boolean isDescriptionExist(Task task){
+		return !(task.getDescription().length()==0);
 	}
 	
-	private boolean isCategoryExist(Event event){
-		return !(event.getCategory().length()==0);
+	private boolean isCategoryExist(Task task){
+		return !(task.getCategory().length()==0);
+	}
+
+	private boolean isFromTimeExist(Task task){
+		return !(task.getFromTime().length()==0);
 	}
 	
-	private boolean isFromTimeExist(Event event){
-		return !(event.getFromTime().length()==0);
-	}
-	
-	private boolean isToTimeExist(Event event){
-		return !(event.getToTime().length()==0);
+	private boolean isToTimeExist(Task task){
+		return !(task.getToTime().length()==0);
 	}
 	
 	//Minor formatting of string such that each "field" is enclosed with a "/"
@@ -93,17 +101,21 @@ public class Storage {
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	public boolean isSaved(ArrayList<Event> events) throws IOException{
-		writeToFile(events);
+	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+		writeToFile(allTaskLists);
 		boolean saveStatus = isSaveToFile();
 		return saveStatus;
 	}
 	
-	private void writeToFile(ArrayList<Event> events) throws IOException  {
+	private void writeToFile(ArrayList<ArrayList<Task>> allTaskLists) throws IOException  {
 		BufferedWriter tempWriter = createTempFileWriter();
-		for(Event event: events){
-			String lineString = extractEventToString(event);
-			tempWriter.write(lineString);
+		for(ArrayList<Task> taskList: allTaskLists){
+			for(Task task: taskList){
+				String lineString = extractTaskToString(task);
+				tempWriter.write(lineString);
+				tempWriter.newLine();
+			}
+			tempWriter.write(FILE_SECTION_SEPARATOR);
 			tempWriter.newLine();
 		}
 		tempWriter.close();
@@ -111,8 +123,10 @@ public class Storage {
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
 	private boolean isSaveToFile(){
-		File file = createFile(DEFAULT_FILE_NAME);
-		File tempFile = createFile(DEFAULT_TEMP_FILE_NAME);
+		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
+		File file = createFile(filePath);
+		String tempFilePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
+		File tempFile = createFile(tempFilePath);
 
 		if(!file.delete() || !tempFile.renameTo(file)){
 			return false;
@@ -121,16 +135,22 @@ public class Storage {
 		}
 	}
 	
-	public ArrayList<Event> getEvents() throws IOException{
+	public ArrayList<ArrayList<Task>> getTasks() throws IOException{
 		BufferedReader defaultFileReader = createDefaultFileReader();
-		ArrayList<Event> events = new ArrayList<Event>();
+		ArrayList<ArrayList<Task>> allTasksLists = new ArrayList<ArrayList<Task>>();
 		String fileLineContent;
+		ArrayList<Task> taskList = new ArrayList<Task>();
 		while ((fileLineContent = defaultFileReader.readLine()) != null) {
-			Event event = getEventFromLine(fileLineContent);
-			events.add(event);
+			if(!fileLineContent.equals(FILE_SECTION_SEPARATOR)){
+				Task task = getTaskFromLine(fileLineContent);
+				taskList.add(task);
+			} else {
+				allTasksLists.add(taskList);
+				taskList = new ArrayList<Task>();
+			}
 		}
 		defaultFileReader.close();
-		return events;
+		return allTasksLists;
 	}
 	
 	private ArrayList<String> getSeparateFields(String fileLineContent){
@@ -138,36 +158,36 @@ public class Storage {
 		return separatedContents;
 	}
 	
-	private Event getEventFromLine(String fileLineContent){
+	private Task getTaskFromLine(String fileLineContent){
 		ArrayList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
-		Event event = new Event(EMPTY_STRING);
+		Task task = new Task(EMPTY_STRING);
 		for(String field: fileLineContentSeparated){
-			setFields(event, field);
+			setFields(task, field);
 		}
-		return event;
+		return task;
 	}
 	
 	//This method is purely for test purposes only
-	public Event testGetEventFromLine(String fileLineContent){
-		return getEventFromLine(fileLineContent);
+	public Task testGetTaskFromLine(String fileLineContent){
+		return getTaskFromLine(fileLineContent);
 	}
 	
-	private void setFields(Event event, String field){
+	private void setFields(Task task, String field){
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
-			event.setTitle(titleString);
+			task.setTitle(titleString);
 		} else if(isCategory(field)){
 			String catField = getRemovedCategoryTagString(field);
-			event.setCategory(catField);
+			task.setCategory(catField);
 		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
-			event.setDescription(descField);
+			task.setDescription(descField);
 		} else if(isFromTime(field)){
 			String fromField = getRemovedFromTagString(field);
-			event.setFromDate(fromField);
+			task.setFromDate(fromField);
 		} else if (isToTime(field)){
 			String toField = getRemovedToTagString(field);
-			event.setToDate(toField);
+			task.setToDate(toField);
 		}
 	}
 	
