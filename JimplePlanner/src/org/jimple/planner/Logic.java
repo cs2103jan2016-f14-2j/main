@@ -27,8 +27,8 @@ public class Logic {
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_DELETED_FEEDBACK = "could not find deleted file";
 
-	private ArrayList<Task> wholeDay;
-	private ArrayList<Task> toDo;
+	private ArrayList<Task> deadlines;
+	private ArrayList<Task> floating;
 	private ArrayList<Task> events;
 	private ArrayList<Task> tempHistory;
 	ListOfMonths listOfMonths;
@@ -40,14 +40,14 @@ public class Logic {
 		listOfMonths = new ListOfMonths();
 		tempHistory = new ArrayList<Task>();
 		try {
-			toDo = store.getTasks().get(0);
-			wholeDay = store.getTasks().get(1);
+			floating = store.getTasks().get(0);
+			deadlines = store.getTasks().get(1);
 			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
 		} catch (IndexOutOfBoundsException d) {
-			toDo = new ArrayList<Task>();
-			wholeDay = new ArrayList<Task>();
+			floating = new ArrayList<Task>();
+			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
 		}
 	}
@@ -67,21 +67,36 @@ public class Logic {
 			feedback[0] = addToTaskList(parsedInput.getVariableArray());
 			break;
 		case "edit":
+			feedback[0] = editTask(parsedInput.getVariableArray(), floating, deadlines, events);
 			break;
 		case "search":
-			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray(), toDo, wholeDay, events);
+			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray(), floating, deadlines, events);
 			feedback[1] = formatter.formatSearchString(searchResults);
 			feedback[0] = "";
 			break;
 		}
 		return feedback;
 	}
+	
+	public ArrayList<Task> display(String type)	{
+		if (type.equals("floating"))	{
+			return floating;
+		}
+		else if (type.equals("events"))	{
+			return events;
+		}
+		else if (type.equals("deadlines"))	{
+			return deadlines;
+		}
+		return null;
+	}
 
-	private String editTask(String[] variableArray) {
-		boolean isToDoEditted = findTaskToEdit(toDo, variableArray, 0);
-		boolean isWholeDayEditted = findTaskToEdit(wholeDay, variableArray, toDo.size());
-		boolean isEventsEditted = findTaskToEdit(events, variableArray, toDo.size() + wholeDay.size());
+	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three) throws IOException {
+		boolean isToDoEditted = findTaskToEdit(one, variableArray, 0);
+		boolean isWholeDayEditted = findTaskToEdit(two, variableArray, one.size());
+		boolean isEventsEditted = findTaskToEdit(three, variableArray, one.size() + two.size());
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
+			packageForSavingInFile();
 			return EDITED_FEEDBACK;
 		}
 		return ERROR_EDIT_FEEDBACK;
@@ -98,7 +113,7 @@ public class Logic {
 	}
 
 	private String[] arrayWithoutEditIndex(String[] variableArray) {
-		String[] parsedInput = new String[4];
+		String[] parsedInput = new String[5];
 		for (int i=1;i<variableArray.length;i++)	{
 			parsedInput[i-1] = variableArray[i];
 		}
@@ -123,7 +138,6 @@ public class Logic {
 					if (isContainsValidTime(formattedToDate)) {
 						aTask.setToDate(formattedToDate);
 					} else {
-						aTask.setFromDate(formattedToDate.concat("00:00"));
 						aTask.setToDate(formattedToDate.concat("23:59"));
 					}
 					break;
@@ -160,19 +174,23 @@ public class Logic {
 	}
 
 	private void allocateCorrectTimeArray(Task newTask) throws IOException {
-		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		// check if null
 		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
-			toDo.add(newTask);
+			floating.add(newTask);
 		}
 		// check if whole day task
-		else if (newTask.getFromTimeString().equals("00:00") && newTask.getToTimeString().equals("23:59")) {
-			wholeDay.add(newTask);
+		else if (newTask.getFromTimeString().equals(null) && newTask.getToTime() != null) {
+			deadlines.add(newTask);
 		} else {
 			events.add(newTask);
 		}
-		allTasksArray.add(toDo);
-		allTasksArray.add(wholeDay);
+		packageForSavingInFile();
+	}
+
+	private void packageForSavingInFile() throws IOException {
+		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
+		allTasksArray.add(floating);
+		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
 		store.isSaved(allTasksArray);
 	}
@@ -319,5 +337,8 @@ public class Logic {
 	}
 	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes)	{
 		return findTaskToEdit(list, variableArray, previousSizes);
+	}
+	public String testEditTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three) throws IOException	{
+		return editTask(variableArray, one, two, three);
 	}
 }
