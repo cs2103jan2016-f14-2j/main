@@ -146,7 +146,7 @@ public class Logic {
 			toDo.add(newTask);
 		}
 		// check if whole day task
-		else if (newTask.getFromTime().equals("00:00") && newTask.getToTime().equals("23:59")) {
+		else if (newTask.getFromTimeString().equals("00:00") && newTask.getToTimeString().equals("23:59")) {
 			wholeDay.add(newTask);
 		} else {
 			events.add(newTask);
@@ -155,6 +155,46 @@ public class Logic {
 		allTasksArray.add(wholeDay);
 		allTasksArray.add(events);
 		store.isSaved(allTasksArray);
+	}
+
+	/**
+	 * returns total number of word matches compared to an event
+	 * 
+	 */
+	private int matchingWordCount(String[] parsedInput, Task task) {
+		int count = 0;
+		for (int i = 0; i < parsedInput.length; i++) {
+			switch (i) {
+			case 1:
+				if (task.getTitle().contains(parsedInput[i])) {
+					count++;
+				}
+				break;
+			case 2:
+				if (task.getDescription().contains(parsedInput[i])) {
+					count++;
+				}
+				break;
+			case 3:
+				if (task.getFromTimeString().contains(parsedInput[i])) {
+					count++;
+				}
+				break;
+			case 4:
+				if (task.getToTimeString().contains(parsedInput[i])) {
+					count++;
+				}
+				break;
+			case 5:
+				if (task.getCategory().contains(parsedInput[i])) {
+					count++;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		return count;
 	}
 
 	/**
