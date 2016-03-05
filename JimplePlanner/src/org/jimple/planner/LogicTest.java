@@ -11,9 +11,12 @@ public class LogicTest {
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String originalInput = "add finish 2103 homework by tomorrow";
-		String[] parsedInput = {"finish 2103 homework", null, null, "3 december 2017 12am", null};
-		assertEquals("task is added to file", "task added to planner\n", testLogic.testAddToTaskList(parsedInput));
+		String[] parsedInput1 = {"finish 2103 homework", null, null, "3 december 2017 12am", null};
+		String[] parsedInput2 = {"finish 2103 homework", null, null, "today", null};
+		String[] parsedInput3 = {"finish 2103 homework", null, null, "9 may", null};
+		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput1));
+		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput2));
+		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput3));
 	}
 	
 	/*@Test
@@ -25,7 +28,7 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-04T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-05T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
 	}
 	
@@ -52,7 +55,7 @@ public class LogicTest {
 	public void ShouldReturnCorrectDay()	{
 		assertEquals("return day", "10T", testformatter.testCheckDay("10"));
 		assertEquals("return day", "05T", testformatter.testCheckDay("5"));
-		assertEquals("return day", "04T", testformatter.testCheckDay("today"));
+		assertEquals("return day", "05T", testformatter.testCheckDay("today"));
 		assertEquals("return day", "", testformatter.testCheckDay("march"));
 		assertEquals("return day", "", testformatter.testCheckDay("2017"));
 	}
