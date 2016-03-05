@@ -1,6 +1,7 @@
 package org.jimple.planner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Formatter {
 	public ListOfMonths listOfMonths;
@@ -42,6 +43,11 @@ public class Formatter {
 		return unformattedDate;
 	}
 
+	public String formatSearchString(ArrayList<String> searchResults) {
+		String formattedResult = new String("");
+		return null;
+	}
+	
 	private String checkYear(String dateTime) {
 		if (isYear(dateTime)) {
 			return dateTime;
