@@ -31,10 +31,21 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnTrueAfterCheckThreeArrayToEdit() throws IOException	{
+	public void ShouldReturnFeedbackAfterDeleteFromArray() throws IOException	{
+		String[] variableArray = {"2"};
+		initializeThreeArrays();
+		assertEquals("delete string", "task deleted", testLogic.testDeleteTask(variableArray, floating, deadlines, events));
+		variableArray[0] = "4";
+		assertEquals("delete string", "could not find task to be deleted", testLogic.testDeleteTask(variableArray, floating, deadlines, events));
+	}
+	
+	@Test
+	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException	{
 		String[] variableArray = {"3", "task one", null, null, "today", null};
 		initializeThreeArrays();
 		assertEquals("return same string", "task edited in planner", testLogic.testEditTask(variableArray, floating, deadlines, events));
+		variableArray[0] = "4";
+		assertEquals("return same string", "task not found", testLogic.testEditTask(variableArray, floating, deadlines, events));
 	}
 	
 	@Test
@@ -90,7 +101,7 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-05T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-06T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
 	}
 	
@@ -117,7 +128,7 @@ public class LogicTest {
 	public void ShouldReturnCorrectDay()	{
 		assertEquals("return day", "10T", testformatter.testCheckDay("10"));
 		assertEquals("return day", "05T", testformatter.testCheckDay("5"));
-		assertEquals("return day", "05T", testformatter.testCheckDay("today"));
+		assertEquals("return day", "06T", testformatter.testCheckDay("today"));
 		assertEquals("return day", "", testformatter.testCheckDay("march"));
 		assertEquals("return day", "", testformatter.testCheckDay("2017"));
 	}
