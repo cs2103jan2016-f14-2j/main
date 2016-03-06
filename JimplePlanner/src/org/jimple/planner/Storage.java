@@ -189,6 +189,17 @@ public class Storage {
 		return getTaskFromLine(fileLineContent);
 	}
 	
+	//This method is used for unit test in StorageTest
+	public String[] testExtractTasksToStringArray(Task task){
+		String[] result = new String[5];
+		result[0] = task.getTitle();
+		result[1] = task.getDescription();
+		result[2] = task.getCategory();
+		result[3] = task.getFromTimeString();
+		result[4] = task.getToTimeString();
+		return result;
+	}
+	
 	private void setFields(Task task, String field){
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
