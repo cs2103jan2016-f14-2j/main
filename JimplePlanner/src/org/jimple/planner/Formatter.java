@@ -1,7 +1,9 @@
 package org.jimple.planner;
 
 import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Formatter {
 	public ListOfMonths listOfMonths;
@@ -18,6 +20,15 @@ public class Formatter {
 		return null;
 	}
 	
+	public String formatSearchString(ArrayList<String> searchResults) {
+		String formattedResult = new String("");
+		for (String result : searchResults)	{
+			formattedResult += result;
+			formattedResult += "\n";
+		}
+		return formattedResult;
+	}
+	
 	public String formatDateTime(String unformattedDate) {
 		if (unformattedDate != null) {
 			String[] dividedDates = unformattedDate.split(" ");
@@ -28,15 +39,17 @@ public class Formatter {
 					break;
 				}
 			}
+			formattedDateTime += checkMonth(LocalDateTime.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
 			for (String dateTime : dividedDates) {
 				if (!checkMonth(dateTime).equals("")) {
-					formattedDateTime += checkMonth(dateTime);
+					formattedDateTime = formattedDateTime.substring(0, formattedDateTime.length()-4).concat(checkMonth(dateTime));
 					break;
 				}
 			}
+			formattedDateTime += checkDay(Integer.toString(LocalDateTime.now().getDayOfMonth()));
 			for (String dateTime : dividedDates) {
 				if (!checkDay(dateTime).equals("")) {
-					formattedDateTime += checkDay(dateTime);
+					formattedDateTime = formattedDateTime.substring(0, formattedDateTime.length()-3).concat(checkDay(dateTime));
 					break;
 				}
 			}
@@ -51,21 +64,10 @@ public class Formatter {
 		return unformattedDate;
 	}
 
-	public String formatSearchString(ArrayList<String> searchResults) {
-		String formattedResult = new String("");
-		for (String result : searchResults)	{
-			formattedResult += result;
-			formattedResult += "\n";
-		}
-		return formattedResult;
-	}
-	
 	private String checkYear(String dateTime) {
 		if (isYear(dateTime)) {
 			return dateTime;
-		} else if (dateTime.equals("today")) {
-			return Integer.toString(LocalDateTime.now().getYear());
-		}
+		} 
 		return null;
 	}
 
@@ -86,36 +88,23 @@ public class Formatter {
 			formattedMonth += "-";
 			formattedMonth += listOfMonths.monthDigit(dateTime);
 			formattedMonth += "-";
-		} else if (dateTime.equals("today")) {
-			formattedMonth += "-";
-			if (lessThanTen(LocalDateTime.now().getMonthValue())) {
-				formattedMonth += "0";
-			}
-			formattedMonth += Integer.toString(LocalDateTime.now().getMonthValue());
-			formattedMonth += "-";
-		}
+		} 
 		return formattedMonth;
 	}
 
 	private String checkDay(String dateTime) {
 		String formattedDay = new String("");
 		if (isDay(dateTime)) {
-			if (lessThanTen(Integer.parseInt(dateTime))) {
+			if (isLessThanTen(Integer.parseInt(dateTime))) {
 				formattedDay += "0";
 			}
 			formattedDay += dateTime;
 			formattedDay += "T";
-		} else if (dateTime.equals("today")) {
-			if (lessThanTen(LocalDateTime.now().getDayOfMonth())) {
-				formattedDay += "0";
-			}
-			formattedDay += Integer.toString(LocalDateTime.now().getDayOfMonth());
-			formattedDay += "T";
-		}
+		} 
 		return formattedDay;
 	}
 
-	private boolean lessThanTen(int dateTime) {
+	private boolean isLessThanTen(int dateTime) {
 		if (dateTime < 10) {
 			return true;
 		}
@@ -163,7 +152,7 @@ public class Formatter {
 
 	private String formatHourAM(String[] time) {
 		String formattedHour = new String("");
-		if (lessThanTen(Integer.parseInt(time[0]))) {
+		if (isLessThanTen(Integer.parseInt(time[0]))) {
 			formattedHour += "0";
 		}
 		if (time[0].equals("12")) {
@@ -177,7 +166,7 @@ public class Formatter {
 	private String formatMinutes(String[] time) {
 		String formattedMinutes = new String("");
 		if (time.length > 1) {
-			if (lessThanTen(Integer.parseInt(time[1]))) {
+			if (isLessThanTen(Integer.parseInt(time[1]))) {
 				formattedMinutes += "0";
 			}
 			formattedMinutes += time[1];
