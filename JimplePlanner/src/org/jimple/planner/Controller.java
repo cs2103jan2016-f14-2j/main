@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -24,6 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -90,10 +92,10 @@ public class Controller implements Initializable {
 		
 		commandBoxListener();
 		tabPanesListener();
-		updateDisplay();
+		initializeDisplay();
 	}
 
-	private void updateDisplay() {
+	private void initializeDisplay() {
 		loadAgendaList();
 		loadEventsList();
 		loadDeadlinesList();
@@ -101,17 +103,6 @@ public class Controller implements Initializable {
 	}
 
     public void loadAgendaList() {
-    	
-    	//SAMPLE DATA=======================================================
-//    	ArrayList<Task> taskList = new ArrayList<Task>();
-//    	Task task = new Task("Finish 2103T homework");
-//    	task.setToDate("2007-12-03T10:15:30");
-//    	taskList.add(task);
-//    	taskList.add(new Task("eat food"));
-//    	taskList.add(new Task("make food"));
-//    	taskList.add(new Task("buy food"));
-//    	taskList.add(new Task("take food"));
-    	//==================================================================
     	ArrayList<Task> taskList = logic.display("events");
     	ObservableList<Task> data = FXCollections.observableArrayList();
         data.addAll(taskList);
@@ -141,6 +132,7 @@ public class Controller implements Initializable {
 
         });
         fitToAnchorPane(listView);
+        agendaContent.getChildren().clear();
         agendaContent.getChildren().add(listView);
     }
 
@@ -174,6 +166,7 @@ public class Controller implements Initializable {
 
         });
         fitToAnchorPane(listView);
+        eventsContent.getChildren().clear();
     	eventsContent.getChildren().add(listView);
     }
 
@@ -207,6 +200,7 @@ public class Controller implements Initializable {
 
         });
         fitToAnchorPane(listView);
+        deadlinesContent.getChildren().clear();
     	deadlinesContent.getChildren().add(listView);
     }
     
@@ -238,6 +232,7 @@ public class Controller implements Initializable {
 
         });
         fitToAnchorPane(listView);
+        todoContent.getChildren().clear();
     	todoContent.getChildren().add(listView);
     }
     
@@ -252,9 +247,8 @@ public class Controller implements Initializable {
 		String inputStr = getInputCommand();
 		if (!isEmpty(inputStr)) {
 			// System.out.println(inputStr);
-			String[] feedbackArr = logic.execute(inputStr);
-			String messageOutput = feedbackArr[0];
-			messagePrompt.setText(messageOutput);
+			String[] feedback = logic.execute(inputStr);
+			messagePrompt.setText(feedback[0]);
 			
 			FadeTransition ft = new FadeTransition(Duration.millis(3000), messagePrompt);
 			ft.setFromValue(1.0);
@@ -263,8 +257,17 @@ public class Controller implements Initializable {
 			ft.play();
 
 			clearCommandBox();
-			updateDisplay();
+			addAndReloadTodo();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addAndReloadTodo() {
+		initializeDisplay();
+		tabPanes.requestFocus();
+		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).requestFocus();
+		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().selectLast();
+		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).scrollTo(((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().getSelectedIndex());
 	}
 	
 	public void commandBoxListener(){		
@@ -272,23 +275,39 @@ public class Controller implements Initializable {
 			
 		        @Override
 		        public void handle(KeyEvent t) {
+		        	System.out.println("commandBoxListener triggered");
 		            if(t.getCode() == KeyCode.ESCAPE)
 		            	tabPanes.requestFocus();
 		        }
 		    });		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void tabPanesListener(){		
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			
 		        @Override
 		        public void handle(KeyEvent t) {
-		        	if(!t.getCode().isArrowKey()){
+		        	if(t.getCode() == KeyCode.DOWN){
+		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).requestFocus();
+		        		if(((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().isEmpty())
+		        			((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().select(0);
+//		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getFocusModel().focus(0);
+		        	}
+		        	else if(t.getCode() == KeyCode.LEFT){
+//		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().clearSelection();
+		        		tabPanes.requestFocus();
+		        	}
+		        	else if(t.getCode() == KeyCode.RIGHT){
+//		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().clearSelection();
+		        		tabPanes.requestFocus();
+		        	}
+		        	else if(!t.getCode().isArrowKey()){
 		        		commandBox.requestFocus();
 		        		commandBox.positionCaret(commandBox.getLength());
 		        	}
 		        }
-		    });		
+		    });
 	}
 
 	public String getInputCommand() {
