@@ -103,11 +103,12 @@ public class LogicTest {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
 		assertEquals("return formated date", "2016-03-06T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
+		assertEquals("return formated date", "2016-03-06T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test
 	public void ShouldReturnCorrectYear()	{
-		assertEquals("return year", "2016", testformatter.testCheckYear("today"));
+		assertEquals("return year", null, testformatter.testCheckYear("today"));
 		assertEquals("return year", "2018", testformatter.testCheckYear("2018"));
 		assertEquals("return year", null, testformatter.testCheckYear("may"));
 		assertEquals("return year", null, testformatter.testCheckYear("6"));
@@ -119,7 +120,7 @@ public class LogicTest {
 		assertEquals("return month", "-02-", testformatter.testCheckMonth("february"));
 		assertEquals("return month", "-05-", testformatter.testCheckMonth("May"));
 		assertEquals("return month", "-12-", testformatter.testCheckMonth("december"));
-		assertEquals("return month", "-03-", testformatter.testCheckMonth("today"));
+		assertEquals("return month", "", testformatter.testCheckMonth("today"));
 		assertEquals("return month", "", testformatter.testCheckMonth("10"));
 		assertEquals("return month", "", testformatter.testCheckMonth("2018"));
 	}
@@ -128,7 +129,7 @@ public class LogicTest {
 	public void ShouldReturnCorrectDay()	{
 		assertEquals("return day", "10T", testformatter.testCheckDay("10"));
 		assertEquals("return day", "05T", testformatter.testCheckDay("5"));
-		assertEquals("return day", "06T", testformatter.testCheckDay("today"));
+		assertEquals("return day", "", testformatter.testCheckDay("today"));
 		assertEquals("return day", "", testformatter.testCheckDay("march"));
 		assertEquals("return day", "", testformatter.testCheckDay("2017"));
 	}
