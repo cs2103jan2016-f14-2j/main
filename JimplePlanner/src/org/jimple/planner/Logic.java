@@ -126,6 +126,7 @@ public class Logic {
 				switch (i) {
 				case 0:
 					aTask.setTitle(variableArray[0]);
+					break;
 				case 1:
 					aTask.setDescription(variableArray[i]);
 					break;
