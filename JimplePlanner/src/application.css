@@ -1,1 +1,48 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+#fancytext {
+    -fx-font: 16px Tahoma ;
+    /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
+}
+
+/* 
+ .list-cell {
+   -fx-padding: 10 10 10 10;
+   -fx-background-color: white;
+ }
+ 
+ .list-cell:odd {
+   -fx-background-color: lightgrey;
+ }
+ 
+.list-cell:selected {
+   -fx-border-style: dotted;
+   -fx-border-width: 3;
+   -fx-border-color: white;
+   -fx-background-color: lightyellow;
+ }*/
+ 
+ .list-view {
+    -fx-padding: 3px ;
+    -fx-background-color: lightgrey ;
+}
+
+.list-cell {
+    -fx-padding: 10px ;
+    -fx-background-color: transparent, -fx-background ;
+    -fx-background-insets: 0px, 2px ;
+}
+
+.list-cell:empty {
+    -fx-padding: 10px;
+    -fx-background-color: transparent ;
+    -fx-background-insets: 0 ;
+}
+
+/* making scroll bar invisible */
+.list-view .scroll-bar:vertical .increment-arrow,
+.list-view .scroll-bar:vertical .decrement-arrow,
+.list-view .scroll-bar:vertical .increment-button,
+.list-view .scroll-bar:vertical .decrement-button {
+    -fx-padding:0;
+}
