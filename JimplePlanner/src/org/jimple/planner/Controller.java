@@ -264,7 +264,7 @@ public class Controller implements Initializable {
 	@SuppressWarnings("unchecked")
 	private void addAndReloadTodo() {
 		initializeDisplay();
-		tabPanes.requestFocus();
+		tabPanes.getSelectionModel().selectLast();
 		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).requestFocus();
 		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().selectLast();
 		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).scrollTo(((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().getSelectedIndex());
@@ -272,10 +272,8 @@ public class Controller implements Initializable {
 	
 	public void commandBoxListener(){		
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			
 		        @Override
 		        public void handle(KeyEvent t) {
-		        	System.out.println("commandBoxListener triggered");
 		            if(t.getCode() == KeyCode.ESCAPE)
 		            	tabPanes.requestFocus();
 		        }
