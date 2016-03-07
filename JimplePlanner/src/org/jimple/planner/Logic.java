@@ -1,94 +1,20 @@
 package org.jimple.planner;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
-
-class Event {
-	private LocalDateTime fromDateTime;
-	private LocalDateTime toDateTime;
-	private String title;
-	private String description;
-	private String category;
-
-	// Constructors
-	public Event(String aTitle) {
-		this.title = aTitle;
-		this.description = new String("");
-		this.category = new String("");
-		this.fromDateTime = null;
-		this.toDateTime = null;
-	}
-
-	public String getFromTime() {
-		if (fromDateTime == null) {
-			return "";
-		}
-		return fromDateTime.toString();
-	}
-
-	public void setFromDate(String dateTime) {
-		if (dateTime==null) {
-		} else {
-			this.fromDateTime = LocalDateTime.parse(dateTime);
-		}
-	}
-
-	public String getToTime() {
-		if (toDateTime == null) {
-			return "";
-		}
-		return toDateTime.toString();
-	}
-
-	public void setToDate(String dateTime) {
-		if (dateTime==null) {
-		} else {
-			this.toDateTime = LocalDateTime.parse(dateTime);
-		}
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDescription() {
-		if (description == null)	{
-			return "";
-		}
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getCategory() {
-		if (category == null)	{
-			return "";
-		}
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-}
 
 public class Logic {
 
+	private static final String STRING_WHOLEDAY = "23:59";
+	private static final String STRING_SEARCH = "search";
+	private static final String STRING_ADD = "add";
+	private static final String STRING_DEADLINES = "deadlines";
+	private static final String STRING_EVENTS = "events";
+	private static final String STRING_FLOATING = "floating";
+	private static final String STRING_DELETE = "delete";
+	private static final String STRING_EDIT = "edit";
+	
 	private String ADD_HELP_HEADER = "Add a new task:\n";
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
 	private String DISPLAY_HELP_HEADER = "Display all tasks:\n";
@@ -102,26 +28,38 @@ public class Logic {
 	private String DISPLAY_COMMAND = "type \"display\"";
 	private String DELETE_COMMAND = "type \"delete\" <event name>";
 
-	private String ADDED_FEEDBACK = "task added to planner\n";
-	private String EDITED_FEEDBACK = "task edited in planner\n";
-	private String SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
-	private String SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner\n";
+	private String ADDED_FEEDBACK = "task added to planner";
+	private String EDITED_FEEDBACK = "task edited in planner";
+	private String DELETED_FEEDBACK = "task deleted";
 
-	private String ERROR_EDIT_FEEDBACK = "task not found\n";
-	private String ERROR_ADDED_FEEDBACK = "could not add to task list\n";
-	private String ERROR_FILE_NOT_FOUND = "could not find file\n";
-
-	private ArrayList<Event> temporaryHistory;
-	private ArrayList<Event> currentListOfTasksInFile;
+	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
+	private String ERROR_FILE_NOT_FOUND = "could not find file";
+	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
+	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
+	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
+	
+	private ArrayList<Task> deadlines;
+	private ArrayList<Task> floating;
+	private ArrayList<Task> events;
+	private ArrayList<Task> tempHistory;
+	ListOfMonths listOfMonths;
 	Parser parser = new Parser();
-	Storage store = new Storage();
+	StorageStub store = new StorageStub();
+	Formatter formatter = new Formatter();
 
 	public Logic() {
-		temporaryHistory = new ArrayList<Event>();
+		listOfMonths = new ListOfMonths();
+		tempHistory = new ArrayList<Task>();
 		try {
-			currentListOfTasksInFile = store.getEvents();
+			floating = store.getTasks().get(0);
+			deadlines = store.getTasks().get(1);
+			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
+		} catch (IndexOutOfBoundsException d) {
+			floating = new ArrayList<Task>();
+			deadlines = new ArrayList<Task>();
+			events = new ArrayList<Task>();
 		}
 	}
 
@@ -129,185 +67,162 @@ public class Logic {
 	 * function is for the UI to call when a user inputs a string
 	 *
 	 */
-	public String execute(String inputString) throws IOException {
-		String feedback = new String("");
+	public String[] execute(String inputString) throws IOException {
+		String[] feedback = new String[2];
 		InputStruct parsedInput = parser.parseInput(inputString);
-		switch (parsedInput.commandString) {
-		case "delete":
+		switch (parsedInput.getCommand()) {
+		case STRING_DELETE:
+			feedback[0] = deleteTask(parsedInput.getVariableArray(), floating, deadlines, events);
 			break;
-		case "add":
-			feedback += addToTaskList(parsedInput.variableArray, inputString);
+		case STRING_ADD:
+			feedback[0] = addToTaskList(parsedInput.getVariableArray());
 			break;
-		case "edit":
-			feedback += editTask(parsedInput.variableArray);
+		case STRING_EDIT:
+			feedback[0] = editTask(parsedInput.getVariableArray(), floating, deadlines, events);
 			break;
-		case "search":
-			ArrayList<String> searchResults = searchWord(parsedInput.variableArray);
-			feedback += "";
+		case STRING_SEARCH:
+			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray(), floating, deadlines, events);
+			feedback[1] = formatter.formatSearchString(searchResults);
+			feedback[0] = "";
 			break;
 		}
 		return feedback;
 	}
 
-	// adds task into the Event object
-	public String addToTaskList(String[] parsedInput, String originalInput) throws IOException {
-		Event newTask = new Event(parsedInput[0]);
-		for (int i = 1; i < parsedInput.length; i++) {
-			if (parsedInput[i] != "") {
+	public ArrayList<Task> display(String type) {
+		if (type.equals(STRING_FLOATING)) {
+			return floating;
+		} else if (type.equals(STRING_EVENTS)) {
+			return events;
+		} else if (type.equals(STRING_DEADLINES)) {
+			return deadlines;
+		}
+		return null;
+	}
+
+	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
+			throws IOException {
+		boolean isToDoEditted = findTask(one, variableArray, 0, STRING_EDIT);
+		boolean isWholeDayEditted = findTask(two, variableArray, one.size(), STRING_EDIT);
+		boolean isEventsEditted = findTask(three, variableArray, one.size() + two.size(), STRING_EDIT);
+		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
+			packageForSavingInFile();
+			return EDITED_FEEDBACK;
+		}
+		return ERROR_EDIT_FEEDBACK;
+	}
+
+	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) {
+		for (int i = 0; i < list.size(); i++) {
+			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
+				if (type.equals(STRING_EDIT)) {
+					list.set(i, doEdit(arrayWithoutEditIndex(variableArray), list.get(i)));
+				}
+				else if (type.equals(STRING_DELETE))	{
+					list.remove(i);
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String[] arrayWithoutEditIndex(String[] variableArray) {
+		String[] parsedInput = new String[5];
+		for (int i = 1; i < variableArray.length; i++) {
+			parsedInput[i - 1] = variableArray[i];
+		}
+		return parsedInput;
+	}
+
+	private Task doEdit(String[] variableArray, Task aTask) {
+		for (int i = 0; i < variableArray.length; i++) {
+			if (variableArray[i] != null) {
 				switch (i) {
+				case 0:
+					aTask.setTitle(variableArray[0]);
+					break;
 				case 1:
-					newTask.setDescription(parsedInput[i]);
+					aTask.setDescription(variableArray[i]);
 					break;
 				case 2:
-					newTask.setFromDate(parsedInput[i]);
+					String formattedFromDate = formatter.formatDateTime(variableArray[i]);
+					aTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
-					newTask.setToDate(parsedInput[i]);
+					String formattedToDate = formatter.formatDateTime(variableArray[i]);
+					if (isContainsValidTime(formattedToDate)) {
+						aTask.setToDate(formattedToDate);
+					} else {
+						aTask.setToDate(formattedToDate.concat(STRING_WHOLEDAY));
+					}
 					break;
 				case 4:
-					newTask.setCategory(parsedInput[i]);
+					aTask.setCategory(variableArray[i]);
 					break;
 				default:
 					break;
 				}
 			}
 		}
-		temporaryHistory.add(newTask);
-		currentListOfTasksInFile.add(newTask);
-		if (store.isSaved(currentListOfTasksInFile)) {
-			return ADDED_FEEDBACK;
-		}
-		return ERROR_ADDED_FEEDBACK;
+		return aTask;
 	}
 
-	/**
-	 * edit a task Condition: can only edit with line number
-	 */
-
-	public String editTask(String[] parsedInput) throws IOException {
-		int taskNumber = Integer.parseInt(parsedInput[0]) - 1;
-		if (currentListOfTasksInFile.get(taskNumber) != null) {
-			for (int i = 0; i < parsedInput.length; i++) {
-				switch (i) {
-				case 1:
-					currentListOfTasksInFile.get(taskNumber).setTitle(parsedInput[i]);
-					break;
-				case 2:
-					currentListOfTasksInFile.get(taskNumber).setDescription(parsedInput[i]);
-					break;
-				case 3:
-					String formattedDate = formatDate(parsedInput[i]);
-					currentListOfTasksInFile.get(taskNumber).setFromDate(parsedInput[i]);
-					break;
-				case 4:
-					currentListOfTasksInFile.get(taskNumber).setToDate(parsedInput[i]);
-					break;
-				case 5:
-					currentListOfTasksInFile.get(taskNumber).setCategory(parsedInput[i]);
-					break;
-				}
-			}
-			if (store.isSaved(currentListOfTasksInFile)) {
-				return EDITED_FEEDBACK;
-			}
+	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three) throws IOException {
+		boolean isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
+		boolean isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
+		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE); 
+		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted)	{
+			packageForSavingInFile();
+			return DELETED_FEEDBACK;
 		}
-		return ERROR_EDIT_FEEDBACK;
+		return ERROR_DELETED_FEEDBACK;
 	}
 
-	private String formatDate(String unformattedDate) {
-		String[] dividedDates = unformattedDate.split(" ");
-		String formattedDateTime = new String("");
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkYear(dateTime);
-		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkMonth(dateTime);
-		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkDay(dateTime);
-		}
-		for (String dateTime : dividedDates) {
-			formattedDateTime += checkTime(dateTime);
-		}
-		return formattedDateTime;
+	// adds task into the Event object
+	private String addToTaskList(String[] parsedInput) throws IOException {
+		Task newTask = new Task("");
+		newTask = doEdit(parsedInput, newTask);
+		allocateCorrectTimeArray(newTask);
+		tempHistory.add(newTask);
+		return ADDED_FEEDBACK;
 	}
 
-	private String checkYear(String dateTime) {
-		String formattedYear = new String("");
-		if (dateTime.equals(" ")) {
-
-		} 
-		else if (dateTime.equals("today"))	{
-			formattedYear += LocalDateTime.now().getYear();
-			formattedYear += "-";
-			formattedYear += LocalDateTime.now().getMonthValue();
-			formattedYear += "-";
-			formattedYear += LocalDateTime.now().getDayOfMonth();
+	private boolean isContainsValidTime(String formattedDateTime) {
+		if (formattedDateTime.endsWith("T")) {
+			return false;
 		}
-		else {
-			formattedYear = Integer.toString(LocalDateTime.now().getYear());
-		}
-		return formattedYear;
+			
+		return true;
 	}
 
-	private String checkMonth(String dateTime) {
-		String formattedDate = new String("");
-		switch (dateTime) {
-		case "january":
-			formattedDate = "1";
-			break;
-		case "february":
-			formattedDate = "2";
-			break;
-		case "march":
-			formattedDate = "3";
-			break;
-		case "april":
-			formattedDate = "4";
-			break;
-		case "may":
-			formattedDate = "5";
-			break;
-		case "june":
-			formattedDate = "6";
-			break;
-		case "july":
-			formattedDate = "7";
-			break;
-		case "august":
-			formattedDate = "8";
-			break;
-		case "september":
-			formattedDate = "9";
-			break;
-		case "october":
-			formattedDate = "10";
-			break;
-		case "november":
-			formattedDate = "11";
-			break;
-		case "december":
-			formattedDate = "12";
-			break;
-		default:
-			break;
+	private void allocateCorrectTimeArray(Task newTask) throws IOException {
+		// check if null
+		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
+			floating.add(newTask);
 		}
-		return formattedDate;
+		// check if whole day task
+		else if (newTask.getFromTime() == null && newTask.getToTime() != null) {
+			deadlines.add(newTask);
+		} else {
+			events.add(newTask);
+		}
+		packageForSavingInFile();
 	}
 
-	private String checkDay(String dateTime) {
-		return null;
-	}
-
-	private String checkTime(String dateTime) {
-		return null;
+	private void packageForSavingInFile() throws IOException {
+		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
+		allTasksArray.add(floating);
+		allTasksArray.add(deadlines);
+		allTasksArray.add(events);
+		store.isSaved(allTasksArray);
 	}
 
 	/**
 	 * returns total number of word matches compared to an event
 	 * 
 	 */
-	private int matchingWordCount(String[] parsedInput, Event task) {
+	private int matchingWordCount(String[] parsedInput, Task task) {
 		int count = 0;
 		for (int i = 0; i < parsedInput.length; i++) {
 			switch (i) {
@@ -322,12 +237,12 @@ public class Logic {
 				}
 				break;
 			case 3:
-				if (task.getFromTime().contains(parsedInput[i])) {
+				if (task.getFromTimeString().contains(parsedInput[i])) {
 					count++;
 				}
 				break;
 			case 4:
-				if (task.getToTime().contains(parsedInput[i])) {
+				if (task.getToTimeString().contains(parsedInput[i])) {
 					count++;
 				}
 				break;
@@ -347,7 +262,7 @@ public class Logic {
 	 * gets a list of help commands for user to refer to
 	 *
 	 */
-	public String helpCommand(String[] parsedInput) {
+	private String helpCommand(String[] parsedInput) {
 		String listOfCommands = new String();
 		listOfCommands += ADD_HELP_HEADER;
 		listOfCommands += ADD_COMMAND_BY;
@@ -365,62 +280,96 @@ public class Logic {
 		listOfCommands += DELETE_COMMAND;
 		return listOfCommands;
 	}
-	
-	//Index 0 will always yield a feedback, indexes 1 onwards will give the Indexes of Events that has the keyword
-	public ArrayList<String> searchWord(String[] variableArray) {
+
+	// Index 0 will always yield a feedback, indexes 1 onwards will give the
+	// Indexes of Events that has the keyword
+	public ArrayList<String> searchWord(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
+			ArrayList<Task> three) {
 		String wordToBeSearched = variableArray[0];
-		ArrayList<String> searchWordResults;
-		if(currentListOfTasksInFile.isEmpty()){
-			searchWordResults = new ArrayList<String>();
-			searchWordResults.add(SEARCH_PLANNER_EMPTY_FEEDBACK);
+		ArrayList<String> searchWordResults = new ArrayList<String>();
+		if (one.isEmpty() && two.isEmpty() && three.isEmpty()) {
+			searchWordResults.add(ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK);
 		} else {
-			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
-			if(searchWordResults.isEmpty()){
-				searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
-			} else {
-				String searchResultFeedback = "search result for \"" + wordToBeSearched + "\"";
-				searchWordResults = getSearchedWordLineIndexes(wordToBeSearched);
-				searchWordResults.add(0, searchResultFeedback);	
-			}
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, one, 0));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, two, one.size()));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, three, one.size() + two.size()));
 		}
 		return searchWordResults;
 	}
-	
-	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched){
+
+	private ArrayList<String> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list, int size) {
+		ArrayList<String> searchWordResults;
+		searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
+		if (searchWordResults.isEmpty()) {
+			// searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+		} else {
+			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
+		}
+		return searchWordResults;
+	}
+
+	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched, ArrayList<Task> list, int size) {
 		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
-		int eventListSize = currentListOfTasksInFile.size();
-		for(int i = 0; i < eventListSize; i++){
-			Event currentEvent = currentListOfTasksInFile.get(i);
-			if(isContainKeyword(currentEvent, wordToBeSearched)){
-				indexesOfWordInstanceFound.add(String.valueOf(i));
+		int eventListSize = list.size();
+		for (int i = 0; i < eventListSize; i++) {
+			Task currentEvent = list.get(i);
+			if (isContainKeyword(currentEvent, wordToBeSearched)) {
+				indexesOfWordInstanceFound.add(String.valueOf(i) + size);
 			}
 		}
 		return indexesOfWordInstanceFound;
 	}
-	
+
 	private boolean isContainSubstring(String sourceString, String substring) {
-	    int substringLength = substring.length();
-	    if (substringLength == 0){
-	        return true;
-	    }
-	    char subStringFirstLowerCaseChar = Character.toLowerCase(substring.charAt(0));
-	    char subStringFirstUpperCaseChar = Character.toUpperCase(substring.charAt(0));
-	    for (int i = sourceString.length() - substringLength; i >= 0; i--) {
-	        char sourceCharacterAt = sourceString.charAt(i);
-	        if (sourceCharacterAt != subStringFirstLowerCaseChar && sourceCharacterAt != subStringFirstUpperCaseChar){
-	            continue;
-	        }
-	        if (sourceString.regionMatches(true, i, substring, 0, substringLength)){
-	            return true;
-	        }
-	    }
-	    return false;
+		int substringLength = substring.length();
+		if (substringLength == 0) {
+			return true;
+		}
+		char subStringFirstLowerCaseChar = Character.toLowerCase(substring.charAt(0));
+		char subStringFirstUpperCaseChar = Character.toUpperCase(substring.charAt(0));
+		for (int i = sourceString.length() - substringLength; i >= 0; i--) {
+			char sourceCharacterAt = sourceString.charAt(i);
+			if (sourceCharacterAt != subStringFirstLowerCaseChar && sourceCharacterAt != subStringFirstUpperCaseChar) {
+				continue;
+			}
+			if (sourceString.regionMatches(true, i, substring, 0, substringLength)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	
-	private boolean isContainKeyword(Event event, String keyword){
+
+	private boolean isContainKeyword(Task event, String keyword) {
 		boolean isTitleSearched = isContainSubstring(event.getTitle(), keyword);
 		boolean isDescSearched = isContainSubstring(event.getDescription(), keyword);
 		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
 		return (isTitleSearched || isDescSearched || isCategorySearched);
+	}
+
+	public String testAddToTaskList(String[] parsedInput) throws IOException {
+		return addToTaskList(parsedInput);
+	}
+
+	public boolean testIsContainKeyword(Task event, String keyword) {
+		return isContainKeyword(event, keyword);
+	}
+
+	public ArrayList<String> testSearchWord(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
+			ArrayList<Task> three) {
+		return searchWord(variableArray, one, two, three);
+	}
+
+	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
+		return findTask(list, variableArray, previousSizes, STRING_EDIT);
+	}
+
+	public String testEditTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
+			throws IOException {
+		return editTask(variableArray, one, two, three);
+	}
+	
+	public String testDeleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
+			ArrayList<Task> three) throws IOException	{
+		return deleteTask(variableArray, one, two, three);
 	}
 }
