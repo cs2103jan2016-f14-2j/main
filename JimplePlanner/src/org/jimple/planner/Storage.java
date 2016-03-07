@@ -9,9 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Storage {
 	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
@@ -102,6 +103,7 @@ public class Storage {
 	}
 	
 	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+		sortBeforeWritngToFile(allTaskLists);
 		writeToFile(allTaskLists);
 		boolean saveStatus = isSaveToFile();
 		return saveStatus;
@@ -119,6 +121,21 @@ public class Storage {
 			tempWriter.newLine();
 		}
 		tempWriter.close();
+	}
+	
+	private void sortBeforeWritngToFile(ArrayList<ArrayList<Task>> allTaskLists){
+		sortDeadlines(allTaskLists);
+		sortEvents(allTaskLists);
+	}
+	
+	private void sortDeadlines(ArrayList<ArrayList<Task>> allTaskLists){
+		Comparator<Task> toDateComparator = Task.getToDateComparator();
+		Collections.sort(allTaskLists.get(1), toDateComparator);
+	}
+	
+	private void sortEvents(ArrayList<ArrayList<Task>> allTaskLists){
+		Comparator<Task> fromDateComparator = Task.getFromDateComparator();
+		Collections.sort(allTaskLists.get(2), fromDateComparator);
 	}
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
@@ -170,6 +187,17 @@ public class Storage {
 	//This method is purely for test purposes only
 	public Task testGetTaskFromLine(String fileLineContent){
 		return getTaskFromLine(fileLineContent);
+	}
+	
+	//This method is used for unit test in StorageTest
+	public String[] testExtractTasksToStringArray(Task task){
+		String[] result = new String[5];
+		result[0] = task.getTitle();
+		result[1] = task.getDescription();
+		result[2] = task.getCategory();
+		result[3] = task.getFromTimeString();
+		result[4] = task.getToTimeString();
+		return result;
 	}
 	
 	private void setFields(Task task, String field){

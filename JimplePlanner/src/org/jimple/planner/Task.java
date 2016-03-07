@@ -1,6 +1,7 @@
 package org.jimple.planner;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 class Task{
 	private LocalDateTime fromDateTime;
@@ -82,5 +83,21 @@ class Task{
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	public static Comparator<Task> getFromDateComparator(){
+		return new Comparator<Task>(){
+			public int compare(Task task1, Task task2){
+				return task1.getFromTime().compareTo(task2.getFromTime());
+			}
+		};
+	}
+	
+	public static Comparator<Task> getToDateComparator(){
+		return new Comparator<Task>(){
+			public int compare(Task task1, Task task2){
+				return task1.getToTime().compareTo(task2.getToTime());
+			}
+		};
 	}
 }
