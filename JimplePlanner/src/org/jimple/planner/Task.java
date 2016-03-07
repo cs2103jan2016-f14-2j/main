@@ -9,6 +9,15 @@ class Task{
 	private String title;
 	private String description;
 	private String category;
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	// Constructors
 	public Task(String aTitle) {
