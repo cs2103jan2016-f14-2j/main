@@ -31,6 +31,7 @@ public class Parser {
 	 */
 	private HashMap<String, Integer> extendedCommandsAdd;
 	private HashMap<String, Integer> extendedCommandsEdit;
+	private HashMap<String, Integer> noExtendedCommands;
 	
 	/* 
 	 *  Stores the extended commands variables into the respective hashmaps.
@@ -38,6 +39,7 @@ public class Parser {
 	public Parser() {
 		extendedCommandsAdd = new HashMap<String, Integer>();
 		extendedCommandsEdit = new HashMap<String, Integer>();
+		noExtendedCommands = new HashMap<String, Integer>();
 		
 		for (int i = 0; i < EXTENDED_COMMANDS_ADD.length; i++) {
 			extendedCommandsAdd.put(EXTENDED_COMMANDS_ADD[i], EXTENDED_COMMANDS_ADD_INDEX[i]);
@@ -59,7 +61,7 @@ public class Parser {
 			case "edit" :
 				return getStruct(splitUserInput, extendedCommandsEdit);
 			default :
-				return null;
+				return getStruct(splitUserInput, noExtendedCommands);
 		}
 	}
 	
