@@ -1,10 +1,20 @@
 package org.jimple.planner;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Logic {
 
+	private static final String STRING_WHOLEDAY = "23:59";
+	private static final String STRING_SEARCH = "search";
+	private static final String STRING_ADD = "add";
+	private static final String STRING_DEADLINES = "deadlines";
+	private static final String STRING_EVENTS = "events";
+	private static final String STRING_FLOATING = "floating";
+	private static final String STRING_DELETE = "delete";
+	private static final String STRING_EDIT = "edit";
+	
 	private String ADD_HELP_HEADER = "Add a new task:\n";
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
 	private String DISPLAY_HELP_HEADER = "Display all tasks:\n";
@@ -22,7 +32,7 @@ public class Logic {
 	private String EDITED_FEEDBACK = "task edited in planner";
 	private String DELETED_FEEDBACK = "task deleted";
 
-	private String ERROR_EDIT_FEEDBACK = "task not found";
+	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
@@ -61,16 +71,16 @@ public class Logic {
 		String[] feedback = new String[2];
 		InputStruct parsedInput = parser.parseInput(inputString);
 		switch (parsedInput.getCommand()) {
-		case "delete":
+		case STRING_DELETE:
 			feedback[0] = deleteTask(parsedInput.getVariableArray(), floating, deadlines, events);
 			break;
-		case "add":
+		case STRING_ADD:
 			feedback[0] = addToTaskList(parsedInput.getVariableArray());
 			break;
-		case "edit":
+		case STRING_EDIT:
 			feedback[0] = editTask(parsedInput.getVariableArray(), floating, deadlines, events);
 			break;
-		case "search":
+		case STRING_SEARCH:
 			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray(), floating, deadlines, events);
 			feedback[1] = formatter.formatSearchString(searchResults);
 			feedback[0] = "";
@@ -80,11 +90,11 @@ public class Logic {
 	}
 
 	public ArrayList<Task> display(String type) {
-		if (type.equals("floating")) {
+		if (type.equals(STRING_FLOATING)) {
 			return floating;
-		} else if (type.equals("events")) {
+		} else if (type.equals(STRING_EVENTS)) {
 			return events;
-		} else if (type.equals("deadlines")) {
+		} else if (type.equals(STRING_DEADLINES)) {
 			return deadlines;
 		}
 		return null;
@@ -92,9 +102,9 @@ public class Logic {
 
 	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
-		boolean isToDoEditted = findTask(one, variableArray, 0, "edit");
-		boolean isWholeDayEditted = findTask(two, variableArray, one.size(), "edit");
-		boolean isEventsEditted = findTask(three, variableArray, one.size() + two.size(), "edit");
+		boolean isToDoEditted = findTask(one, variableArray, 0, STRING_EDIT);
+		boolean isWholeDayEditted = findTask(two, variableArray, one.size(), STRING_EDIT);
+		boolean isEventsEditted = findTask(three, variableArray, one.size() + two.size(), STRING_EDIT);
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			packageForSavingInFile();
 			return EDITED_FEEDBACK;
@@ -105,10 +115,10 @@ public class Logic {
 	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
-				if (type.equals("edit")) {
-					doEdit(arrayWithoutEditIndex(variableArray), list.get(i));
+				if (type.equals(STRING_EDIT)) {
+					list.set(i, doEdit(arrayWithoutEditIndex(variableArray), list.get(i)));
 				}
-				else if (type.equals("delete"))	{
+				else if (type.equals(STRING_DELETE))	{
 					list.remove(i);
 				}
 				return true;
@@ -131,6 +141,7 @@ public class Logic {
 				switch (i) {
 				case 0:
 					aTask.setTitle(variableArray[0]);
+					break;
 				case 1:
 					aTask.setDescription(variableArray[i]);
 					break;
@@ -143,7 +154,7 @@ public class Logic {
 					if (isContainsValidTime(formattedToDate)) {
 						aTask.setToDate(formattedToDate);
 					} else {
-						aTask.setToDate(formattedToDate.concat("23:59"));
+						aTask.setToDate(formattedToDate.concat(STRING_WHOLEDAY));
 					}
 					break;
 				case 4:
@@ -158,9 +169,9 @@ public class Logic {
 	}
 
 	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three) throws IOException {
-		boolean isFloatDeleted = findTask(one, variableArray, 0, "delete");
-		boolean isDeadlineDeleted = findTask(two, variableArray, one.size(), "delete");
-		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), "delete"); 
+		boolean isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
+		boolean isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
+		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE); 
 		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted)	{
 			packageForSavingInFile();
 			return DELETED_FEEDBACK;
@@ -181,6 +192,7 @@ public class Logic {
 		if (formattedDateTime.endsWith("T")) {
 			return false;
 		}
+			
 		return true;
 	}
 
@@ -348,7 +360,7 @@ public class Logic {
 	}
 
 	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
-		return findTask(list, variableArray, previousSizes, "edit");
+		return findTask(list, variableArray, previousSizes, STRING_EDIT);
 	}
 
 	public String testEditTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
