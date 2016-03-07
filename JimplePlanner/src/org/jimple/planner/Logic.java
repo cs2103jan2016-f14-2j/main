@@ -202,7 +202,7 @@ public class Logic {
 			floating.add(newTask);
 		}
 		// check if whole day task
-		else if (newTask.getFromTimeString().equals(null) && newTask.getToTime() != null) {
+		else if (newTask.getFromTime() == null && newTask.getToTime() != null) {
 			deadlines.add(newTask);
 		} else {
 			events.add(newTask);
