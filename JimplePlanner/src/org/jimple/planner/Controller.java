@@ -249,6 +249,8 @@ public class Controller implements Initializable {
 			// System.out.println(inputStr);
 			String[] feedback = logic.execute(inputStr);
 			messagePrompt.setText(feedback[0]);
+			if(feedback[1]!=null)
+				System.out.println(feedback[1]);
 			
 			FadeTransition ft = new FadeTransition(Duration.millis(3000), messagePrompt);
 			ft.setFromValue(1.0);
@@ -257,7 +259,22 @@ public class Controller implements Initializable {
 			ft.play();
 
 			clearCommandBox();
-			addAndReloadTodo();
+			
+			String displayType = feedback[1];
+			reloadDisplay();
+//			switch(displayType){
+//			case "agenda":
+//				break;
+//			case "events":
+//				break;
+//			case "deadline":
+//				break;
+//			case "todo":
+//				addAndReloadTodo();
+//				break;
+//			default:
+//				break;
+//			}
 		}
 	}
 
@@ -268,6 +285,10 @@ public class Controller implements Initializable {
 		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).requestFocus();
 		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().selectLast();
 		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).scrollTo(((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().getSelectedIndex());
+	}
+	
+	private void reloadDisplay(){
+		initializeDisplay();
 	}
 	
 	public void commandBoxListener(){		
