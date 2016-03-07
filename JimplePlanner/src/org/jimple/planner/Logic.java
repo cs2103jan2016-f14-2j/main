@@ -314,7 +314,7 @@ public class Logic {
 		for (int i = 0; i < eventListSize; i++) {
 			Task currentEvent = list.get(i);
 			if (isContainKeyword(currentEvent, wordToBeSearched)) {
-				indexesOfWordInstanceFound.add(String.valueOf(i) + size);
+				indexesOfWordInstanceFound.add(String.valueOf(i+size));
 			}
 		}
 		return indexesOfWordInstanceFound;
