@@ -73,17 +73,19 @@ public class Logic {
 		switch (parsedInput.getCommand()) {
 		case STRING_DELETE:
 			feedback[0] = deleteTask(parsedInput.getVariableArray(), floating, deadlines, events);
+			feedback[1] = STRING_DELETE;
 			break;
 		case STRING_ADD:
 			feedback[0] = addToTaskList(parsedInput.getVariableArray());
+			feedback[1] = STRING_ADD;
 			break;
 		case STRING_EDIT:
 			feedback[0] = editTask(parsedInput.getVariableArray(), floating, deadlines, events);
+			feedback[1] = STRING_EDIT;
 			break;
 		case STRING_SEARCH:
-			ArrayList<String> searchResults = searchWord(parsedInput.getVariableArray(), floating, deadlines, events);
-			feedback[1] = formatter.formatSearchString(searchResults);
 			feedback[0] = "";
+			feedback[1] = STRING_SEARCH;
 			break;
 		}
 		return feedback;
