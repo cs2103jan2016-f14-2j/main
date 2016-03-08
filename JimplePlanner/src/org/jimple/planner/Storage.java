@@ -18,6 +18,8 @@ public class Storage {
 	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
 	private static final String DEFAULT_FILE_NAME = "planner.jim";
 	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
+	private static final String TEST_FILE_NAME = "testplanner.jim";
+	private static final String TEST_TEMP_FILE_NAME = "testtempplanner.jim";
 	private static final String TAGS_CATEGORY = ":cat:";
 	private static final String TAGS_DESCRIPTION = ":desc:";
 	private static final String TAGS_FROM_TIME = ":from:";
@@ -41,24 +43,45 @@ public class Storage {
 	}
 	
 	//Methods for creating filereaders and filewriters
-	private BufferedReader createDefaultFileReader() throws FileNotFoundException {
-		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
-		File file = createFile(filePath);
+	private BufferedReader createFileReader(String fileName) throws FileNotFoundException {
+		File file = createFile(fileName);
 		FileInputStream fileIn = new FileInputStream(file);
 		InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
 		BufferedReader reader = new BufferedReader(inputStreamReader);
 		return reader;
 	}
 	
-	private BufferedWriter createTempFileWriter() throws FileNotFoundException {
-		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
-		File file = createFile(filePath);
+	private BufferedWriter createFileWriter(String fileName) throws FileNotFoundException {
+		File file = createFile(fileName);
 		FileOutputStream fileOut = new FileOutputStream(file);
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
 		BufferedWriter writer = new BufferedWriter(outputStreamWriter);
 		return writer;
 	}
-
+	
+	private BufferedReader createDefaultFileReader() throws FileNotFoundException {
+		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
+		return createFileReader(filePath);
+	}
+	
+	private BufferedWriter createTempFileWriter() throws FileNotFoundException {
+		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
+		return createFileWriter(filePath);
+	}
+	
+	/*
+	 * The following 2 methods are just used for Testing purposes
+	 */
+	public BufferedWriter createTestFileReader() throws FileNotFoundException {
+		String filePath = DEFAULT_FILE_DIRECTORY+TEST_FILE_NAME;
+		return createFileWriter(filePath);
+	}
+	
+	public BufferedWriter createTestTempFileWriter() throws FileNotFoundException {
+		String filePath = DEFAULT_FILE_DIRECTORY+TEST_TEMP_FILE_NAME;
+		return createFileWriter(filePath);
+	}
+	
 	//This method extracts all relevant fields from an Task and stores them as a String, each String line is an Task
 	private String extractTaskToString(Task task){
 		String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
