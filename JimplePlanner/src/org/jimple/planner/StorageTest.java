@@ -96,7 +96,7 @@ public class StorageTest {
 	public void testIsSaved() throws IOException {
 		ArrayList<ArrayList<Task>> tasks = getTasksStub();
 		Storage storage = new Storage();
-		boolean saveState = storage.isSaved(tasks);
+		boolean saveState = storage.isSavedTest(tasks);
 		assertTrue("this should return true if saved", saveState);
 	}
 	
@@ -137,7 +137,7 @@ public class StorageTest {
 	@Test
 	public void testGetTasks() throws IOException{
 		Storage storage = new Storage();
-		ArrayList<ArrayList<Task>> tasks = storage.getTasks();
+		ArrayList<ArrayList<Task>> tasks = storage.getTestTasks();
 		ArrayList<Task> todo = tasks.get(0);
 		ArrayList<Task> deadline = tasks.get(1);
 		ArrayList<Task> event = tasks.get(2);

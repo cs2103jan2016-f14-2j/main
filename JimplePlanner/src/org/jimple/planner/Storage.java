@@ -28,6 +28,8 @@ public class Storage {
 	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
 	private static final String EMPTY_STRING = "";
 	private static final String FILE_SECTION_SEPARATOR = ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<";
+	private static final boolean IS_TEST = true;
+	private static final boolean IS_NOT_TEST = false;
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
@@ -72,12 +74,12 @@ public class Storage {
 	/*
 	 * The following 2 methods are just used for Testing purposes
 	 */
-	public BufferedWriter createTestFileReader() throws FileNotFoundException {
+	private BufferedReader createTestFileReader() throws FileNotFoundException {
 		String filePath = DEFAULT_FILE_DIRECTORY+TEST_FILE_NAME;
-		return createFileWriter(filePath);
+		return createFileReader(filePath);
 	}
 	
-	public BufferedWriter createTestTempFileWriter() throws FileNotFoundException {
+	private BufferedWriter createTestTempFileWriter() throws FileNotFoundException {
 		String filePath = DEFAULT_FILE_DIRECTORY+TEST_TEMP_FILE_NAME;
 		return createFileWriter(filePath);
 	}
@@ -125,15 +127,28 @@ public class Storage {
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+	private boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, boolean isTest) throws IOException{
 		sortBeforeWritngToFile(allTaskLists);
-		writeToFile(allTaskLists);
-		boolean saveStatus = isSaveToFile();
+		writeToFile(allTaskLists, isTest);
+		boolean saveStatus = isSaveToFile(isTest);
 		return saveStatus;
 	}
 	
-	private void writeToFile(ArrayList<ArrayList<Task>> allTaskLists) throws IOException  {
-		BufferedWriter tempWriter = createTempFileWriter();
+	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+		return isSavedSelect(allTaskLists, IS_NOT_TEST);
+	}
+	
+	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+		return isSavedSelect(allTaskLists, IS_TEST);
+	}
+	
+	private void writeToFile(ArrayList<ArrayList<Task>> allTaskLists, boolean isTest) throws IOException  {
+		BufferedWriter tempWriter = null;
+		if(isTest){
+			tempWriter = createTestTempFileWriter();
+		} else {
+			tempWriter = createTempFileWriter();
+		}
 		for(ArrayList<Task> taskList: allTaskLists){
 			for(Task task: taskList){
 				String lineString = extractTaskToString(task);
@@ -162,12 +177,18 @@ public class Storage {
 	}
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
-	private boolean isSaveToFile(){
-		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
+	private boolean isSaveToFile(boolean isTest){
+		String filePath = null;
+		String tempFilePath = null;
+		if(isTest){
+			filePath = DEFAULT_FILE_DIRECTORY+TEST_FILE_NAME;
+			tempFilePath = DEFAULT_FILE_DIRECTORY+TEST_TEMP_FILE_NAME;
+		} else {
+			filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
+			tempFilePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
+		}
 		File file = createFile(filePath);
-		String tempFilePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
 		File tempFile = createFile(tempFilePath);
-
 		if(!file.delete() || !tempFile.renameTo(file)){
 			return false;
 		} else {
@@ -175,8 +196,13 @@ public class Storage {
 		}
 	}
 	
-	public ArrayList<ArrayList<Task>> getTasks() throws IOException{
-		BufferedReader defaultFileReader = createDefaultFileReader();
+	private ArrayList<ArrayList<Task>> getTaskSelect(boolean isTest) throws IOException{
+		BufferedReader defaultFileReader = null;
+		if(isTest){
+			defaultFileReader = createTestFileReader();
+		} else {
+			defaultFileReader = createDefaultFileReader();
+		}
 		ArrayList<ArrayList<Task>> allTasksLists = new ArrayList<ArrayList<Task>>();
 		String fileLineContent;
 		ArrayList<Task> taskList = new ArrayList<Task>();
@@ -191,6 +217,14 @@ public class Storage {
 		}
 		defaultFileReader.close();
 		return allTasksLists;
+	}
+	
+	public ArrayList<ArrayList<Task>> getTasks() throws IOException{
+		return getTaskSelect(IS_NOT_TEST);
+	}
+	
+	public ArrayList<ArrayList<Task>> getTestTasks() throws IOException{
+		return getTaskSelect(IS_TEST);
 	}
 	
 	private ArrayList<String> getSeparateFields(String fileLineContent){
