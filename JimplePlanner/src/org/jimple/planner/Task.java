@@ -10,14 +10,9 @@ class Task{
 	private String description;
 	private String category;
 	private String type;
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	private static final String TYPE_EVENT = "event";
+	private static final String TYPE_TODO = "todo";
+	private static final String TYPE_DEADLINE = "deadline";
 
 	// Constructors
 	public Task(String aTitle) {
@@ -26,6 +21,7 @@ class Task{
 		this.category = new String("");
 		this.fromDateTime = null;
 		this.toDateTime = null;
+		this.type = TYPE_TODO;
 	}
 
 	public String getFromTimeString() {
@@ -44,6 +40,7 @@ class Task{
 		} else {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
+		checkAndSetType();
 	}
 
 	public String getToTimeString() {
@@ -62,8 +59,35 @@ class Task{
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
+		checkAndSetType();
 	}
-
+	
+	public String getType() {
+		return type;
+	}
+	
+	private void checkAndSetType(){
+		if(isTodo()){
+			this.type = TYPE_TODO;
+		} else if(isDeadline()){
+			this.type = TYPE_DEADLINE;
+		} else if (isEvent()){
+			this.type = TYPE_EVENT;
+		}
+	}
+	
+	private boolean isTodo(){
+		return (getToTime() == null && getFromTime() == null);
+	}
+	
+	private boolean isDeadline(){
+		return (getToTime() != null && getFromTime() == null);
+	}
+	
+	private boolean isEvent(){
+		return (getFromTime() != null);
+	}
+	
 	public String getTitle() {
 		return title;
 	}

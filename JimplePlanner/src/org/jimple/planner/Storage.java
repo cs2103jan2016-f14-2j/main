@@ -248,12 +248,13 @@ public class Storage {
 	
 	//This method is used for unit test in StorageTest
 	public String[] testExtractTasksToStringArray(Task task){
-		String[] result = new String[5];
+		String[] result = new String[6];
 		result[0] = task.getTitle();
 		result[1] = task.getDescription();
 		result[2] = task.getCategory();
 		result[3] = task.getFromTimeString();
 		result[4] = task.getToTimeString();
+		result[5] = task.getType();
 		return result;
 	}
 	
