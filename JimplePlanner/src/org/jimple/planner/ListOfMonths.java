@@ -44,6 +44,6 @@ public class ListOfMonths {
 	}
 	
 	public String newMonthDigit(int month) {
-		return listOfMonths.get(month);
+		return listOfNewMonths.get(month);
 	}
 }
