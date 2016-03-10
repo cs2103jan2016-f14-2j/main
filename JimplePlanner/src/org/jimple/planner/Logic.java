@@ -9,12 +9,13 @@ public class Logic {
 	private static final String STRING_WHOLEDAY = "23:59";
 	private static final String STRING_SEARCH = "search";
 	private static final String STRING_ADD = "add";
-	private static final String STRING_DEADLINES = "deadlines";
-	private static final String STRING_EVENTS = "events";
-	private static final String STRING_FLOATING = "floating";
 	private static final String STRING_DELETE = "delete";
 	private static final String STRING_EDIT = "edit";
-	
+
+	private static final String TYPE_DEADLINE = "deadline";
+	private static final String TYPE_EVENT = "event";
+	private static final String TYPE_TODO = "todo";
+
 	private String ADD_HELP_HEADER = "Add a new task:\n";
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
 	private String DISPLAY_HELP_HEADER = "Display all tasks:\n";
@@ -31,15 +32,16 @@ public class Logic {
 	private String ADDED_FEEDBACK = "task added to planner";
 	private String EDITED_FEEDBACK = "task edited in planner";
 	private String DELETED_FEEDBACK = "task deleted";
+	private String WINDOW_CLOSED_FEEDBACK = "search window closed";
 
 	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
-	
+
 	private ArrayList<Task> deadlines;
-	private ArrayList<Task> floating;
+	private ArrayList<Task> todo;
 	private ArrayList<Task> events;
 	private ArrayList<Task> tempHistory;
 	ListOfMonths listOfMonths;
@@ -51,13 +53,13 @@ public class Logic {
 		listOfMonths = new ListOfMonths();
 		tempHistory = new ArrayList<Task>();
 		try {
-			floating = store.getTasks().get(0);
+			todo = store.getTasks().get(0);
 			deadlines = store.getTasks().get(1);
 			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
 		} catch (IndexOutOfBoundsException d) {
-			floating = new ArrayList<Task>();
+			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
 		}
@@ -72,7 +74,7 @@ public class Logic {
 		InputStruct parsedInput = parser.parseInput(inputString);
 		switch (parsedInput.getCommand()) {
 		case STRING_DELETE:
-			feedback[0] = deleteTask(parsedInput.getVariableArray(), floating, deadlines, events);
+			feedback[0] = deleteTask(parsedInput.getVariableArray(), todo, deadlines, events);
 			feedback[1] = STRING_DELETE;
 			break;
 		case STRING_ADD:
@@ -80,11 +82,11 @@ public class Logic {
 			feedback[1] = STRING_ADD;
 			break;
 		case STRING_EDIT:
-			feedback[0] = editTask(parsedInput.getVariableArray(), floating, deadlines, events);
+			feedback[0] = editTask(parsedInput.getVariableArray(), todo, deadlines, events);
 			feedback[1] = STRING_EDIT;
 			break;
 		case STRING_SEARCH:
-			feedback[0] = "";
+			feedback[0] = parsedInput.getVariableArray()[0];
 			feedback[1] = STRING_SEARCH;
 			break;
 		}
@@ -92,11 +94,11 @@ public class Logic {
 	}
 
 	public ArrayList<Task> display(String type) {
-		if (type.equals(STRING_FLOATING)) {
-			return floating;
-		} else if (type.equals(STRING_EVENTS)) {
+		if (type.equals(TYPE_TODO)) {
+			return todo;
+		} else if (type.equals(TYPE_EVENT)) {
 			return events;
-		} else if (type.equals(STRING_DEADLINES)) {
+		} else if (type.equals(TYPE_DEADLINE)) {
 			return deadlines;
 		}
 		return null;
@@ -119,8 +121,7 @@ public class Logic {
 			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
 				if (type.equals(STRING_EDIT)) {
 					list.set(i, doEdit(arrayWithoutEditIndex(variableArray), list.get(i)));
-				}
-				else if (type.equals(STRING_DELETE))	{
+				} else if (type.equals(STRING_DELETE)) {
 					list.remove(i);
 				}
 				return true;
@@ -137,7 +138,7 @@ public class Logic {
 		return parsedInput;
 	}
 
-	private Task doEdit(String[] variableArray, Task aTask) {
+	public Task doEdit(String[] variableArray, Task aTask) {
 		for (int i = 0; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
 				switch (i) {
@@ -170,11 +171,12 @@ public class Logic {
 		return aTask;
 	}
 
-	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three) throws IOException {
+	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
+			throws IOException {
 		boolean isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
 		boolean isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
-		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE); 
-		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted)	{
+		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE);
+		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
 			packageForSavingInFile();
 			return DELETED_FEEDBACK;
 		}
@@ -194,14 +196,14 @@ public class Logic {
 		if (formattedDateTime.endsWith("T")) {
 			return false;
 		}
-			
+
 		return true;
 	}
 
 	private void allocateCorrectTimeArray(Task newTask) throws IOException {
 		// check if null
 		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
-			floating.add(newTask);
+			todo.add(newTask);
 		}
 		// check if whole day task
 		else if (newTask.getFromTime() == null && newTask.getToTime() != null) {
@@ -214,7 +216,7 @@ public class Logic {
 
 	private void packageForSavingInFile() throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
-		allTasksArray.add(floating);
+		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
 		store.isSaved(allTasksArray);
@@ -283,43 +285,55 @@ public class Logic {
 		return listOfCommands;
 	}
 
-	// Index 0 will always yield a feedback, indexes 1 onwards will give the
-	// Indexes of Events that has the keyword
-	public ArrayList<String> searchWord(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
-			ArrayList<Task> three) {
-		String wordToBeSearched = variableArray[0];
-		ArrayList<String> searchWordResults = new ArrayList<String>();
-		if (one.isEmpty() && two.isEmpty() && three.isEmpty()) {
-			searchWordResults.add(ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK);
-		} else {
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, one, 0));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, two, one.size()));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, three, one.size() + two.size()));
-		}
-		return searchWordResults;
-	}
-
-	private ArrayList<String> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list, int size) {
-		ArrayList<String> searchWordResults;
-		searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
-		if (searchWordResults.isEmpty()) {
-			// searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
-		} else {
-			searchWordResults = getSearchedWordLineIndexes(wordToBeSearched, list, size);
-		}
-		return searchWordResults;
-	}
-
-	private ArrayList<String> getSearchedWordLineIndexes(String wordToBeSearched, ArrayList<Task> list, int size) {
-		ArrayList<String> indexesOfWordInstanceFound = new ArrayList<String>();
-		int eventListSize = list.size();
-		for (int i = 0; i < eventListSize; i++) {
-			Task currentEvent = list.get(i);
-			if (isContainKeyword(currentEvent, wordToBeSearched)) {
-				indexesOfWordInstanceFound.add(String.valueOf(i+size));
+	public String reInsertNewTasks(ArrayList<Task> newList) throws IOException {
+		for (Task aTask : newList) {
+			if (aTask.getType().equals(TYPE_EVENT)) {
+				events.add(aTask);
+			} else if (aTask.getType().equals(TYPE_TODO)) {
+				todo.add(aTask);
+			} else if (aTask.getType().equals(TYPE_DEADLINE)) {
+				deadlines.add(aTask);
 			}
 		}
-		return indexesOfWordInstanceFound;
+		packageForSavingInFile();
+		return WINDOW_CLOSED_FEEDBACK;
+	}
+
+	// Index 0 will always yield a feedback, indexes 1 onwards will give the
+	// Indexes of Events that has the keyword
+	public ArrayList<Task> searchWord(String wordToBeSearched, ArrayList<Task> one, ArrayList<Task> two,
+			ArrayList<Task> three) {
+		ArrayList<Task> searchWordResults = new ArrayList<Task>();
+		if (one.isEmpty() && two.isEmpty() && three.isEmpty()) {
+		} else {
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, one));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, two));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, three));
+		}
+		return searchWordResults;
+	}
+
+	private ArrayList<Task> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list) {
+		ArrayList<Task> searchWordResults;
+		searchWordResults = getSearchedTasks(wordToBeSearched, list);
+		if (searchWordResults.isEmpty()) {
+			// searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+		}
+		return searchWordResults;
+	}
+
+	private ArrayList<Task> getSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
+		ArrayList<Task> objectOfTaskInstanceFound = new ArrayList<Task>();
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				Task currentTask = list.get(i);
+				if (isContainKeyword(currentTask, wordToBeSearched)) {
+					objectOfTaskInstanceFound.add(list.remove(i));
+					i--;
+				}
+			}
+		}
+		return objectOfTaskInstanceFound;
 	}
 
 	private boolean isContainSubstring(String sourceString, String substring) {
@@ -356,9 +370,9 @@ public class Logic {
 		return isContainKeyword(event, keyword);
 	}
 
-	public ArrayList<String> testSearchWord(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
+	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> one, ArrayList<Task> two,
 			ArrayList<Task> three) {
-		return searchWord(variableArray, one, two, three);
+		return searchWord(wordToBeSearched, one, two, three);
 	}
 
 	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
@@ -369,9 +383,9 @@ public class Logic {
 			throws IOException {
 		return editTask(variableArray, one, two, three);
 	}
-	
+
 	public String testDeleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
-			ArrayList<Task> three) throws IOException	{
+			ArrayList<Task> three) throws IOException {
 		return deleteTask(variableArray, one, two, three);
 	}
 }
