@@ -2,6 +2,7 @@ package org.jimple.planner;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -28,6 +29,12 @@ public class LogicTest {
 		deadlines.add(event2);
 		events.add(event3);
 		events.add(event4);
+	}
+	@Test
+	public void ShouldReturnPrettyDate()	{
+		LocalDateTime testDate = null;
+		testDate = LocalDateTime.parse("2016-01-12T15:30");
+		assertEquals("12/1/2016\n15:30", testformatter.formatPrettyDate(testDate));
 	}
 	
 	@Test
