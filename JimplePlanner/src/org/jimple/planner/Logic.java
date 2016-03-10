@@ -36,6 +36,7 @@ public class Logic {
 
 	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
+	private String ERROR_CONFLICT_FEEDBACK = "conflict with current events";
 	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
@@ -187,9 +188,50 @@ public class Logic {
 	private String addToTaskList(String[] parsedInput) throws IOException {
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
+		if (isConflictWithCurrentTasks(newTask, deadlines, events)) {
+			return ERROR_CONFLICT_FEEDBACK;
+		}
 		allocateCorrectTimeArray(newTask);
 		tempHistory.add(newTask);
 		return ADDED_FEEDBACK;
+	}
+
+	private boolean isConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
+		boolean isConflict = false;
+		switch (newTask.getType()) {
+		case TYPE_DEADLINE:
+			for (int i = 0; i < deadlines.size(); i++) {
+				if (newTask.getToTime().equals(deadlines.get(i).getToTime())) {
+					isConflict = true;
+				}
+			}
+			break;
+		case TYPE_EVENT:
+			for (int i = 0; i < events.size(); i++) {
+				if (isToTimeExceedTimeRange(newTask, events.get(i))
+						|| isFromTimeExceedTimeRange(newTask, events.get(i))) {
+					isConflict = true;
+				}
+			}
+			break;
+		}
+		return isConflict;
+	}
+	
+	private boolean isToTimeExceedTimeRange(Task newTask, Task event)	{
+		if (newTask.getToTime().compareTo(event.getFromTime()) > 0 
+				&& newTask.getToTime().compareTo(event.getToTime()) < 0)	{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isFromTimeExceedTimeRange(Task newTask, Task event)	{
+		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0 
+				&& newTask.getFromTime().compareTo(event.getToTime()) < 0)	{
+			return true;
+		}
+		return false;
 	}
 
 	private boolean isContainsValidTime(String formattedDateTime) {
@@ -387,5 +429,8 @@ public class Logic {
 	public String testDeleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two,
 			ArrayList<Task> three) throws IOException {
 		return deleteTask(variableArray, one, two, three);
+	}
+	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events)	{
+		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
 }
