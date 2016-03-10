@@ -49,6 +49,7 @@ public class Logic {
 	Parser parser = new Parser();
 	StorageStub store = new StorageStub();
 	Formatter formatter = new Formatter();
+	TimeParser timeParse = new TimeParser();
 
 	public Logic() {
 		listOfMonths = new ListOfMonths();
@@ -150,11 +151,11 @@ public class Logic {
 					aTask.setDescription(variableArray[i]);
 					break;
 				case 2:
-					String formattedFromDate = formatter.formatDateTime(variableArray[i]);
+					String formattedFromDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
 					aTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
-					String formattedToDate = formatter.formatDateTime(variableArray[i]);
+					String formattedToDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
 					if (isContainsValidTime(formattedToDate)) {
 						aTask.setToDate(formattedToDate);
 					} else {
