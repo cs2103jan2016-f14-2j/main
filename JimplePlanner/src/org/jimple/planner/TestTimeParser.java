@@ -13,7 +13,7 @@ public class TestTimeParser {
 			System.out.println("Lai, try input a time:");
 			String testInput = sc.nextLine();
 			TimeParser tp = new TimeParser();
-			Date t = tp.timeParser(testInput);
+			Calendar t = tp.timeParser(testInput);
 			if (t != null) {
 				System.out.println("Time Parsed:");
 				System.out.println(t);

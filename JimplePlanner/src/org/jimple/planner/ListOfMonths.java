@@ -3,29 +3,25 @@ package org.jimple.planner;
 import java.util.HashMap;
 
 public class ListOfMonths {
-	public HashMap<String, String> listOfMonths;
+	public HashMap<Integer, String> listOfMonths;
 
 	public ListOfMonths() {
-		listOfMonths = new HashMap<String, String>();
-		listOfMonths.put("january", "01");
-		listOfMonths.put("february", "02");
-		listOfMonths.put("march", "03");
-		listOfMonths.put("april", "04");
-		listOfMonths.put("may", "05");
-		listOfMonths.put("june", "06");
-		listOfMonths.put("july", "07");
-		listOfMonths.put("august", "08");
-		listOfMonths.put("september", "09");
-		listOfMonths.put("october", "10");
-		listOfMonths.put("november", "11");
-		listOfMonths.put("december", "12");
+		listOfMonths = new HashMap<Integer, String>();
+		listOfMonths.put(0, "01");
+		listOfMonths.put(1, "02");
+		listOfMonths.put(2, "03");
+		listOfMonths.put(3, "04");
+		listOfMonths.put(4, "05");
+		listOfMonths.put(5, "06");
+		listOfMonths.put(6, "07");
+		listOfMonths.put(7, "08");
+		listOfMonths.put(8, "09");
+		listOfMonths.put(9, "10");
+		listOfMonths.put(10, "11");
+		listOfMonths.put(11, "12");
 	}
 
-	public boolean contain(String month) {
-		return listOfMonths.containsKey(month.toLowerCase());
-	}
-
-	public String monthDigit(String month) {
-		return listOfMonths.get(month.toLowerCase());
+	public String monthDigit(int month) {
+		return listOfMonths.get(month);
 	}
 }

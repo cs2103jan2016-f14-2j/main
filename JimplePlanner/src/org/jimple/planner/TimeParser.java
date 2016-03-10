@@ -23,7 +23,7 @@ class TimeParser {
 			1, 1,
 			2, 2,
 			3, 3,
-			4,
+			4, 
 			5, 5,
 			6, 6,
 			7, 7,
@@ -45,7 +45,7 @@ class TimeParser {
 	private static int hour = -1;
 	private static int minute = -1;
 	
-	private Calendar c = null;
+	private Calendar calendar= null;
 	
 	public TimeParser() {
 		for (int i = 0; i < monthStrings.length; i++) {
@@ -56,40 +56,39 @@ class TimeParser {
 		}
 	}
 	
-	public Date timeParser(String input) {
+	public Calendar timeParser(String input) {
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
-		for (String i: splitInput) {
-			parseIfIsDay(i);
-			parseIfIsAMPMFormat(i);
-			parseIfIsMonth(i);
-			parseIfIsFloatingNumber(i);
-			parseIfIs4DigitTimeFormat(i);
+		for (String time: splitInput) {
+			parseIfIsDay(time);
+			parseIfIsAMPMFormat(time);
+			parseIfIsMonth(time);
+			parseIfIsFloatingNumber(time);
+			parseIfIs4DigitTimeFormat(time);
 		}
 		if (!formatCalendarIfValid()) {
-			System.out.println("Ey what u typing.");
 			return null;
 		}
 		return returnFunction();
 	}
 	
-	private Date returnFunction() {
-		if (c != null) {
-			return c.getTime();
+	private Calendar returnFunction() {
+		if (calendar != null) {
+			return calendar;
 		}
 		System.out.println("Anyhow input isit?");
 		return null;
 	}
 	
 	private boolean formatCalendarIfValid() {
-		c = Calendar.getInstance();
+		calendar = Calendar.getInstance();
 		boolean hasDay = false;
 		boolean hasMonth = false;
 		for (int i = 0; i < 5; i++) {
 			switch (i) {
 				case 0 :
 					if (day != -1) {
-						c.set(c.DAY_OF_MONTH, day);
+						calendar.set(calendar.DAY_OF_MONTH, day);
 						hasDay = true;
 					} else {
 						return false;
@@ -98,32 +97,32 @@ class TimeParser {
 				case 1 :
 					if (month != -1) {
 						hasMonth = true;
-						c.set(c.MONTH, month);
+						calendar.set(calendar.MONTH, month);
 					} else {
 						return false;
 					}
 					break;
 				case 2 :
 					if (hour != -1) {
-						c.set(c.HOUR_OF_DAY, hour);
+						calendar.set(calendar.HOUR_OF_DAY, hour);
 					} else if (hasDay && hasMonth) {
-						c.set(c.HOUR_OF_DAY, 23);
+						calendar.set(calendar.HOUR_OF_DAY, 23);
 					} else {
 						return false;
 					}
 					break;
 				case 3 :
 					if (minute != -1) {
-						c.set(c.MINUTE, minute);
+						calendar.set(calendar.MINUTE, minute);
 					} else if (hasDay && hasMonth) {
-						c.set(c.MINUTE, 59);
+						calendar.set(calendar.MINUTE, 59);
 					} else {
 						return false;
 					}
 					break;
 				case 4 :
-					c.set(c.YEAR, 2016);
-					c.set(c.SECOND, 0);
+					calendar.set(calendar.YEAR, 2016);
+					calendar.set(calendar.SECOND, 0);
 					break;
 				default :
 					break;
@@ -142,14 +141,14 @@ class TimeParser {
 	
 	private boolean parseIfIsDay(String input) {
 		if (calendarDays.containsKey(input)) {
-			c = Calendar.getInstance();
-			c.setTimeInMillis(System.currentTimeMillis());
+			calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(System.currentTimeMillis());
 			int inputDayNo = calendarDays.get(input);
-			while (c.getTime().getDay() != inputDayNo - 1) {
-				c.add(c.DATE, 1);
+			while (calendar.getTime().getDay() != inputDayNo - 1) {
+				calendar.add(calendar.DATE, 1);
 			}
-			day = c.getTime().getDate();
-			month = c.getTime().getMonth();
+			day = calendar.getTime().getDate();
+			month = calendar.getTime().getMonth();
 			hour = 23;
 			minute = 59;
 			return true;

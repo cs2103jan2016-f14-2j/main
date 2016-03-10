@@ -3,6 +3,7 @@ package org.jimple.planner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Logic {
 
@@ -46,11 +47,16 @@ public class Logic {
 	private ArrayList<Task> events;
 	private ArrayList<Task> tempHistory;
 	ListOfMonths listOfMonths;
-	Parser parser = new Parser();
-	StorageStub store = new StorageStub();
-	Formatter formatter = new Formatter();
+	Parser parser;
+	StorageStub store;
+	Formatter formatter;
+	TimeParser timeParse;
 
 	public Logic() {
+		parser = new Parser();
+		store = new StorageStub();
+		formatter = new Formatter();
+		timeParse = new TimeParser();
 		listOfMonths = new ListOfMonths();
 		tempHistory = new ArrayList<Task>();
 		try {
@@ -150,10 +156,12 @@ public class Logic {
 					aTask.setDescription(variableArray[i]);
 					break;
 				case 2:
+					//Calendar inputFromDate = timeParse.timeParser(variableArray[i]);
 					String formattedFromDate = formatter.formatDateTime(variableArray[i]);
 					aTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
+					//Calendar inputToDate = timeParse.timeParser(variableArray[i]);
 					String formattedToDate = formatter.formatDateTime(variableArray[i]);
 					if (isContainsValidTime(formattedToDate)) {
 						aTask.setToDate(formattedToDate);
