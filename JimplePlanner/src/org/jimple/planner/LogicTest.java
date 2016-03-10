@@ -31,6 +31,34 @@ public class LogicTest {
 	}
 	
 	@Test
+	public void ShouldReturnTrueIfNoTimeConflict()	{
+		Task event1 = new Task("a test only one");
+		event1.setToDate("2016-03-10T16:00");
+		Task event2 = new Task("a test only two");
+		event2.setFromDate("2016-03-11T09:00");
+		event2.setToDate("2016-03-11T17:00");
+		Task event3 = new Task("a test only three");
+		event3.setToDate("2016-03-10T16:00");
+		Task event4 = new Task("a test only three");
+		event4 = new Task("a test only four");
+		deadlines.add(event1);
+		events.add(event2);
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event3, deadlines, events));
+		event4.setFromDate("2016-03-11T07:00");
+		event4.setToDate("2016-03-11T16:00");
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+		event4.setFromDate("2016-03-11T10:00");
+		event4.setToDate("2016-03-11T18:00");
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+		event4.setFromDate("2016-03-11T12:00");
+		event4.setToDate("2016-03-11T13:00");
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+		event4.setFromDate("2016-03-11T18:00");
+		event4.setToDate("2016-03-11T19:00");
+		assertFalse("returns false", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+	}
+	
+	@Test
 	public void ShouldReturnFeedbackAfterDeleteFromArray() throws IOException	{
 		String[] variableArray = {"2"};
 		initializeThreeArrays();
