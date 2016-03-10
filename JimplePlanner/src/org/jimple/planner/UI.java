@@ -21,6 +21,11 @@ public class UI extends Application {
 		}
 	}
 	
+	public void begin(){
+		String[] args = null;
+		launch(args);
+	}
+	
 	public void begin(String[] args) {
 		launch(args);
 	}

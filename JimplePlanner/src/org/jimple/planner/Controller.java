@@ -46,35 +46,35 @@ public class Controller implements Initializable {
 
 	@FXML
 	Label messagePrompt;
-	
+
 	@FXML
 	AnchorPane mainController;
-	
+
 	@FXML
 	Tab agendaTab;
 	@FXML
 	Tab eventsTab;
 	@FXML
 	Tab todoTab;
-	
+
 	@FXML
 	TabPane tabPanes;
-	
+
 	@FXML
 	AnchorPane agendaContent;
-	
+
 	@FXML
 	AnchorPane eventsContent;
-	
+
 	@FXML
 	AnchorPane deadlinesContent;
-	
+
 	@FXML
 	AnchorPane todoContent;
-	
-//	@FXML
-//	ListView<Task> listView;
-	
+
+	// @FXML
+	// ListView<Task> listView;
+
 	@FXML
 	ListView<String> list;
 
@@ -82,17 +82,18 @@ public class Controller implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		assert commandBox != null : "fx:id=\"synopsis\" was not injected: check your FXML file 'IssueTrackingLite.fxml'.";
 		System.out.println("initializing Jimple UI");
-		
+
 		Platform.runLater(new Runnable() {
-	        @Override
-	        public void run() {
-	            commandBox.requestFocus();
-	        }
-	    });
-		
+			@Override
+			public void run() {
+				commandBox.requestFocus();
+			}
+		});
+
 		commandBoxListener();
 		tabPanesListener();
 		initializeDisplay();
+		tabIndexSelectionListener();
 	}
 
 	private void initializeDisplay() {
@@ -102,156 +103,176 @@ public class Controller implements Initializable {
 		loadTodoList();
 	}
 
-    public void loadAgendaList() {
-    	ArrayList<Task> taskList = logic.display("events");
-    	ObservableList<Task> data = FXCollections.observableArrayList();
-        data.addAll(taskList);
-        ListView<Task> listView = new ListView<Task>(data);
-        listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+	public void loadAgendaList() {
+		ArrayList<Task> taskList = logic.display("events");
+		ObservableList<Task> data = FXCollections.observableArrayList();
+		data.addAll(taskList);
+		ListView<Task> listView = new ListView<Task>(data);
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 
-            @Override
-            public ListCell<Task> call(ListView<Task> arg0) {
-                return new ListCell<Task>() {
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
 
-                    @Override
-                    protected void updateItem(Task item, boolean bln) {
-                        super.updateItem(item, bln);
-                        if (item != null) {
-                        	Text t = new Text(item.getTitle());
-                        	t.setId("fancytext");
-                            VBox vBox = new VBox(t,
-                            		new Text(String.format("from: %s", item.getFromTime())),
-                            		new Text(String.format("to: %s", item.getToTime())));
-                            HBox hBox = new HBox(vBox);
-                            hBox.setSpacing(10);
-                            setGraphic(hBox);
-                        }
-                    }
-                };
-            }
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							t.setId("fancytext");
+							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
+									new Text(String.format("to: %s", item.getToTime())));
+							HBox hBox = new HBox(vBox);
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
 
-        });
-        fitToAnchorPane(listView);
-        agendaContent.getChildren().clear();
-        agendaContent.getChildren().add(listView);
-    }
+		});
+		fitToAnchorPane(listView);
+		agendaContent.getChildren().clear();
+		agendaContent.getChildren().add(listView);
+	}
 
-    public void loadEventsList() {
-    	ArrayList<Task> taskList = logic.display("events");
-    	ObservableList<Task> data = FXCollections.observableArrayList();
-        data.addAll(taskList);
-        ListView<Task> listView = new ListView<Task>(data);
-        listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+	public void loadEventsList() {
+		ArrayList<Task> taskList = logic.display("events");
+		ObservableList<Task> data = FXCollections.observableArrayList();
+		data.addAll(taskList);
+		ListView<Task> listView = new ListView<Task>(data);
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 
-            @Override
-            public ListCell<Task> call(ListView<Task> arg0) {
-                return new ListCell<Task>() {
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
 
-                    @Override
-                    protected void updateItem(Task item, boolean bln) {
-                        super.updateItem(item, bln);
-                        if (item != null) {
-                        	Text t = new Text(item.getTitle());
-                        	t.setId("fancytext");
-                            VBox vBox = new VBox(t,
-                            		new Text(String.format("from: %s", item.getFromTime())),
-                            		new Text(String.format("to: %s", item.getToTime())));
-                            HBox hBox = new HBox(vBox);
-                            hBox.setSpacing(10);
-                            setGraphic(hBox);
-                        }
-                    }
-                };
-            }
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							t.setId("fancytext");
+							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
+									new Text(String.format("to: %s", item.getToTime())));
+							HBox hBox = new HBox(vBox);
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
 
-        });
-        fitToAnchorPane(listView);
-        eventsContent.getChildren().clear();
-    	eventsContent.getChildren().add(listView);
-    }
+		});
+		fitToAnchorPane(listView);
+		eventsContent.getChildren().clear();
+		eventsContent.getChildren().add(listView);
+	}
 
-    public void loadDeadlinesList() {
-    	ArrayList<Task> taskList = logic.display("deadlines");
-    	ObservableList<Task> data = FXCollections.observableArrayList();
-        data.addAll(taskList);
-        ListView<Task> listView = new ListView<Task>(data);
-        listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+	public void loadDeadlinesList() {
+		ArrayList<Task> taskList = logic.display("deadlines");
+		ObservableList<Task> data = FXCollections.observableArrayList();
+		data.addAll(taskList);
+		ListView<Task> listView = new ListView<Task>(data);
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 
-            @Override
-            public ListCell<Task> call(ListView<Task> arg0) {
-                return new ListCell<Task>() {
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
 
-                    @Override
-                    protected void updateItem(Task item, boolean bln) {
-                        super.updateItem(item, bln);
-                        if (item != null) {
-                        	Text t = new Text(item.getTitle());
-                        	t.setId("fancytext");
-                            VBox vBox = new VBox(t,
-                            		new Text(String.format("from: %s", item.getFromTime())),
-                            		new Text(String.format("to: %s", item.getToTime())));
-                            HBox hBox = new HBox(vBox);
-                            hBox.setSpacing(10);
-                            setGraphic(hBox);
-                        }
-                    }
-                };
-            }
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							t.setId("fancytext");
+							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
+									new Text(String.format("to: %s", item.getToTime())));
+							HBox hBox = new HBox(vBox);
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
 
-        });
-        fitToAnchorPane(listView);
-        deadlinesContent.getChildren().clear();
-    	deadlinesContent.getChildren().add(listView);
-    }
-    
-    public void loadTodoList() {
-    	ArrayList<Task> taskList = logic.display("floating");
-    	ObservableList<Task> data = FXCollections.observableArrayList();
-        data.addAll(taskList);
-        ListView<Task> listView = new ListView<Task>(data);
-        listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+		});
+		fitToAnchorPane(listView);
+		deadlinesContent.getChildren().clear();
+		deadlinesContent.getChildren().add(listView);
+	}
 
-            @Override
-            public ListCell<Task> call(ListView<Task> arg0) {
-                return new ListCell<Task>() {
+	public void loadTodoList() {
+		ArrayList<Task> taskList = logic.display("floating");
+		ObservableList<Task> data = FXCollections.observableArrayList();
+		data.addAll(taskList);
+		ListView<Task> listView = new ListView<Task>(data);
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 
-                    @Override
-                    protected void updateItem(Task item, boolean bln) {
-                        super.updateItem(item, bln);
-                        if (item != null) {
-                        	Text t = new Text(item.getTitle());
-                        	t.setId("fancytext");
-                            VBox vBox = new VBox(t);
-                            HBox hBox = new HBox(new Text(String.format("#%d",super.getIndex())),vBox);
-                            hBox.setSpacing(10);
-                            setGraphic(hBox);
-                        }
-                    }
-                };
-            }
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
 
-        });
-        fitToAnchorPane(listView);
-        todoContent.getChildren().clear();
-    	todoContent.getChildren().add(listView);
-    }
-    
-    public void fitToAnchorPane(Node node){
-        AnchorPane.setTopAnchor(node, 0.0);
-        AnchorPane.setLeftAnchor(node, 0.0);
-        AnchorPane.setRightAnchor(node, 0.0);
-        AnchorPane.setBottomAnchor(node, 0.0);
-    }
-    
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							t.setId("fancytext");
+							VBox vBox = new VBox(t);
+							HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex())), vBox);
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
+
+		});
+		fitToAnchorPane(listView);
+		todoContent.getChildren().clear();
+		todoContent.getChildren().add(listView);
+	}
+
+	public String getCurrentTabName() {
+		return tabPanes.getSelectionModel().getSelectedItem().getText();
+	}
+
+	public Tab getCurrentTab() {
+		return tabPanes.getSelectionModel().getSelectedItem();
+	}
+
+	public int getCurrentTabItemIndex() {
+		return getActiveListView().getSelectionModel().getSelectedIndex();
+	}
+
+	public void deselectTaskItem() {
+		getActiveListView().getSelectionModel().clearSelection();
+	}
+
+	@SuppressWarnings("unchecked")
+	private ListView<Task> getActiveListView() {
+		return (ListView<Task>) ((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren()
+				.get(0);
+	}
+
+	public void fitToAnchorPane(Node node) {
+		AnchorPane.setTopAnchor(node, 0.0);
+		AnchorPane.setLeftAnchor(node, 0.0);
+		AnchorPane.setRightAnchor(node, 0.0);
+		AnchorPane.setBottomAnchor(node, 0.0);
+	}
+
 	public void enterTriggered() throws IOException {
 		String inputStr = getInputCommand();
+		System.out.println(getCurrentTabItemIndex());
 		if (!isEmpty(inputStr)) {
 			// System.out.println(inputStr);
 			String[] feedback = logic.execute(inputStr);
 			messagePrompt.setText(feedback[0]);
-			if(feedback[1]!=null)
+			if (feedback[1] != null)
 				System.out.println(feedback[1]);
-			
+
 			FadeTransition ft = new FadeTransition(Duration.millis(3000), messagePrompt);
 			ft.setFromValue(1.0);
 			ft.setToValue(0.0);
@@ -259,74 +280,143 @@ public class Controller implements Initializable {
 			ft.play();
 
 			clearCommandBox();
-			
+
 			String displayType = feedback[1];
 			reloadDisplay();
-//			switch(displayType){
-//			case "agenda":
-//				break;
-//			case "events":
-//				break;
-//			case "deadline":
-//				break;
-//			case "todo":
-//				addAndReloadTodo();
-//				break;
-//			default:
-//				break;
-//			}
+			// switch(displayType){
+			// case "agenda":
+			// break;
+			// case "events":
+			// break;
+			// case "deadline":
+			// break;
+			// case "todo":
+			// addAndReloadTodo();
+			// break;
+			// default:
+			// break;
+			// }
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void addAndReloadTodo() {
 		initializeDisplay();
 		tabPanes.getSelectionModel().selectLast();
-		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).requestFocus();
-		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().selectLast();
-		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).scrollTo(((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().getSelectedIndex());
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().selectLast();
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
 	}
-	
-	private void reloadDisplay(){
+
+	private void reloadDisplay() {
 		initializeDisplay();
 	}
-	
-	public void commandBoxListener(){		
-		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-		        @Override
-		        public void handle(KeyEvent t) {
-		            if(t.getCode() == KeyCode.ESCAPE)
-		            	tabPanes.requestFocus();
-		        }
-		    });		
-	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void tabPanesListener(){		
+	private ListView<Task> getList(Tab tab) {
+		return (ListView<Task>) ((Pane) tab.getContent()).getChildren().get(0);
+	}
+
+	public void commandBoxListener() {
+		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent t) {
+				if (t.getCode() == KeyCode.ESCAPE)
+					tabPanes.requestFocus();
+			}
+		});
+	}
+
+	public void tabIndexSelectionListener() {
+		getList(getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent t) {
+				switch (t.getCode()) {
+				case DELETE:
+					try {
+						System.out.println(getCurrentTabName());
+						System.out.println(getCurrentTabItemIndex());
+						switch (getCurrentTabName()) {
+						case "To-do":
+							logic.execute("delete " + getCurrentTabItemIndex());
+							reloadDisplay();
+							break;
+
+						case "Deadlines":
+							logic.execute("delete " + (getCurrentTabItemIndex() + logic.display("floating").size()));
+							reloadDisplay();
+							break;
+
+						case "Events":
+							System.out.println("deleting from events");
+							logic.execute("delete " + (getCurrentTabItemIndex() + logic.display("floating").size() + logic.display("deadlines").size()));
+							reloadDisplay();
+							break;
+							
+						case "Agenda":
+							System.out.println("deleting from agenda");
+							logic.execute("delete " + (getCurrentTabItemIndex() + logic.display("floating").size() + logic.display("deadlines").size()));
+							reloadDisplay();
+							break;
+
+						default:
+							break;
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				default:
+					break;
+				}
+				if (t.getCode() == KeyCode.UP) {
+					if (getCurrentTabItemIndex() == 0) {
+						System.out.println(getCurrentTabItemIndex());
+						tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
+						deselectTaskItem();
+					}
+				}
+
+			}
+		});
+	}
+
+	public void tabPanesListener() {
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			
-		        @Override
-		        public void handle(KeyEvent t) {
-		        	if(t.getCode() == KeyCode.DOWN){
-		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).requestFocus();
-		        		if(((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().isEmpty())
-		        			((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().select(0);
-//		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getFocusModel().focus(0);
-		        	}
-		        	else if(t.getCode() == KeyCode.LEFT){
-//		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().clearSelection();
-		        		tabPanes.requestFocus();
-		        	}
-		        	else if(t.getCode() == KeyCode.RIGHT){
-//		        		((ListView<Task>)((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren().get(0)).getSelectionModel().clearSelection();
-		        		tabPanes.requestFocus();
-		        	}
-		        	else if(!t.getCode().isArrowKey()){
-		        		commandBox.requestFocus();
-		        		commandBox.positionCaret(commandBox.getLength());
-		        	}
-		        }
-		    });
+			@Override
+			public void handle(KeyEvent t) {
+				if (t.getCode().isArrowKey())
+					tabIndexSelectionListener();
+
+				switch (t.getCode()) {
+				case DOWN:
+					getActiveListView().requestFocus();
+					if (isListViewSelectionEmpty())
+						getActiveListView().getSelectionModel().select(0);
+					break;
+				case UP:
+					tabIndexSelectionListener();
+					break;
+				case LEFT:
+					tabPanes.requestFocus();
+					deselectTaskItem();
+					break;
+				case RIGHT:
+					tabPanes.requestFocus();
+					deselectTaskItem();
+					break;
+				default:
+					tabIndexSelectionListener();
+					commandBox.requestFocus();
+					commandBox.positionCaret(commandBox.getLength());
+					break;
+				}
+			}
+
+			private boolean isListViewSelectionEmpty() {
+				return getActiveListView().getSelectionModel().isEmpty();
+			}
+		});
 	}
 
 	public String getInputCommand() {
