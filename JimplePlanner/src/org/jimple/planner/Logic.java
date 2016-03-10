@@ -96,6 +96,7 @@ public class Logic {
 	}
 
 	public ArrayList<Task> display(String type) {
+		checkOverCurrentTime();
 		if (type.equals(TYPE_TODO)) {
 			return todo;
 		} else if (type.equals(TYPE_EVENT)) {
@@ -104,6 +105,23 @@ public class Logic {
 			return deadlines;
 		}
 		return null;
+	}
+
+	private void checkOverCurrentTime() {
+		for (Task aTask : deadlines) {
+			if (aTask.getToTime() != null) {
+				if (aTask.getToTime().compareTo(LocalDateTime.now()) > 0) {
+					aTask.setIsOverDue(true);
+				}
+			}
+		}
+		for (Task aTask : events) {
+			if (aTask.getFromTime() != null) {
+				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
+					aTask.setIsOverDue(true);
+				}
+			}
+		}
 	}
 
 	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
@@ -218,18 +236,18 @@ public class Logic {
 		}
 		return isConflict;
 	}
-	
-	private boolean isToTimeExceedTimeRange(Task newTask, Task event)	{
-		if (newTask.getToTime().compareTo(event.getFromTime()) > 0 
-				&& newTask.getToTime().compareTo(event.getToTime()) < 0)	{
+
+	private boolean isToTimeExceedTimeRange(Task newTask, Task event) {
+		if (newTask.getToTime().compareTo(event.getFromTime()) > 0
+				&& newTask.getToTime().compareTo(event.getToTime()) < 0) {
 			return true;
 		}
 		return false;
 	}
-	
-	private boolean isFromTimeExceedTimeRange(Task newTask, Task event)	{
-		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0 
-				&& newTask.getFromTime().compareTo(event.getToTime()) < 0)	{
+
+	private boolean isFromTimeExceedTimeRange(Task newTask, Task event) {
+		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0
+				&& newTask.getFromTime().compareTo(event.getToTime()) < 0) {
 			return true;
 		}
 		return false;
@@ -431,7 +449,8 @@ public class Logic {
 			ArrayList<Task> three) throws IOException {
 		return deleteTask(variableArray, one, two, three);
 	}
-	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events)	{
+
+	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
 }
