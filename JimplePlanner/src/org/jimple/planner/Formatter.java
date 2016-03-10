@@ -15,7 +15,7 @@ public class Formatter {
 
 	public String newFormatDateTime(Date date) {
 		String formattedDateTime = new String("");
-		formattedDateTime += date.getYear() + 1900;
+		formattedDateTime += (date.getYear() + 1900);
 		formattedDateTime += newFormatMonth(date.getMonth());
 		formattedDateTime += newFormatDay(date.getDay() + 1);
 		formattedDateTime += newFormatTime(date);
