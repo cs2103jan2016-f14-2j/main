@@ -23,6 +23,9 @@ public class Formatter {
 		prettyDateTime += "\n";
 		prettyDateTime += dateTime.getHour();
 		prettyDateTime += ":";
+		if (dateTime.getMinute() < 10) {
+			prettyDateTime += "0";
+		}
 		prettyDateTime += dateTime.getMinute();
 
 		return prettyDateTime;
