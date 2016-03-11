@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.prefs.Preferences;
 
 public class Storage {
 	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
@@ -28,8 +29,12 @@ public class Storage {
 	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
 	private static final String EMPTY_STRING = "";
 	private static final String FILE_SECTION_SEPARATOR = ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<";
+	private static final String PREFS_NODE_NAME = "JimplePlanner";
+	private static final String PREFS_NODE_KEY_SAVEPATH_SAVEPATH = "savepath";
 	private static final boolean IS_TEST = true;
 	private static final boolean IS_NOT_TEST = false;
+	
+	private static Preferences prefs = Preferences.userRoot().node(PREFS_NODE_NAME);
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
