@@ -39,6 +39,18 @@ class Task{
 		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
 	}
+	
+	public String getPrettyFromTime()	{
+		String prettyFromTime = new String("");
+		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
+		return prettyFromTime;
+	}
+	
+	public String getPrettyToTime()	{
+		String prettyToTime = new String("");
+		prettyToTime = formatter.formatPrettyTime(toDateTime);
+		return prettyToTime;
+	}
 
 	public String getFromTimeString() {
 		if (fromDateTime == null) {
