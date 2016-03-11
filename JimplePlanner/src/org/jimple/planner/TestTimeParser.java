@@ -164,11 +164,11 @@ class TimeParser {
 			c = Calendar.getInstance();
 			c.setTimeInMillis(System.currentTimeMillis());
 			int inputDayNo = calendarDays.get(input);
-			while (c.getTime().getDay() != inputDayNo - 1) {
-				c.add(c.DATE, 1);
+			while (c.get(Calendar.DAY_OF_WEEK) != inputDayNo) {
+				c.add(Calendar.DATE, 1);
 			}
-			day = c.getTime().getDate();
-			month = c.getTime().getMonth();
+			day = c.get(Calendar.DATE);
+			month = c.get(Calendar.MONTH);
 			hour = 23;
 			minute = 59;
 			return true;
