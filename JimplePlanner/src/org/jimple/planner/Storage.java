@@ -27,8 +27,10 @@ public class Storage {
 	private static final String TAGS_TO_TIME = ":to:";
 	private static final String TAGS_TITLE = ":title:";
 	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
+	private static final String TYPE_EVENT = "event";
+	private static final String TYPE_TODO = "floating";
+	private static final String TYPE_DEADLINE = "deadline";
 	private static final String EMPTY_STRING = "";
-	private static final String FILE_SECTION_SEPARATOR = ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<";
 	private static final String PREFS_NODE_NAME = "JimplePlanner";
 	private static final String PREFS_NODE_KEY_SAVEPATH_SAVEPATH = "savepath";
 	private static final boolean IS_TEST = true;
@@ -160,8 +162,6 @@ public class Storage {
 				tempWriter.write(lineString);
 				tempWriter.newLine();
 			}
-			tempWriter.write(FILE_SECTION_SEPARATOR);
-			tempWriter.newLine();
 		}
 		tempWriter.close();
 	}
@@ -208,16 +208,12 @@ public class Storage {
 		} else {
 			defaultFileReader = createDefaultFileReader();
 		}
-		ArrayList<ArrayList<Task>> allTasksLists = new ArrayList<ArrayList<Task>>();
+		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
-		ArrayList<Task> taskList = new ArrayList<Task>();
 		while ((fileLineContent = defaultFileReader.readLine()) != null) {
-			if(!fileLineContent.equals(FILE_SECTION_SEPARATOR)){
+			if(!fileLineContent.equals(EMPTY_STRING)){
 				Task task = getTaskFromLine(fileLineContent);
-				taskList.add(task);
-			} else {
-				allTasksLists.add(taskList);
-				taskList = new ArrayList<Task>();
+				allocateTaskToArrayList(task, allTasksLists);
 			}
 		}
 		defaultFileReader.close();
@@ -230,6 +226,14 @@ public class Storage {
 	
 	public ArrayList<ArrayList<Task>> getTestTasks() throws IOException{
 		return getTaskSelect(IS_TEST);
+	}
+	
+	private ArrayList<ArrayList<Task>> populateArrayList(){
+		ArrayList<ArrayList<Task>> allTasksLists = new ArrayList<ArrayList<Task>>();
+		allTasksLists.add(new ArrayList<Task>());
+		allTasksLists.add(new ArrayList<Task>());
+		allTasksLists.add(new ArrayList<Task>());
+		return allTasksLists;
 	}
 	
 	private ArrayList<String> getSeparateFields(String fileLineContent){
@@ -325,5 +329,20 @@ public class Storage {
 	private String getRemovedToTagString(String field){
 		String removedTag = field.replace(TAGS_TO_TIME, EMPTY_STRING);
 		return removedTag;
+	}
+	
+	private void allocateTaskToArrayList(Task task, ArrayList<ArrayList<Task>> allTasksLists){
+		String taskType = task.getType();
+		switch(taskType){
+		case TYPE_TODO:
+			allTasksLists.get(0).add(task);
+			break;
+		case TYPE_DEADLINE:
+			allTasksLists.get(1).add(task);
+			break;
+		case TYPE_EVENT:
+			allTasksLists.get(2).add(task);
+			break;
+		}
 	}
 }
