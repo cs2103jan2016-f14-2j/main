@@ -112,7 +112,7 @@ public class Controller implements Initializable {
 	}
 
 	public void loadAgendaList() {
-		ArrayList<Task> taskList = logic.display("deadlines");
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadlines"));
 		taskList.addAll(logic.display("events"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
@@ -152,7 +152,7 @@ public class Controller implements Initializable {
 	}
 
 	public void showSearch(String searchStr) {
-		ArrayList<Task> taskList = logic.searchWord(searchStr);
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -185,7 +185,7 @@ public class Controller implements Initializable {
 	}
 
 	public void loadEventsList() {
-		ArrayList<Task> taskList = logic.display("events");
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("events"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -217,8 +217,8 @@ public class Controller implements Initializable {
 		eventsContent.getChildren().add(listView);
 	}
 
-	public void loadDeadlinesList() {
-		ArrayList<Task> taskList = logic.display("deadlines");
+	public void loadDeadlinesList() {		
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadlines"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -251,7 +251,7 @@ public class Controller implements Initializable {
 	}
 
 	public void loadTodoList() {
-		ArrayList<Task> taskList = logic.display("floating");
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("floating"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -319,12 +319,13 @@ public class Controller implements Initializable {
 			if (feedback[1] != null)
 				System.out.println(feedback[1]);
 
-			fadeOut(3, messagePrompt);
+			fadeOut(5, messagePrompt);
 
 			clearCommandBox();
 
 			String displayType = feedback[1];
 
+//			reloadDisplay();
 			switch (displayType) {
 			case "event":
 				addAndReload(eventsTab);
