@@ -5,6 +5,16 @@
     /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
 }
 
+#event {
+    -fx-font: 16px Tahoma ;
+    /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
+}
+
+#deadline {	
+    -fx-font: 12px Tahoma ;
+    -fx-fill: red;
+}
+
 /* 
  .list-cell {
    -fx-padding: 10 10 10 10;
@@ -46,3 +56,9 @@
 .list-view .scroll-bar:vertical .decrement-button {
     -fx-padding:0;
 }
+
+/*
+.list-cell {
+    -fx-background-color: maroon; 
+}
+*/
