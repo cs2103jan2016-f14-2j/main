@@ -3,6 +3,7 @@ package org.jimple.planner;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class Formatter {
@@ -12,23 +13,83 @@ public class Formatter {
 		listOfMonths = new ListOfMonths();
 	}
 
-	public String formatTaskForDisplay(ArrayList<Task> list)	{
+	public String formatPrettyDate(LocalDateTime dateTime) {
+		String prettyDateTime = new String("");
+		prettyDateTime += dateTime.getDayOfMonth();
+		prettyDateTime += "/";
+		prettyDateTime += dateTime.getMonthValue();
+		prettyDateTime += "/";
+		prettyDateTime += dateTime.getYear();
+		prettyDateTime += "\n";
+		prettyDateTime += dateTime.getHour();
+		prettyDateTime += ":";
+		prettyDateTime += dateTime.getMinute();
+
+		return prettyDateTime;
+	}
+
+	public String newFormatDateTime(Date date) {
+		String formattedDateTime = new String("");
+		formattedDateTime += (date.getYear() + 1900);
+		formattedDateTime += newFormatMonth(date.getMonth());
+		formattedDateTime += newFormatDay(date.getDate());
+		formattedDateTime += newFormatTime(date);
+		return formattedDateTime;
+	}
+
+	private String newFormatTime(Date time) {
+		String formattedHoursMinutes = new String("");
+		formattedHoursMinutes += formatTime(time.getHours());
+		formattedHoursMinutes += ":";
+		formattedHoursMinutes += formatTime(time.getMinutes());
+		return formattedHoursMinutes;
+	}
+
+	private String formatTime(int time) {
+		String formattedTime = new String("");
+		if (isLessThanTen(time)) {
+			formattedTime += "0";
+		}
+		formattedTime += time;
+		return formattedTime;
+	}
+
+	private String newFormatDay(int day) {
+		String formattedDay = new String("");
+		if (isLessThanTen(day)) {
+			formattedDay += "0";
+		}
+		formattedDay += day;
+		formattedDay += "T";
+
+		return formattedDay;
+	}
+
+	private String newFormatMonth(int month) {
+		String formattedMonth = new String("");
+		formattedMonth += "-";
+		formattedMonth += listOfMonths.newMonthDigit(month);
+		formattedMonth += "-";
+		return formattedMonth;
+	}
+
+	public String formatTaskForDisplay(ArrayList<Task> list) {
 		String formattedTasks = new String("");
-		for (Task aTask : list)	{
+		for (Task aTask : list) {
 			formattedTasks += aTask.getTitle().concat("\n");
 		}
 		return null;
 	}
-	
+
 	public String formatSearchString(ArrayList<String> searchResults) {
 		String formattedResult = new String("");
-		for (String result : searchResults)	{
+		for (String result : searchResults) {
 			formattedResult += result;
 			formattedResult += "\n";
 		}
 		return formattedResult;
 	}
-	
+
 	public String formatDateTime(String unformattedDate) {
 		if (unformattedDate != null) {
 			String[] dividedDates = unformattedDate.split(" ");
@@ -39,17 +100,20 @@ public class Formatter {
 					break;
 				}
 			}
-			formattedDateTime += checkMonth(LocalDateTime.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+			formattedDateTime += checkMonth(
+					LocalDateTime.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
 			for (String dateTime : dividedDates) {
 				if (!checkMonth(dateTime).equals("")) {
-					formattedDateTime = formattedDateTime.substring(0, formattedDateTime.length()-4).concat(checkMonth(dateTime));
+					formattedDateTime = formattedDateTime.substring(0, formattedDateTime.length() - 4)
+							.concat(checkMonth(dateTime));
 					break;
 				}
 			}
 			formattedDateTime += checkDay(Integer.toString(LocalDateTime.now().getDayOfMonth()));
 			for (String dateTime : dividedDates) {
 				if (!checkDay(dateTime).equals("")) {
-					formattedDateTime = formattedDateTime.substring(0, formattedDateTime.length()-3).concat(checkDay(dateTime));
+					formattedDateTime = formattedDateTime.substring(0, formattedDateTime.length() - 3)
+							.concat(checkDay(dateTime));
 					break;
 				}
 			}
@@ -67,7 +131,7 @@ public class Formatter {
 	private String checkYear(String dateTime) {
 		if (isYear(dateTime)) {
 			return dateTime;
-		} 
+		}
 		return null;
 	}
 
@@ -88,7 +152,7 @@ public class Formatter {
 			formattedMonth += "-";
 			formattedMonth += listOfMonths.monthDigit(dateTime);
 			formattedMonth += "-";
-		} 
+		}
 		return formattedMonth;
 	}
 
@@ -100,7 +164,7 @@ public class Formatter {
 			}
 			formattedDay += dateTime;
 			formattedDay += "T";
-		} 
+		}
 		return formattedDay;
 	}
 
@@ -175,7 +239,7 @@ public class Formatter {
 		}
 		return formattedMinutes;
 	}
-	
+
 	public String testCheckYear(String dateTime) {
 		return checkYear(dateTime);
 	}
@@ -191,7 +255,8 @@ public class Formatter {
 	public String testCheckTime(String dateTime) {
 		return checkTime(dateTime);
 	}
-	public String testFormatTime(String unformattedDate)	{
+
+	public String testFormatTime(String unformattedDate) {
 		return formatDateTime(unformattedDate);
 	}
 

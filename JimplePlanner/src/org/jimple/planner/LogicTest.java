@@ -2,6 +2,7 @@ package org.jimple.planner;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -29,6 +30,40 @@ public class LogicTest {
 		events.add(event3);
 		events.add(event4);
 	}
+	@Test
+	public void ShouldReturnPrettyDate()	{
+		LocalDateTime testDate = null;
+		testDate = LocalDateTime.parse("2016-01-12T15:30");
+		assertEquals("12/1/2016\n15:30", testformatter.formatPrettyDate(testDate));
+	}
+	
+	@Test
+	public void ShouldReturnTrueIfNoTimeConflict()	{
+		Task event1 = new Task("a test only one");
+		event1.setToDate("2016-03-10T16:00");
+		Task event2 = new Task("a test only two");
+		event2.setFromDate("2016-03-11T09:00");
+		event2.setToDate("2016-03-11T17:00");
+		Task event3 = new Task("a test only three");
+		event3.setToDate("2016-03-10T16:00");
+		Task event4 = new Task("a test only three");
+		event4 = new Task("a test only four");
+		deadlines.add(event1);
+		events.add(event2);
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event3, deadlines, events));
+		event4.setFromDate("2016-03-11T07:00");
+		event4.setToDate("2016-03-11T16:00");
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+		event4.setFromDate("2016-03-11T10:00");
+		event4.setToDate("2016-03-11T18:00");
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+		event4.setFromDate("2016-03-11T12:00");
+		event4.setToDate("2016-03-11T13:00");
+		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+		event4.setFromDate("2016-03-11T18:00");
+		event4.setToDate("2016-03-11T19:00");
+		assertFalse("returns false", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
+	}
 	
 	@Test
 	public void ShouldReturnFeedbackAfterDeleteFromArray() throws IOException	{
@@ -41,18 +76,18 @@ public class LogicTest {
 	
 	@Test
 	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException	{
-		String[] variableArray = {"3", "task one", null, null, "today", null};
+		String[] variableArray = {"3", "task one", null, null, "2 march 5am", null};
 		initializeThreeArrays();
 		assertEquals("return same string", "task edited in planner", testLogic.testEditTask(variableArray, floating, deadlines, events));
 		variableArray[0] = "4";
-		assertEquals("return same string", "task not found", testLogic.testEditTask(variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task could not be editted", testLogic.testEditTask(variableArray, floating, deadlines, events));
 	}
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String[] parsedInput1 = {"finish 2103 homework", null, null, "3 december 2017 12am", null};
-		String[] parsedInput2 = {"finish 2103 homework", null, null, "today", null};
-		String[] parsedInput3 = {"finish 2103 homework", null, null, "9 may", null};
+		String[] parsedInput1 = {"finish 2103 homework", null, null, "9 march 1pm", null};
+		String[] parsedInput2 = {"finish 2103 homework", null, null, "18 may 2018 4pm", null};
+		String[] parsedInput3 = {"finish 2103 homework", null, null, "7 may 2100", null};
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput1));
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput2));
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput3));
@@ -60,7 +95,7 @@ public class LogicTest {
 	
 	@Test
 	public void ShouldReturnTrueAfterEditting()	{
-		String[] variableArray = {"1", "task one", null, null, "today", null};
+		String[] variableArray = {"1", "task one", null, null, "12 march 1400", null};
 		ArrayList<Task> testArray = new ArrayList<Task>();
 		Task event1 = new Task("first");
 		Task event2 = new Task("second");
@@ -72,18 +107,19 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnArrayListOfLineIndex()	{
-		ArrayList<String> expected = new ArrayList<String>();
-		String[] variableArray = {"only"};
-		expected.add("planner is empty");
-		assertEquals("should be same", expected, testLogic.testSearchWord(variableArray, floating, deadlines, events));
+	public void ShouldReturnArrayListOfTasks() throws IOException	{
+		ArrayList<Task> expected = new ArrayList<Task>();
+		String wordToBeSearched = "only";
+		assertEquals("should be same", expected, testLogic.testSearchWord(wordToBeSearched, floating, deadlines, events));
 		initializeThreeArrays();
-		expected.remove(0);
-		expected.add("00");
-		expected.add("01");
-		expected.add("02");
-		assertEquals("should be same", expected, testLogic.testSearchWord(variableArray, floating, deadlines, events));
-		assertEquals("String should be same", "00\n01\n02\n", testformatter.formatSearchString(testLogic.testSearchWord(variableArray, floating, deadlines, events)));
+		expected.add(new Task("a test only one"));
+		expected.add(new Task("a test only two"));
+		expected.add(new Task("a test only three"));
+		ArrayList<Task> result = testLogic.testSearchWord(wordToBeSearched, floating, deadlines, events);
+		assertEquals("should be the same", expected.get(0).getTitle(), result.get(0).getTitle());
+		assertEquals("should be the same", expected.get(1).getTitle(), result.get(1).getTitle());
+		assertEquals("should be the same", expected.get(2).getTitle(), result.get(2).getTitle());
+		assertEquals("should reinsert values and return feedback", "search window closed", testLogic.reInsertNewTasks(result));
 	}
 	
 	@Test
@@ -101,9 +137,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-06T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-11T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-06T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-11T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test
