@@ -362,14 +362,13 @@ public class Logic {
 
 	// Index 0 will always yield a feedback, indexes 1 onwards will give the
 	// Indexes of Events that has the keyword
-	public ArrayList<Task> searchWord(String wordToBeSearched, ArrayList<Task> one, ArrayList<Task> two,
-			ArrayList<Task> three) {
+	public ArrayList<Task> searchWord(String wordToBeSearched) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
-		if (one.isEmpty() && two.isEmpty() && three.isEmpty()) {
+		if (todo.isEmpty() && deadlines.isEmpty() && events.isEmpty()) {
 		} else {
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, one));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, two));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, three));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, todo));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, deadlines));
+			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, events));
 		}
 		return searchWordResults;
 	}
@@ -433,7 +432,7 @@ public class Logic {
 
 	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> one, ArrayList<Task> two,
 			ArrayList<Task> three) {
-		return searchWord(wordToBeSearched, one, two, three);
+		return searchWord(wordToBeSearched);
 	}
 
 	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
