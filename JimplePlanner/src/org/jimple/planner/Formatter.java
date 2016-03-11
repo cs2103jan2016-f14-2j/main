@@ -12,8 +12,8 @@ public class Formatter {
 	public Formatter() {
 		listOfMonths = new ListOfMonths();
 	}
-	
-	public String formatPrettyDate(LocalDateTime dateTime)	{
+
+	public String formatPrettyDate(LocalDateTime dateTime) {
 		String prettyDateTime = new String("");
 		prettyDateTime += dateTime.getDayOfMonth();
 		prettyDateTime += "/";

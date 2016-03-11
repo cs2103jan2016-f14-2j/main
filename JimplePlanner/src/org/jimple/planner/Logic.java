@@ -12,9 +12,9 @@ public class Logic {
 	private static final String STRING_DELETE = "delete";
 	private static final String STRING_EDIT = "edit";
 
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_TODO = "todo";
+	private static final String TYPE_DEADLINE = "deadlines";
+	private static final String TYPE_EVENT = "events";
+	private static final String TYPE_TODO = "floating";
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
