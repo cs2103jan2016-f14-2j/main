@@ -2,8 +2,8 @@ package org.jimple.planner;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.junit.Test;
 
@@ -29,6 +29,12 @@ public class LogicTest {
 		deadlines.add(event2);
 		events.add(event3);
 		events.add(event4);
+	}
+	@Test
+	public void ShouldReturnPrettyDate()	{
+		LocalDateTime testDate = null;
+		testDate = LocalDateTime.parse("2016-01-12T15:30");
+		assertEquals("12/1/2016\n15:30", testformatter.formatPrettyDate(testDate));
 	}
 	
 	@Test
@@ -70,26 +76,26 @@ public class LogicTest {
 	
 	@Test
 	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException	{
-		String[] variableArray = {"3", "task one", null, null, "today", null};
+		String[] variableArray = {"3", "task one", null, null, "2 march 5am", null};
 		initializeThreeArrays();
 		assertEquals("return same string", "task edited in planner", testLogic.testEditTask(variableArray, floating, deadlines, events));
 		variableArray[0] = "4";
 		assertEquals("return same string", "task could not be editted", testLogic.testEditTask(variableArray, floating, deadlines, events));
 	}
 	
-	/*@Test
+	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String[] parsedInput1 = {"finish 2103 homework", null, null, "3 december 2017 12am", null};
-		String[] parsedInput2 = {"finish 2103 homework", null, null, "today", null};
-		String[] parsedInput3 = {"finish 2103 homework", null, null, "9 may", null};
+		String[] parsedInput1 = {"finish 2103 homework", null, null, "9 march 1pm", null};
+		String[] parsedInput2 = {"finish 2103 homework", null, null, "18 may 2018 4pm", null};
+		String[] parsedInput3 = {"finish 2103 homework", null, null, "7 may 2100", null};
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput1));
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput2));
 		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput3));
-	}*/
+	}
 	
 	@Test
 	public void ShouldReturnTrueAfterEditting()	{
-		String[] variableArray = {"1", "task one", null, null, "today", null};
+		String[] variableArray = {"1", "task one", null, null, "12 march 1400", null};
 		ArrayList<Task> testArray = new ArrayList<Task>();
 		Task event1 = new Task("first");
 		Task event2 = new Task("second");
@@ -128,37 +134,44 @@ public class LogicTest {
 		assertFalse("returns false", testLogic.testIsContainKeyword(event, "a only"));
 	}
 	
-	/*@Test
+	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-10T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-11T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-10T23:00", testformatter.testFormatTime("11pm"));
-	}*/
+		assertEquals("return formated date", "2016-03-11T23:00", testformatter.testFormatTime("11pm"));
+	}
 	
+	@Test
+	public void ShouldReturnCorrectYear()	{
+		assertEquals("return year", null, testformatter.testCheckYear("today"));
+		assertEquals("return year", "2018", testformatter.testCheckYear("2018"));
+		assertEquals("return year", null, testformatter.testCheckYear("may"));
+		assertEquals("return year", null, testformatter.testCheckYear("6"));
+		//assertEquals("returns feedback", "taskEd")
+	}
 	
 	@Test
 	public void ShoudReturnCorrectMonth()	{
-		assertEquals("return month", "-02-", testformatter.testCheckMonth(1));
-		assertEquals("return month", "-05-", testformatter.testCheckMonth(4));
-		assertEquals("return month", "-12-", testformatter.testCheckMonth(11));
-		//assertEquals("return month", "", testformatter.testCheckMonth("today"));
-		//assertEquals("return month", "", testformatter.testCheckMonth("10"));
-		//assertEquals("return month", "", testformatter.testCheckMonth("2018"));
+		assertEquals("return month", "-02-", testformatter.testCheckMonth("february"));
+		assertEquals("return month", "-05-", testformatter.testCheckMonth("May"));
+		assertEquals("return month", "-12-", testformatter.testCheckMonth("december"));
+		assertEquals("return month", "", testformatter.testCheckMonth("today"));
+		assertEquals("return month", "", testformatter.testCheckMonth("10"));
+		assertEquals("return month", "", testformatter.testCheckMonth("2018"));
 	}
 	
 	@Test
 	public void ShouldReturnCorrectDay()	{
-		assertEquals("return day", "10T", testformatter.testCheckDay(10));
-		assertEquals("return day", "05T", testformatter.testCheckDay(5));
-		//assertEquals("return day", "", testformatter.testCheckDay("today"));
-		//assertEquals("return day", "", testformatter.testCheckDay("march"));
-		//assertEquals("return day", "", testformatter.testCheckDay("2017"));
+		assertEquals("return day", "10T", testformatter.testCheckDay("10"));
+		assertEquals("return day", "05T", testformatter.testCheckDay("5"));
+		assertEquals("return day", "", testformatter.testCheckDay("today"));
+		assertEquals("return day", "", testformatter.testCheckDay("march"));
+		assertEquals("return day", "", testformatter.testCheckDay("2017"));
 	}
 	
 	@Test
 	public void ShouldReturnCorrectTime()	{
-		Calendar time = null;
 		assertEquals("return time", "00:00", testformatter.testCheckTime("12am"));
 		assertEquals("return time", "09:00", testformatter.testCheckTime("9am"));
 		assertEquals("return time", "12:30", testformatter.testCheckTime("12.30pm"));

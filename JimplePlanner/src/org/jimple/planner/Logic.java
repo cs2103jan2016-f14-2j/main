@@ -3,7 +3,6 @@ package org.jimple.planner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Logic {
 
@@ -13,9 +12,9 @@ public class Logic {
 	private static final String STRING_DELETE = "delete";
 	private static final String STRING_EDIT = "edit";
 
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_TODO = "todo";
+	private static final String TYPE_DEADLINE = "deadlines";
+	private static final String TYPE_EVENT = "events";
+	private static final String TYPE_TODO = "floating";
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
@@ -47,16 +46,12 @@ public class Logic {
 	private ArrayList<Task> events;
 	private ArrayList<Task> tempHistory;
 	ListOfMonths listOfMonths;
-	Parser parser;
-	StorageStub store;
-	Formatter formatter;
-	TimeParser timeParse;
+	Parser parser = new Parser();
+	StorageStub store = new StorageStub();
+	Formatter formatter = new Formatter();
+	TimeParser timeParse = new TimeParser();
 
 	public Logic() {
-		parser = new Parser();
-		store = new StorageStub();
-		formatter = new Formatter();
-		timeParse = new TimeParser();
 		listOfMonths = new ListOfMonths();
 		tempHistory = new ArrayList<Task>();
 		try {
@@ -101,6 +96,7 @@ public class Logic {
 	}
 
 	public ArrayList<Task> display(String type) {
+		checkOverCurrentTime();
 		if (type.equals(TYPE_TODO)) {
 			return todo;
 		} else if (type.equals(TYPE_EVENT)) {
@@ -109,6 +105,23 @@ public class Logic {
 			return deadlines;
 		}
 		return null;
+	}
+
+	private void checkOverCurrentTime() {
+		for (Task aTask : deadlines) {
+			if (aTask.getToTime() != null) {
+				if (aTask.getToTime().compareTo(LocalDateTime.now()) > 0) {
+					aTask.setIsOverDue(true);
+				}
+			}
+		}
+		for (Task aTask : events) {
+			if (aTask.getFromTime() != null) {
+				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
+					aTask.setIsOverDue(true);
+				}
+			}
+		}
 	}
 
 	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
@@ -156,13 +169,11 @@ public class Logic {
 					aTask.setDescription(variableArray[i]);
 					break;
 				case 2:
-					//Calendar inputFromDate = timeParse.timeParser(variableArray[i]);
-					String formattedFromDate = formatter.formatDateTime(variableArray[i]);
+					String formattedFromDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
 					aTask.setFromDate(formattedFromDate);
 					break;
 				case 3:
-					//Calendar inputToDate = timeParse.timeParser(variableArray[i]);
-					String formattedToDate = formatter.formatDateTime(variableArray[i]);
+					String formattedToDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
 					if (isContainsValidTime(formattedToDate)) {
 						aTask.setToDate(formattedToDate);
 					} else {
@@ -225,18 +236,18 @@ public class Logic {
 		}
 		return isConflict;
 	}
-	
-	private boolean isToTimeExceedTimeRange(Task newTask, Task event)	{
-		if (newTask.getToTime().compareTo(event.getFromTime()) > 0 
-				&& newTask.getToTime().compareTo(event.getToTime()) < 0)	{
+
+	private boolean isToTimeExceedTimeRange(Task newTask, Task event) {
+		if (newTask.getToTime().compareTo(event.getFromTime()) > 0
+				&& newTask.getToTime().compareTo(event.getToTime()) < 0) {
 			return true;
 		}
 		return false;
 	}
-	
-	private boolean isFromTimeExceedTimeRange(Task newTask, Task event)	{
-		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0 
-				&& newTask.getFromTime().compareTo(event.getToTime()) < 0)	{
+
+	private boolean isFromTimeExceedTimeRange(Task newTask, Task event) {
+		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0
+				&& newTask.getFromTime().compareTo(event.getToTime()) < 0) {
 			return true;
 		}
 		return false;
@@ -438,7 +449,8 @@ public class Logic {
 			ArrayList<Task> three) throws IOException {
 		return deleteTask(variableArray, one, two, three);
 	}
-	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events)	{
+
+	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
 }
