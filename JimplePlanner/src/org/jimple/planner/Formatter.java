@@ -32,7 +32,7 @@ public class Formatter {
 		String formattedDateTime = new String("");
 		formattedDateTime += (date.getYear() + 1900);
 		formattedDateTime += newFormatMonth(date.getMonth());
-		formattedDateTime += newFormatDay(date.getDay() + 1);
+		formattedDateTime += newFormatDay(date.getDate());
 		formattedDateTime += newFormatTime(date);
 		return formattedDateTime;
 	}
