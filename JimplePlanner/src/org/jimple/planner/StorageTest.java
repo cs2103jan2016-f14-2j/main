@@ -8,19 +8,19 @@ import java.util.LinkedList;
 import org.junit.Test;
 
 public class StorageTest {
-	private ArrayList<Task> getTodoStub(){
-		Task todo1 = new Task("Go exercise, you fatty");
-		todo1.setCategory("Keep fit");
-		Task todo2 = new Task("Read Lord of The Rings");
-		Task todo3 = new Task("Learn to play the harmonica");
-		Task todo4 = new Task("go through my anime backlog");
-		ArrayList<Task> todo = new ArrayList<Task>();
+	private ArrayList<Task> getfloatingStub(){
+		Task floating1 = new Task("Go exercise, you fatty");
+		floating1.setCategory("Keep fit");
+		Task floating2 = new Task("Read Lord of The Rings");
+		Task floating3 = new Task("Learn to play the harmonica");
+		Task floating4 = new Task("go through my anime backlog");
+		ArrayList<Task> floating = new ArrayList<Task>();
 		
-		todo.add(todo1);
-		todo.add(todo2);
-		todo.add(todo3);
-		todo.add(todo4);
-		return todo;
+		floating.add(floating1);
+		floating.add(floating2);
+		floating.add(floating3);
+		floating.add(floating4);
+		return floating;
 	}
 	
 	private ArrayList<Task> getDeadlineStub(){
@@ -82,11 +82,11 @@ public class StorageTest {
 	
 	private ArrayList<ArrayList<Task>> getTasksStub(){
 		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
-		ArrayList<Task> todo = getTodoStub();
+		ArrayList<Task> floating = getfloatingStub();
 		ArrayList<Task> deadline = getDeadlineStub();
 		ArrayList<Task> event = getEventStub();
 		
-		tasks.add(todo);
+		tasks.add(floating);
 		tasks.add(deadline);
 		tasks.add(event);
 		return tasks;
@@ -126,7 +126,7 @@ public class StorageTest {
 		assertEquals("cat", "Keep fit", cat1);
 		assertEquals("from", "", from1);
 		assertEquals("to", "", to1);
-		assertEquals("type", "todo", type1);
+		assertEquals("type", "floating", type1);
 		
 		String title2 = tasks.get(1).getTitle();
 		String desc2 = tasks.get(1).getDescription();
@@ -172,24 +172,24 @@ public class StorageTest {
 	public void testGetTasks() throws IOException{
 		Storage storage = new Storage();
 		ArrayList<ArrayList<Task>> tasks = storage.getTestTasks();
-		ArrayList<Task> todo = tasks.get(0);
+		ArrayList<Task> floating = tasks.get(0);
 		ArrayList<Task> deadline = tasks.get(1);
 		ArrayList<Task> event = tasks.get(2);
 		
-		String[] todo1Check = {"Go exercise, you fatty", "Keep fit"};
-		String[] todo2Check = {"Read Lord of The Rings"};
-		String[] todo3Check = {"Learn to play the harmonica"};
-		String[] todo4Check = {"go through my anime backlog"};
-		String todo1Title = todo.get(0).getTitle();
-		String todo1Category = todo.get(0).getCategory();
-		String todo2Title = todo.get(1).getTitle();
-		String todo3Title = todo.get(2).getTitle();
-		String todo4Title = todo.get(3).getTitle();
-		assertEquals("true if same", todo1Check[0], todo1Title);
-		assertEquals("true if same", todo1Check[1], todo1Category);
-		assertEquals("true if same", todo2Check[0], todo2Title);
-		assertEquals("true if same", todo3Check[0], todo3Title);
-		assertEquals("true if same", todo4Check[0], todo4Title);
+		String[] floating1Check = {"Go exercise, you fatty", "Keep fit"};
+		String[] floating2Check = {"Read Lord of The Rings"};
+		String[] floating3Check = {"Learn to play the harmonica"};
+		String[] floating4Check = {"go through my anime backlog"};
+		String floating1Title = floating.get(0).getTitle();
+		String floating1Category = floating.get(0).getCategory();
+		String floating2Title = floating.get(1).getTitle();
+		String floating3Title = floating.get(2).getTitle();
+		String floating4Title = floating.get(3).getTitle();
+		assertEquals("true if same", floating1Check[0], floating1Title);
+		assertEquals("true if same", floating1Check[1], floating1Category);
+		assertEquals("true if same", floating2Check[0], floating2Title);
+		assertEquals("true if same", floating3Check[0], floating3Title);
+		assertEquals("true if same", floating4Check[0], floating4Title);
 		
 		String[] deadline3Check = {"submit report before countdown party", "2015-12-31T23:59"};
 		String[] deadline4Check = {"deadline for GER1000 quiz", "2016-03-06T23:59"};
