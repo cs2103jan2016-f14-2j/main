@@ -128,16 +128,19 @@ public class Controller implements Initializable {
 						super.updateItem(item, bln);
 						if (item != null) {
 							Text t = new Text(item.getTitle());
-							VBox vBox = null;
+							VBox vBox = new VBox();
+							HBox hBox = new HBox();
 							if (item.getType() == "deadline") {
 								t.setId("deadline");
-								vBox = new VBox(t, new Text(String.format("to: %s", item.getPrettyToDate())));
+								vBox = new VBox(t);
+								hBox = new HBox(new Text(String.format("#%d", super.getIndex()+ logic.display("floating").size())), vBox, new Text(String.format("by %s", item.getPrettyToDate())));
 							} else {
 								t.setId("event");
 								vBox = new VBox(t, new Text(String.format("from: %s", item.getPrettyFromDate())),
 										new Text(String.format("to: %s", item.getPrettyToDate())));
+								hBox = new HBox(new Text(String.format("#%d", super.getIndex()+ logic.display("floating").size()
+										+ logic.display("deadlines").size())), vBox);
 							}
-							HBox hBox = new HBox(vBox);
 							hBox.setSpacing(10);
 							setGraphic(hBox);
 						}
@@ -150,40 +153,7 @@ public class Controller implements Initializable {
 		agendaContent.getChildren().clear();
 		agendaContent.getChildren().add(listView);
 	}
-
-	public void showSearch(String searchStr) {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
-									new Text(String.format("to: %s", item.getToTime())));
-							HBox hBox = new HBox(vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
-		((Pane) getCurrentTab().getContent()).getChildren().clear();
-		((Pane) getCurrentTab().getContent()).getChildren().add(listView);
-	}
-
+	
 	public void loadEventsList() {
 		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("events"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
@@ -203,7 +173,8 @@ public class Controller implements Initializable {
 							t.setId("fancytext");
 							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
 									new Text(String.format("to: %s", item.getToTime())));
-							HBox hBox = new HBox(vBox);
+							HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex()+ logic.display("floating").size()
+									+ logic.display("deadlines").size())), vBox);
 							hBox.setSpacing(10);
 							setGraphic(hBox);
 						}
@@ -217,7 +188,7 @@ public class Controller implements Initializable {
 		eventsContent.getChildren().add(listView);
 	}
 
-	public void loadDeadlinesList() {		
+	public void loadDeadlinesList() {
 		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadlines"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
@@ -236,7 +207,7 @@ public class Controller implements Initializable {
 							t.setId("fancytext");
 							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
 									new Text(String.format("to: %s", item.getToTime())));
-							HBox hBox = new HBox(vBox);
+							HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex()+logic.display("floating").size())), vBox);
 							hBox.setSpacing(10);
 							setGraphic(hBox);
 						}
@@ -280,6 +251,39 @@ public class Controller implements Initializable {
 		fitToAnchorPane(listView);
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listView);
+	}
+	
+	public void showSearch(String searchStr) {
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
+		ObservableList<Task> data = FXCollections.observableArrayList();
+		data.addAll(taskList);
+		ListView<Task> listView = new ListView<Task>(data);
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
+
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							t.setId("fancytext");
+							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
+									new Text(String.format("to: %s", item.getToTime())));
+							HBox hBox = new HBox(vBox);
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
+
+		});
+		fitToAnchorPane(listView);
+		((Pane) getCurrentTab().getContent()).getChildren().clear();
+		((Pane) getCurrentTab().getContent()).getChildren().add(listView);
 	}
 
 	public String getCurrentTabName() {
