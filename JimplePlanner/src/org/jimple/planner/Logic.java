@@ -81,7 +81,7 @@ public class Logic {
 			break;
 		case STRING_ADD:
 			feedback[0] = addToTaskList(parsedInput.getVariableArray());
-			feedback[1] = tempHistory.get(tempHistory.size()-1).getType();
+			feedback[1] = tempHistory.get(tempHistory.size() - 1).getType();
 			break;
 		case STRING_EDIT:
 			feedback[0] = editTask(parsedInput.getVariableArray(), todo, deadlines, events);
@@ -193,9 +193,17 @@ public class Logic {
 
 	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
-		boolean isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
-		boolean isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
-		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE);
+		boolean isFloatDeleted = false;
+		boolean isDeadlineDeleted = false;
+		boolean isEventsDeleted = false;
+		
+		isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
+		if (!isFloatDeleted) {
+			isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
+		}
+		if (!isFloatDeleted && !isDeadlineDeleted) {
+			isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE);
+		}
 		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
 			packageForSavingInFile();
 			return DELETED_FEEDBACK;
