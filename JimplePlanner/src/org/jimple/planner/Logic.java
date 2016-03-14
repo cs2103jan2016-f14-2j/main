@@ -205,16 +205,10 @@ public class Logic {
 					aTask.setDescription(variableArray[i]);
 					break;
 				case 2:
-					String formattedFromDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
-					aTask.setFromDate(formattedFromDate);
+					aTask.setFromDate(variableArray[i]);
 					break;
 				case 3:
-					String formattedToDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
-					if (isContainsValidTime(formattedToDate)) {
-						aTask.setToDate(formattedToDate);
-					} else {
-						aTask.setToDate(formattedToDate.concat(STRING_WHOLEDAY));
-					}
+					aTask.setToDate(variableArray[i]);
 					break;
 				case 4:
 					aTask.setCategory(variableArray[i]);

@@ -91,13 +91,18 @@ public class TimeParser {
 	private String calendarToStringFormat() {
 		if (c != null) {
 			Date parsedDate = c.getTime();
-			return parsedDate.getDate() + "/" + (parsedDate.getMonth()+1) + "/" + (parsedDate.getYear()+1900) + " " + parsedDate.getHours()
-			+ ":" + parsedDate.getMinutes();
+			String date = parseIfLessThanTen(parsedDate.getDate());
+			String month = parseIfLessThanTen(parsedDate.getMonth()+1);
+			String hours = parseIfLessThanTen(parsedDate.getHours());
+			String minutes = parseIfLessThanTen(parsedDate.getMinutes());
+			String correctDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
+			+ ":" + minutes;
+			return correctDate;
 		}
 		System.out.println("Anyhow input isit?");
 		return null;
 	}
-	
+
 	private boolean formatCalendarIfValid(String extendedCommand) {
 		c = Calendar.getInstance();
 		boolean hasDay = false;
@@ -320,6 +325,13 @@ public class TimeParser {
 		return false;
 	}
 	
+	private String parseIfLessThanTen(int date) {
+		if (isLessThanTen(date))	{
+			return "0" + date;
+		}
+		return Integer.toString(date);
+	}
+	
 	private boolean isValid24HourInput(int inputNo) {
 		return inputNo >= 0 && inputNo < 2400;
 	}
@@ -336,5 +348,12 @@ public class TimeParser {
 			}
 		}
 		return isNumber;
+	}
+	
+	private boolean isLessThanTen(int dateTime) {
+		if (dateTime < 10) {
+			return true;
+		}
+		return false;
 	}
 }
