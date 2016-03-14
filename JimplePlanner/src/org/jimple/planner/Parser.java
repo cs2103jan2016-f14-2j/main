@@ -1,3 +1,8 @@
+/* ------------------|
+ * Author: A0135775W |
+ * Name: Lee Lu Ke   |
+ * ----------------- */
+
 package org.jimple.planner;
 import java.util.HashMap;
 
@@ -32,6 +37,13 @@ public class Parser {
 	private HashMap<String, Integer> extendedCommandsAdd;
 	private HashMap<String, Integer> extendedCommandsEdit;
 	private HashMap<String, Integer> noExtendedCommands;
+	
+	/* ---------------------|
+	 * DateTimeParser Class |
+	 * ---------------------|
+	 * Class that can parse "natural language" inputs for date and time.
+	 */
+	private TimeParser timeParser = new TimeParser();
 	
 	/* 
 	 *  Stores the extended commands variables into the respective hashmaps.
@@ -76,6 +88,8 @@ public class Parser {
 		// currIndex is the index on the InputStruct that the strings currently being read affects.
 		int currIndex = INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT;
 		
+		String currExtendedCommand = EMPTY_STRING;
+		
 		// userInputString is the string currently being read. Updates while the next extended command is not found.
 		String userInputString = EMPTY_STRING;
 		
@@ -88,9 +102,14 @@ public class Parser {
 			} else { //Word being read is an extended command.
 				
 				//When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex". Removes the whitespace at the end.
-				outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
+				if (isDateTimeInput(currExtendedCommand)) { //Parses using the TimeFormat class first, if the extended command is date-time specific.
+					outputStruct.setAtIndex(currIndex, timeParser.timeParser(currExtendedCommand, userInputString));
+				} else {
+					outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
+				}
 				
-				//Updates the "currIndex" to the index related to the current extended command.
+				//Updates the "currIndex" and "currExtendedCommand" to the current extended command.
+				currExtendedCommand = currString;
 				currIndex = inputExtendedCommandsHashMap.get(currString);
 				
 				//Resets "userInputString".
@@ -101,11 +120,18 @@ public class Parser {
 		return outputStruct;
 	}
 	
-	public String getCommandString(String[] userInputStringArray) {
+	private boolean isDateTimeInput(String extendedCommand) {
+		if (extendedCommandsAdd.containsKey(extendedCommand)) {
+			return extendedCommandsAdd.get(extendedCommand) == 1 || extendedCommandsAdd.get(extendedCommand) == 2;
+		}
+		return false;
+	}
+	
+	private String getCommandString(String[] userInputStringArray) {
 		return userInputStringArray[USER_INPUT_INDEX_COMMAND_STRING];		
 	}
 	
-	public String removeLastCharacter(String inputString) {
+	private String removeLastCharacter(String inputString) {
 		return inputString.substring(STRING_INDEX_START, inputString.length()-STRING_INDEX_TRIM_LAST_SPACE_SIZE);
 	}
 	

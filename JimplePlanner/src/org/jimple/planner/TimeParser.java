@@ -1,3 +1,8 @@
+/* ------------------|
+ * Author: A0135775W |
+ * Name: Lee Lu Ke   |
+ * ----------------- */
+
 package org.jimple.planner;
 
 import java.time.LocalDateTime;
@@ -198,7 +203,7 @@ public class TimeParser {
 		return false;
 	}
 	
-	public boolean isFieldSet(String inputField) {
+	private boolean isFieldSet(String inputField) {
 		switch (inputField) {
 			case "day" :
 				return day != FIELD_NOT_SET_VALUE;
@@ -216,7 +221,7 @@ public class TimeParser {
 		}
 	}
 	
-	public int getField(String inputField) {
+	private int getField(String inputField) {
 		switch (inputField) {
 			case "day" :
 				return day;
@@ -280,7 +285,7 @@ public class TimeParser {
 		return false;
 	}
 	
-	public boolean isValidAMPMNumberInput(int inputNo) {
+	private boolean isValidAMPMNumberInput(int inputNo) {
 		return inputNo > 0 && inputNo <= 12;
 	}
 	

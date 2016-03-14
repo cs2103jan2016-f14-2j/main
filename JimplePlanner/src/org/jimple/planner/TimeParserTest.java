@@ -1,6 +1,11 @@
 package org.jimple.planner;
 
 import java.util.Date;
+/* ------------------|
+ * Author: A0135775W |
+ * Name: Lee Lu Ke   |
+ * ----------------- */
+
 import java.util.Scanner;
 
 public class TimeParserTest {
