@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.prefs.Preferences;
+import java.util.Properties;
 
 public class Storage {
 	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
@@ -21,22 +23,90 @@ public class Storage {
 	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
 	private static final String TEST_FILE_NAME = "testplanner.jim";
 	private static final String TEST_TEMP_FILE_NAME = "testtempplanner.jim";
+	private static final String PROPERTIES_CONFIG_FILE_NAME = "jimpleConfig.properties";
+	private static final String PROPERTIES_SAVEPATH_KEY_NAME = "savepath";
+	
+	private static final String FILEPATH_DEFAULT = DEFAULT_FILE_DIRECTORY + DEFAULT_FILE_NAME;
+	private static final String FILEPATH_DEFAULT_TEMP = DEFAULT_FILE_DIRECTORY + DEFAULT_TEMP_FILE_NAME;
+	private static final String FILEPATH_TEST = DEFAULT_FILE_DIRECTORY + TEST_FILE_NAME;
+	private static final String FILEPATH_TEST_TEMP = DEFAULT_FILE_DIRECTORY + TEST_TEMP_FILE_NAME;
+	private static final String FILEPATH_CONFIG = DEFAULT_FILE_DIRECTORY+PROPERTIES_CONFIG_FILE_NAME;
+	
 	private static final String TAGS_CATEGORY = ":cat:";
 	private static final String TAGS_DESCRIPTION = ":desc:";
 	private static final String TAGS_FROM_TIME = ":from:";
 	private static final String TAGS_TO_TIME = ":to:";
 	private static final String TAGS_TITLE = ":title:";
 	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
+	
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String EMPTY_STRING = "";
-	private static final String PREFS_NODE_NAME = "JimplePlanner";
-	private static final String PREFS_NODE_KEY_SAVEPATH_SAVEPATH = "savepath";
 	private static final boolean IS_TEST = true;
 	private static final boolean IS_NOT_TEST = false;
 	
-	private static Preferences prefs = Preferences.userRoot().node(PREFS_NODE_NAME);
+	private static Properties properties = null;
+	private static String fileSavePath = null;
+	
+	//Constructor
+	public Storage(){
+		properties = loadProperties();
+		fileSavePath = getSavePath();
+	}
+	
+	public boolean setPath(String pathName){
+		boolean setStatus = false;
+		if(checkFilePath(pathName)){
+			properties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+			storeProperties();
+			setStatus = true;
+			//TODO Copy over the tasks current to new path
+		}
+		return setStatus;
+	}
+	
+	private void storeProperties(){
+		BufferedWriter configFileWriter = createFileWriter(FILEPATH_CONFIG);
+		try {
+			properties.store(configFileWriter, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String getSavePath(){
+		String savedPath = properties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
+		if(savedPath != null){
+			savedPath += FILEPATH_DEFAULT;
+		}
+		return savedPath;
+	}
+	
+	private boolean checkFilePath(String filePath){
+        try {
+            Paths.get(filePath);
+            File fileDir = new File(filePath);
+            return fileDir.isDirectory();
+        } catch (InvalidPathException | NullPointerException ex) {
+            return false;
+        }
+    }
+	
+	private Properties loadProperties(){
+		try {
+			String configPath = FILEPATH_CONFIG;
+			BufferedReader configFileReader = createFileReader(configPath);
+			Properties properties = new Properties();
+			properties.load(configFileReader);
+			configFileReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return properties;
+	}
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
@@ -51,24 +121,34 @@ public class Storage {
 		return file;
 	}
 	
-	//Methods for creating filereaders and filewriters
-	private BufferedReader createFileReader(String fileName) throws FileNotFoundException {
-		File file = createFile(fileName);
-		FileInputStream fileIn = new FileInputStream(file);
-		InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
-		BufferedReader reader = new BufferedReader(inputStreamReader);
+	//Methods for creating file readers and file writers
+	private BufferedReader createFileReader(String fileName){
+		BufferedReader reader = null;
+		try {
+			File file = createFile(fileName);
+			FileInputStream fileIn = new FileInputStream(file);
+			InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
+			reader = new BufferedReader(inputStreamReader);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		return reader;
 	}
 	
-	private BufferedWriter createFileWriter(String fileName) throws FileNotFoundException {
-		File file = createFile(fileName);
-		FileOutputStream fileOut = new FileOutputStream(file);
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
-		BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+	private BufferedWriter createFileWriter(String fileName){
+		BufferedWriter writer = null;
+		try {
+			File file = createFile(fileName);
+			FileOutputStream fileOut = new FileOutputStream(file);
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
+			writer = new BufferedWriter(outputStreamWriter);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		return writer;
 	}
 	
-	private BufferedReader createDefaultFileReader() throws FileNotFoundException {
+	/*private BufferedReader createDefaultFileReader() throws FileNotFoundException {
 		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
 		return createFileReader(filePath);
 	}
@@ -76,11 +156,12 @@ public class Storage {
 	private BufferedWriter createTempFileWriter() throws FileNotFoundException {
 		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
 		return createFileWriter(filePath);
-	}
+	} 
 	
 	/*
 	 * The following 2 methods are just used for Testing purposes
 	 */
+	/*
 	private BufferedReader createTestFileReader() throws FileNotFoundException {
 		String filePath = DEFAULT_FILE_DIRECTORY+TEST_FILE_NAME;
 		return createFileReader(filePath);
@@ -89,7 +170,7 @@ public class Storage {
 	private BufferedWriter createTestTempFileWriter() throws FileNotFoundException {
 		String filePath = DEFAULT_FILE_DIRECTORY+TEST_TEMP_FILE_NAME;
 		return createFileWriter(filePath);
-	}
+	} */
 	
 	//This method extracts all relevant fields from an Task and stores them as a String, each String line is an Task
 	private String extractTaskToString(Task task){
