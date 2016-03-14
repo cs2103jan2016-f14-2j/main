@@ -11,6 +11,7 @@ public class Logic {
 	private static final String STRING_ADD = "add";
 	private static final String STRING_DELETE = "delete";
 	private static final String STRING_EDIT = "edit";
+	private static final String STRING_CHANGEDIR = "changedir";
 
 	private static final String TYPE_DEADLINE = "deadlines";
 	private static final String TYPE_EVENT = "events";
@@ -33,6 +34,7 @@ public class Logic {
 	private String EDITED_FEEDBACK = "task edited in planner";
 	private String DELETED_FEEDBACK = "task deleted";
 	private String WINDOW_CLOSED_FEEDBACK = "search window closed";
+	private String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed";
 
 	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
@@ -40,6 +42,7 @@ public class Logic {
 	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
+	private String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";
 	private String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 
 	private ArrayList<Task> deadlines;
@@ -75,30 +78,49 @@ public class Logic {
 	public String[] execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
 		try {
-		InputStruct parsedInput = parser.parseInput(inputString);
-		switch (parsedInput.getCommand()) {
-		case STRING_DELETE:
-			feedback[0] = deleteTask(parsedInput.getVariableArray(), todo, deadlines, events);
-			feedback[1] = STRING_DELETE;
-			break;
-		case STRING_ADD:
-			feedback[0] = addToTaskList(parsedInput.getVariableArray());
-			feedback[1] = tempHistory.get(tempHistory.size() - 1).getType();
-			break;
-		case STRING_EDIT:
-			feedback[0] = editTask(parsedInput.getVariableArray(), todo, deadlines, events);
-			feedback[1] = STRING_EDIT;
-			break;
-		case STRING_SEARCH:
-			feedback[0] = parsedInput.getVariableArray()[0];
-			feedback[1] = STRING_SEARCH;
-			break;
-		}
-		} catch (Exception e)	{
+			InputStruct parsedInput = parser.parseInput(inputString);
+			switch (parsedInput.getCommand()) {
+			case STRING_DELETE:
+				feedback[0] = deleteTask(parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[1] = STRING_DELETE;
+				break;
+			case STRING_ADD:
+				feedback[0] = addToTaskList(parsedInput.getVariableArray());
+				feedback[1] = tempHistory.get(tempHistory.size() - 1).getType();
+				break;
+			case STRING_EDIT:
+				feedback[0] = editTask(parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[1] = STRING_EDIT;
+				break;
+			case STRING_SEARCH:
+				feedback[0] = parsedInput.getVariableArray()[0];
+				feedback[1] = STRING_SEARCH;
+				break;
+			case STRING_CHANGEDIR:
+				feedback[0] = changeSaveDirectory(parsedInput.getVariableArray());
+				feedback[1] = STRING_CHANGEDIR;
+				break;
+			}
+		} catch (Exception e) {
 			feedback[0] = ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
 		}
 		return feedback;
+	}
+	
+
+	private String changeSaveDirectory(String[] variableArray) {
+		if (!isValidPath(variableArray))	{
+			return ERROR_DIRECTORY_PATH_FEEDBACK;
+		} 
+		return DIRECTORY_PATH_CHANGED_FEEDBACK;
+	}
+
+	private boolean isValidPath(String[] variableArray) {
+		if (store.setPath(variableArray[0]))	{
+			return true;
+		}
+		return false;
 	}
 
 	public ArrayList<Task> display(String type) {
@@ -202,7 +224,7 @@ public class Logic {
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
 		boolean isEventsDeleted = false;
-		
+
 		isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
 		if (!isFloatDeleted) {
 			isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
