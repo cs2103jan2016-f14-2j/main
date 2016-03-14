@@ -14,18 +14,25 @@ public class Formatter {
 	}
 
 	public String formatPrettyDate(LocalDateTime dateTime) {
-		String prettyDateTime = new String("");
-		prettyDateTime += dateTime.getDayOfMonth();
-		prettyDateTime += "/";
-		prettyDateTime += dateTime.getMonthValue();
-		prettyDateTime += "/";
-		prettyDateTime += dateTime.getYear();
-		prettyDateTime += "\n";
-		prettyDateTime += dateTime.getHour();
-		prettyDateTime += ":";
-		prettyDateTime += dateTime.getMinute();
+		String prettyDate = new String("");
+		prettyDate += dateTime.getDayOfMonth();
+		prettyDate += "/";
+		prettyDate += dateTime.getMonthValue();
+		prettyDate += "/";
+		prettyDate += dateTime.getYear();
 
-		return prettyDateTime;
+		return prettyDate;
+	}
+	
+	public String formatPrettyTime(LocalDateTime dateTime)	{
+		String prettyTime = new String("");
+		prettyTime += dateTime.getHour();
+		prettyTime += ":";
+		if (dateTime.getMinute() < 10) {
+			prettyTime += "0";
+		}
+		prettyTime += dateTime.getMinute();
+		return prettyTime;
 	}
 
 	public String newFormatDateTime(Date date) {

@@ -12,7 +12,7 @@ class Task{
 	private String type;
 	private boolean isOverDue;
 	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_TODO = "todo";
+	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private Formatter formatter;
 	
@@ -38,6 +38,18 @@ class Task{
 		String prettyToDate = new String("");
 		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
+	}
+	
+	public String getPrettyFromTime()	{
+		String prettyFromTime = new String("");
+		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
+		return prettyFromTime;
+	}
+	
+	public String getPrettyToTime()	{
+		String prettyToTime = new String("");
+		prettyToTime = formatter.formatPrettyTime(toDateTime);
+		return prettyToTime;
 	}
 
 	public String getFromTimeString() {

@@ -11,6 +11,7 @@ public class Logic {
 	private static final String STRING_ADD = "add";
 	private static final String STRING_DELETE = "delete";
 	private static final String STRING_EDIT = "edit";
+	private static final String STRING_CHANGEDIR = "changedir";
 
 	private static final String TYPE_DEADLINE = "deadlines";
 	private static final String TYPE_EVENT = "events";
@@ -33,6 +34,7 @@ public class Logic {
 	private String EDITED_FEEDBACK = "task edited in planner";
 	private String DELETED_FEEDBACK = "task deleted";
 	private String WINDOW_CLOSED_FEEDBACK = "search window closed";
+	private String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed";
 
 	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
@@ -40,6 +42,8 @@ public class Logic {
 	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
+	private String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";
+	private String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
@@ -73,26 +77,49 @@ public class Logic {
 	 */
 	public String[] execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
-		InputStruct parsedInput = parser.parseInput(inputString);
-		switch (parsedInput.getCommand()) {
-		case STRING_DELETE:
-			feedback[0] = deleteTask(parsedInput.getVariableArray(), todo, deadlines, events);
-			feedback[1] = STRING_DELETE;
-			break;
-		case STRING_ADD:
-			feedback[0] = addToTaskList(parsedInput.getVariableArray());
-			feedback[1] = tempHistory.get(tempHistory.size()-1).getType();
-			break;
-		case STRING_EDIT:
-			feedback[0] = editTask(parsedInput.getVariableArray(), todo, deadlines, events);
-			feedback[1] = STRING_EDIT;
-			break;
-		case STRING_SEARCH:
-			feedback[0] = parsedInput.getVariableArray()[0];
-			feedback[1] = STRING_SEARCH;
-			break;
+		try {
+			InputStruct parsedInput = parser.parseInput(inputString);
+			switch (parsedInput.getCommand()) {
+			case STRING_DELETE:
+				feedback[0] = deleteTask(parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[1] = STRING_DELETE;
+				break;
+			case STRING_ADD:
+				feedback[0] = addToTaskList(parsedInput.getVariableArray());
+				feedback[1] = tempHistory.get(tempHistory.size() - 1).getType();
+				break;
+			case STRING_EDIT:
+				feedback[0] = editTask(parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[1] = STRING_EDIT;
+				break;
+			case STRING_SEARCH:
+				feedback[0] = parsedInput.getVariableArray()[0];
+				feedback[1] = STRING_SEARCH;
+				break;
+			case STRING_CHANGEDIR:
+				feedback[0] = changeSaveDirectory(parsedInput.getVariableArray());
+				feedback[1] = STRING_CHANGEDIR;
+				break;
+			}
+		} catch (Exception e) {
+			feedback[0] = ERROR_WRONG_INPUT_FEEDBACK;
+			feedback[1] = "";
 		}
 		return feedback;
+	}
+
+	private String changeSaveDirectory(String[] variableArray) {
+		if (!isValidPath(variableArray)) {
+			return ERROR_DIRECTORY_PATH_FEEDBACK;
+		}
+		return DIRECTORY_PATH_CHANGED_FEEDBACK;
+	}
+
+	private boolean isValidPath(String[] variableArray) {
+		if (store.setPath(variableArray[0])) {
+			return true;
+		}
+		return false;
 	}
 
 	public ArrayList<Task> display(String type) {
@@ -126,9 +153,16 @@ public class Logic {
 
 	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
-		boolean isToDoEditted = findTask(one, variableArray, 0, STRING_EDIT);
-		boolean isWholeDayEditted = findTask(two, variableArray, one.size(), STRING_EDIT);
-		boolean isEventsEditted = findTask(three, variableArray, one.size() + two.size(), STRING_EDIT);
+		boolean isToDoEditted = false;
+		boolean isWholeDayEditted = false;
+		boolean isEventsEditted = false;
+		isToDoEditted = findTask(one, variableArray, 0, STRING_EDIT);
+		if (!isToDoEditted) {
+			isWholeDayEditted = findTask(two, variableArray, one.size(), STRING_EDIT);
+		}
+		if (!isWholeDayEditted && !isToDoEditted) {
+			isEventsEditted = findTask(three, variableArray, one.size() + two.size(), STRING_EDIT);
+		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			packageForSavingInFile();
 			return EDITED_FEEDBACK;
@@ -136,11 +170,13 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) {
+	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
 				if (type.equals(STRING_EDIT)) {
-					list.set(i, doEdit(arrayWithoutEditIndex(variableArray), list.get(i)));
+					Task taskToBeEditted = list.remove(i);
+					taskToBeEditted = doEdit(createArrayWithoutFirstIndex(variableArray), taskToBeEditted);
+					allocateCorrectTimeArray(taskToBeEditted);
 				} else if (type.equals(STRING_DELETE)) {
 					list.remove(i);
 				}
@@ -150,7 +186,7 @@ public class Logic {
 		return false;
 	}
 
-	private String[] arrayWithoutEditIndex(String[] variableArray) {
+	private String[] createArrayWithoutFirstIndex(String[] variableArray) {
 		String[] parsedInput = new String[5];
 		for (int i = 1; i < variableArray.length; i++) {
 			parsedInput[i - 1] = variableArray[i];
@@ -193,9 +229,17 @@ public class Logic {
 
 	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
-		boolean isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
-		boolean isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
-		boolean isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE);
+		boolean isFloatDeleted = false;
+		boolean isDeadlineDeleted = false;
+		boolean isEventsDeleted = false;
+
+		isFloatDeleted = findTask(one, variableArray, 0, STRING_DELETE);
+		if (!isFloatDeleted) {
+			isDeadlineDeleted = findTask(two, variableArray, one.size(), STRING_DELETE);
+		}
+		if (!isFloatDeleted && !isDeadlineDeleted) {
+			isEventsDeleted = findTask(three, variableArray, one.size() + two.size(), STRING_DELETE);
+		}
 		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
 			packageForSavingInFile();
 			return DELETED_FEEDBACK;
@@ -435,7 +479,7 @@ public class Logic {
 		return searchWord(wordToBeSearched);
 	}
 
-	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
+	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) throws IOException {
 		return findTask(list, variableArray, previousSizes, STRING_EDIT);
 	}
 
