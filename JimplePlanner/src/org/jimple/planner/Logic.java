@@ -40,6 +40,7 @@ public class Logic {
 	private String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
 	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
+	private String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
@@ -73,6 +74,7 @@ public class Logic {
 	 */
 	public String[] execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
+		try {
 		InputStruct parsedInput = parser.parseInput(inputString);
 		switch (parsedInput.getCommand()) {
 		case STRING_DELETE:
@@ -91,6 +93,10 @@ public class Logic {
 			feedback[0] = parsedInput.getVariableArray()[0];
 			feedback[1] = STRING_SEARCH;
 			break;
+		}
+		} catch (Exception e)	{
+			feedback[0] = ERROR_WRONG_INPUT_FEEDBACK;
+			feedback[1] = "";
 		}
 		return feedback;
 	}
