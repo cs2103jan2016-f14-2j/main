@@ -107,17 +107,16 @@ public class Logic {
 		}
 		return feedback;
 	}
-	
 
 	private String changeSaveDirectory(String[] variableArray) {
-		if (!isValidPath(variableArray))	{
+		if (!isValidPath(variableArray)) {
 			return ERROR_DIRECTORY_PATH_FEEDBACK;
-		} 
+		}
 		return DIRECTORY_PATH_CHANGED_FEEDBACK;
 	}
 
 	private boolean isValidPath(String[] variableArray) {
-		if (store.setPath(variableArray[0]))	{
+		if (store.setPath(variableArray[0])) {
 			return true;
 		}
 		return false;
@@ -154,9 +153,16 @@ public class Logic {
 
 	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
-		boolean isToDoEditted = findTask(one, variableArray, 0, STRING_EDIT);
-		boolean isWholeDayEditted = findTask(two, variableArray, one.size(), STRING_EDIT);
-		boolean isEventsEditted = findTask(three, variableArray, one.size() + two.size(), STRING_EDIT);
+		boolean isToDoEditted = false;
+		boolean isWholeDayEditted = false;
+		boolean isEventsEditted = false;
+		isToDoEditted = findTask(one, variableArray, 0, STRING_EDIT);
+		if (!isToDoEditted) {
+			isWholeDayEditted = findTask(two, variableArray, one.size(), STRING_EDIT);
+		}
+		if (!isWholeDayEditted && !isToDoEditted) {
+			isEventsEditted = findTask(three, variableArray, one.size() + two.size(), STRING_EDIT);
+		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			packageForSavingInFile();
 			return EDITED_FEEDBACK;
@@ -164,11 +170,13 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) {
+	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
 				if (type.equals(STRING_EDIT)) {
-					list.set(i, doEdit(arrayWithoutEditIndex(variableArray), list.get(i)));
+					Task taskToBeEditted = list.remove(i);
+					taskToBeEditted = doEdit(createArrayWithoutFirstIndex(variableArray), taskToBeEditted);
+					allocateCorrectTimeArray(taskToBeEditted);
 				} else if (type.equals(STRING_DELETE)) {
 					list.remove(i);
 				}
@@ -178,7 +186,7 @@ public class Logic {
 		return false;
 	}
 
-	private String[] arrayWithoutEditIndex(String[] variableArray) {
+	private String[] createArrayWithoutFirstIndex(String[] variableArray) {
 		String[] parsedInput = new String[5];
 		for (int i = 1; i < variableArray.length; i++) {
 			parsedInput[i - 1] = variableArray[i];
@@ -471,7 +479,7 @@ public class Logic {
 		return searchWord(wordToBeSearched);
 	}
 
-	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) {
+	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) throws IOException {
 		return findTask(list, variableArray, previousSizes, STRING_EDIT);
 	}
 

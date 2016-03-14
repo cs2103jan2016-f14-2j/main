@@ -94,7 +94,7 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnTrueAfterEditting()	{
+	public void ShouldReturnTrueAfterEditting()	throws IOException{
 		String[] variableArray = {"1", "task one", null, null, "12 march 1400", null};
 		ArrayList<Task> testArray = new ArrayList<Task>();
 		Task event1 = new Task("first");
