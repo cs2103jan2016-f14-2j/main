@@ -251,9 +251,6 @@ public class Logic {
 	private String addToTaskList(String[] parsedInput) throws IOException {
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
-		/*if (isConflictWithCurrentTasks(newTask, deadlines, events)) {
-			return ERROR_CONFLICT_FEEDBACK;
-		}*/
 		allocateCorrectTimeArray(newTask);
 		tempHistory.add(newTask);
 		return ADDED_FEEDBACK;
