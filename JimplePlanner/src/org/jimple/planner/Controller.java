@@ -138,8 +138,7 @@ public class Controller implements Initializable {
 								t.setId("event");
 								vBox = new VBox(t, new Text(String.format("from: %s", item.getPrettyFromDate())),
 										new Text(String.format("to: %s", item.getPrettyToDate())));
-								hBox = new HBox(new Text(String.format("#%d", super.getIndex()+ logic.display("floating").size()
-										+ logic.display("deadlines").size())), vBox);
+								hBox = new HBox(new Text(String.format("#%d", super.getIndex()+ logic.display("floating").size())), vBox);
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -293,6 +292,15 @@ public class Controller implements Initializable {
 	public Tab getCurrentTab() {
 		return tabPanes.getSelectionModel().getSelectedItem();
 	}
+	
+	public void updatePointer(int num){
+		System.out.println(getActiveListView().getItems().size());
+		if(num >= getActiveListView().getItems().size())
+			num -= 1;
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().select(num);
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+	}
 
 	public int getCurrentTabItemIndex() {
 		return getActiveListView().getSelectionModel().getSelectedIndex();
@@ -381,34 +389,34 @@ public class Controller implements Initializable {
 		try {
 			System.out.println(getCurrentTabName());
 			System.out.println(getCurrentTabItemIndex());
+			int selectedIndex = getCurrentTabItemIndex();
+			if(selectedIndex == -1)
+				return;
 			switch (getCurrentTabName()) {
 			case "To-do":
-				logic.execute("delete " + getCurrentTabItemIndex());
-				reloadDisplay();
+				logic.execute("delete " + selectedIndex);
 				break;
 
 			case "Deadlines":
-				logic.execute("delete " + (getCurrentTabItemIndex() + logic.display("floating").size()));
-				reloadDisplay();
+				logic.execute("delete " + (selectedIndex + logic.display("floating").size()));
 				break;
 
 			case "Events":
 				System.out.println("deleting from events");
-				logic.execute("delete " + (getCurrentTabItemIndex() + logic.display("floating").size()
+				logic.execute("delete " + (selectedIndex + logic.display("floating").size()
 						+ logic.display("deadlines").size()));
-				reloadDisplay();
 				break;
 
 			case "Agenda":
 				System.out.println("deleting from agenda");
-				logic.execute("delete " + (getCurrentTabItemIndex() + logic.display("floating").size()
-						+ logic.display("deadlines").size()));
-				reloadDisplay();
+				logic.execute("delete " + (selectedIndex + logic.display("floating").size()));
 				break;
 
 			default:
 				break;
 			}
+			reloadDisplay();
+			updatePointer(selectedIndex);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -475,6 +483,7 @@ public class Controller implements Initializable {
 					tabPanes.requestFocus();
 					deselectTaskItem();
 					break;
+				case BACK_SPACE:
 				case DELETE:
 					// Pane popup = new Pane();
 					// VBox dialogVbox = new VBox(20);
