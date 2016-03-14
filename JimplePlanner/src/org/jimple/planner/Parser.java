@@ -1,3 +1,8 @@
+/* ------------------|
+ * Author: A0135775W |
+ * Name: Lee Lu Ke   |
+ * ----------------- */
+
 package org.jimple.planner;
 import java.util.HashMap;
 
@@ -32,6 +37,13 @@ public class Parser {
 	private HashMap<String, Integer> extendedCommandsAdd;
 	private HashMap<String, Integer> extendedCommandsEdit;
 	private HashMap<String, Integer> noExtendedCommands;
+	
+	/* ---------------------|
+	 * DateTimeParser Class |
+	 * ---------------------|
+	 * Class that can parse "natural language" inputs for date and time.
+	 */
+	private TimeParser timeParser = new TimeParser();
 	
 	/* 
 	 *  Stores the extended commands variables into the respective hashmaps.
@@ -76,9 +88,10 @@ public class Parser {
 		// currIndex is the index on the InputStruct that the strings currently being read affects.
 		int currIndex = INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT;
 		
+		String currExtendedCommand = EMPTY_STRING;
+		
 		// userInputString is the string currently being read. Updates while the next extended command is not found.
 		String userInputString = EMPTY_STRING;
-		String[] currVariableArray = outputStruct.getVariableArray();
 		
 		for (int i = 1; i < userInputStringArray.length; i++) {
 			
@@ -86,24 +99,40 @@ public class Parser {
 			String currString = userInputStringArray[i];
 			if (!inputExtendedCommandsHashMap.containsKey(currString)) {
 				userInputString += currString + " ";
-			} else {
+			} else { //Word being read is an extended command.
 				
-				//When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex".
-				currVariableArray[currIndex] = userInputString.substring(0, userInputString.length()-1);
+				//When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex". Removes the whitespace at the end.
+				if (isDateTimeInput(currExtendedCommand)) { //Parses using the TimeFormat class first, if the extended command is date-time specific.
+					outputStruct.setAtIndex(currIndex, timeParser.timeParser(currExtendedCommand, userInputString));
+				} else {
+					outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
+				}
 				
-				//Updates the "currIndex" to the index related to the extended command.
+				//Updates the "currIndex" and "currExtendedCommand" to the current extended command.
+				currExtendedCommand = currString;
 				currIndex = inputExtendedCommandsHashMap.get(currString);
 				
-				//Resets the "userInputString".
+				//Resets "userInputString".
 				userInputString = EMPTY_STRING;
 			}
 		}
-		currVariableArray[currIndex] = userInputString.substring(STRING_INDEX_START, userInputString.length()-STRING_INDEX_TRIM_LAST_SPACE_SIZE);
+		outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
 		return outputStruct;
 	}
 	
-	public String getCommandString(String[] userInputStringArray) {
+	private boolean isDateTimeInput(String extendedCommand) {
+		if (extendedCommandsAdd.containsKey(extendedCommand)) {
+			return extendedCommandsAdd.get(extendedCommand) == 1 || extendedCommandsAdd.get(extendedCommand) == 2;
+		}
+		return false;
+	}
+	
+	private String getCommandString(String[] userInputStringArray) {
 		return userInputStringArray[USER_INPUT_INDEX_COMMAND_STRING];		
+	}
+	
+	private String removeLastCharacter(String inputString) {
+		return inputString.substring(STRING_INDEX_START, inputString.length()-STRING_INDEX_TRIM_LAST_SPACE_SIZE);
 	}
 	
 }
@@ -131,8 +160,16 @@ class InputStruct {
 	// The string array being used, according to commandString.
 	private String[] variableArray;
 	
+	public void setCommand(String inputCommand) {
+		commandString = inputCommand;
+	}
+	
 	public String getCommand() {
 		return commandString;
+	}
+	
+	public void setVariableArraySize(int inputSize) {
+		variableArray = new String[inputSize];
 	}
 	
 	public String[] getVariableArray() {
@@ -145,16 +182,16 @@ class InputStruct {
 		// Initializes the size of the variable array according to the commandString. 
 		switch (commandString) {
 			case "add" :
-				variableArray = new String[ARRAY_SIZE_ADD];
+				setVariableArraySize(ARRAY_SIZE_ADD);
 				break;
 			case "edit" :
-				variableArray = new String[ARRAY_SIZE_EDIT];
+				setVariableArraySize(ARRAY_SIZE_EDIT);
 				break;
 			case "delete" :
-				variableArray = new String[ARRAY_SIZE_DELETE];
+				setVariableArraySize(ARRAY_SIZE_DELETE);
 				break;
 			case "search" :
-				variableArray = new String[ARRAY_SIZE_SEARCH];
+				setVariableArraySize(ARRAY_SIZE_SEARCH);
 				break;
 			default :
 				break;
@@ -199,5 +236,13 @@ class InputStruct {
 	 * ---------------|
 	 * N/A
 	 */
+	
+	public void setAtIndex(int inputIndex, String inputString) {
+		variableArray[inputIndex] = inputString;
+	}
+	
+	public String getAtIndex(int inputIndex) {
+		return variableArray[inputIndex];
+	}
 	
 }
