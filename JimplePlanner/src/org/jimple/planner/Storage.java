@@ -15,9 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Properties;
 
 public class Storage {
+	private static final int ALL_ARRAY_SIZE = 3;
+	
 	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
 	private static final String DEFAULT_FILE_NAME = "planner.jim";
 	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
@@ -53,14 +56,13 @@ public class Storage {
 	//Constructor
 	public Storage(){
 		properties = loadProperties();
-		storeProperties();
 	}
 	
 	public boolean setPath(String pathName){
 		boolean setStatus = false;
 		if(checkFilePath(pathName)){
 			if(updateKeys(pathName)){
-				storeProperties();
+				storeProperties(properties);
 				setStatus = copyToNewLocation();
 			}
 		}
@@ -86,12 +88,28 @@ public class Storage {
 		String oldPath = getActualFilePath(oldDir);
 		boolean saveStatus= false;
 		try {
-			ArrayList<ArrayList<Task>> oldPathTasks = getTaskSelect(oldPath);
-			saveStatus = isSavedSelect(oldPathTasks, newPath, oldPath);
+			ArrayList<ArrayList<Task>> consolidatedTasks = getConsolidatedTasks(newPath, oldPath);
+			saveStatus = isSavedSelect(consolidatedTasks, newPath, oldPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return saveStatus;
+	}
+
+	private ArrayList<ArrayList<Task>> getConsolidatedTasks(String newPath, String oldPath) throws IOException {
+		ArrayList<ArrayList<Task>> oldPathTasks = getTaskSelect(oldPath);
+		ArrayList<ArrayList<Task>> newPathTasks = getTaskSelect(newPath);
+		ArrayList<ArrayList<Task>> consolidatedTasks = new ArrayList<ArrayList<Task>>();
+		for(int i = 0; i < ALL_ARRAY_SIZE; i++){
+			ArrayList<Task> newTasksByType = newPathTasks.get(i);
+			ArrayList<Task> oldTasksByType = oldPathTasks.get(i);
+			oldTasksByType.addAll(newTasksByType);
+			
+			HashSet<Task> removeDuplicatedTasksByType = new HashSet<Task>(oldTasksByType);
+			ArrayList<Task> consolidatedTasksByType = new ArrayList<Task>(removeDuplicatedTasksByType);
+			consolidatedTasks.add(consolidatedTasksByType);
+		}
+		return consolidatedTasks;
 	}
 	
 	private String getFileDirectory(String filePath){
@@ -102,6 +120,8 @@ public class Storage {
 		return fileDir;
 	}
 	
+	
+	
 	private String getCurrentFileDirectory(){
 		return getFileDirectory(PROPERTIES_SAVEPATH_KEY_NAME);
 	}
@@ -111,7 +131,7 @@ public class Storage {
 	}
 	
 	private String getFullFilePath(String fileSaveDir, String fileName) {
-		String fileString = "";
+		String fileString = EMPTY_STRING;
 		if(fileSaveDir.equals(EMPTY_STRING)){
 			fileString = fileSaveDir + fileName;
 		} else {
@@ -128,10 +148,10 @@ public class Storage {
 		return getFullFilePath(fileSaveDir, FILEPATH_DEFAULT_TEMP);
 	}
 	
-	private void storeProperties(){
+	private void storeProperties(Properties property){
 		BufferedWriter configFileWriter = createFileWriter(FILEPATH_CONFIG);
 		try {
-			properties.store(configFileWriter, PROPERTIES_COMMENT_HEADER);
+			property.store(configFileWriter, PROPERTIES_COMMENT_HEADER);
 			configFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -159,6 +179,7 @@ public class Storage {
 				property.load(configFileReader);
 				if(property.isEmpty()){
 					propertyKeysInitialise(property);
+					storeProperties(property);
 				}
 				configFileReader.close();
 			} catch (IOException e) {
