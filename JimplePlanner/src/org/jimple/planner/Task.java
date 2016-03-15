@@ -16,7 +16,8 @@ class Task{
 	private static final String TYPE_DEADLINE = "deadline";
 	private Formatter formatter;
 	
-	// Constructors
+	// Constructor
+	
 	public Task(String aTitle) {
 		this.formatter = new Formatter();
 		this.title = aTitle;
@@ -26,6 +27,18 @@ class Task{
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
+	}
+	
+	//Copy Constructor
+	public Task (Task taskToBeDuplicated)	{
+		this.formatter = new Formatter();
+		this.title = taskToBeDuplicated.getTitle();
+		this.description = taskToBeDuplicated.getDescription();
+		this.category = taskToBeDuplicated.getCategory();
+		this.fromDateTime = taskToBeDuplicated.getFromTime();
+		this.toDateTime = taskToBeDuplicated.getToTime();
+		this.type = taskToBeDuplicated.getType();
+		this.isOverDue = taskToBeDuplicated.getIsOverDue();
 	}
 	
 	public String getPrettyFromDate()	{

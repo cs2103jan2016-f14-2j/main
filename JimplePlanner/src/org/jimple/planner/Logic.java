@@ -36,6 +36,7 @@ public class Logic {
 	private String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	private String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed";
 
+	private String ERROR_ADDED_FEEDBACK = "task could not be added";
 	private String ERROR_EDIT_FEEDBACK = "task could not be editted";
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_CONFLICT_FEEDBACK = "conflict with current events";
@@ -175,13 +176,26 @@ public class Logic {
 			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
 				if (type.equals(STRING_EDIT)) {
 					Task taskToBeEditted = list.remove(i);
-					taskToBeEditted = doEdit(createArrayWithoutFirstIndex(variableArray), taskToBeEditted);
+					Task editedTask = doEdit(createArrayWithoutFirstIndex(variableArray), taskToBeEditted);
+					if (!isFromAndToTimeCorrect(editedTask))	{
+						list.add(taskToBeEditted);
+						return false;
+					}
 					allocateCorrectTimeArray(taskToBeEditted);
 				} else if (type.equals(STRING_DELETE)) {
 					list.remove(i);
 				}
 				return true;
 			}
+		}
+		return false;
+	}
+
+	private boolean isFromAndToTimeCorrect(Task taskToBeEditted) {
+		if (taskToBeEditted.getFromTime() == null) {
+			return true;
+		} else if (taskToBeEditted.getFromTime().compareTo(taskToBeEditted.getToTime()) < 0) {
+			return true;
 		}
 		return false;
 	}
@@ -195,30 +209,31 @@ public class Logic {
 	}
 
 	public Task doEdit(String[] variableArray, Task aTask) {
+		Task editedTask = new Task(aTask);
 		for (int i = 0; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
 				switch (i) {
 				case 0:
-					aTask.setTitle(variableArray[0]);
+					editedTask.setTitle(variableArray[0]);
 					break;
 				case 1:
-					aTask.setDescription(variableArray[i]);
+					editedTask.setDescription(variableArray[i]);
 					break;
 				case 2:
-					aTask.setFromDate(variableArray[i]);
+					editedTask.setFromDate(variableArray[i]);
 					break;
 				case 3:
-					aTask.setToDate(variableArray[i]);
+					editedTask.setToDate(variableArray[i]);
 					break;
 				case 4:
-					aTask.setCategory(variableArray[i]);
+					editedTask.setCategory(variableArray[i]);
 					break;
 				default:
 					break;
 				}
 			}
 		}
-		return aTask;
+		return editedTask;
 	}
 
 	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
@@ -245,6 +260,9 @@ public class Logic {
 	private String addToTaskList(String[] parsedInput) throws IOException {
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
+		if (!isFromAndToTimeCorrect(newTask))	{
+			return ERROR_ADDED_FEEDBACK;
+		}
 		allocateCorrectTimeArray(newTask);
 		tempHistory.add(newTask);
 		return ADDED_FEEDBACK;
@@ -286,14 +304,6 @@ public class Logic {
 			return true;
 		}
 		return false;
-	}
-
-	private boolean isContainsValidTime(String formattedDateTime) {
-		if (formattedDateTime.endsWith("T")) {
-			return false;
-		}
-
-		return true;
 	}
 
 	private void allocateCorrectTimeArray(Task newTask) throws IOException {
@@ -470,7 +480,8 @@ public class Logic {
 		return searchWord(wordToBeSearched);
 	}
 
-	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes) throws IOException {
+	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes)
+			throws IOException {
 		return findTask(list, variableArray, previousSizes, STRING_EDIT);
 	}
 
