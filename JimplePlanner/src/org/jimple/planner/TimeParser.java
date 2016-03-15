@@ -101,13 +101,13 @@ public class TimeParser {
 	private String calendarToStringFormat() {
 		if (c != null) {
 			Date parsedDate = c.getTime();
-			String date = parseIfLessThanTen(parsedDate.getDate());
-			String month = parseIfLessThanTen(parsedDate.getMonth()+1);
-			String hours = parseIfLessThanTen(parsedDate.getHours());
-			String minutes = parseIfLessThanTen(parsedDate.getMinutes());
-			String correctDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
+			String date = String.format("%02d", parsedDate.getDate());
+			String month = String.format("%02d", parsedDate.getMonth());
+			String hours = String.format("%02d", parsedDate.getHours());
+			String minutes = String.format("%02d", parsedDate.getMinutes());
+			String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
 			+ ":" + minutes;
-			return correctDate;
+			return outputDate;
 		}
 		return null;
 	}
@@ -132,6 +132,7 @@ public class TimeParser {
 	private boolean initSecondaryAndPresetFields(String extendedCommand) {
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
+		setField("year", 2016);
 		if (isFieldSet("hour") && isFieldSet("minute")) {
 			if (isAfterCurrentTime(getField("hour"), getField("minute"))) {
 				setSecondaryField("day", c.get(Calendar.DAY_OF_MONTH));
@@ -372,13 +373,6 @@ public class TimeParser {
 		return false;
 	}
 	
-	private String parseIfLessThanTen(int date) {
-		if (isLessThanTen(date))	{
-			return "0" + date;
-		}
-		return Integer.toString(date);
-	}
-	
 	private boolean isValid24HourInput(int inputNo) {
 		return inputNo >= 0 && inputNo < 2400;
 	}
@@ -395,12 +389,5 @@ public class TimeParser {
 			}
 		}
 		return isNumber;
-	}
-	
-	private boolean isLessThanTen(int dateTime) {
-		if (dateTime < 10) {
-			return true;
-		}
-		return false;
 	}
 }
