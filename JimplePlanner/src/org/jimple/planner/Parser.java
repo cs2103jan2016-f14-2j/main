@@ -168,6 +168,7 @@ class InputStruct {
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
+	private final int ARRAY_SIZE_CHANGEDIR = 1;
 
 	private String commandString;
 
@@ -195,18 +196,20 @@ class InputStruct {
 
 		// Initializes the size of the variable array according to the commandString.
 		switch (commandString) {
-		case "add":
+		case "add" :
 			setVariableArraySize(ARRAY_SIZE_ADD);
 			break;
-		case "edit":
+		case "edit" :
 			setVariableArraySize(ARRAY_SIZE_EDIT);
 			break;
-		case "delete":
+		case "delete" :
 			setVariableArraySize(ARRAY_SIZE_DELETE);
 			break;
-		case "search":
+		case "search" :
 			setVariableArraySize(ARRAY_SIZE_SEARCH);
 			break;
+		case "changedir" :
+			setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
 		default:
 			break;
 		}
