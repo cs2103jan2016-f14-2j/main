@@ -59,18 +59,23 @@ public class Storage {
 	public boolean setPath(String pathName){
 		boolean setStatus = false;
 		if(checkFilePath(pathName)){
-			updateKeys(pathName);
-			storeProperties();
-			setStatus = copyToNewLocation();
-			//TODO Copy over the tasks current to new file and set the old path to key
+			if(updateKeys(pathName)){
+				storeProperties();
+				setStatus = copyToNewLocation();
+			}
 		}
 		return setStatus;
 	}
 	
-	private void updateKeys(String pathName){
+	//True if and only if the new key updated is the same
+	private boolean updateKeys(String pathName){
 		String previousPath = properties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
+		if(previousPath.equals(pathName)){
+			return false;
+		}
 		properties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
 		properties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+		return true;
 	}
 	
 	private boolean copyToNewLocation(){
@@ -92,7 +97,7 @@ public class Storage {
 	private String getFileDirectory(String filePath){
 		String fileDir = properties.getProperty(filePath);
 		if(fileDir.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-			fileDir = "";
+			fileDir = EMPTY_STRING;
 		}
 		return fileDir;
 	}
@@ -106,7 +111,12 @@ public class Storage {
 	}
 	
 	private String getFullFilePath(String fileSaveDir, String fileName) {
-		String fileString = fileSaveDir + fileName;
+		String fileString = "";
+		if(fileSaveDir.equals(EMPTY_STRING)){
+			fileString = fileSaveDir + fileName;
+		} else {
+			fileString = fileSaveDir + File.separator + fileName;
+		}
 		return fileString;
 	}
 	
@@ -129,6 +139,9 @@ public class Storage {
 	}
 	
 	private boolean checkFilePath(String filePath){
+		if(filePath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
+			return true;
+		}
         try {
             Paths.get(filePath);
             File fileDir = new File(filePath);
@@ -165,7 +178,8 @@ public class Storage {
 	
 	private File createFile(String fileName) {
 		File file = new File(fileName);
-		File dir = new File(DEFAULT_FILE_DIRECTORY);
+		String dirPath = file.getAbsolutePath().replaceAll(file.getName(), EMPTY_STRING);
+		File dir = new File(dirPath);
 		try {
 			dir.mkdirs();
 			file.createNewFile();
