@@ -13,8 +13,8 @@ public class Logic {
 	private static final String STRING_EDIT = "edit";
 	private static final String STRING_CHANGEDIR = "changedir";
 
-	private static final String TYPE_DEADLINE = "deadlines";
-	private static final String TYPE_EVENT = "events";
+	private static final String TYPE_DEADLINE = "deadline";
+	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
@@ -205,16 +205,10 @@ public class Logic {
 					aTask.setDescription(variableArray[i]);
 					break;
 				case 2:
-					String formattedFromDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
-					aTask.setFromDate(formattedFromDate);
+					aTask.setFromDate(variableArray[i]);
 					break;
 				case 3:
-					String formattedToDate = formatter.newFormatDateTime(timeParse.timeParser(variableArray[i]));
-					if (isContainsValidTime(formattedToDate)) {
-						aTask.setToDate(formattedToDate);
-					} else {
-						aTask.setToDate(formattedToDate.concat(STRING_WHOLEDAY));
-					}
+					aTask.setToDate(variableArray[i]);
 					break;
 				case 4:
 					aTask.setCategory(variableArray[i]);
@@ -251,9 +245,6 @@ public class Logic {
 	private String addToTaskList(String[] parsedInput) throws IOException {
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
-		if (isConflictWithCurrentTasks(newTask, deadlines, events)) {
-			return ERROR_CONFLICT_FEEDBACK;
-		}
 		allocateCorrectTimeArray(newTask);
 		tempHistory.add(newTask);
 		return ADDED_FEEDBACK;
