@@ -75,7 +75,7 @@ public class TimeParser {
 			if (parseIfIsDay(i)) {
 			} else if (parseIfIsMonth(i)) {
 			} else if (parseIfIsAMPMFormat(i)) {
-			//} else if (parseIfIsTodayOrTomorrow(i)) {
+			} else if (parseIfIsTodayOrTomorrow(i)) {
 			} else if (parseIfIs4DigitFloatingNumber(i)) {
 			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
 			} else {
@@ -133,12 +133,12 @@ public class TimeParser {
 		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
 			System.out.println("A");
 			switch (extendedCommand) {
-				case "on" :
 				case "from" :
 				case "at" :
 					setField("hour", 00);
 					setField("minute", 00);
 					break;
+				case "on" :
 				case "by" :
 				case "to" :
 					setField("hour", 23);
@@ -321,6 +321,24 @@ public class TimeParser {
 					}
 				}
 			}
+		}
+		return false;
+	}
+	
+	private boolean parseIfIsTodayOrTomorrow(String input) {
+		c = Calendar.getInstance();
+		switch (input.toLowerCase()) {
+		case "today" :
+			setField("day", c.get(Calendar.DATE));
+			setField("month", c.get(Calendar.MONTH));
+			return true;
+		case "tomorrow" :
+			c.add(Calendar.DATE, 1);
+			setField("day", c.get(Calendar.DATE));
+			setField("month", c.get(Calendar.MONTH));
+			return true;
+		default :
+			break;
 		}
 		return false;
 	}
