@@ -131,7 +131,6 @@ public class TimeParser {
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
 		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
-			System.out.println("A");
 			switch (extendedCommand) {
 				case "from" :
 				case "at" :
