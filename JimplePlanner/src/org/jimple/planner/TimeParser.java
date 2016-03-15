@@ -356,8 +356,8 @@ public class TimeParser {
 	
 	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) {
 		if (isANumber(input) && input.length() <= 2) {
-				setField("day", Integer.parseInt(input));
-				return true;
+			setField("day", Integer.parseInt(input));
+			return true;
 		}
 		return false;
 	}
