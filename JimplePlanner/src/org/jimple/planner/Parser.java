@@ -9,19 +9,20 @@ import java.util.HashMap;
 
 public class Parser {
 
-	/*
-	 * ----------------------------| EXTENDED COMMANDS VARIABLES |
-	 * ----------------------------| String[]: Stores the possible extended
-	 * command strings for each command. int[]: Stores the index on InputStruct
-	 * which each extended command string affects.
+	/* ----------------------------|
+	 * EXTENDED COMMANDS VARIABLES |
+	 * ----------------------------| 
+	 * String[]: Stores the possible extended command strings for each command.
+	 * int[]: Stores the index on InputStruct which each extended command string affects.
 	 */
 	private final String[] EXTENDED_COMMANDS_ADD = { "desc", "at", "from", "by", "to", "cat" };
 	private final int[] EXTENDED_COMMANDS_ADD_INDEX = { 1, 2, 2, 3, 3, 4 };
 	private final String[] EXTENDED_COMMANDS_EDIT = { "name", "desc", "from", "to", "cat" };
 	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = { 1, 2, 3, 4, 5 };
 
-	/*
-	 * ----------------| FINAL VARIABLES | ----------------|
+	/* ----------------|
+	 * FINAL VARIABLES |
+	 * ----------------|
 	 */
 	private final int INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT = 0;
 	private final int STRING_INDEX_START = 0;
@@ -29,16 +30,19 @@ public class Parser {
 	private final int USER_INPUT_INDEX_COMMAND_STRING = 0;
 	private final String EMPTY_STRING = "";
 
-	/*
-	 * ---------| HASHMAPS | ---------| Stores the extended command strings with
-	 * the index for easy access.
+	/* ---------|
+	 * HASHMAPS |
+	 * ---------| 
+	 * Stores the extended command strings with the index for easy access.
 	 */
 	private HashMap<String, Integer> extendedCommandsAdd;
 	private HashMap<String, Integer> extendedCommandsEdit;
 	private HashMap<String, Integer> noExtendedCommands;
 
 	/*
-	 * ---------------------| DateTimeParser Class | ---------------------|
+	 * ---------------------|
+	 * DateTimeParser Class |
+	 * ---------------------|
 	 * Class that can parse "natural language" inputs for date and time.
 	 */
 	private TimeParser timeParser = new TimeParser();
@@ -105,21 +109,15 @@ public class Parser {
 			if (inputExtendedCommandsHashMap.containsKey(currString) || i == userInputStringArray.length - 1) {
 				// Word being read is an extended command.
 
-				// When word being read is an extended command, stores the
-				// "userInputString" into the index in the InputStruct specified
-				// by "currIndex". Removes the whitespace at the end.
+				// When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex". Removes the whitespace at the end.
 				if (isDateTimeInput(currExtendedCommand)) {
-					// Parses using theTimeFormat class first, if the extended
-					// command is date-time specific.
-					// System.out.println(timeParser.timeParser(currExtendedCommand,
-					// userInputString));
+					// Parses using theTimeFormat class first, if the extended command is date-time specific.
 					outputStruct.setAtIndex(currIndex, timeParser.timeParser(currExtendedCommand, userInputString));
 				} else {
 					outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
 				}
 
-				// Updates the "currIndex" and "currExtendedCommand" to the
-				// current extended command.
+				// Updates the "currIndex" and "currExtendedCommand" to the current extended command.
 				currExtendedCommand = currString;
 				if (inputExtendedCommandsHashMap.containsKey(currString)) {
 					currIndex = inputExtendedCommandsHashMap.get(currString);
@@ -152,22 +150,25 @@ public class Parser {
 
 }
 
-/*
- * ------------| INPUTSTRUCT | ------------| This class is the output of the
- * Parser. It contains the command string and all possible variables for all
+/* ------------|
+ * INPUTSTRUCT |
+ * ------------|
+ * This class is the output of the Parser. It contains the command string and all possible variables for all
  * commands in the Jimple Planner. Stores the variables detected in the user
  * input.
  */
 class InputStruct {
 
-	/*
-	 * ----------------| SIZE VARIABLES | ----------------| Variables containing
-	 * the intended size of the variable array for each command.
+	/* ---------------|
+	 * SIZE VARIABLES |
+	 * ---------------|
+	 * Variables containing the intended size of the variable array for each command.
 	 */
 	private final int ARRAY_SIZE_ADD = 5;
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
+	private final int ARRAY_SIZE_CHANGEDIR = 1;
 
 	private String commandString;
 
@@ -193,50 +194,70 @@ class InputStruct {
 	public InputStruct(String inputCommandString) {
 		commandString = inputCommandString;
 
-		// Initializes the size of the variable array according to the
-		// commandString.
+		// Initializes the size of the variable array according to the commandString.
 		switch (commandString) {
-		case "add":
+		case "add" :
 			setVariableArraySize(ARRAY_SIZE_ADD);
 			break;
-		case "edit":
+		case "edit" :
 			setVariableArraySize(ARRAY_SIZE_EDIT);
 			break;
-		case "delete":
+		case "delete" :
 			setVariableArraySize(ARRAY_SIZE_DELETE);
 			break;
-		case "search":
+		case "search" :
 			setVariableArraySize(ARRAY_SIZE_SEARCH);
 			break;
+		case "changedir" :
+			setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
 		default:
 			break;
 		}
 	}
 
-	/*
-	 * --------------| ADD VARIABLES | --------------| Index 0: Event Name Index
-	 * 1: Event Description Index 2: Event Time (From) Index 3: Event Time (To)
+	/* --------------|
+	 * ADD VARIABLES |
+	 * --------------|
+	 * Index 0: Event Name
+	 * Index 1: Event Description
+	 * Index 2: Event Time (From)
+	 * Index 3: Event Time (To)
 	 * Index 4: Event Category
 	 */
 
-	/*
-	 * --------------| EDIT VARIABLES| --------------| Index 0: Event Index
-	 * Index 1: Event Name Index 2: Event Description Index 3: Event Time (From)
-	 * Index 4: Event Time (To) Index 5: Event Category
+	/* --------------|
+	 * EDIT VARIABLES|
+	 * --------------|
+	 * Index 0: Event Index
+	 * Index 1: Event Name
+	 * Index 2: Event Description
+	 * Index 3: Event Time (From)
+	 * Index 4: Event Time (To)
+	 * Index 5: Event Category
 	 */
 
-	/*
-	 * ----------------| DELETE VARIABLE | ----------------| Index 0: Event
-	 * Index
+	/* ----------------|
+	 * DELETE VARIABLE |
+	 * ----------------|
+	 * Index 0: Event Index
 	 */
 
-	/*
-	 * ----------------| SEARCH VARIABLE | ----------------| Index 0: String to
-	 * Search
+	/* ----------------|
+	 * SEARCH VARIABLE |
+	 * ----------------|
+	 * Index 0: String to Search
+	 */
+	
+	/* -------------------|
+	 * CHANGEDIR VARIABLE |
+	 * -------------------|
+	 * Index 0: Directory String
 	 */
 
-	/*
-	 * ---------------| HELP VARIABLES | ---------------| N/A
+	/* ---------------|
+	 * HELP VARIABLES |
+	 * ---------------|
+	 * N/A
 	 */
 
 	public void setAtIndex(int inputIndex, String inputString) {
