@@ -23,8 +23,12 @@ public class Storage {
 	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
 	private static final String TEST_FILE_NAME = "testplanner.jim";
 	private static final String TEST_TEMP_FILE_NAME = "testtempplanner.jim";
+	
 	private static final String PROPERTIES_CONFIG_FILE_NAME = "jimpleConfig.properties";
 	private static final String PROPERTIES_SAVEPATH_KEY_NAME = "savepath";
+	private static final String PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME = "prevsavepath";
+	private static final String PROPERTIES_COMMENT_HEADER = "PATH SETTINGS";
+	private static final String PROPERTIES_SAVEPATH_TO_CWD = "origin";
 	
 	private static final String FILEPATH_DEFAULT = DEFAULT_FILE_DIRECTORY + DEFAULT_FILE_NAME;
 	private static final String FILEPATH_DEFAULT_TEMP = DEFAULT_FILE_DIRECTORY + DEFAULT_TEMP_FILE_NAME;
@@ -43,44 +47,85 @@ public class Storage {
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String EMPTY_STRING = "";
-	private static final boolean IS_TEST = true;
-	private static final boolean IS_NOT_TEST = false;
 	
 	private static Properties properties = null;
-	private static String fileSavePath = null;
 	
 	//Constructor
 	public Storage(){
 		properties = loadProperties();
-		fileSavePath = getSavePath();
+		storeProperties();
 	}
 	
 	public boolean setPath(String pathName){
 		boolean setStatus = false;
 		if(checkFilePath(pathName)){
-			properties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+			updateKeys(pathName);
 			storeProperties();
-			setStatus = true;
-			//TODO Copy over the tasks current to new path
+			setStatus = copyToNewLocation();
+			//TODO Copy over the tasks current to new file and set the old path to key
 		}
 		return setStatus;
+	}
+	
+	private void updateKeys(String pathName){
+		String previousPath = properties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
+		properties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
+		properties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+	}
+	
+	private boolean copyToNewLocation(){
+		String newDir = getCurrentFileDirectory();
+		String oldDir = getOldFileDirectory();
+		
+		String newPath = getActualFilePath(newDir);
+		String oldPath = getActualFilePath(oldDir);
+		boolean saveStatus= false;
+		try {
+			ArrayList<ArrayList<Task>> oldPathTasks = getTaskSelect(oldPath);
+			saveStatus = isSavedSelect(oldPathTasks, newPath, oldPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return saveStatus;
+	}
+	
+	private String getFileDirectory(String filePath){
+		String fileDir = properties.getProperty(filePath);
+		if(fileDir.equals(PROPERTIES_SAVEPATH_TO_CWD)){
+			fileDir = "";
+		}
+		return fileDir;
+	}
+	
+	private String getCurrentFileDirectory(){
+		return getFileDirectory(PROPERTIES_SAVEPATH_KEY_NAME);
+	}
+	
+	private String getOldFileDirectory(){
+		return getFileDirectory(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME);
+	}
+	
+	private String getFullFilePath(String fileSaveDir, String fileName) {
+		String fileString = fileSaveDir + fileName;
+		return fileString;
+	}
+	
+	private String getActualFilePath(String fileSaveDir){
+		return getFullFilePath(fileSaveDir, FILEPATH_DEFAULT);
+	}
+	
+	private String getActualTempFilePath(String fileSaveDir){
+		return getFullFilePath(fileSaveDir, FILEPATH_DEFAULT_TEMP);
 	}
 	
 	private void storeProperties(){
 		BufferedWriter configFileWriter = createFileWriter(FILEPATH_CONFIG);
 		try {
-			properties.store(configFileWriter, null);
+			properties.store(configFileWriter, PROPERTIES_COMMENT_HEADER);
+			configFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private String getSavePath(){
-		String savedPath = properties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
-		if(savedPath != null){
-			savedPath += FILEPATH_DEFAULT;
-		}
-		return savedPath;
 	}
 	
 	private boolean checkFilePath(String filePath){
@@ -94,18 +139,28 @@ public class Storage {
     }
 	
 	private Properties loadProperties(){
-		try {
-			String configPath = FILEPATH_CONFIG;
-			BufferedReader configFileReader = createFileReader(configPath);
-			Properties properties = new Properties();
-			properties.load(configFileReader);
-			configFileReader.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		String configPath = FILEPATH_CONFIG;
+		BufferedReader configFileReader = createFileReader(configPath);
+		Properties property = new Properties();
+			try {
+				property.load(configFileReader);
+				if(property.isEmpty()){
+					propertyKeysInitialise(property);
+				}
+				configFileReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		return property;
+	}
+	
+	private void propertyKeysInitialise(Properties property){
+		if(property.getProperty(PROPERTIES_SAVEPATH_KEY_NAME) == null){
+			property.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, PROPERTIES_SAVEPATH_TO_CWD);
 		}
-		return properties;
+		if(property.getProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME) == null){
+			property.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, PROPERTIES_SAVEPATH_TO_CWD);
+		}
 	}
 	
 	private File createFile(String fileName) {
@@ -115,7 +170,6 @@ public class Storage {
 			dir.mkdirs();
 			file.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return file;
@@ -148,52 +202,68 @@ public class Storage {
 		return writer;
 	}
 	
-	/*private BufferedReader createDefaultFileReader() throws FileNotFoundException {
-		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
-		return createFileReader(filePath);
+	private boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath) throws IOException{
+		sortBeforeWritngToFile(allTaskLists);
+		writeTasksToFile(allTaskLists, tempFilePath);
+		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
+		return saveStatus;
 	}
 	
-	private BufferedWriter createTempFileWriter() throws FileNotFoundException {
-		String filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
-		return createFileWriter(filePath);
-	} 
-	
-	/*
-	 * The following 2 methods are just used for Testing purposes
-	 */
-	/*
-	private BufferedReader createTestFileReader() throws FileNotFoundException {
-		String filePath = DEFAULT_FILE_DIRECTORY+TEST_FILE_NAME;
-		return createFileReader(filePath);
+	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+		String fileSaveDir = getCurrentFileDirectory();
+		String fileName = getActualFilePath(fileSaveDir);
+		String tempFileName = getActualTempFilePath(fileSaveDir);
+		return isSavedSelect(allTaskLists, fileName, tempFileName);
 	}
 	
-	private BufferedWriter createTestTempFileWriter() throws FileNotFoundException {
-		String filePath = DEFAULT_FILE_DIRECTORY+TEST_TEMP_FILE_NAME;
-		return createFileWriter(filePath);
-	} */
+	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+		return isSavedSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
+	}
+	
+	private void writeTasksToFile(ArrayList<ArrayList<Task>> allTaskLists, String tempFilePath) throws IOException  {
+		BufferedWriter tempWriter = createFileWriter(tempFilePath);
+		for(ArrayList<Task> taskList: allTaskLists){
+			for(Task task: taskList){
+				String lineString = extractTaskToString(task);
+				tempWriter.write(lineString);
+				tempWriter.newLine();
+			}
+		}
+		tempWriter.close();
+	}
+	
+	private boolean isSaveToFile(String filePath, String tempFilePath){
+		File file = createFile(filePath);
+		File tempFile = createFile(tempFilePath);
+		if(!file.delete() || !tempFile.renameTo(file)){
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 	//This method extracts all relevant fields from an Task and stores them as a String, each String line is an Task
-	private String extractTaskToString(Task task){
-		String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
-		if(isDescriptionExist(task)){
-			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + task.getDescription());
-			lineString = lineString + descriptionString;
-		} 
-		if(isCategoryExist(task)) {
-			String categoryString = formatToSaveString(TAGS_CATEGORY + task.getCategory());
-			lineString = lineString + categoryString;
-		} 
-		if (isFromTimeExist(task)){
-			String fromTimeString = formatToSaveString(TAGS_FROM_TIME + task.getFromTime());
-			lineString = lineString + fromTimeString;
-		} 
-		if (isToTimeExist(task)){
-			String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
-			lineString = lineString + fromToString;
+		private String extractTaskToString(Task task){
+			String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
+			if(isDescriptionExist(task)){
+				String descriptionString = formatToSaveString(TAGS_DESCRIPTION + task.getDescription());
+				lineString = lineString + descriptionString;
+			} 
+			if(isCategoryExist(task)) {
+				String categoryString = formatToSaveString(TAGS_CATEGORY + task.getCategory());
+				lineString = lineString + categoryString;
+			} 
+			if (isFromTimeExist(task)){
+				String fromTimeString = formatToSaveString(TAGS_FROM_TIME + task.getFromTime());
+				lineString = lineString + fromTimeString;
+			} 
+			if (isToTimeExist(task)){
+				String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
+				lineString = lineString + fromToString;
+			}
+			return lineString;
 		}
-		return lineString;
-	}
-	
+		
 	private boolean isDescriptionExist(Task task){
 		return !(task.getDescription().length()==0);
 	}
@@ -215,38 +285,6 @@ public class Storage {
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	private boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, boolean isTest) throws IOException{
-		sortBeforeWritngToFile(allTaskLists);
-		writeToFile(allTaskLists, isTest);
-		boolean saveStatus = isSaveToFile(isTest);
-		return saveStatus;
-	}
-	
-	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
-		return isSavedSelect(allTaskLists, IS_NOT_TEST);
-	}
-	
-	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
-		return isSavedSelect(allTaskLists, IS_TEST);
-	}
-	
-	private void writeToFile(ArrayList<ArrayList<Task>> allTaskLists, boolean isTest) throws IOException  {
-		BufferedWriter tempWriter = null;
-		if(isTest){
-			tempWriter = createTestTempFileWriter();
-		} else {
-			tempWriter = createTempFileWriter();
-		}
-		for(ArrayList<Task> taskList: allTaskLists){
-			for(Task task: taskList){
-				String lineString = extractTaskToString(task);
-				tempWriter.write(lineString);
-				tempWriter.newLine();
-			}
-		}
-		tempWriter.close();
-	}
-	
 	private void sortBeforeWritngToFile(ArrayList<ArrayList<Task>> allTaskLists){
 		sortDeadlines(allTaskLists);
 		sortEvents(allTaskLists);
@@ -263,32 +301,9 @@ public class Storage {
 	}
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
-	private boolean isSaveToFile(boolean isTest){
-		String filePath = null;
-		String tempFilePath = null;
-		if(isTest){
-			filePath = DEFAULT_FILE_DIRECTORY+TEST_FILE_NAME;
-			tempFilePath = DEFAULT_FILE_DIRECTORY+TEST_TEMP_FILE_NAME;
-		} else {
-			filePath = DEFAULT_FILE_DIRECTORY+DEFAULT_FILE_NAME;
-			tempFilePath = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_FILE_NAME;
-		}
-		File file = createFile(filePath);
-		File tempFile = createFile(tempFilePath);
-		if(!file.delete() || !tempFile.renameTo(file)){
-			return false;
-		} else {
-			return true;
-		}
-	}
 	
-	private ArrayList<ArrayList<Task>> getTaskSelect(boolean isTest) throws IOException{
-		BufferedReader defaultFileReader = null;
-		if(isTest){
-			defaultFileReader = createTestFileReader();
-		} else {
-			defaultFileReader = createDefaultFileReader();
-		}
+	private ArrayList<ArrayList<Task>> getTaskSelect(String filePath) throws IOException{
+		BufferedReader defaultFileReader = createFileReader(filePath);
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
 		while ((fileLineContent = defaultFileReader.readLine()) != null) {
@@ -302,11 +317,13 @@ public class Storage {
 	}
 	
 	public ArrayList<ArrayList<Task>> getTasks() throws IOException{
-		return getTaskSelect(IS_NOT_TEST);
+		String fileSaveDir = getCurrentFileDirectory();
+		String fileName = getActualFilePath(fileSaveDir);
+		return getTaskSelect(fileName);
 	}
 	
 	public ArrayList<ArrayList<Task>> getTestTasks() throws IOException{
-		return getTaskSelect(IS_TEST);
+		return getTaskSelect(FILEPATH_TEST);
 	}
 	
 	private ArrayList<ArrayList<Task>> populateArrayList(){
