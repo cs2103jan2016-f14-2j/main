@@ -14,6 +14,7 @@ class Task{
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
+	private static final String TYPE_STATIC = "static";
 	private Formatter formatter;
 	
 	// Constructors
@@ -92,6 +93,10 @@ class Task{
 	
 	public String getType() {
 		return type;
+	}
+	
+	public void setType(String type){
+		this.type = type;
 	}
 	
 	private void checkAndSetType(){

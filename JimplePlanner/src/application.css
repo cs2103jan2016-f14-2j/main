@@ -5,6 +5,11 @@
     /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
 }
 
+#date {
+    -fx-font: 8px Tahoma ;
+    /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
+}
+
 #event {
     -fx-font: 16px Tahoma ;
     /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
@@ -43,6 +48,10 @@
     -fx-background-insets: 0px, 2px ;
 }
 
+#date {
+	-fx-background-color: lightgrey ;	
+}
+
 .list-cell:empty {
     -fx-padding: 10px;
     -fx-background-color: transparent ;
@@ -57,6 +66,12 @@
     -fx-padding:0;
 }
 
+.popup{
+	-fx-background-radius: 10px;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-radius: 10px;
+}
 /*
 .list-cell {
     -fx-background-color: maroon; 
