@@ -159,8 +159,8 @@ public class Controller implements Initializable {
 	}
 
 	public void loadAgendaList() {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadlines"));
-		taskList.addAll(logic.display("events"));
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadline"));
+		taskList.addAll(logic.display("event"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -210,7 +210,8 @@ public class Controller implements Initializable {
 //		staticDate.setType("static");
 //		taskList.add(staticDate);
 		ArrayList<Task> taskList = new ArrayList<Task>();
-		taskList.addAll(logic.display("events"));
+		taskList.addAll(logic.display("event"));
+
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		// data.add();
@@ -245,7 +246,7 @@ public class Controller implements Initializable {
 										new Text(String.format("to: %s %s", item.getPrettyToDate(),
 												item.getPrettyToTime())));
 								HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex()
-										+ logic.display("floating").size() + logic.display("deadlines").size())), vBox);
+										+ logic.display("floating").size() + logic.display("deadline").size())), vBox);
 								hBox.setSpacing(10);
 								setGraphic(hBox);
 							}
@@ -261,7 +262,7 @@ public class Controller implements Initializable {
 	}
 
 	public void loadDeadlinesList() {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadlines"));
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadline"));
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -465,8 +466,8 @@ public class Controller implements Initializable {
 
 			case "Events":
 				System.out.println("deleting from events");
-				logic.execute("delete "
-						+ (selectedIndex + logic.display("floating").size() + logic.display("deadlines").size()));
+				logic.execute("delete " + (selectedIndex + logic.display("floating").size()
+						+ logic.display("deadline").size()));
 				break;
 
 			case "Agenda":
