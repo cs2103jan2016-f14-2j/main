@@ -55,6 +55,12 @@ public class TimeParser {
 	private int hour = FIELD_NOT_SET_VALUE;
 	private int minute = FIELD_NOT_SET_VALUE;
 	
+	private int daySecondary = FIELD_NOT_SET_VALUE;
+	private int monthSecondary = FIELD_NOT_SET_VALUE;
+	private int yearSecondary = FIELD_NOT_SET_VALUE;
+	private int hourSecondary = FIELD_NOT_SET_VALUE;
+	private int minuteSecondary = FIELD_NOT_SET_VALUE;
+	
 	private Calendar c = null;
 	
 	public TimeParser() {
@@ -74,15 +80,19 @@ public class TimeParser {
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
 		for (String i: splitInput) {
-			parseIfIsDay(i);
-			parseIfIsMonth(i);
-			parseIfIsAMPMFormat(i);
-			//parseIfIsTodayOrTomorrow(i);
-			parseIfIs4DigitFloatingNumber(i);
-			parseIfIs2OrLessDigitFloatingNumber(i);
+			if (parseIfIsDay(i)) {
+			} else if (parseIfIsMonth(i)) {
+			} else if (parseIfIsAMPMFormat(i)) {
+			//} else if (parseIfIsTodayOrTomorrow(i)) {
+			} else if (parseIfIs4DigitFloatingNumber(i)) {
+			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
+			} else {
+				System.out.println("Date/Time: " + i + " not recognised.");
+				return null;
+			}
 		}
 		if (!formatCalendarIfValid(extendedCommand)) {
-			System.out.println("Ey what u typing.");
+			System.out.println("Invalid time.");
 			return null;
 		}
 		return calendarToStringFormat();
@@ -94,22 +104,17 @@ public class TimeParser {
 			return parsedDate.getDate() + "/" + (parsedDate.getMonth()+1) + "/" + (parsedDate.getYear()+1900) + " " + parsedDate.getHours()
 			+ ":" + parsedDate.getMinutes();
 		}
-		System.out.println("Anyhow input isit?");
 		return null;
 	}
 	
 	private boolean formatCalendarIfValid(String extendedCommand) {
 		c = Calendar.getInstance();
-		boolean hasDay = false;
-		boolean hasMonth = false;
-		initPresetFields(extendedCommand);
-		if (setCalendarField("day", getField("day"))) {
-			hasDay = true;
-			if (setCalendarField("month", getField("month"))) {
-				hasMonth = true;
+		initSecondaryAndPresetFields(extendedCommand);
+		if (setCalendarField("hour", getField("hour"))) {
+			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
-					if (setCalendarField("hour", getField("hour"))) {
-						if (setCalendarField("minute", getField("minute"))) {
+					if (setCalendarField("month", getField("month"))) {
+						if (setCalendarField("day", getField("day"))) {
 							return true;
 						}
 					}
@@ -119,19 +124,36 @@ public class TimeParser {
 		return false;
 	}
 		
-	private boolean initPresetFields(String extendedCommand) {
-		setField("year", 2016);
+	private boolean initSecondaryAndPresetFields(String extendedCommand) {
+		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
+		if (isFieldSet("hour") && isFieldSet("minute")) {
+			if (isAfterCurrentTime(getField("hour"), getField("minute"))) {
+				setSecondaryField("day", c.get(Calendar.DAY_OF_MONTH));
+				setSecondaryField("month", c.get(Calendar.MONTH) + 1);
+				setSecondaryField("year", c.get(Calendar.YEAR));
+			}
+		} 
 		switch (extendedCommand) {
 			case "on" :
+				setSecondaryField("hour", 00);
+				setSecondaryField("minute", 00);
+				break;
 			case "by" :
-				setField("hour", 23);
-				setField("minute", 59);
-				return true;
+				setSecondaryField("hour", 23);
+				setSecondaryField("minute", 59);
+				break;
 				default :
 					break;
 		}
-		return false;
+		return true;
+	}
+	
+	private boolean isAfterCurrentTime(int inputHour, int inputMinute) {
+		c.setTimeInMillis(System.currentTimeMillis());
+		boolean case1 = inputHour > c.get(Calendar.HOUR_OF_DAY);
+		boolean case2 = inputHour == c.get(Calendar.HOUR_OF_DAY) && inputMinute > c.get(Calendar.MINUTE);
+		return case1 || case2;
 	}
 	
 	private boolean resetTimeAndDate() {
@@ -199,6 +221,30 @@ public class TimeParser {
 					System.out.println("Invalid field for setting Date/Time");
 					break;
 			}
+		}
+		return false;
+	}
+	
+	private boolean setSecondaryField(String inputField, int inputValue) {
+		switch (inputField) {
+			case "day" :
+				daySecondary = inputValue;
+				return true;
+			case "month" :
+				monthSecondary = inputValue;
+				return true;
+			case "year" :
+				yearSecondary = inputValue;
+				return true;
+			case "hour" :
+				hourSecondary = inputValue;
+				return true;
+			case "minute" :
+				minuteSecondary = inputValue;
+				return true;
+			default :
+				System.out.println("Invalid field for setting Date/Time");
+				break;
 		}
 		return false;
 	}
@@ -300,6 +346,7 @@ public class TimeParser {
 	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) {
 		if (isANumber(input) && input.length() <= 2) {
 				setField("day", Integer.parseInt(input));
+				return true;
 		}
 		return false;
 	}

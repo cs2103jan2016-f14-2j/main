@@ -154,6 +154,7 @@ class InputStruct {
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
+	private final int ARRAY_SIZE_CHANGEDIR = 1;
 	
 	private String commandString;
 	
@@ -193,6 +194,9 @@ class InputStruct {
 			case "search" :
 				setVariableArraySize(ARRAY_SIZE_SEARCH);
 				break;
+			case "changedir":
+				setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
+				break;
 			default :
 				break;
 		}
@@ -229,6 +233,12 @@ class InputStruct {
 	 * SEARCH VARIABLE |
 	 * ----------------|
 	 * Index 0: String to Search
+	 */
+	
+	/* -------------------|
+	 * CHANGEDIR VARIABLE |
+	 * -------------------|
+	 * Index 0: Directory String
 	 */
 	
 	/* ---------------|
