@@ -5,15 +5,13 @@
 
 package org.jimple.planner;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class TimeParser {
 	
-	private String[] monthStrings = {"january", "jan",
+	private String[] STRINGS_MONTH = {"january", "jan",
 			"february", "feb",
 			"march", "mar",
 			"april", "apr",
@@ -26,7 +24,7 @@ public class TimeParser {
 			"november", "nov",
 			"december", "dec"};
 	
-	private int[] monthNo = {0, 0,
+	private int[] VALUES_MONTH = {0, 0,
 			1, 1,
 			2, 2,
 			3, 3,
@@ -39,9 +37,9 @@ public class TimeParser {
 			10, 10,
 			11, 11};
 	
-	private String[] dayStrings = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
+	private String[] STRINGS_DAY = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 	
-	private int[] dayNo = {1, 2, 3, 4, 5, 6, 7};
+	private int[] VALUES_DAY = {1, 2, 3, 4, 5, 6, 7};
 	
 	private final int FIELD_NOT_SET_VALUE = -1;
 	private final int FIELD_INVALID_VALUE = -2;
@@ -55,20 +53,14 @@ public class TimeParser {
 	private int hour = FIELD_NOT_SET_VALUE;
 	private int minute = FIELD_NOT_SET_VALUE;
 	
-	private int daySecondary = FIELD_NOT_SET_VALUE;
-	private int monthSecondary = FIELD_NOT_SET_VALUE;
-	private int yearSecondary = FIELD_NOT_SET_VALUE;
-	private int hourSecondary = FIELD_NOT_SET_VALUE;
-	private int minuteSecondary = FIELD_NOT_SET_VALUE;
-	
 	private Calendar c = null;
 	
 	public TimeParser() {
-		for (int i = 0; i < monthStrings.length; i++) {
-			calendarMonths.put(monthStrings[i], monthNo[i]);
+		for (int i = 0; i < STRINGS_MONTH.length; i++) {
+			calendarMonths.put(STRINGS_MONTH[i], VALUES_MONTH[i]);
 		}
-		for (int i = 0; i < dayStrings.length; i++) {
-			calendarDays.put(dayStrings[i], dayNo[i]);
+		for (int i = 0; i < STRINGS_DAY.length; i++) {
+			calendarDays.put(STRINGS_DAY[i], VALUES_DAY[i]);
 		}
 	}
 	
@@ -102,7 +94,7 @@ public class TimeParser {
 		if (c != null) {
 			Date parsedDate = c.getTime();
 			String date = String.format("%02d", parsedDate.getDate());
-			String month = String.format("%02d", parsedDate.getMonth());
+			String month = String.format("%02d", parsedDate.getMonth()+1);
 			String hours = String.format("%02d", parsedDate.getHours());
 			String minutes = String.format("%02d", parsedDate.getMinutes());
 			String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
@@ -130,29 +122,49 @@ public class TimeParser {
 	}
 		
 	private boolean initSecondaryAndPresetFields(String extendedCommand) {
-		// Seconds preset to 0 (default).
-		c.set(Calendar.SECOND, 0);
-		setField("year", 2016);
-		if (isFieldSet("hour") && isFieldSet("minute")) {
+		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
+			c.setTimeInMillis(System.currentTimeMillis());
 			if (isAfterCurrentTime(getField("hour"), getField("minute"))) {
-				setSecondaryField("day", c.get(Calendar.DAY_OF_MONTH));
-				setSecondaryField("month", c.get(Calendar.MONTH) + 1);
-				setSecondaryField("year", c.get(Calendar.YEAR));
+				c.add(Calendar.DATE, 1);
 			}
-		} 
-		switch (extendedCommand) {
-			case "on" :
-				setSecondaryField("hour", 00);
-				setSecondaryField("minute", 00);
-				break;
-			case "by" :
-				setSecondaryField("hour", 23);
-				setSecondaryField("minute", 59);
-				break;
+			setField("day", c.get(Calendar.DAY_OF_MONTH));
+			setField("month", c.get(Calendar.MONTH));
+			setField("year", c.get(Calendar.YEAR));
+		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
+			System.out.println("A");
+			switch (extendedCommand) {
+				case "on" :
+				case "from" :
+				case "at" :
+					setField("hour", 00);
+					setField("minute", 00);
+					break;
+				case "by" :
+				case "to" :
+					setField("hour", 23);
+					setField("minute", 59);
+					break;
 				default :
 					break;
+			}
+			if (!isFieldSet("year")) {
+				c.setTimeInMillis(System.currentTimeMillis());
+				if (!isAfterCurrentDate(day, month)) {
+					c.add(Calendar.YEAR, 1);
+				}
+				setField("year", c.get(Calendar.YEAR));
+			}
 		}
+		// Seconds preset to 0 (default).
+		c.set(Calendar.SECOND, 0);
 		return true;
+	}
+	
+	private boolean isAfterCurrentDate(int inputDay, int inputMonth) {
+		c.setTimeInMillis(System.currentTimeMillis());
+		boolean case1 = inputMonth > c.get(Calendar.MONTH);
+		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay > c.get(Calendar.DAY_OF_MONTH);
+		return case1 || case2;
 	}
 	
 	private boolean isAfterCurrentTime(int inputHour, int inputMinute) {
@@ -227,30 +239,6 @@ public class TimeParser {
 					System.out.println("Invalid field for setting Date/Time");
 					break;
 			}
-		}
-		return false;
-	}
-	
-	private boolean setSecondaryField(String inputField, int inputValue) {
-		switch (inputField) {
-			case "day" :
-				daySecondary = inputValue;
-				return true;
-			case "month" :
-				monthSecondary = inputValue;
-				return true;
-			case "year" :
-				yearSecondary = inputValue;
-				return true;
-			case "hour" :
-				hourSecondary = inputValue;
-				return true;
-			case "minute" :
-				minuteSecondary = inputValue;
-				return true;
-			default :
-				System.out.println("Invalid field for setting Date/Time");
-				break;
 		}
 		return false;
 	}
