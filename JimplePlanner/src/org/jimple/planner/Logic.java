@@ -62,8 +62,6 @@ public class Logic {
 			todo = store.getTasks().get(0);
 			deadlines = store.getTasks().get(1);
 			events = store.getTasks().get(2);
-		} catch (IOException e) {
-			System.out.print(ERROR_FILE_NOT_FOUND);
 		} catch (IndexOutOfBoundsException d) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();

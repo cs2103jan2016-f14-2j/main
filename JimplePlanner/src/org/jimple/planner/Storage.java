@@ -87,16 +87,13 @@ public class Storage {
 		String newPath = getActualFilePath(newDir);
 		String oldPath = getActualFilePath(oldDir);
 		boolean saveStatus= false;
-		try {
-			ArrayList<ArrayList<Task>> consolidatedTasks = getConsolidatedTasks(newPath, oldPath);
-			saveStatus = isSavedSelect(consolidatedTasks, newPath, oldPath);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		ArrayList<ArrayList<Task>> consolidatedTasks = getConsolidatedTasks(newPath, oldPath);
+		saveStatus = isSavedSelect(consolidatedTasks, newPath, oldPath);
 		return saveStatus;
 	}
 
-	private ArrayList<ArrayList<Task>> getConsolidatedTasks(String newPath, String oldPath) throws IOException {
+	private ArrayList<ArrayList<Task>> getConsolidatedTasks(String newPath, String oldPath){
 		ArrayList<ArrayList<Task>> oldPathTasks = getTaskSelect(oldPath);
 		ArrayList<ArrayList<Task>> newPathTasks = getTaskSelect(newPath);
 		ArrayList<ArrayList<Task>> consolidatedTasks = new ArrayList<ArrayList<Task>>();
@@ -132,7 +129,7 @@ public class Storage {
 	
 	private String getFullFilePath(String fileSaveDir, String fileName) {
 		String fileString = EMPTY_STRING;
-		if(fileSaveDir.equals(EMPTY_STRING)){
+		if(fileSaveDir.equals(EMPTY_STRING) || fileSaveDir.endsWith(File.separator)){
 			fileString = fileSaveDir + fileName;
 		} else {
 			fileString = fileSaveDir + File.separator + fileName;
@@ -174,17 +171,17 @@ public class Storage {
 	private Properties loadProperties(){
 		String configPath = FILEPATH_CONFIG;
 		BufferedReader configFileReader = createFileReader(configPath);
-		Properties property = new Properties();
-			try {
-				property.load(configFileReader);
+		Properties property = new Properties();;
+		try {
+			property.load(configFileReader);
 				if(property.isEmpty()){
 					propertyKeysInitialise(property);
 					storeProperties(property);
 				}
 				configFileReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return property;
 	}
 	
@@ -201,8 +198,8 @@ public class Storage {
 		File file = new File(fileName);
 		String dirPath = file.getAbsolutePath().replaceAll(file.getName(), EMPTY_STRING);
 		File dir = new File(dirPath);
+		dir.mkdirs();
 		try {
-			dir.mkdirs();
 			file.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -237,34 +234,38 @@ public class Storage {
 		return writer;
 	}
 	
-	private boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath) throws IOException{
+	private boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
 		sortBeforeWritngToFile(allTaskLists);
 		writeTasksToFile(allTaskLists, tempFilePath);
 		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
 		return saveStatus;
 	}
 	
-	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) {
 		String fileSaveDir = getCurrentFileDirectory();
 		String fileName = getActualFilePath(fileSaveDir);
 		String tempFileName = getActualTempFilePath(fileSaveDir);
 		return isSavedSelect(allTaskLists, fileName, tempFileName);
 	}
 	
-	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists) throws IOException{
+	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists){
 		return isSavedSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
 	}
 	
-	private void writeTasksToFile(ArrayList<ArrayList<Task>> allTaskLists, String tempFilePath) throws IOException  {
+	private void writeTasksToFile(ArrayList<ArrayList<Task>> allTaskLists, String tempFilePath){
 		BufferedWriter tempWriter = createFileWriter(tempFilePath);
-		for(ArrayList<Task> taskList: allTaskLists){
-			for(Task task: taskList){
-				String lineString = extractTaskToString(task);
-				tempWriter.write(lineString);
-				tempWriter.newLine();
+		try {
+			for(ArrayList<Task> taskList: allTaskLists){
+				for(Task task: taskList){
+					String lineString = extractTaskToString(task);
+					tempWriter.write(lineString);
+					tempWriter.newLine();
+				}
 			}
+			tempWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		tempWriter.close();
 	}
 	
 	private boolean isSaveToFile(String filePath, String tempFilePath){
@@ -337,27 +338,31 @@ public class Storage {
 	
 	//this handles the deletion of files and the subsequent renaming of temporary file to the default filename
 	
-	private ArrayList<ArrayList<Task>> getTaskSelect(String filePath) throws IOException{
+	private ArrayList<ArrayList<Task>> getTaskSelect(String filePath){
 		BufferedReader defaultFileReader = createFileReader(filePath);
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
-		while ((fileLineContent = defaultFileReader.readLine()) != null) {
-			if(!fileLineContent.equals(EMPTY_STRING)){
-				Task task = getTaskFromLine(fileLineContent);
-				allocateTaskToArrayList(task, allTasksLists);
+		try {
+			while ((fileLineContent = defaultFileReader.readLine()) != null) {
+				if(!fileLineContent.equals(EMPTY_STRING)){
+					Task task = getTaskFromLine(fileLineContent);
+					allocateTaskToArrayList(task, allTasksLists);
+				}
 			}
+			defaultFileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		defaultFileReader.close();
 		return allTasksLists;
 	}
 	
-	public ArrayList<ArrayList<Task>> getTasks() throws IOException{
+	public ArrayList<ArrayList<Task>> getTasks(){
 		String fileSaveDir = getCurrentFileDirectory();
 		String fileName = getActualFilePath(fileSaveDir);
 		return getTaskSelect(fileName);
 	}
 	
-	public ArrayList<ArrayList<Task>> getTestTasks() throws IOException{
+	public ArrayList<ArrayList<Task>> getTestTasks(){
 		return getTaskSelect(FILEPATH_TEST);
 	}
 	
