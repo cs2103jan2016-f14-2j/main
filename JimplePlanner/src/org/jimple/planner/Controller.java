@@ -47,7 +47,6 @@ import javafx.util.Duration;
 
 public class Controller implements Initializable {
 	Logic logic = new Logic();
-	
 	private final BooleanProperty dragModeActiveProperty =
             new SimpleBooleanProperty(this, "dragModeActive", true);
 
@@ -89,8 +88,6 @@ public class Controller implements Initializable {
 
 	@FXML
 	StackPane stackPane;
-	// @FXML
-	// ListView<Task> listView;
 
 	@FXML
 	ListView<String> list;
@@ -101,6 +98,7 @@ public class Controller implements Initializable {
 	@FXML
 	VBox overlay;
 
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		assert commandBox != null : "fx:id=\"synopsis\" was not injected: check your FXML file 'IssueTrackingLite.fxml'.";
@@ -115,15 +113,8 @@ public class Controller implements Initializable {
 		overlay.setVisible(false);
 		commandBoxListener();
 		tabPanesListener();
-		initializeDisplay();
+		loadDisplay();
 		//taskSelectionListener();
-	}
-
-	private void initializeDisplay() {
-		loadAgendaList();
-		loadEventsList();
-		loadDeadlinesList();
-		loadTodoList();
 	}
 	
 	public void enterTriggered() throws IOException {
@@ -132,7 +123,7 @@ public class Controller implements Initializable {
 			String[] feedback = logic.execute(inputStr);
 			messagePrompt.setText(feedback[0]);
 			fadeOut(5, messagePrompt);
-
+			
 			clearCommandBox();
 
 			String displayType = feedback[1];
@@ -152,10 +143,23 @@ public class Controller implements Initializable {
 				searchPrompt(feedback[0]);
 				break;
 			default:
-				reloadDisplay();
+				loadDisplay();
 				break;
 			}
 		}
+	}
+
+	/*======================================
+	 * 
+	 * LOADING/RELOADING TASK LIST:
+	 * 
+	========================================*/
+	
+	private void loadDisplay() {
+		loadAgendaList();
+		loadEventsList();
+		loadDeadlinesList();
+		loadTodoList();
 	}
 
 	public void loadAgendaList() {
@@ -328,6 +332,12 @@ public class Controller implements Initializable {
 		todoContent.getChildren().add(listView);
 	}
 
+	/*======================================
+	 * 
+	 * TASK LIST DISPLAY CONTROLS:
+	 * 
+	========================================*/
+	
 	public void showSearch(String searchStr) {
 		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
 		ObservableList<Task> data = FXCollections.observableArrayList();
@@ -381,69 +391,9 @@ public class Controller implements Initializable {
 	public int getCurrentTabItemIndex() {
 		return getActiveListView().getSelectionModel().getSelectedIndex();
 	}
-
+	
 	public void deselectTaskItem() {
 		getActiveListView().getSelectionModel().clearSelection();
-	}
-
-	@SuppressWarnings("unchecked")
-	private ListView<Task> getActiveListView() {
-		return (ListView<Task>) ((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren()
-				.get(0);
-	}
-
-	public void fitToAnchorPane(Node node) {
-		AnchorPane.setTopAnchor(node, 0.0);
-		AnchorPane.setLeftAnchor(node, 0.0);
-		AnchorPane.setRightAnchor(node, 0.0);
-		AnchorPane.setBottomAnchor(node, 0.0);
-	}
-
-	private void fadeOut(float sec, Node item) {
-		FadeTransition ft = new FadeTransition(Duration.millis(3000), item);
-		ft.setFromValue(1.0);
-		ft.setCycleCount(1);
-		ft.play();
-	}
-
-	private void addAndReload(Tab tab) {
-		initializeDisplay();
-		tabPanes.getSelectionModel().select(tab);
-		switch (tab.getText()) {
-		case "Agenda":
-		case "Events":
-		case "Deadlines":
-			// selectIndex(num);
-			// implementation for Brandon: just search for input
-			break;
-		case "To-do":
-			selectLastItem();
-			break;
-		default:
-			break;
-		}
-
-	}
-
-	private void selectIndex(int num) {
-		getActiveListView().requestFocus();
-		getActiveListView().getSelectionModel().select(num);
-		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
-	}
-
-	private void selectLastItem() {
-		getActiveListView().requestFocus();
-		getActiveListView().getSelectionModel().selectLast();
-		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
-	}
-
-	private void reloadDisplay() {
-		initializeDisplay();
-	}
-
-	@SuppressWarnings("unchecked")
-	private ListView<Task> getList(Tab tab) {
-		return (ListView<Task>) ((Pane) tab.getContent()).getChildren().get(0);
 	}
 
 	private void deleteSelectedTask() {
@@ -478,14 +428,84 @@ public class Controller implements Initializable {
 			default:
 				break;
 			}
-			reloadDisplay();
+			loadDisplay();
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	private void addAndReload(Tab tab) {
+		loadDisplay();
+		tabPanes.getSelectionModel().select(tab);
+		switch (tab.getText()) {
+		case "Agenda":
+		case "Events":
+		case "Deadlines":
+			// selectIndex(num);
+			// implementation for Brandon: just search for input
+			break;
+		case "To-do":
+			selectLastItem();
+			break;
+		default:
+			break;
+		}
 
+	}
+
+	private void selectIndex(int num) {
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().select(num);
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+	}
+
+	private void selectLastItem() {
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().selectLast();
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+	}
+
+	@SuppressWarnings("unchecked")
+	private ListView<Task> getList(Tab tab) {
+		return (ListView<Task>) ((Pane) tab.getContent()).getChildren().get(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private ListView<Task> getActiveListView() {
+		return (ListView<Task>) ((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren()
+				.get(0);
+	}
+
+	
+	
+	/*======================================
+	 * 
+	 * FXML LAYOUT RELATED:
+	 * 
+	========================================*/
+	private void fadeOut(float sec, Node item) {
+		FadeTransition ft = new FadeTransition(Duration.millis(sec*1000), item);
+		ft.setFromValue(1.0);
+		ft.setToValue(0);
+		ft.setCycleCount(1);
+		ft.play();
+	}
+	
+	public void fitToAnchorPane(Node node) {
+		AnchorPane.setTopAnchor(node, 0.0);
+		AnchorPane.setLeftAnchor(node, 0.0);
+		AnchorPane.setRightAnchor(node, 0.0);
+		AnchorPane.setBottomAnchor(node, 0.0);
+	}
+	
+	/*======================================
+	 * 
+	 * KEYBOARD LISTENERS:
+	 * 
+	========================================*/
+	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -563,6 +583,13 @@ public class Controller implements Initializable {
 			}
 		});
 	}
+
+	
+	/*======================================
+	 * 
+	 * POPUP DIALOGUE BOXES:
+	 * 
+	========================================*/
 
 	private void deletePrompt() {
 		Pane popup = new Pane();
@@ -669,7 +696,34 @@ public class Controller implements Initializable {
 		
 //		popup.getChildren().clear();
 //		popup.getChildren().add(listView);
+	}	
+	
+	/*======================================
+	 * 
+	 * COMMAND BOX RELATED:
+	 * 
+	========================================*/
+	
+	public String getInputCommand() {
+		if (commandBox == null || isEmpty(commandBox.getText())) {
+			return "";
+		}
+		return commandBox.getText();
 	}
+
+	private boolean isEmpty(String s) {
+		return s == null || s.trim().isEmpty();
+	}
+
+	private void clearCommandBox() {
+		commandBox.setText(null);
+	}
+	
+	/*======================================
+	 * 
+	 * UI INTERACTION:
+	 * 
+	========================================*/
 	
 	private static final class DragContext {
         public double mouseAnchorX;
@@ -730,20 +784,5 @@ public class Controller implements Initializable {
                 });
                 
         return wrapGroup;
-    }
-	
-	public String getInputCommand() {
-		if (commandBox == null || isEmpty(commandBox.getText())) {
-			return "";
-		}
-		return commandBox.getText();
-	}
-
-	private boolean isEmpty(String s) {
-		return s == null || s.trim().isEmpty();
-	}
-
-	private void clearCommandBox() {
-		commandBox.setText(null);
-	}
+    }	
 }
