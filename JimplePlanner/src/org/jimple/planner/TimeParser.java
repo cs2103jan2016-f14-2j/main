@@ -124,7 +124,7 @@ public class TimeParser {
 	private boolean initSecondaryAndPresetFields(String extendedCommand) {
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
-			if (isAfterCurrentTime(getField("hour"), getField("minute"))) {
+			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
 				c.add(Calendar.DATE, 1);
 			}
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
