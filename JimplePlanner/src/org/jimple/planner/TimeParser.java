@@ -5,15 +5,13 @@
 
 package org.jimple.planner;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class TimeParser {
 	
-	private String[] monthStrings = {"january", "jan",
+	private String[] STRINGS_MONTH = {"january", "jan",
 			"february", "feb",
 			"march", "mar",
 			"april", "apr",
@@ -26,7 +24,7 @@ public class TimeParser {
 			"november", "nov",
 			"december", "dec"};
 	
-	private int[] monthNo = {0, 0,
+	private int[] VALUES_MONTH = {0, 0,
 			1, 1,
 			2, 2,
 			3, 3,
@@ -39,9 +37,9 @@ public class TimeParser {
 			10, 10,
 			11, 11};
 	
-	private String[] dayStrings = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
+	private String[] STRINGS_DAY = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 	
-	private int[] dayNo = {1, 2, 3, 4, 5, 6, 7};
+	private int[] VALUES_DAY = {1, 2, 3, 4, 5, 6, 7};
 	
 	private final int FIELD_NOT_SET_VALUE = -1;
 	private final int FIELD_INVALID_VALUE = -2;
@@ -58,11 +56,11 @@ public class TimeParser {
 	private Calendar c = null;
 	
 	public TimeParser() {
-		for (int i = 0; i < monthStrings.length; i++) {
-			calendarMonths.put(monthStrings[i], monthNo[i]);
+		for (int i = 0; i < STRINGS_MONTH.length; i++) {
+			calendarMonths.put(STRINGS_MONTH[i], VALUES_MONTH[i]);
 		}
-		for (int i = 0; i < dayStrings.length; i++) {
-			calendarDays.put(dayStrings[i], dayNo[i]);
+		for (int i = 0; i < STRINGS_DAY.length; i++) {
+			calendarDays.put(STRINGS_DAY[i], VALUES_DAY[i]);
 		}
 	}
 	
@@ -74,15 +72,19 @@ public class TimeParser {
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
 		for (String i: splitInput) {
-			parseIfIsDay(i);
-			parseIfIsMonth(i);
-			parseIfIsAMPMFormat(i);
-			//parseIfIsTodayOrTomorrow(i);
-			parseIfIs4DigitFloatingNumber(i);
-			parseIfIs2OrLessDigitFloatingNumber(i);
+			if (parseIfIsDay(i)) {
+			} else if (parseIfIsMonth(i)) {
+			} else if (parseIfIsAMPMFormat(i)) {
+			} else if (parseIfIsTodayOrTomorrow(i)) {
+			} else if (parseIfIs4DigitFloatingNumber(i)) {
+			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
+			} else {
+				System.out.println("Date/Time: " + i + " not recognised.");
+				return null;
+			}
 		}
 		if (!formatCalendarIfValid(extendedCommand)) {
-			System.out.println("Ey what u typing.");
+			System.out.println("Invalid time.");
 			return null;
 		}
 		return calendarToStringFormat();
@@ -91,30 +93,25 @@ public class TimeParser {
 	private String calendarToStringFormat() {
 		if (c != null) {
 			Date parsedDate = c.getTime();
-			String date = parseIfLessThanTen(parsedDate.getDate());
-			String month = parseIfLessThanTen(parsedDate.getMonth()+1);
-			String hours = parseIfLessThanTen(parsedDate.getHours());
-			String minutes = parseIfLessThanTen(parsedDate.getMinutes());
-			String correctDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
+			String date = String.format("%02d", parsedDate.getDate());
+			String month = String.format("%02d", parsedDate.getMonth()+1);
+			String hours = String.format("%02d", parsedDate.getHours());
+			String minutes = String.format("%02d", parsedDate.getMinutes());
+			String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
 			+ ":" + minutes;
-			return correctDate;
+			return outputDate;
 		}
-		System.out.println("Anyhow input isit?");
 		return null;
 	}
 
 	private boolean formatCalendarIfValid(String extendedCommand) {
 		c = Calendar.getInstance();
-		boolean hasDay = false;
-		boolean hasMonth = false;
-		initPresetFields(extendedCommand);
-		if (setCalendarField("day", getField("day"))) {
-			hasDay = true;
-			if (setCalendarField("month", getField("month"))) {
-				hasMonth = true;
+		initSecondaryAndPresetFields(extendedCommand);
+		if (setCalendarField("hour", getField("hour"))) {
+			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
-					if (setCalendarField("hour", getField("hour"))) {
-						if (setCalendarField("minute", getField("minute"))) {
+					if (setCalendarField("month", getField("month"))) {
+						if (setCalendarField("day", getField("day"))) {
 							return true;
 						}
 					}
@@ -124,19 +121,56 @@ public class TimeParser {
 		return false;
 	}
 		
-	private boolean initPresetFields(String extendedCommand) {
-		setField("year", 2016);
-		c.set(Calendar.SECOND, 0);
-		switch (extendedCommand) {
-			case "on" :
-			case "by" :
-				setField("hour", 23);
-				setField("minute", 59);
-				return true;
+	private boolean initSecondaryAndPresetFields(String extendedCommand) {
+		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
+			c.setTimeInMillis(System.currentTimeMillis());
+			if (isAfterCurrentTime(getField("hour"), getField("minute"))) {
+				c.add(Calendar.DATE, 1);
+			}
+			setField("day", c.get(Calendar.DAY_OF_MONTH));
+			setField("month", c.get(Calendar.MONTH));
+			setField("year", c.get(Calendar.YEAR));
+		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
+			switch (extendedCommand) {
+				case "from" :
+				case "at" :
+					setField("hour", 00);
+					setField("minute", 00);
+					break;
+				case "on" :
+				case "by" :
+				case "to" :
+					setField("hour", 23);
+					setField("minute", 59);
+					break;
 				default :
 					break;
+			}
+			if (!isFieldSet("year")) {
+				c.setTimeInMillis(System.currentTimeMillis());
+				if (!isAfterCurrentDate(day, month)) {
+					c.add(Calendar.YEAR, 1);
+				}
+				setField("year", c.get(Calendar.YEAR));
+			}
 		}
-		return false;
+		// Seconds preset to 0 (default).
+		c.set(Calendar.SECOND, 0);
+		return true;
+	}
+	
+	private boolean isAfterCurrentDate(int inputDay, int inputMonth) {
+		c.setTimeInMillis(System.currentTimeMillis());
+		boolean case1 = inputMonth > c.get(Calendar.MONTH);
+		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay > c.get(Calendar.DAY_OF_MONTH);
+		return case1 || case2;
+	}
+	
+	private boolean isAfterCurrentTime(int inputHour, int inputMinute) {
+		c.setTimeInMillis(System.currentTimeMillis());
+		boolean case1 = inputHour > c.get(Calendar.HOUR_OF_DAY);
+		boolean case2 = inputHour == c.get(Calendar.HOUR_OF_DAY) && inputMinute > c.get(Calendar.MINUTE);
+		return case1 || case2;
 	}
 	
 	private boolean resetTimeAndDate() {
@@ -290,6 +324,24 @@ public class TimeParser {
 		return false;
 	}
 	
+	private boolean parseIfIsTodayOrTomorrow(String input) {
+		c = Calendar.getInstance();
+		switch (input.toLowerCase()) {
+		case "today" :
+			setField("day", c.get(Calendar.DATE));
+			setField("month", c.get(Calendar.MONTH));
+			return true;
+		case "tomorrow" :
+			c.add(Calendar.DATE, 1);
+			setField("day", c.get(Calendar.DATE));
+			setField("month", c.get(Calendar.MONTH));
+			return true;
+		default :
+			break;
+		}
+		return false;
+	}
+	
 	private boolean isValidAMPMNumberInput(int inputNo) {
 		return inputNo > 0 && inputNo <= 12;
 	}
@@ -304,7 +356,8 @@ public class TimeParser {
 	
 	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) {
 		if (isANumber(input) && input.length() <= 2) {
-				setField("day", Integer.parseInt(input));
+			setField("day", Integer.parseInt(input));
+			return true;
 		}
 		return false;
 	}
@@ -325,13 +378,6 @@ public class TimeParser {
 		return false;
 	}
 	
-	private String parseIfLessThanTen(int date) {
-		if (isLessThanTen(date))	{
-			return "0" + date;
-		}
-		return Integer.toString(date);
-	}
-	
 	private boolean isValid24HourInput(int inputNo) {
 		return inputNo >= 0 && inputNo < 2400;
 	}
@@ -348,12 +394,5 @@ public class TimeParser {
 			}
 		}
 		return isNumber;
-	}
-	
-	private boolean isLessThanTen(int dateTime) {
-		if (dateTime < 10) {
-			return true;
-		}
-		return false;
 	}
 }

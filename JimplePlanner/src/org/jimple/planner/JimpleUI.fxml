@@ -96,5 +96,18 @@
             </VBox>
          </children>
       </AnchorPane>
+      <VBox fx:id="overlay">
+         <children>
+            <Region VBox.vgrow="ALWAYS" />
+            <HBox>
+               <children>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <AnchorPane fx:id="popupLayer" />
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Region VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
    </children>
 </StackPane>
