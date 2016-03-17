@@ -105,8 +105,8 @@ public class Parser {
 			String currString = userInputStringArray[i];
 			if (!inputExtendedCommandsHashMap.containsKey(currString.toLowerCase())) {
 				userInputString += currString + " ";
-			} else {
-			/*if (inputExtendedCommandsHashMap.containsKey(currString) || i == userInputStringArray.length - 1) {*/
+			}
+			if (inputExtendedCommandsHashMap.containsKey(currString) || i == userInputStringArray.length - 1) {
 				// Word being read is an extended command.
 
 				// When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex". Removes the whitespace at the end.
@@ -118,8 +118,10 @@ public class Parser {
 				}
 
 				// Updates the "currIndex" and "currExtendedCommand" to the current extended command.
-				currExtendedCommand = currString.toLowerCase();
-				currIndex = inputExtendedCommandsHashMap.get(currExtendedCommand);
+				if (inputExtendedCommandsHashMap.containsKey(currString)) {
+					currExtendedCommand = currString.toLowerCase();
+					currIndex = inputExtendedCommandsHashMap.get(currExtendedCommand);
+				}
 
 				// Resets "userInputString".
 				userInputString = EMPTY_STRING;

@@ -69,6 +69,7 @@ public class TimeParser {
 	 * -------------------|
 	 */
 	public String timeParser(String extendedCommand, String input) {
+		System.out.println(input);
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
 		for (String i: splitInput) {
@@ -79,7 +80,7 @@ public class TimeParser {
 			} else if (parseIfIs4DigitFloatingNumber(i)) {
 			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
 			} else {
-				System.out.println("Date/Time: " + i + " not recognised.");
+				System.out.println("Date/Time: \"" + i + "\" not recognised.");
 				return null;
 			}
 		}
@@ -107,6 +108,7 @@ public class TimeParser {
 	private boolean formatCalendarIfValid(String extendedCommand) {
 		c = Calendar.getInstance();
 		initSecondaryAndPresetFields(extendedCommand);
+		//System.out.println(getField("year"));
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
@@ -122,6 +124,7 @@ public class TimeParser {
 	}
 		
 	private boolean initSecondaryAndPresetFields(String extendedCommand) {
+		System.out.println(getField("hour") + getField("minute") + getField("day") + getField("month") + getField("year"));
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
@@ -130,6 +133,7 @@ public class TimeParser {
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
+			System.out.println("A" + getField("year"));
 		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
 			switch (extendedCommand) {
 				case "from" :
@@ -146,13 +150,14 @@ public class TimeParser {
 				default :
 					break;
 			}
-			if (!isFieldSet("year")) {
-				c.setTimeInMillis(System.currentTimeMillis());
-				if (!isAfterCurrentDate(day, month)) {
-					c.add(Calendar.YEAR, 1);
-				}
-				setField("year", c.get(Calendar.YEAR));
+		}
+		if (!isFieldSet("year")) {
+			c.setTimeInMillis(System.currentTimeMillis());
+			if (!isAfterCurrentDate(day, month)) {
+				c.add(Calendar.YEAR, 1);
 			}
+			setField("year", c.get(Calendar.YEAR));
+			System.out.println("B" + getField("year"));
 		}
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
