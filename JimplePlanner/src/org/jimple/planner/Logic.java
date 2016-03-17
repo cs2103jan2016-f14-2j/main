@@ -50,14 +50,10 @@ public class Logic {
 	private ArrayList<Task> todo;
 	private ArrayList<Task> events;
 	private ArrayList<Task> tempHistory;
-	ListOfMonths listOfMonths;
 	Parser parser = new Parser();
 	StorageStub store = new StorageStub();
-	Formatter formatter = new Formatter();
-	TimeParser timeParse = new TimeParser();
 
 	public Logic() {
-		listOfMonths = new ListOfMonths();
 		tempHistory = new ArrayList<Task>();
 		try {
 			todo = store.getTasks().get(0);
@@ -181,7 +177,7 @@ public class Logic {
 						list.add(taskToBeEditted);
 						return false;
 					}
-					allocateCorrectTimeArray(taskToBeEditted);
+					allocateCorrectTimeArray(editedTask);
 				} else if (type.equals(STRING_DELETE)) {
 					list.remove(i);
 				}
@@ -191,10 +187,10 @@ public class Logic {
 		return false;
 	}
 
-	private boolean isFromAndToTimeCorrect(Task taskToBeEditted) {
-		if (taskToBeEditted.getFromTime() == null) {
+	private boolean isFromAndToTimeCorrect(Task task) {
+		if (task.getFromTime() == null || task.getToTime() == null) {
 			return true;
-		} else if (taskToBeEditted.getFromTime().compareTo(taskToBeEditted.getToTime()) < 0) {
+		} else if (task.getFromTime().compareTo(task.getToTime()) < 0) {
 			return true;
 		}
 		return false;
