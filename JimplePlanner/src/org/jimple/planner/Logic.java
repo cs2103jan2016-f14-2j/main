@@ -56,16 +56,13 @@ public class Logic {
 	StorageStub store = new StorageStub();
 	Logger logger;
 
-	public Logic() {
+	public Logic() throws IOException {
 		tempHistory = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
 			todo = store.getTasks().get(0);
 			deadlines = store.getTasks().get(1);
 			events = store.getTasks().get(2);
-		} catch (IOException e) {
-			System.out.print(ERROR_FILE_NOT_FOUND);
-			logger.log(Level.WARNING, "input/output does not exist", e);
 		} catch (IndexOutOfBoundsException d) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();

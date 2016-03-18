@@ -103,7 +103,7 @@ public class Parser {
 			// Updates userInputString if word being read is not an extended
 			// command.
 			String currString = userInputStringArray[i];
-			if (!inputExtendedCommandsHashMap.containsKey(currString)) {
+			if (!inputExtendedCommandsHashMap.containsKey(currString.toLowerCase())) {
 				userInputString += currString + " ";
 			}
 			if (inputExtendedCommandsHashMap.containsKey(currString) || i == userInputStringArray.length - 1) {
@@ -118,9 +118,9 @@ public class Parser {
 				}
 
 				// Updates the "currIndex" and "currExtendedCommand" to the current extended command.
-				currExtendedCommand = currString;
 				if (inputExtendedCommandsHashMap.containsKey(currString)) {
-					currIndex = inputExtendedCommandsHashMap.get(currString);
+					currExtendedCommand = currString.toLowerCase();
+					currIndex = inputExtendedCommandsHashMap.get(currExtendedCommand);
 				}
 
 				// Resets "userInputString".
