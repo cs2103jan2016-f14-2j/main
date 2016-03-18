@@ -3,6 +3,8 @@ package org.jimple.planner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Logic {
 
@@ -52,19 +54,23 @@ public class Logic {
 	private ArrayList<Task> tempHistory;
 	Parser parser = new Parser();
 	StorageStub store = new StorageStub();
+	Logger logger;
 
 	public Logic() {
 		tempHistory = new ArrayList<Task>();
+		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
 			todo = store.getTasks().get(0);
 			deadlines = store.getTasks().get(1);
 			events = store.getTasks().get(2);
 		} catch (IOException e) {
 			System.out.print(ERROR_FILE_NOT_FOUND);
+			logger.log(Level.WARNING, "input/output does not exist", e);
 		} catch (IndexOutOfBoundsException d) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
+			logger.log(Level.WARNING, "when planner.jim does not exist", d);
 		}
 	}
 
@@ -74,6 +80,7 @@ public class Logic {
 	 */
 	public String[] execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
+		logger.log(Level.INFO, "preparig to start processing");
 		try {
 			InputStruct parsedInput = parser.parseInput(inputString);
 			switch (parsedInput.getCommand()) {
@@ -101,7 +108,9 @@ public class Logic {
 		} catch (Exception e) {
 			feedback[0] = ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
+			logger.log(Level.WARNING, "input error", e);
 		}
+		logger.log(Level.INFO, "end of processing");
 		return feedback;
 	}
 
@@ -150,6 +159,7 @@ public class Logic {
 
 	private String editTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
+		assert variableArray.length == 6;
 		boolean isToDoEditted = false;
 		boolean isWholeDayEditted = false;
 		boolean isEventsEditted = false;
@@ -234,6 +244,7 @@ public class Logic {
 
 	private String deleteTask(String[] variableArray, ArrayList<Task> one, ArrayList<Task> two, ArrayList<Task> three)
 			throws IOException {
+		assert variableArray.length == 1;
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
 		boolean isEventsDeleted = false;
@@ -254,6 +265,7 @@ public class Logic {
 
 	// adds task into the Event object
 	private String addToTaskList(String[] parsedInput) throws IOException {
+		assert parsedInput.length == 5;
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
 		if (!isFromAndToTimeCorrect(newTask))	{
