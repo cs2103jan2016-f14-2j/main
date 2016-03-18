@@ -3,6 +3,8 @@ package org.jimple.planner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Logic {
 
@@ -59,9 +61,11 @@ public class Logic {
 		listOfMonths = new ListOfMonths();
 		tempHistory = new ArrayList<Task>();
 		try {
-			todo = store.getTasks().get(0);
-			deadlines = store.getTasks().get(1);
-			events = store.getTasks().get(2);
+			ArrayList<ArrayList<Task>> allTasksList = store.getTasks();
+			assignTaskIds(allTasksList);
+			todo = allTasksList.get(0);
+			deadlines = allTasksList.get(1);
+			events = allTasksList.get(2);
 		} catch (IndexOutOfBoundsException d) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -313,7 +317,22 @@ public class Logic {
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
+		Comparator<Task> taskIdComparator = Task.getTaskIdComparator();
+		for(ArrayList<Task> taskList: allTasksArray){
+			Collections.sort(taskList, taskIdComparator);
+		}
+		assignTaskIds(allTasksArray);
 		store.isSaved(allTasksArray);
+	}
+	
+	private void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray){
+		int taskId = 1;
+		for(ArrayList<Task> taskList: allTasksArray){
+			for(Task task: taskList){
+				task.setTaskId(taskId);
+				taskId++;
+			}
+		}
 	}
 
 	/**
