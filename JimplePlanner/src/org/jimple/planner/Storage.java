@@ -379,12 +379,14 @@ public class Storage {
 		BufferedReader defaultFileReader = createFileReader(filePath);
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
+		int taskId = 1;
 		try {
 			while ((fileLineContent = defaultFileReader.readLine()) != null) {
 				if(!fileLineContent.equals(EMPTY_STRING)){
-					Task task = getTaskFromLine(fileLineContent);
+					Task task = getTaskFromLine(fileLineContent, taskId);
 					allocateTaskToArrayList(task, allTasksLists);
 				}
+				taskId++;
 			}
 			defaultFileReader.close();
 		} catch (IOException e) {
@@ -416,18 +418,20 @@ public class Storage {
 		return separatedContents;
 	}
 	
-	private Task getTaskFromLine(String fileLineContent){
+	private Task getTaskFromLine(String fileLineContent, int taskId){
 		ArrayList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
 		Task task = new Task(EMPTY_STRING);
 		for(String field: fileLineContentSeparated){
 			setFields(task, field);
 		}
+		task.setTaskId(taskId);
 		return task;
 	}
 	
 	//This method is purely for test purposes only
 	public Task testGetTaskFromLine(String fileLineContent){
-		return getTaskFromLine(fileLineContent);
+		int i = 0;
+		return getTaskFromLine(fileLineContent, i);
 	}
 	
 	//This method is used for unit test in StorageTest

@@ -12,6 +12,7 @@ class Task{
 	private String category;
 	private String type;
 	private boolean isOverDue;
+	private int taskId;
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
@@ -28,6 +29,7 @@ class Task{
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
+		this.taskId = -100;
 	}
 	
 	public String getPrettyFromDate()	{
@@ -158,6 +160,14 @@ class Task{
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	public void setTaskId(int taskId){
+		this.taskId = taskId;
+	}
+	
+	public int getTaskId(){
+		return taskId;
 	}
 	
 	public static Comparator<Task> getFromDateComparator(){
