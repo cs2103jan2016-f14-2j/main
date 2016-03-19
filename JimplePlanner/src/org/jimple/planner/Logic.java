@@ -56,18 +56,18 @@ public class Logic {
 	StorageStub store = new StorageStub();
 	Logger logger;
 
-	public Logic() throws IOException {
+	public Logic() {
 		tempHistory = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
 			todo = store.getTasks().get(0);
 			deadlines = store.getTasks().get(1);
 			events = store.getTasks().get(2);
-		} catch (IndexOutOfBoundsException d) {
+		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
-			logger.log(Level.WARNING, "when planner.jim does not exist", d);
+			logger.log(Level.WARNING, "when planner.jim does not exist", e);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class Logic {
 	 */
 	public String[] execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
-		logger.log(Level.INFO, "preparig to start processing");
+		logger.log(Level.INFO, "preparing to start processing");
 		try {
 			InputStruct parsedInput = parser.parseInput(inputString);
 			switch (parsedInput.getCommand()) {
@@ -100,6 +100,11 @@ public class Logic {
 			case STRING_CHANGEDIR:
 				feedback[0] = changeSaveDirectory(parsedInput.getVariableArray());
 				feedback[1] = STRING_CHANGEDIR;
+				break;
+			default:
+				feedback[0] = ERROR_WRONG_INPUT_FEEDBACK;
+				feedback[1] = "";
+				logger.log(Level.WARNING, "wrong input");
 				break;
 			}
 		} catch (Exception e) {
@@ -174,13 +179,14 @@ public class Logic {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type) throws IOException {
+	private boolean findTask(ArrayList<Task> list, String[] variableArray, int previousSizes, String type)
+			throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) - previousSizes == i) {
 				if (type.equals(STRING_EDIT)) {
 					Task taskToBeEditted = list.remove(i);
 					Task editedTask = doEdit(createArrayWithoutFirstIndex(variableArray), taskToBeEditted);
-					if (!isFromAndToTimeCorrect(editedTask))	{
+					if (!isFromAndToTimeCorrect(editedTask)) {
 						list.add(taskToBeEditted);
 						return false;
 					}
@@ -265,7 +271,7 @@ public class Logic {
 		assert parsedInput.length == 5;
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
-		if (!isFromAndToTimeCorrect(newTask))	{
+		if (!isFromAndToTimeCorrect(newTask)) {
 			return ERROR_ADDED_FEEDBACK;
 		}
 		allocateCorrectTimeArray(newTask);
