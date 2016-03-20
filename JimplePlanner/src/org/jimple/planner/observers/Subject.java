@@ -8,7 +8,7 @@ import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 
 public class Subject {
-	private ArrayList<Observer>	observers = new ArrayList<Observer>();
+	private ArrayList<myObserver> observers = new ArrayList<myObserver>();
 	Logic logic = new Logic();
 	
 	public ArrayList<Task> getToDo()	{
@@ -23,24 +23,19 @@ public class Subject {
 		return logic.getEventsList();
 	}
 	
-	public void setTodo(ArrayList<Task> toDoState)	{
+	public void setState(ArrayList<Task> toDoState, ArrayList<Task> deadlineState, ArrayList<Task> eventState)	{
 		logic.setToDoList(toDoState);
-	}
-	
-	public void setDeadlines(ArrayList<Task> deadlineState)	{
 		logic.setDeadlinesList(deadlineState);
-	}
-	
-	public void setEvents(ArrayList<Task> eventState)	{
 		logic.setEventsList(eventState);
+		notifyAllObservers();
 	}
 	
-	public void attach(Observer observer)	{
+	public void attach(myObserver observer)	{
 		observers.add(observer);
 	}
 	
 	public void notifyAllObservers()	{
-		for (Observer observer : observers)	{
+		for (myObserver observer : observers)	{
 			observer.update();
 		}
 	}

@@ -1,10 +1,10 @@
 package org.jimple.planner.observers;
 
-public class ToDoObserver extends Observer {
+public class ToDoObserver extends myObserver {
 
 	public ToDoObserver(Subject subject) {
 		this.subject = subject;
-		this.subject.attach((java.util.Observer) this);
+		this.subject.attach(this);
 	}
 
 	@Override

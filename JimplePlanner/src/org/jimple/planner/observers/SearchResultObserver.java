@@ -1,10 +1,10 @@
-package org.jimple.planner;
+package org.jimple.planner.observers;
 
-public class EventsObserver extends Observer{
+public class SearchResultObserver extends myObserver{
 	
-	public EventsObserver(Subject subject) {
+	public SearchResultObserver(Subject subject)	{
 		this.subject = subject;
-		this.subject.attach((java.util.Observer) this);
+		this.subject.attach(this);
 	}
 	
 	@Override
@@ -14,5 +14,4 @@ public class EventsObserver extends Observer{
 			System.out.println(subject.getEvents().get(0).getTitle());
 		}
 	}
-	
 }
