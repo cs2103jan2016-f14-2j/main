@@ -63,17 +63,17 @@ public class Logic {
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
 			ArrayList<ArrayList<Task>> allTasksList = store.getTasks();
-			assignTaskIds(allTasksList);
 			todo = allTasksList.get(0);
 			deadlines = allTasksList.get(1);
 			events = allTasksList.get(2);
+			assignTaskIds(allTasksList);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
 			logger.log(Level.WARNING, "when planner.jim does not exist", e);
 		}
-			
+
 	}
 
 	/**
@@ -91,7 +91,8 @@ public class Logic {
 				feedback[1] = STRING_DELETE;
 				break;
 			case STRING_ADD:
-				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines, events);
+				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
+						events);
 				feedback[1] = tempHistory.get(tempHistory.size() - 1).getType();
 				break;
 			case STRING_EDIT:
@@ -121,16 +122,32 @@ public class Logic {
 		return feedback;
 	}
 
-	public ArrayList<Task> display(String type) {
+	public ArrayList<Task> getToDoList() {
+		return todo;
+	}
+
+	public ArrayList<Task> getDeadlinesList() {
 		checkOverCurrentTime();
-		if (type.equals(TYPE_TODO)) {
-			return todo;
-		} else if (type.equals(TYPE_EVENT)) {
-			return events;
-		} else if (type.equals(TYPE_DEADLINE)) {
-			return deadlines;
-		}
-		return null;
+		return deadlines;
+	}
+
+	public ArrayList<Task> getEventsList() {
+		checkOverCurrentTime();
+		return events;
+	}
+
+	public void setToDoList(ArrayList<Task> toDoState) {
+		todo = toDoState;
+	}
+
+	public void setDeadlinesList(ArrayList<Task> deadlinesState) {
+		deadlines = deadlinesState;
+		checkOverCurrentTime();
+	}
+
+	public void setEventsList(ArrayList<Task> eventsState) {
+		todo = eventsState;
+		checkOverCurrentTime();
 	}
 
 	private void checkOverCurrentTime() {
@@ -195,11 +212,11 @@ public class Logic {
 
 		return true;
 	}
-	
-	private void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray){
+
+	private void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
-		for(ArrayList<Task> taskList: allTasksArray){
-			for(Task task: taskList){
+		for (ArrayList<Task> taskList : allTasksArray) {
+			for (Task task : taskList) {
 				task.setTaskId(taskId);
 				taskId++;
 			}
