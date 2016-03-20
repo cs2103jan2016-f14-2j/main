@@ -1,7 +1,10 @@
-package org.jimple.planner;
+package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.jimple.planner.Storage;
+import org.jimple.planner.Task;
 
 public class LogicDelete extends LogicEdit{
 	private static final String DELETED_FEEDBACK = "task deleted";

@@ -1,10 +1,13 @@
-package org.jimple.planner;
+package org.jimple.planner.logic;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import org.jimple.planner.Formatter;
+import org.jimple.planner.Storage;
+import org.jimple.planner.Task;
 import org.junit.Test;
 
 public class LogicTest {

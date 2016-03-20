@@ -1,7 +1,10 @@
-package org.jimple.planner;
+package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.jimple.planner.Storage;
+import org.jimple.planner.Task;
 
 public class LogicEdit implements LogicTaskModification{
 	private static final String EDITED_FEEDBACK = "task edited in planner";

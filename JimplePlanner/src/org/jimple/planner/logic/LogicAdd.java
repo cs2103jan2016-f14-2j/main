@@ -1,7 +1,10 @@
-package org.jimple.planner;
+package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.jimple.planner.Storage;
+import org.jimple.planner.Task;
 
 public class LogicAdd implements LogicTaskModification{
 	private static final String ERROR_ADDED_FEEDBACK = "task could not be added";

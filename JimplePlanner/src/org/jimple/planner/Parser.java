@@ -157,7 +157,7 @@ public class Parser {
  * commands in the Jimple Planner. Stores the variables detected in the user
  * input.
  */
-class InputStruct {
+public class InputStruct {
 
 	/* ---------------|
 	 * SIZE VARIABLES |

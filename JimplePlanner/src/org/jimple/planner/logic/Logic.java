@@ -1,10 +1,16 @@
-package org.jimple.planner;
+package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jimple.planner.InputStruct;
+import org.jimple.planner.Parser;
+import org.jimple.planner.Storage;
+import org.jimple.planner.Task;
+
 import java.util.Collections;
 import java.util.Comparator;
 
