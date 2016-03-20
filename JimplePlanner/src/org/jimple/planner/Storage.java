@@ -67,6 +67,12 @@ public class Storage {
 	private ArrayList<ArrayList<Task>> getConsolidatedTasks(String newPath, String oldPath){
 		ArrayList<ArrayList<Task>> oldPathTasks = getTaskSelect(oldPath);
 		ArrayList<ArrayList<Task>> newPathTasks = getTaskSelect(newPath);
+		ArrayList<ArrayList<Task>> consolidatedTasks = removeDuplicateTasks(oldPathTasks, newPathTasks);
+		return consolidatedTasks;
+	}
+
+	private ArrayList<ArrayList<Task>> removeDuplicateTasks(ArrayList<ArrayList<Task>> oldPathTasks,
+			ArrayList<ArrayList<Task>> newPathTasks) {
 		ArrayList<ArrayList<Task>> consolidatedTasks = new ArrayList<ArrayList<Task>>();
 		for(int i = 0; i < ALL_ARRAY_SIZE; i++){
 			ArrayList<Task> newTasksByType = newPathTasks.get(i);
