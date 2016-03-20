@@ -10,9 +10,16 @@ import org.junit.Test;
 public class LogicTest {
 	Formatter testformatter = new Formatter();
 	Logic testLogic = new Logic();
+	Storage testStore = new Storage();
+	LogicAdd testAdder = new LogicAdd();
+	LogicEdit testEditer = new LogicEdit();
+	LogicDelete testDeleter = new LogicDelete();
+	LogicSearch testSearcher = new LogicSearch();
+	LogicDirectory testDirecter = new LogicDirectory();
 	ArrayList<Task>	floating = new ArrayList<Task>();
 	ArrayList<Task>	deadlines = new ArrayList<Task>();
 	ArrayList<Task>	events = new ArrayList<Task>();
+	ArrayList<Task>	tempHistory = new ArrayList<Task>();
 	
 	/*@Test
 	public void EditShouldReturnFeedback() throws IOException	{
@@ -21,14 +28,18 @@ public class LogicTest {
 	}*/
 	
 	public void initializeThreeArrays()	{
-		Task event1 = new Task("a test only one");
-		Task event2 = new Task("a test only two");
-		Task event3 = new Task("a test only three");
-		Task event4 = new Task("a test four");
-		floating.add(event1);
-		deadlines.add(event2);
-		events.add(event3);
-		events.add(event4);
+		Task todo1 = new Task("a test only one");
+		Task deadlines1 = new Task("a test only two");
+		Task events1 = new Task("a test only three");
+		Task events2 = new Task("a test four");
+		todo1.setType("floating");
+		deadlines1.setType("deadline");
+		events1.setType("event");
+		events2.setType("event");
+		floating.add(todo1);
+		deadlines.add(deadlines1);
+		events.add(events1);
+		events.add(events2);
 	}
 	@Test
 	public void ShouldReturnPrettyDate()	{
@@ -69,24 +80,24 @@ public class LogicTest {
 	public void ShouldReturnFeedbackAfterDeleteFromArray() throws IOException	{
 		String[] variableArray = {"2"};
 		initializeThreeArrays();
-		assertEquals("delete string", "task deleted", testLogic.testDeleteTask(variableArray, floating, deadlines, events));
+		assertEquals("delete string", "task deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events));
 		variableArray[0] = "4";
-		assertEquals("delete string", "could not find task to be deleted", testLogic.testDeleteTask(variableArray, floating, deadlines, events));
+		assertEquals("delete string", "could not find task to be deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events));
 	}
 	
 	@Test
 	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException	{
-		String[] variableArray = {"3", "task one", null, null, "2016-03-02T05:00", null};
+		String[] variableArray = {"0", "task one", null, null, "2016-03-02T05:00", null};
 		initializeThreeArrays();
-		assertEquals("return same string", "task edited in planner", testLogic.testEditTask(variableArray, floating, deadlines, events));
+		//assertEquals("return same string", "task edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 		variableArray[0] = "4";
-		assertEquals("return same string", "task could not be editted", testLogic.testEditTask(variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 	}
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
 		String[] parsedInput1 = {"finish 2103 homework", null, null, "2016-03-09T13:00", null};
-		assertEquals("task is added to file", "task added to planner", testLogic.testAddToTaskList(parsedInput1));
+		assertEquals("task is added to file", "task added to planner", testAdder.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events));
 	}
 	
 	@Test
@@ -99,7 +110,7 @@ public class LogicTest {
 		testArray.add(event1);
 		testArray.add(event2);
 		testArray.add(event3);
-		assertTrue("return true after editting", testLogic.testFindTaskToEdit(testArray, variableArray, 0));
+		assertTrue("return true after editting", testEditer.testFindTaskToEdit(testArray, variableArray, 0, floating, deadlines, events));
 	}
 	
 	/*@Test
@@ -123,19 +134,19 @@ public class LogicTest {
 		Task event = new Task("a test only");
 		event.setDescription("good stuff");
 		event.setCategory("food");
-		assertTrue("returns true", testLogic.testIsContainKeyword(event, "good"));
-		assertTrue("returns true", testLogic.testIsContainKeyword(event, "a test only"));
-		assertFalse("returns false", testLogic.testIsContainKeyword(event, "wrong"));
-		assertFalse("returns false", testLogic.testIsContainKeyword(event, "good food"));
-		assertFalse("returns false", testLogic.testIsContainKeyword(event, "a only"));
+		assertTrue("returns true", testSearcher.testIsContainKeyword(event, "good"));
+		assertTrue("returns true", testSearcher.testIsContainKeyword(event, "a test only"));
+		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "wrong"));
+		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "good food"));
+		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "a only"));
 	}
 	
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-19T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-20T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-19T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-20T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test
