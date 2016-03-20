@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Logic {
 
@@ -54,15 +56,18 @@ public class Logic {
 		tempHistory = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
-			todo = store.getTasks().get(0);
-			deadlines = store.getTasks().get(1);
-			events = store.getTasks().get(2);
+			ArrayList<ArrayList<Task>> allTasksList = store.getTasks();
+			assignTaskIds(allTasksList);
+			todo = allTasksList.get(0);
+			deadlines = allTasksList.get(1);
+			events = allTasksList.get(2);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
 			logger.log(Level.WARNING, "when planner.jim does not exist", e);
 		}
+			
 	}
 
 	/**
@@ -176,7 +181,25 @@ public class Logic {
 		}
 		return false;
 	}
-	 
+
+	private boolean isContainsValidTime(String formattedDateTime) {
+		if (formattedDateTime.endsWith("T")) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	private void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray){
+		int taskId = 1;
+		for(ArrayList<Task> taskList: allTasksArray){
+			for(Task task: taskList){
+				task.setTaskId(taskId);
+				taskId++;
+			}
+		}
+	}
+
 	/**
 	 * gets a list of help commands for user to refer to
 	 *

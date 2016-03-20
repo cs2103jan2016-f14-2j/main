@@ -12,6 +12,7 @@ class Task{
 	private String category;
 	private String type;
 	private boolean isOverDue;
+	private int taskId;
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
@@ -29,6 +30,7 @@ class Task{
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
+		this.taskId = -100;
 	}
 	
 	//Copy Constructor
@@ -173,6 +175,14 @@ class Task{
 		this.category = category;
 	}
 	
+	public void setTaskId(int taskId){
+		this.taskId = taskId;
+	}
+	
+	public int getTaskId(){
+		return taskId;
+	}
+	
 	public static Comparator<Task> getFromDateComparator(){
 		return new Comparator<Task>(){
 			public int compare(Task task1, Task task2){
@@ -185,6 +195,24 @@ class Task{
 		return new Comparator<Task>(){
 			public int compare(Task task1, Task task2){
 				return task1.getToTime().compareTo(task2.getToTime());
+			}
+		};
+	}
+	
+	public static Comparator<Task> getTaskIdComparator(){
+		return new Comparator<Task>(){
+			public int compare(Task task1, Task task2){
+				int task1id = task1.getTaskId();
+				int task2id = task2.getTaskId();
+				int result;
+				if(task1id<task2id){
+					result = -1;
+				} else if (task1id==task2id){
+					result = 0;
+				} else {
+					result = 1;
+				}
+				return result;
 			}
 		};
 	}
