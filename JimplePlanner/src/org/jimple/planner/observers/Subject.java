@@ -23,10 +23,12 @@ public class Subject {
 		return logic.getEventsList();
 	}
 	
-	public void setState(ArrayList<Task> toDoState, ArrayList<Task> deadlineState, ArrayList<Task> eventState)	{
-		logic.setToDoList(toDoState);
-		logic.setDeadlinesList(deadlineState);
-		logic.setEventsList(eventState);
+	public ArrayList<Task> getSearchResults()	{
+		return logic.getSearchList();
+	}
+	
+	public void setSearchState(ArrayList<Task> searchList)	{
+		logic.setSearchList(searchList);
 		notifyAllObservers();
 	}
 	
