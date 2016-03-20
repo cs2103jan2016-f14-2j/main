@@ -14,7 +14,6 @@ public class LogicEdit implements LogicTaskModification {
 
 	protected String editTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events) throws IOException {
-		assert variableArray.length == 6;
 		boolean isToDoEditted = false;
 		boolean isWholeDayEditted = false;
 		boolean isEventsEditted = false;
@@ -56,8 +55,7 @@ public class LogicEdit implements LogicTaskModification {
 		return parsedInput;
 	}
 
-	public boolean testFindTaskToEdit(ArrayList<Task> list, String[] variableArray, int previousSizes,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		return findTaskToEdit(variableArray, todo, deadlines, events);
 	}
 

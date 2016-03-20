@@ -7,6 +7,10 @@ import org.jimple.planner.Storage;
 import org.jimple.planner.Task;
 
 public interface LogicTaskModification {
+	final String TYPE_TODO = "floating";
+	final String TYPE_DEADLINE = "deadline";
+	final String TYPE_EVENT = "event";
+	
 	public default Task doEdit(String[] variableArray, Task aTask) {
 		Task editedTask = new Task(aTask);
 		for (int i = 0; i < variableArray.length; i++) {
@@ -37,13 +41,13 @@ public interface LogicTaskModification {
 	
 	public default void allocateCorrectTimeArray(Task newTask, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		// check if null
-		if (newTask.getFromTime() == null && newTask.getToTime() == null) {
+		if (newTask.getType().compareTo(TYPE_TODO) == 0) {
 			todo.add(newTask);
 		}
 		// check if whole day task
-		else if (newTask.getFromTime() == null && newTask.getToTime() != null) {
+		else if (newTask.getType().compareTo(TYPE_DEADLINE) == 0) {
 			deadlines.add(newTask);
-		} else {
+		} else if (newTask.getType().compareTo(TYPE_EVENT) == 0){
 			events.add(newTask);
 		}
 	}

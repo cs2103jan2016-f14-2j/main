@@ -50,5 +50,9 @@ public class LogicDelete extends LogicEdit{
 			ArrayList<Task> events, ArrayList<Task> deletedTasks) throws IOException {
 		return deleteTask(store, variableArray, todo, deadlines, events, deletedTasks);
 	}
+	
+	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list, ArrayList<Task> deletedTasks) throws IOException	{
+		return findTaskToDelete(variableArray, list, deletedTasks);
+	}
 
 }

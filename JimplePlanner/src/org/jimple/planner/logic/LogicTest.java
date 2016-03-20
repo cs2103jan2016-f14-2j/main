@@ -37,9 +37,13 @@ public class LogicTest {
 		Task events1 = new Task("a test only three");
 		Task events2 = new Task("a test four");
 		todo1.setType("floating");
+		todo1.setTaskId(1);
 		deadlines1.setType("deadline");
+		deadlines1.setTaskId(2);
 		events1.setType("event");
+		events1.setTaskId(3);
 		events2.setType("event");
+		events2.setTaskId(4);
 		floating.add(todo1);
 		deadlines.add(deadlines1);
 		events.add(events1);
@@ -81,12 +85,19 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnFeedbackAfterDeleteFromArray() throws IOException	{
-		String[] variableArray = {"2"};
+	public void ShouldReturnTrueAfterDeleteFromArray() throws IOException	{
+		String[] variableArray = {"1"};
 		initializeThreeArrays();
-		assertEquals("delete string", "task deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks));
+		assertTrue("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, deletedTasks));
 		variableArray[0] = "4";
-		assertEquals("delete string", "could not find task to be deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks));
+		assertFalse("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, deletedTasks));
+	}
+	
+	@Test
+	public void ShouldReturnTrueAfterEditting()	throws IOException{
+		String[] variableArray = {"1", "task one", null, null, "2016-03-12T14:00", null};
+		initializeThreeArrays();
+		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, deadlines, events));
 	}
 	
 	@Test
@@ -94,7 +105,7 @@ public class LogicTest {
 		String[] variableArray = {"0", "task one", null, null, "2016-03-02T05:00", null};
 		initializeThreeArrays();
 		//assertEquals("return same string", "task edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
-		variableArray[0] = "4";
+		variableArray[0] = "10";
 		assertEquals("return same string", "task could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 	}
 	
@@ -105,33 +116,32 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnTrueAfterEditting()	throws IOException{
-		String[] variableArray = {"1", "task one", null, null, "2016-03-12T14:00", null};
-		ArrayList<Task> testArray = new ArrayList<Task>();
-		Task event1 = new Task("first");
-		Task event2 = new Task("second");
-		Task event3 = new Task("third");
-		testArray.add(event1);
-		testArray.add(event2);
-		testArray.add(event3);
-		assertTrue("return true after editting", testEditer.testFindTaskToEdit(testArray, variableArray, 0, floating, deadlines, events));
+	public void ShoudReturnListOfTasksFromSearching()	{
+		String wordToBeSearched = "only";
+		ArrayList<Task> list = new ArrayList<Task>();
+		list.add(new Task("stuff and stuff"));
+		list.add(new Task("some stuff only"));
+		list.add(new Task ("only stuff"));
+		
+		ArrayList<Task> searchResults = testSearcher.testgetSearchedTasks(wordToBeSearched, list);
+		assertEquals("some stuff only", searchResults.get(0).getTitle());
+		assertEquals("only stuff", searchResults.get(1).getTitle());
 	}
 	
-	/*@Test
+	@Test
 	public void ShouldReturnArrayListOfTasks() throws IOException	{
 		ArrayList<Task> expected = new ArrayList<Task>();
 		String wordToBeSearched = "only";
-		assertEquals("should be same", expected, testLogic.testSearchWord(wordToBeSearched, floating, deadlines, events));
+		assertEquals("should be same", expected, testSearcher.testSearchWord(wordToBeSearched, floating, deadlines, events));
 		initializeThreeArrays();
 		expected.add(new Task("a test only one"));
 		expected.add(new Task("a test only two"));
 		expected.add(new Task("a test only three"));
-		ArrayList<Task> result = testLogic.testSearchWord(wordToBeSearched, floating, deadlines, events);
+		ArrayList<Task> result = testSearcher.testSearchWord(wordToBeSearched, floating, deadlines, events);
 		assertEquals("should be the same", expected.get(0).getTitle(), result.get(0).getTitle());
 		assertEquals("should be the same", expected.get(1).getTitle(), result.get(1).getTitle());
 		assertEquals("should be the same", expected.get(2).getTitle(), result.get(2).getTitle());
-		assertEquals("should reinsert values and return feedback", "search window closed", testLogic.reInsertNewTasks(result));
-	}*/
+	}
 	
 	@Test
 	public void ShouldReturnTrueIfContainKeyword()	{
@@ -148,9 +158,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-20T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-21T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-20T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-21T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test

@@ -17,18 +17,9 @@ public class LogicSearch implements LogicTaskModification{
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
 		if (todo.isEmpty() && deadlines.isEmpty() && events.isEmpty()) {
 		} else {
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, todo));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, deadlines));
-			searchWordResults.addAll(searchFromOneTaskList(wordToBeSearched, events));
-		}
-		return searchWordResults;
-	}
-	
-	private ArrayList<Task> searchFromOneTaskList(String wordToBeSearched, ArrayList<Task> list) {
-		ArrayList<Task> searchWordResults;
-		searchWordResults = getSearchedTasks(wordToBeSearched, list);
-		if (searchWordResults.isEmpty()) {
-			// searchWordResults.add(SEARCH_WORD_NOT_FOUND_FEEDBACK);
+			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, todo));
+			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, deadlines));
+			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, events));
 		}
 		return searchWordResults;
 	}
@@ -40,7 +31,6 @@ public class LogicSearch implements LogicTaskModification{
 				Task currentTask = list.get(i);
 				if (isContainKeyword(currentTask, wordToBeSearched)) {
 					objectOfTaskInstanceFound.add(list.get(i));
-					i--;
 				}
 			}
 		}
@@ -94,5 +84,8 @@ public class LogicSearch implements LogicTaskModification{
 	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return searchWord(wordToBeSearched, todo, deadlines, events);
 	}
-
+	
+	public ArrayList<Task> testgetSearchedTasks (String wordToBeSearched, ArrayList<Task> list)	{
+		return getSearchedTasks(wordToBeSearched, list);
+	}
 }

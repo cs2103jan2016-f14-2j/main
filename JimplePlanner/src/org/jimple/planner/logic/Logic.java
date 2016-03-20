@@ -62,7 +62,6 @@ public class Logic {
 	LogicSearch searcher = new LogicSearch();
 	LogicDirectory directer = new LogicDirectory();
 	LogicUndo undoer = new LogicUndo();
-	Subject subject = new Subject();
 	Logger logger;
 
 	public Logic() {
