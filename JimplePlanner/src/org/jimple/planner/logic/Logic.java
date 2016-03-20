@@ -10,6 +10,7 @@ import org.jimple.planner.InputStruct;
 import org.jimple.planner.Parser;
 import org.jimple.planner.Storage;
 import org.jimple.planner.Task;
+import org.jimple.planner.observers.Subject;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +26,7 @@ public class Logic {
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
+	private static final String STRING_UNDO = "undo";
 
 	private String ADD_HELP_HEADER = "Add a new task:\n";
 	private String EDIT_HELP_HEADER = "Edit a current task:\n";
@@ -41,14 +43,17 @@ public class Logic {
 
 	private String ERROR_FILE_NOT_FOUND = "could not find file";
 	private String ERROR_CONFLICT_FEEDBACK = "conflict with current events";
-	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "keyword not found in planner";
+	private String ERROR_SEARCH_WORD_NOT_FOUND_FEEDBACK = "searchword not found in planner";
 	private String ERROR_SEARCH_PLANNER_EMPTY_FEEDBACK = "planner is empty";
 	private String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
+	private String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
 	private ArrayList<Task> events;
 	private ArrayList<Task> tempHistory;
+	private ArrayList<Task>	searchResults;
+	private ArrayList<Task>	deletedTasks;
 	Parser parser = new Parser();
 	Storage store = new Storage();
 	LogicAdd adder = new LogicAdd();
@@ -56,17 +61,18 @@ public class Logic {
 	LogicDelete deleter = new LogicDelete();
 	LogicSearch searcher = new LogicSearch();
 	LogicDirectory directer = new LogicDirectory();
+	LogicUndo undoer = new LogicUndo();
+	Subject subject = new Subject();
 	Logger logger;
 
 	public Logic() {
 		tempHistory = new ArrayList<Task>();
+		deletedTasks = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
-			ArrayList<ArrayList<Task>> allTasksList = store.getTasks();
-			todo = allTasksList.get(0);
-			deadlines = allTasksList.get(1);
-			events = allTasksList.get(2);
-			assignTaskIds(allTasksList);
+			todo = store.getTasks().get(0);
+			deadlines = store.getTasks().get(1);
+			events = store.getTasks().get(2);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -87,28 +93,32 @@ public class Logic {
 			InputStruct parsedInput = parser.parseInput(inputString);
 			switch (parsedInput.getCommand()) {
 			case STRING_DELETE:
-				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events, deletedTasks);
 				feedback[1] = STRING_DELETE;
 				break;
 			case STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
 						events);
-				feedback[1] = tempHistory.get(tempHistory.size() - 1).getType();
+				feedback[1] = Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId());
 				break;
 			case STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events);
 				feedback[1] = STRING_EDIT;
 				break;
 			case STRING_SEARCH:
-				feedback[0] = parsedInput.getVariableArray()[0];
+				searchResults = searcher.searchWord(parsedInput.getVariableArray()[0], todo, deadlines, events);
+				feedback[0] = "";
 				feedback[1] = STRING_SEARCH;
 				break;
 			case STRING_CHANGEDIR:
 				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray());
 				feedback[1] = STRING_CHANGEDIR;
 				break;
+			case STRING_UNDO:
+				feedback[0] = undoer.undoPreviousChange(store, deletedTasks, todo, deadlines, events);
+				feedback[1] = STRING_UNDO;
 			default:
-				feedback[0] = ERROR_WRONG_INPUT_FEEDBACK;
+				feedback[0] = ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
 				logger.log(Level.WARNING, "wrong input");
 				break;
@@ -135,7 +145,11 @@ public class Logic {
 		checkOverCurrentTime();
 		return events;
 	}
-
+	
+	public ArrayList<Task> getSearchList()	{
+		return searchResults;
+	}
+	
 	public void setToDoList(ArrayList<Task> toDoState) {
 		todo = toDoState;
 	}
@@ -149,7 +163,12 @@ public class Logic {
 		todo = eventsState;
 		checkOverCurrentTime();
 	}
-
+	
+	public void setSearchList(ArrayList<Task> searchState)	{
+		searchResults = searchState;
+		checkOverCurrentTime();
+	}
+	
 	private void checkOverCurrentTime() {
 		for (Task aTask : deadlines) {
 			if (aTask.getToTime() != null) {
@@ -203,24 +222,6 @@ public class Logic {
 			return true;
 		}
 		return false;
-	}
-
-	private boolean isContainsValidTime(String formattedDateTime) {
-		if (formattedDateTime.endsWith("T")) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
-		int taskId = 1;
-		for (ArrayList<Task> taskList : allTasksArray) {
-			for (Task task : taskList) {
-				task.setTaskId(taskId);
-				taskId++;
-			}
-		}
 	}
 
 	/**

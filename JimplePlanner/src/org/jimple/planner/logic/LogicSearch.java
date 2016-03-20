@@ -39,7 +39,7 @@ public class LogicSearch implements LogicTaskModification{
 			for (int i = 0; i < list.size(); i++) {
 				Task currentTask = list.get(i);
 				if (isContainKeyword(currentTask, wordToBeSearched)) {
-					objectOfTaskInstanceFound.add(list.remove(i));
+					objectOfTaskInstanceFound.add(list.get(i));
 					i--;
 				}
 			}

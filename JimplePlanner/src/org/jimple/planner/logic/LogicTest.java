@@ -22,6 +22,7 @@ public class LogicTest {
 	ArrayList<Task>	floating = new ArrayList<Task>();
 	ArrayList<Task>	deadlines = new ArrayList<Task>();
 	ArrayList<Task>	events = new ArrayList<Task>();
+	ArrayList<Task> deletedTasks = new ArrayList<Task>();
 	ArrayList<Task>	tempHistory = new ArrayList<Task>();
 	
 	/*@Test
@@ -83,9 +84,9 @@ public class LogicTest {
 	public void ShouldReturnFeedbackAfterDeleteFromArray() throws IOException	{
 		String[] variableArray = {"2"};
 		initializeThreeArrays();
-		assertEquals("delete string", "task deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("delete string", "task deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks));
 		variableArray[0] = "4";
-		assertEquals("delete string", "could not find task to be deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("delete string", "could not find task to be deleted", testDeleter.testDeleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks));
 	}
 	
 	@Test

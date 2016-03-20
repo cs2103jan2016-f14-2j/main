@@ -53,7 +53,18 @@ public interface LogicTaskModification {
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
+		assignTaskIds(allTasksArray);
 		store.isSaved(allTasksArray);
+	}
+	
+	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+		int taskId = 1;
+		for (ArrayList<Task> taskList : allTasksArray) {
+			for (Task task : taskList) {
+				task.setTaskId(taskId);
+				taskId++;
+			}
+		}
 	}
 	
 	public default boolean isFromAndToTimeCorrect(Task task) {
