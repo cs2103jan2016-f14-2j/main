@@ -1,4 +1,5 @@
 package org.jimple.planner.logic;
+
 import org.jimple.planner.storage.*;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public interface LogicTaskModification {
 	final String TYPE_TODO = "floating";
 	final String TYPE_DEADLINE = "deadline";
 	final String TYPE_EVENT = "event";
-	
+
 	public default Task doEdit(String[] variableArray, Task aTask) {
 		Task editedTask = new Task(aTask);
 		for (int i = 0; i < variableArray.length; i++) {
@@ -43,8 +44,9 @@ public interface LogicTaskModification {
 		}
 		return editedTask;
 	}
-	
-	public default void allocateCorrectTimeArray(Task newTask, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+
+	public default void allocateCorrectTimeArray(Task newTask, ArrayList<Task> todo, ArrayList<Task> deadlines,
+			ArrayList<Task> events) throws IOException {
 		// check if null
 		if (newTask.getType().compareTo(TYPE_TODO) == 0) {
 			todo.add(newTask);
@@ -52,12 +54,13 @@ public interface LogicTaskModification {
 		// check if whole day task
 		else if (newTask.getType().compareTo(TYPE_DEADLINE) == 0) {
 			deadlines.add(newTask);
-		} else if (newTask.getType().compareTo(TYPE_EVENT) == 0){
+		} else if (newTask.getType().compareTo(TYPE_EVENT) == 0) {
 			events.add(newTask);
 		}
 	}
-	
-	public default void packageForSavingInFile(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+
+	public default void packageForSavingInFile(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
+			ArrayList<Task> events) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
@@ -65,7 +68,7 @@ public interface LogicTaskModification {
 		assignTaskIds(allTasksArray);
 		store.isSaved(allTasksArray);
 	}
-	
+
 	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
@@ -75,9 +78,11 @@ public interface LogicTaskModification {
 			}
 		}
 	}
-	
+
 	public default boolean isFromAndToTimeCorrect(Task task) {
-		if (task.getFromTime() == null || task.getToTime() == null) {
+		if (task.getFromTime() == null && task.getToTime() == null) {
+			return true;
+		} else if (task.getFromTime() != null && task.getToTime() == null) {
 			return true;
 		} else if (task.getFromTime().compareTo(task.getToTime()) < 0) {
 			return true;

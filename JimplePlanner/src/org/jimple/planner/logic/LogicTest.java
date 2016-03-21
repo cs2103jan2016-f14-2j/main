@@ -100,9 +100,9 @@ public class LogicTest {
 	
 	@Test
 	public void ShouldReturnTrueAfterEditting()	throws IOException{
-		String[] variableArray = {"1", "task one", null, null, "2016-03-12T14:00", null};
+		String[] variableArray = {"1", "task one", null, "2016-03-12T14:00", null, null};
 		initializeThreeArrays();
-		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, deadlines, events));
+		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
 	}
 	
 	@Test
@@ -116,7 +116,7 @@ public class LogicTest {
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String[] parsedInput1 = {"finish 2103 homework", null, null, "2016-03-09T13:00", null};
+		String[] parsedInput1 = {"finish 2103 homework", null, "2016-03-09T13:00", null, null};
 		assertEquals("task is added to file", "task added to planner", testAdder.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events));
 	}
 	

@@ -58,7 +58,6 @@ public class LoadUnit implements StorageLoad{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		assignTaskIds(allTasksLists);
 		return allTasksLists;
 	}
 	

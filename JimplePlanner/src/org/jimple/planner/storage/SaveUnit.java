@@ -42,7 +42,6 @@ public class SaveUnit implements StorageSave{
 	public boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
 		assert allTaskLists.size() == 3;
 		sortBeforeWritngToFile(allTaskLists);
-		assignTaskIds(allTaskLists);
 		writeTasksToFile(allTaskLists, tempFilePath);
 		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
 		return saveStatus;

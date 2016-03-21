@@ -17,12 +17,12 @@ public class LogicEdit implements LogicTaskModification {
 		boolean isToDoEditted = false;
 		boolean isWholeDayEditted = false;
 		boolean isEventsEditted = false;
-		isToDoEditted = findTaskToEdit(variableArray, todo, deadlines, events);
+		isToDoEditted = findTaskToEdit(variableArray, todo, todo, deadlines, events);
 		if (!isToDoEditted) {
-			isWholeDayEditted = findTaskToEdit(variableArray, deadlines, events, todo);
+			isWholeDayEditted = findTaskToEdit(variableArray, deadlines, todo, deadlines, events);
 		}
 		if (!isWholeDayEditted && !isToDoEditted) {
-			isEventsEditted = findTaskToEdit(variableArray, events, todo, deadlines);
+			isEventsEditted = findTaskToEdit(variableArray, events, todo, deadlines, events);
 		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			packageForSavingInFile(store, todo, deadlines, events);
@@ -31,7 +31,8 @@ public class LogicEdit implements LogicTaskModification {
 		return ERROR_EDIT_FEEDBACK;
 	}
 
-	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> listTwo, ArrayList<Task> listThree) throws IOException {
+	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, 
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
 				Task taskToBeEditted = list.remove(i);
@@ -40,7 +41,8 @@ public class LogicEdit implements LogicTaskModification {
 					list.add(taskToBeEditted);
 					return false;
 				}
-				allocateCorrectTimeArray(editedTask, list, listTwo, listThree);
+				editedTask.checkAndSetType();
+				allocateCorrectTimeArray(editedTask, todo, deadlines, events);
 				return true;
 			}
 		}
@@ -55,8 +57,9 @@ public class LogicEdit implements LogicTaskModification {
 		return parsedInput;
 	}
 
-	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
-		return findTaskToEdit(variableArray, todo, deadlines, events);
+	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo, ArrayList<Task> deadlines,
+			ArrayList<Task> events) throws IOException	{
+		return findTaskToEdit(variableArray, list, todo, deadlines, events);
 	}
 
 	public String testEditTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
