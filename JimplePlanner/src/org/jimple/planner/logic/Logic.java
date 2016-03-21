@@ -94,7 +94,7 @@ public class Logic {
 	 * function is for the UI to call when a user inputs a string
 	 *
 	 */
-	public String[] execute(String inputString) throws IOException {
+	public void execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
 		logger.log(Level.INFO, "preparing to start processing");
 		try {
@@ -137,8 +137,7 @@ public class Logic {
 			logger.log(Level.WARNING, "input error", e);
 		}
 		logger.log(Level.INFO, "end of processing");
-		notifyAllObservers();
-		return feedback;
+		notifyAllObservers(feedback);
 	}
 
 	public ArrayList<Task> getToDoList() {
@@ -237,9 +236,9 @@ public class Logic {
 		observers.add(observer);
 	}
 	
-	public void notifyAllObservers()	{
+	public void notifyAllObservers(String[] displayType)	{
 		for (myObserver observer : observers)	{
-			observer.update();
+			observer.update(displayType);
 		}
 	}
 
