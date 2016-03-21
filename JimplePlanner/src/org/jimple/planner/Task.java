@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 
-class Task{
+public class Task{
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
