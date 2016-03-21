@@ -1,4 +1,5 @@
 package org.jimple.planner.observers;
+import org.jimple.planner.logic.*;
 
 public class DeadlinesObserver extends myObserver{
 	

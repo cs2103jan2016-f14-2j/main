@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import org.jimple.planner.Task;
 
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +19,7 @@ import org.jimple.planner.observers.Subject;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class Logic {
+public class Logic extends Subject{
 
 	private static final String STRING_SEARCH = "search";
 	private static final String STRING_ADD = "add";
@@ -136,6 +134,7 @@ public class Logic {
 			logger.log(Level.WARNING, "input error", e);
 		}
 		logger.log(Level.INFO, "end of processing");
+		notifyAllObservers();
 		return feedback;
 	}
 
