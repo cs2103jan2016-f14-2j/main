@@ -59,6 +59,7 @@ public class Logic {
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task>	searchResults;
 	private ArrayList<Task>	deletedTasks;
+	private ArrayList<Task> agenda;
 	private ArrayList<myObserver> observers;
 	Parser parser = new Parser();
 	Storage store = new StorageComponent();
@@ -73,6 +74,7 @@ public class Logic {
 	public Logic() {
 		tempHistory = new ArrayList<Task>();
 		deletedTasks = new ArrayList<Task>();
+		agenda = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		observers = new ArrayList<myObserver>();
 		try {
@@ -158,6 +160,13 @@ public class Logic {
 		return searchResults;
 	}
 	
+	public ArrayList<Task> getAgendaList()	{
+		agenda.addAll(deadlines);
+		agenda.addAll(events);
+		Collections.sort(agenda, Task.getFromDateComparator());
+		return agenda;
+	}
+
 	public void setToDoList(ArrayList<Task> toDoState) {
 		todo = toDoState;
 	}
@@ -272,17 +281,6 @@ public class Logic {
 	/**
 	 * temporary methods to be removed after refactor
 	 */
-	public ArrayList<Task> display(String type) {
-		checkOverCurrentTime();
-		if (type.equals(TYPE_TODO)) {
-			return todo;
-		} else if (type.equals(TYPE_EVENT)) {
-			return events;
-		} else if (type.equals(TYPE_DEADLINE)) {
-			return deadlines;
-		}
-		return null;
-	}
 	
 	public ArrayList<Task> searchWord(String wordToBeSearched)	{
 		return searcher.searchWord(wordToBeSearched, todo, deadlines, events);
