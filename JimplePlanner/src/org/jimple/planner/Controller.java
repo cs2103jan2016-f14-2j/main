@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -46,7 +48,9 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 public class Controller implements Initializable {
+	private static final Logger log= Logger.getLogger( Controller.class.getName() );
 	Logic logic = new Logic();
+	ListViewFormatter listFormatter = new ListViewFormatter();
 	private final BooleanProperty dragModeActiveProperty =
             new SimpleBooleanProperty(this, "dragModeActive", true);
 
@@ -101,7 +105,8 @@ public class Controller implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		assert commandBox != null : "fx:id=\"synopsis\" was not injected: check your FXML file 'IssueTrackingLite.fxml'.";
+		//asserts that FXML files initialises objects
+		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
 		System.out.println("initializing Jimple UI");
 
 		Platform.runLater(new Runnable() {
@@ -111,11 +116,13 @@ public class Controller implements Initializable {
 			}
 		});
 		overlay.setVisible(false);
+		assert !overlay.isVisible();
+//		assert false;
+		log.log(Level.INFO,"initialising event listeners");
 		commandBoxListener();
 		tabPanesListener();
 		loadDisplay();
-		//taskSelectionListener();
-	}
+	 }
 	
 	public void enterTriggered() throws IOException {
 		String inputStr = getInputCommand();
@@ -210,126 +217,21 @@ public class Controller implements Initializable {
 	}
 
 	public void loadEventsList() {
-//		Task staticDate = new Task("Today");
-//		staticDate.setType("static");
-//		taskList.add(staticDate);
-		ArrayList<Task> taskList = new ArrayList<Task>();
-		taskList.addAll(logic.display("event"));
-
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		// data.add();
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setItems(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-
-							if (item.getType().equals("static")) {
-								this.setDisable(true);
-								this.setFocusTraversable(false);
-								VBox vBox = new VBox(t);
-								HBox hBox = new HBox(vBox);
-								hBox.setSpacing(10);
-								setGraphic(hBox);
-							}
-							
-							else {
-								VBox vBox = new VBox(t,
-										new Text(String.format("from: %s %s", item.getPrettyFromDate(),
-												item.getPrettyFromTime())),
-										new Text(String.format("to: %s %s", item.getPrettyToDate(),
-												item.getPrettyToTime())));
-								HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex()
-										+ logic.display("floating").size() + logic.display("deadline").size())), vBox);
-								hBox.setSpacing(10);
-								setGraphic(hBox);
-							}
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
+		listFormatter.formatList(logic.display("event"));
 		eventsContent.getChildren().clear();
-		eventsContent.getChildren().add(listView);
+		eventsContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadDeadlinesList() {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadline"));
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t,
-									new Text(String.format("by: %s %s", item.getPrettyToDate(), item.getPrettyToTime())));
-							HBox hBox = new HBox(
-									new Text(String.format("#%d", super.getIndex() + logic.display("floating").size())),
-									vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
+		listFormatter.formatList(logic.display("deadline"));
 		deadlinesContent.getChildren().clear();
-		deadlinesContent.getChildren().add(listView);
+		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadTodoList() {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("floating"));
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t);
-							HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex())), vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
+		listFormatter.formatList(logic.display("floating"));
 		todoContent.getChildren().clear();
-		todoContent.getChildren().add(listView);
+		todoContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	/*======================================
@@ -398,8 +300,7 @@ public class Controller implements Initializable {
 
 	private void deleteSelectedTask() {
 		try {
-			System.out.println(getCurrentTabName());
-			System.out.println(getCurrentTabItemIndex());
+			log.log(Level.INFO, "attempting to delete selected task");
 			int selectedIndex = getCurrentTabItemIndex();
 			if (selectedIndex == -1)
 				return;
@@ -432,7 +333,7 @@ public class Controller implements Initializable {
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.log(Level.WARNING, "IO exception. delete not successful", e);
 		}
 	}
 	
