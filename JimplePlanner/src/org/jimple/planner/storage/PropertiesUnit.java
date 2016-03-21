@@ -32,6 +32,7 @@ public class PropertiesUnit {
 		if(isFilePathValid(pathName)){
 			if(isKeyChanged(pathName)){
 				setStatus = copyToNewLocation();
+				deleteResidualDirectory();
 			}
 		}
 		saveUnit.saveProperties(storageProperties);
@@ -56,18 +57,22 @@ public class PropertiesUnit {
 		if(previousPath.equals(pathName)){
 			return false;
 		} else if (isValueSame(pathName, previousPath)){ 
-			if(pathName.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
-				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, pathName);
-			} else if(previousPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, previousPath);
-				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
-			}
+			setIfOrigin(pathName, previousPath);
 			return false;
 		} else{
 			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
 			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
 			return true;
+		}
+	}
+
+	private void setIfOrigin(String pathName, String previousPath) {
+		if(pathName.equals(PROPERTIES_SAVEPATH_TO_CWD)){
+			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, pathName);
+		} else if(previousPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
+			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, previousPath);
+			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
 		}
 	}
 
@@ -109,6 +114,16 @@ public class PropertiesUnit {
 			consolidatedTasks.add(consolidatedTasksByType);
 		}
 		return consolidatedTasks;
+	}
+	
+	private void deleteResidualDirectory(){
+		String oldFileDirPath = getOldFileDirectory();
+		if(!oldFileDirPath.equals(PROPERTIES_SAVEPATH_KEY_NAME)){
+			File oldFileDir = new File(oldFileDirPath);
+			if(oldFileDir.isDirectory()){
+				oldFileDir.delete();
+			}
+		}
 	}
 	
 	private String getFileDirectoryFromProperties(String key){

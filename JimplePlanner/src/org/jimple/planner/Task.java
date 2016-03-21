@@ -81,10 +81,10 @@ public class Task{
 	}
 	
 	public void setFromDate(String dateTime) {
-		if (dateTime == null) {
-		} else {
+		if (dateTime != null) {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
+		checkAndSetType();
 	}
 
 	public String getToTimeString() {
@@ -99,10 +99,10 @@ public class Task{
 	}
 	
 	public void setToDate(String dateTime) {
-		if (dateTime == null) {
-		} else {
+		if (dateTime != null) {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
+		checkAndSetType();
 	}
 	
 	public String getType() {
@@ -113,7 +113,7 @@ public class Task{
 		this.type = type;
 	}
 	
-	public void checkAndSetType(){
+	private void checkAndSetType(){
 		if(isTodo()){
 			this.type = TYPE_TODO;
 		} else if(isDeadline()){
