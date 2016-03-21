@@ -65,15 +65,16 @@ public interface LogicTaskModification {
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
-		assignTaskIds(allTasksArray);
+		assignTaskIdsAndTaskType(allTasksArray);
 		store.isSaved(allTasksArray);
 	}
 
-	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+	public static void assignTaskIdsAndTaskType(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
 			for (Task task : taskList) {
 				task.setTaskId(taskId);
+				task.checkAndSetType();
 				taskId++;
 			}
 		}
