@@ -30,7 +30,7 @@ public class Task{
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
-		this.taskId = -100;
+		this.taskId = 1000;
 	}
 	
 	//Copy Constructor

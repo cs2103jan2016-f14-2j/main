@@ -1,4 +1,7 @@
 package org.jimple.planner;
+
+import static org.jimple.planner.Constants.*;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,72 +20,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Properties;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Storage {
-	private static final int ALL_ARRAY_SIZE = 3;
-	
-	private static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
-	private static final String DEFAULT_FILE_NAME = "planner.jim";
-	private static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
-	private static final String TEST_FILE_NAME = "testplanner.jim";
-	private static final String TEST_TEMP_FILE_NAME = "testtempplanner.jim";
-	
-	private static final String PROPERTIES_CONFIG_FILE_NAME = "jimpleConfig.properties";
-	private static final String PROPERTIES_SAVEPATH_KEY_NAME = "savepath";
-	private static final String PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME = "prevsavepath";
-	private static final String PROPERTIES_COMMENT_HEADER = "PATH SETTINGS";
-	private static final String PROPERTIES_SAVEPATH_TO_CWD = "origin";
-	
-	private static final String FILEPATH_DEFAULT = DEFAULT_FILE_DIRECTORY + DEFAULT_FILE_NAME;
-	private static final String FILEPATH_DEFAULT_TEMP = DEFAULT_FILE_DIRECTORY + DEFAULT_TEMP_FILE_NAME;
-	private static final String FILEPATH_TEST = DEFAULT_FILE_DIRECTORY + TEST_FILE_NAME;
-	private static final String FILEPATH_TEST_TEMP = DEFAULT_FILE_DIRECTORY + TEST_TEMP_FILE_NAME;
-	private static final String FILEPATH_CONFIG = DEFAULT_FILE_DIRECTORY+PROPERTIES_CONFIG_FILE_NAME;
-	
-	private static final String TAGS_CATEGORY = ":cat:";
-	private static final String TAGS_DESCRIPTION = ":desc:";
-	private static final String TAGS_FROM_TIME = ":from:";
-	private static final String TAGS_TO_TIME = ":to:";
-	private static final String TAGS_TITLE = ":title:";
-	private static final String TAGS_LINE_FIELD_SEPARATOR = "/";
-	
-	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_TODO = "floating";
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String EMPTY_STRING = "";
-	
 	private static Properties properties = null;
-	private static Logger logger = Logger.getLogger("org.jimple.planner.Storage");;
-	//private static FileHandler fh;
-	
+
 	//Constructor
 	public Storage(){
-		//initialiseFHLogger();
-		logger.log(Level.INFO, "loading properties from file");
 		properties = loadProperties();
-		logger.log(Level.INFO, "properties loading successful");
 	}
-	
-	/*public void initialiseFHLogger(){
-		try {
-			logger = Logger.getLogger("org.jimple.planner.Storage");
-			fh = new FileHandler("C:/Users/vic94/Desktop/New folder/store.log");
-			logger.addHandler(fh);
-	        // This block configure the logger with handler and formatter  
-	        SimpleFormatter formatter = new SimpleFormatter();  
-	        fh.setFormatter(formatter);  
-	        // the following statement is used to log any messages  
-	        logger.info("LOG"); 
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}*/
 	
 	public boolean setPath(String pathName){
 		boolean setStatus = false;
@@ -122,6 +67,12 @@ public class Storage {
 	private ArrayList<ArrayList<Task>> getConsolidatedTasks(String newPath, String oldPath){
 		ArrayList<ArrayList<Task>> oldPathTasks = getTaskSelect(oldPath);
 		ArrayList<ArrayList<Task>> newPathTasks = getTaskSelect(newPath);
+		ArrayList<ArrayList<Task>> consolidatedTasks = removeDuplicateTasks(oldPathTasks, newPathTasks);
+		return consolidatedTasks;
+	}
+
+	private ArrayList<ArrayList<Task>> removeDuplicateTasks(ArrayList<ArrayList<Task>> oldPathTasks,
+			ArrayList<ArrayList<Task>> newPathTasks) {
 		ArrayList<ArrayList<Task>> consolidatedTasks = new ArrayList<ArrayList<Task>>();
 		for(int i = 0; i < ALL_ARRAY_SIZE; i++){
 			ArrayList<Task> newTasksByType = newPathTasks.get(i);
@@ -207,7 +158,6 @@ public class Storage {
 				configFileReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.log(Level.WARNING, "load properties failed", e);
 		}
 		return property;
 	}
@@ -229,13 +179,10 @@ public class Storage {
 		String dirPath = file.getAbsolutePath().replaceAll(file.getName(), EMPTY_STRING);
 		File dir = new File(dirPath);
 		dir.mkdirs();
-		
-		//assert false; //TODO NARKER
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.log(Level.WARNING, "create file fail, give a valid file path", e);
 		}
 		return file;
 	}
@@ -249,7 +196,6 @@ public class Storage {
 			InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
 			reader = new BufferedReader(inputStreamReader);
 		} catch (FileNotFoundException e) {
-			System.out.println("path name "+fileName+" does not exist");
 			e.printStackTrace();
 		}
 		return reader;
@@ -263,9 +209,7 @@ public class Storage {
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
 			writer = new BufferedWriter(outputStreamWriter);
 		} catch (FileNotFoundException e) {
-			System.out.println("path name "+fileName+" does not exist"); //TODO MARKER
 			e.printStackTrace();
-			logger.log(Level.WARNING, "path name does not exist", e);
 		}
 		return writer;
 	}
