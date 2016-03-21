@@ -1,13 +1,17 @@
-package org.jimple.planner;
+package org.jimple.planner.storage;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import org.jimple.planner.Task;
 import org.junit.Test;
 
 public class StorageTest {
+	SaveUnit saveUnit = new SaveUnit();
+	LoadUnit loadUnit = new LoadUnit();
+	
 	private ArrayList<Task> getfloatingStub(){
 		Task floating1 = new Task("Go exercise, you fatty");
 		floating1.setCategory("Keep fit");
@@ -27,18 +31,18 @@ public class StorageTest {
 		Task deadline1 = new Task("Do 2100 assignment");
 		deadline1.setDescription("due very soon");
 		deadline1.setCategory("Homework");
-		deadline1.setToDate("2016-07-29T23:59");
+		deadline1.setFromDate("2016-07-29T23:59");
 		Task deadline2 = new Task("Hand in cs2103 progress report");
 		deadline2.setCategory("Homework");
-		deadline2.setToDate("2016-03-09T23:59");
+		deadline2.setFromDate("2016-03-09T23:59");
 		Task deadline3 = new Task("submit report before countdown party");
-		deadline3.setToDate("2015-12-31T23:59");
+		deadline3.setFromDate("2015-12-31T23:59");
 		Task deadline4 = new Task("deadline for GER1000 quiz");
-		deadline4.setToDate("2016-03-06T23:59");
+		deadline4.setFromDate("2016-03-06T23:59");
 		Task deadline5 = new Task("register for Orbital");
 		deadline5.setDescription("keep my summer occupied");
 		deadline5.setCategory("Self-learning");
-		deadline5.setToDate("2016-05-15T16:00");
+		deadline5.setFromDate("2016-05-15T16:00");
 		
 		ArrayList<Task> deadline = new ArrayList<Task>();
 		deadline.add(deadline1);
@@ -95,8 +99,7 @@ public class StorageTest {
 	@Test
 	public void testIsSaved() throws IOException {
 		ArrayList<ArrayList<Task>> tasks = getTasksStub();
-		Storage storage = new Storage();
-		boolean saveState = storage.isSavedTest(tasks);
+		boolean saveState = saveUnit.isSavedTest(tasks);
 		assertTrue("this should return true if saved", saveState);
 	}
 	
@@ -105,17 +108,16 @@ public class StorageTest {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		
 		String line1 = "/:title:Go exercise, you fatty//:cat:Keep fit/";
-		String line2 = "/:title:register for Orbital//:desc:keep my summer occupied//:cat:Self-learning//:to:2016-05-15T16:00/";
+		String line2 = "/:title:register for Orbital//:desc:keep my summer occupied//:cat:Self-learning//:from:2016-05-15T16:00/";
 		String line3 = "/:title:Attend seminar//:desc:at SOC//:from:2016-08-11T11:00//:to:2016-08-11T17:00/";
 		String line4 = "/:title:banana king//:desc:tomahawk//:from:2016-08-11T11:00/";
 		String line5 = "/:title:attend wedding//:from:2016-03-15T15:00/";
 		
-		Storage storage = new Storage();
-		tasks.add(storage.testGetTaskFromLine(line1));
-		tasks.add(storage.testGetTaskFromLine(line2));
-		tasks.add(storage.testGetTaskFromLine(line3));
-		tasks.add(storage.testGetTaskFromLine(line4));
-		tasks.add(storage.testGetTaskFromLine(line5));
+		tasks.add(loadUnit.testGetTaskFromLine(line1));
+		tasks.add(loadUnit.testGetTaskFromLine(line2));
+		tasks.add(loadUnit.testGetTaskFromLine(line3));
+		tasks.add(loadUnit.testGetTaskFromLine(line4));
+		tasks.add(loadUnit.testGetTaskFromLine(line5));
 		
 		String title1 = tasks.get(0).getTitle();
 		String desc1 = tasks.get(0).getDescription();
@@ -139,8 +141,8 @@ public class StorageTest {
 		assertEquals("title", "register for Orbital", title2);
 		assertEquals("desc", "keep my summer occupied", desc2);
 		assertEquals("cat", "Self-learning", cat2);
-		assertEquals("from", "", from2);
-		assertEquals("to", "2016-05-15T16:00", to2);
+		assertEquals("from", "2016-05-15T16:00", from2);
+		assertEquals("to", "", to2);
 		assertEquals("type", "deadline", type2);
 			
 		String title3 = tasks.get(2).getTitle();
@@ -167,7 +169,7 @@ public class StorageTest {
 		assertEquals("cat", "", cat4);
 		assertEquals("from", "2016-08-11T11:00", from4);
 		assertEquals("to", "", to4);
-		assertEquals("type", "event", type4);
+		assertEquals("type", "deadline", type4);
 		
 		String title5 = tasks.get(4).getTitle();
 		String desc5 = tasks.get(4).getDescription();
@@ -180,13 +182,12 @@ public class StorageTest {
 		assertEquals("cat", "", cat5);
 		assertEquals("from", "2016-03-15T15:00", from5);
 		assertEquals("to", "", to5);
-		assertEquals("type", "event", type5);
+		assertEquals("type", "deadline", type5);
 	}
 	
 	@Test
 	public void testGetTasks() throws IOException{
-		Storage storage = new Storage();
-		ArrayList<ArrayList<Task>> tasks = storage.getTestTasks();
+		ArrayList<ArrayList<Task>> tasks = loadUnit.getTestTasks();
 		ArrayList<Task> floating = tasks.get(0);
 		ArrayList<Task> deadline = tasks.get(1);
 		ArrayList<Task> event = tasks.get(2);
@@ -212,18 +213,18 @@ public class StorageTest {
 		String[] deadline5Check = {"register for Orbital", "keep my summer occupied", "Self-learning", "2016-05-15T16:00"};
 		String[] deadline1Check = {"Do 2100 assignment", "due very soon", "Homework", "2016-07-29T23:59"};
 		String deadline1Title = deadline.get(0).getTitle();
-		String deadline1ToTime = deadline.get(0).getToTimeString();
+		String deadline1ToTime = deadline.get(0).getFromTimeString();
 		String deadline2Title = deadline.get(1).getTitle();
-		String deadline2ToTime = deadline.get(1).getToTimeString();
+		String deadline2ToTime = deadline.get(1).getFromTimeString();
 		String deadline3Title = deadline.get(2).getTitle();
-		String deadline3ToTime = deadline.get(2).getToTimeString();
+		String deadline3ToTime = deadline.get(2).getFromTimeString();
 		String deadline3Category = deadline.get(2).getCategory();
 		String deadline4Title = deadline.get(3).getTitle();
-		String deadline4ToTime = deadline.get(3).getToTimeString();
+		String deadline4ToTime = deadline.get(3).getFromTimeString();
 		String deadline4Category = deadline.get(3).getCategory();
 		String deadline4Description = deadline.get(3).getDescription();
 		String deadline5Title = deadline.get(4).getTitle();
-		String deadline5ToTime = deadline.get(4).getToTimeString();
+		String deadline5ToTime = deadline.get(4).getFromTimeString();
 		String deadline5Category = deadline.get(4).getCategory();
 		String deadline5Description = deadline.get(4).getDescription();
 
@@ -249,11 +250,11 @@ public class StorageTest {
 		String[] event4Check = {"business workshop", "", "", "2016-06-16T12:00", "2016-06-16T14:00"};
 		String[] event3Check = {"Attend seminar", "at SOC", "", "2016-08-11T11:00", "2016-08-11T17:00"};
 		
-		String[] event1Actual = storage.testExtractTasksToStringArray(event.get(0));
-		String[] event2Actual = storage.testExtractTasksToStringArray(event.get(1));
-		String[] event3Actual = storage.testExtractTasksToStringArray(event.get(2));
-		String[] event4Actual = storage.testExtractTasksToStringArray(event.get(3));
-		String[] event5Actual = storage.testExtractTasksToStringArray(event.get(4));
+		String[] event1Actual = loadUnit.testExtractTasksToStringArray(event.get(0));
+		String[] event2Actual = loadUnit.testExtractTasksToStringArray(event.get(1));
+		String[] event3Actual = loadUnit.testExtractTasksToStringArray(event.get(2));
+		String[] event4Actual = loadUnit.testExtractTasksToStringArray(event.get(3));
+		String[] event5Actual = loadUnit.testExtractTasksToStringArray(event.get(4));
 		for(int i=0; i<5; i++){
 			assertEquals("true if same", event2Check[i], event1Actual[i]);
 		}
