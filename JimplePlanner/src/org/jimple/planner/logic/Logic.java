@@ -1,4 +1,5 @@
 package org.jimple.planner.logic;
+
 import org.jimple.planner.storage.*;
 
 import java.io.IOException;
@@ -56,10 +57,11 @@ public class Logic {
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
 	private ArrayList<Task> events;
-	private ArrayList<Task> tempHistory;
-	private ArrayList<Task>	searchResults;
-	private ArrayList<Task>	deletedTasks;
 	private ArrayList<Task> agenda;
+	private ArrayList<Task> tempHistory;
+	private ArrayList<Task> searchResults;
+	private ArrayList<Task> deletedTasks;
+	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	Parser parser = new Parser();
 	Storage store = new StorageComponent();
@@ -75,6 +77,7 @@ public class Logic {
 		tempHistory = new ArrayList<Task>();
 		deletedTasks = new ArrayList<Task>();
 		agenda = new ArrayList<Task>();
+		pastUserInputs = new ArrayList<String>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		observers = new ArrayList<myObserver>();
 		try {
@@ -98,18 +101,20 @@ public class Logic {
 	 */
 	public void execute(String inputString) throws IOException {
 		String[] feedback = new String[2];
+		pastUserInputs.add(inputString);
 		logger.log(Level.INFO, "preparing to start processing");
 		try {
 			InputStruct parsedInput = parser.parseInput(inputString);
 			switch (parsedInput.getCommand()) {
 			case STRING_DELETE:
-				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events, deletedTasks);
+				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
+						deletedTasks);
 				feedback[1] = STRING_DELETE;
 				break;
 			case STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
 						events);
-				feedback[1] = Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId()) + tempHistory.get(tempHistory.size() - 1).getType();
+				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events);
@@ -155,37 +160,30 @@ public class Logic {
 		checkOverCurrentTime();
 		return events;
 	}
-	
-	public ArrayList<Task> getSearchList()	{
+
+	public ArrayList<Task> getSearchList() {
 		return searchResults;
 	}
-	
-	public ArrayList<Task> getAgendaList()	{
+
+	public ArrayList<Task> getAgendaList() {
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
 		Collections.sort(agenda, Task.getFromDateComparator());
 		return agenda;
 	}
 
-	public void setToDoList(ArrayList<Task> toDoState) {
-		todo = toDoState;
+	public ArrayList<String> getPastInputs() {
+		if (!pastUserInputs.isEmpty()) {
+			return pastUserInputs;
+		}
+		return null;
 	}
 
-	public void setDeadlinesList(ArrayList<Task> deadlinesState) {
-		deadlines = deadlinesState;
-		checkOverCurrentTime();
-	}
-
-	public void setEventsList(ArrayList<Task> eventsState) {
-		todo = eventsState;
-		checkOverCurrentTime();
-	}
-	
-	public void setSearchList(ArrayList<Task> searchState)	{
+	public void setSearchList(ArrayList<Task> searchState) {
 		searchResults = searchState;
 		checkOverCurrentTime();
 	}
-	
+
 	private void checkOverCurrentTime() {
 		for (Task aTask : deadlines) {
 			if (aTask.getToTime() != null) {
@@ -240,13 +238,22 @@ public class Logic {
 		}
 		return false;
 	}
-	
-	public void attach(myObserver observer)	{
+
+	private String getTaskTypeAndTaskID() {
+		if (!tempHistory.isEmpty()) {
+			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId())
+					+ tempHistory.get(tempHistory.size() - 1).getType();
+		} else {
+			return "";
+		}
+	}
+
+	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
-	
-	public void notifyAllObservers(String[] displayType)	{
-		for (myObserver observer : observers)	{
+
+	public void notifyAllObservers(String[] displayType) {
+		for (myObserver observer : observers) {
 			observer.update(displayType);
 		}
 	}
@@ -277,12 +284,12 @@ public class Logic {
 	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
-	
+
 	/**
 	 * temporary methods to be removed after refactor
 	 */
-	
-	public ArrayList<Task> searchWord(String wordToBeSearched)	{
+
+	public ArrayList<Task> searchWord(String wordToBeSearched) {
 		return searcher.searchWord(wordToBeSearched, todo, deadlines, events);
 	}
 }

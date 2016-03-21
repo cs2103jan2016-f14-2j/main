@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class ListViewFormatter {
+	private static final String TYPE_AGENDA = "agenda";
 	private static final String TYPE_FLOATING = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String TYPE_EVENT = "event";
@@ -27,11 +28,7 @@ public class ListViewFormatter {
 		formattedList = new ArrayList<Task>();
 	}
 
-	public ListViewFormatter(ArrayList<Task> newList) {
-		formatList(newList);
-	}
-
-	public void formatList(ArrayList<Task> newList) {
+	public void formatList(ArrayList<Task> newList, String listType) {
 		this.arrList = newList;
 		formattedList.clear();
 
@@ -39,7 +36,14 @@ public class ListViewFormatter {
 			formatEmptyList();
 			return;
 		}
-		switch (arrList.get(0).getType()) {
+		formatType(listType);
+	}
+
+	public void formatType(String listType) {
+		switch (listType) {
+		case TYPE_AGENDA:
+			formatAgendaList();
+			break;
 		case TYPE_DEADLINE:
 			formatDeadlinesList();
 			break;
@@ -52,12 +56,7 @@ public class ListViewFormatter {
 		default: //AGENDA LIST
 			formatEmptyList();
 			break;
-		}
-	}
-
-
-	public void formatList(ArrayList<Task> deadline, ArrayList<Task> event) {
-		formatAgendaList(deadline,event);
+		}		
 	}
 
 
@@ -79,15 +78,7 @@ public class ListViewFormatter {
 		return task;
 	}
 
-	private void formatAgendaList(ArrayList<Task> deadline, ArrayList<Task> event) {
-//		deadline.iterator().next();
-		Iterator<Task> deadlineIt = deadline.iterator();
-		Iterator<Task> eventIt = event.iterator();
-		
-//		deadline.get(0).getFromTime().toLocalDate().compareTo(arg0)
-	}
-	
-	private void formatDeadlinesList() {
+	private void addTasksToFormattedDateList() {
 		String dateCounter = "";
 
 		for (Task task : arrList) {
@@ -100,38 +91,87 @@ public class ListViewFormatter {
 		}
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
-		deadlinesCellFormat();
+	}
+	
+	private void addTasksToFormattedList() {
+		for (Task task : arrList) {
+			formattedList.add(task);
+		}		
+		data = FXCollections.observableArrayList(formattedList);
+		listView = new ListView<Task>(data);
 	}
 	
 	private void formatEmptyList() {
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
 	}
+	
+	private void formatAgendaList() {
+		addTasksToFormattedDateList();
+		agendaCellFormat();
+	}
+
+	private void formatDeadlinesList() {
+		addTasksToFormattedDateList();
+		deadlinesCellFormat();
+	}
 
 	private void formatEventsList() {
-		String dateCounter = "";
-
-		for (Task task : arrList) {
-			if (!dateCounter.equals(task.getPrettyFromDate())) {
-				dateCounter = task.getPrettyFromDate();
-				formattedList.add(staticTask(dateCounter));
-			}
-
-			formattedList.add(task);
-		}
-		data = FXCollections.observableArrayList(formattedList);
-		listView = new ListView<Task>(data);
+		addTasksToFormattedDateList();
 		eventsCellFormat();
 	}
 	
 	private void formatTodoList() {
-		for (Task task : arrList) {
-			formattedList.add(task);
-		}
-		
-		data = FXCollections.observableArrayList(formattedList);
-		listView = new ListView<Task>(data);
+		addTasksToFormattedList();
 		todoCellFormat();
+	}
+	
+	private void agendaCellFormat() {
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
+
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							VBox vBox = new VBox();
+							HBox hBox = new HBox();
+							if (item.getType().equals("static")) {
+//								this.setDisabled(true);
+								this.setFocusTraversable(false);
+								vBox = new VBox(t);
+								hBox = new HBox(vBox);
+								hBox.setSpacing(10);
+								setGraphic(hBox);
+							}
+							else if (item.getType() == TYPE_DEADLINE) {
+								t.setId(TYPE_DEADLINE);
+								vBox = new VBox(t);
+								hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox,
+										new Text(String.format("by %s %s", item.getPrettyToDate(),
+												item.getPrettyToTime())));
+							} else {
+								t.setId(TYPE_EVENT);
+								vBox = new VBox(t,
+										new Text(String.format("from: %s %s", item.getPrettyFromDate(),
+												item.getPrettyFromTime())),
+										new Text(String.format("to: %s %s", item.getPrettyToDate(),
+												item.getPrettyToTime())));
+								hBox = new HBox(new Text(String.format("#%d", item.getTaskId())),
+										vBox);
+							}
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
+
+		});
 	}
 
 	private void eventsCellFormat() {
@@ -187,7 +227,6 @@ public class ListViewFormatter {
 							Text t = new Text(item.getTitle());
 							t.setId("fancytext");
 							if (item.getType().equals("static")) {
-//								this.setDisabled(true);
 								this.setFocusTraversable(false);
 								VBox vBox = new VBox(t);
 								HBox hBox = new HBox(vBox);
@@ -242,48 +281,7 @@ public class ListViewFormatter {
 		data = FXCollections.observableArrayList();
 		data.addAll(formattedList);
 		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							VBox vBox = new VBox();
-							HBox hBox = new HBox();
-							if (item.getType() == TYPE_DEADLINE) {
-								t.setId(TYPE_DEADLINE);
-								vBox = new VBox(t);
-								hBox = new HBox(new Text(String.format("#%d", super.getIndex() + arrList.size())), vBox,
-										new Text(String.format("by %s %s", item.getPrettyToDate(),
-												item.getPrettyToTime())));
-							} else {
-								t.setId(TYPE_EVENT);
-								vBox = new VBox(t,
-										new Text(String.format("from: %s %s", item.getPrettyFromDate(),
-												item.getPrettyFromTime())),
-										new Text(String.format("to: %s %s", item.getPrettyToDate(),
-												item.getPrettyToTime())));
-								hBox = new HBox(new Text(String.format("#%d", super.getIndex() + arrList.size())),
-										vBox);
-							}
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		return null;
-	}
-
-	public String getListType() {
-
+		
 		return null;
 	}
 }
