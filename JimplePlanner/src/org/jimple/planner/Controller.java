@@ -171,7 +171,7 @@ public class Controller implements Initializable {
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
+ 
 			@Override
 			public ListCell<Task> call(ListView<Task> arg0) {
 				return new ListCell<Task>() {
