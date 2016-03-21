@@ -53,6 +53,7 @@ public class PropertiesUnit {
 	
 	private boolean isKeyUpdated(String pathName){
 		String previousPath = this.storageProperties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
+		//isValueSame(pathName, previousPath);
 		if(previousPath.equals(pathName)){
 			return false;
 		}
@@ -60,6 +61,15 @@ public class PropertiesUnit {
 		this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
 		return true;
 	}
+
+	/*private boolean isValueSame(String pathName, String previousPath) {
+		if(previousPath.equals(pathName)){
+			return false;
+		} TODO take note of replacement, 
+		File fileDir = new File(pathName);
+		File previousFileDir = new File(previousPath);
+		
+	}*/
 	
 	private boolean copyToNewLocation(){
 		String newDir = getCurrentFileDirectory();

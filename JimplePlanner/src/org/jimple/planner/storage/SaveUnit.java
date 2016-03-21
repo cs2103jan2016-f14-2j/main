@@ -126,12 +126,12 @@ public class SaveUnit implements StorageSave{
 	}
 	
 	private void sortDeadlines(ArrayList<ArrayList<Task>> allTaskLists){
-		Comparator<Task> toDateComparator = Task.getToDateComparator();
-		Collections.sort(allTaskLists.get(1), toDateComparator);
+		Comparator<Task> fromDateComparator = Task.getFromDateTimeComparator();
+		Collections.sort(allTaskLists.get(1), fromDateComparator);
 	}
 	
 	private void sortEvents(ArrayList<ArrayList<Task>> allTaskLists){
-		Comparator<Task> fromDateComparator = Task.getFromDateComparator();
+		Comparator<Task> fromDateComparator = Task.getFromDateTimeComparator();
 		Collections.sort(allTaskLists.get(2), fromDateComparator);
 	}
 	
