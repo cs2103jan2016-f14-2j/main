@@ -1,9 +1,9 @@
 package org.jimple.planner.logic;
+import org.jimple.planner.storage.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.storage.Storage;
 import org.jimple.planner.Task;
 
 public class LogicEdit implements LogicTaskModification {

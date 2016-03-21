@@ -1,9 +1,14 @@
 package org.jimple.planner.logic;
+import org.jimple.planner.storage.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.storage.Storage;
+import org.jimple.planner.Task;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.jimple.planner.Task;
 
 public interface LogicTaskModification {
@@ -61,7 +66,7 @@ public interface LogicTaskModification {
 		store.isSaved(allTasksArray);
 	}
 	
-	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
 			for (Task task : taskList) {

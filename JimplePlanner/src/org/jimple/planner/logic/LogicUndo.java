@@ -3,7 +3,12 @@ package org.jimple.planner.logic;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jimple.planner.Task;
-import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.jimple.planner.Task;
 
 public class LogicUndo implements LogicTaskModification {
 
@@ -24,7 +29,7 @@ public class LogicUndo implements LogicTaskModification {
 	}
 
 	private void checkOverDeletedCacheLimit(ArrayList<Task> deletedTask) {
-		if (deletedTask.size() > DELETE_CACHE_LIMIT) {
+		while (deletedTask.size() > DELETE_CACHE_LIMIT) {
 			deletedTask.remove(0);
 		}
 	}
