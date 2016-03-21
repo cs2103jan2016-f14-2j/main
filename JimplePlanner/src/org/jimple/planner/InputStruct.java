@@ -38,7 +38,7 @@ public class InputStruct {
 		variableArray = new String[inputSize];
 	}
 
-	public String[] getVariableArray() {
+	public String[] getVariableArray(){
 		return variableArray;
 	}
 
@@ -118,5 +118,6 @@ public class InputStruct {
 	public String getAtIndex(int inputIndex) {
 		return variableArray[inputIndex];
 	}
+	
 }
 
