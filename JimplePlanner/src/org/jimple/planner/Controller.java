@@ -265,37 +265,20 @@ public class Controller implements Initializable {
 			int selectedIndex = getCurrentTabItemIndex();
 			if (selectedIndex == -1)
 				return;
-			if(getActiveListView().getSelectionModel().getSelectedItem().getType().equals("static"))
+			if(getSelectedListItem().getType().equals("static"))
 				return;
-			switch (getCurrentTabName()) {
-			case "To-do":
-				logic.execute("delete " + selectedIndex);
-				break;
+			logic.execute("delete " + getSelectedListItem().getTaskId());
 
-			case "Deadlines":
-				logic.execute("delete " + (selectedIndex + logic.display("floating").size()));
-				break;
-
-			case "Events":
-				System.out.println("deleting from events");
-				logic.execute("delete " + (selectedIndex + logic.display("floating").size()
-						+ logic.display("deadline").size()));
-				break;
-
-			case "Agenda":
-				System.out.println("deleting from agenda");
-				logic.execute("delete " + (selectedIndex + logic.display("floating").size()));
-				break;
-
-			default:
-				break;
-			}
 			loadDisplay();
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			log.log(Level.WARNING, "IO exception. delete not successful", e);
 		}
+	}
+
+	private Task getSelectedListItem() {
+		return getActiveListView().getSelectionModel().getSelectedItem();
 	}
 	
 	private void addAndReload(Tab tab) {

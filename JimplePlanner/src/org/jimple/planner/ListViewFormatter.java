@@ -137,8 +137,7 @@ public class ListViewFormatter {
 								t.setId("fancytext");
 
 								if (item.getType().equals("static")) {
-									// this.setDisable(true);
-									this.setDisabled(true);
+//									this.setDisabled(true);
 									this.setFocusTraversable(false);
 									VBox vBox = new VBox(t);
 									HBox hBox = new HBox(vBox);
@@ -178,7 +177,7 @@ public class ListViewFormatter {
 							Text t = new Text(item.getTitle());
 							t.setId("fancytext");
 							if (item.getType().equals("static")) {
-								this.setDisabled(true);
+//								this.setDisabled(true);
 								this.setFocusTraversable(false);
 								VBox vBox = new VBox(t);
 								HBox hBox = new HBox(vBox);
