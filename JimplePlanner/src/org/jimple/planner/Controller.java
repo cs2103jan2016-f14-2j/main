@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jimple.planner.logic.Logic;
+import org.jimple.planner.observers.myObserver;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -49,7 +50,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-public class Controller implements Initializable {
+public class Controller extends myObserver implements Initializable {
 	private static final Logger log= Logger.getLogger( Controller.class.getName() );
 	Logic logic = new Logic();
 	ListViewFormatter listFormatter = new ListViewFormatter();
@@ -110,6 +111,7 @@ public class Controller implements Initializable {
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
 		System.out.println("initializing Jimple UI");
+		logic.attach(this);
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -123,7 +125,8 @@ public class Controller implements Initializable {
 		log.log(Level.INFO,"initialising event listeners");
 		commandBoxListener();
 		tabPanesListener();
-		loadDisplay();
+//		loadDisplay();
+		update();
 	 }
 	
 	public void enterTriggered() throws IOException {
@@ -137,24 +140,7 @@ public class Controller implements Initializable {
 
 			String displayType = feedback[1];
 
-			switch (displayType) {
-			case "event":
-				addAndReload(eventsTab);
-				break;
-			case "deadline":
-				addAndReload(deadlinesTab);
-				break;
-			case "floating":
-				addAndReload(todoTab);
-				break;
-			case "search":
-//				showSearch(feedback[0]);
-				searchPrompt(feedback[0]);
-				break;
-			default:
-				loadDisplay();
-				break;
-			}
+			
 		}
 	}
 
@@ -170,7 +156,7 @@ public class Controller implements Initializable {
 		loadDeadlinesList();
 		loadTodoList();
 	}
-
+	
 	public void loadAgendaList() {
 		listFormatter.formatList(new ArrayList<Task>());
 		agendaContent.getChildren().clear();
@@ -178,19 +164,19 @@ public class Controller implements Initializable {
 	}
 
 	public void loadEventsList() {
-		listFormatter.formatList(logic.display("event"));
+		listFormatter.formatList(logic.getEventsList());
 		eventsContent.getChildren().clear();
 		eventsContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadDeadlinesList() {
-		listFormatter.formatList(logic.display("deadline"));
+		listFormatter.formatList(logic.getDeadlinesList());
 		deadlinesContent.getChildren().clear();
 		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadTodoList() {
-		listFormatter.formatList(logic.display("floating"));
+		listFormatter.formatList(logic.getToDoList());
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listFormatter.getFormattedList());
 	}
@@ -272,7 +258,6 @@ public class Controller implements Initializable {
 			loadDisplay();
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			log.log(Level.WARNING, "IO exception. delete not successful", e);
 		}
 	}
@@ -629,5 +614,33 @@ public class Controller implements Initializable {
                 });
                 
         return wrapGroup;
-    }	
+    }
+	
+	@Override
+	public void update() {
+		loadDisplay();
+	}	
+
+	@Override
+	public void update(String[] displayType) {
+		switch (displayType[1]) {
+		case "event":
+			addAndReload(eventsTab);
+			break;
+		case "deadline":
+			addAndReload(deadlinesTab);
+			break;
+		case "floating":
+			addAndReload(todoTab);
+			break;
+		case "search":
+//			showSearch(feedback[0]);
+//			searchPrompt(feedback[0]);
+			break;
+		default:
+			loadDisplay();
+			break;
+		}
+	}
+
 }
