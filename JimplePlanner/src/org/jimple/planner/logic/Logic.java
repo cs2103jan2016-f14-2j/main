@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jimple.planner.Task;
-
+import org.jimple.planner.observers.myObserver;
 
 import java.time.LocalDateTime;
 import java.util.logging.Level;
@@ -14,14 +14,13 @@ import java.util.logging.Logger;
 import org.jimple.planner.InputStruct;
 import org.jimple.planner.Parser;
 import org.jimple.planner.Task;
-import org.jimple.planner.observers.Subject;
 import org.jimple.planner.storage.Storage;
 import org.jimple.planner.storage.StorageComponent;
 
 import java.util.Collections;
 import java.util.Comparator;
 
-public class Logic extends Subject{
+public class Logic {
 
 	private static final String STRING_SEARCH = "search";
 	private static final String STRING_ADD = "add";
@@ -60,6 +59,7 @@ public class Logic extends Subject{
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task>	searchResults;
 	private ArrayList<Task>	deletedTasks;
+	private ArrayList<myObserver> observers;
 	Parser parser = new Parser();
 	Storage store = new StorageComponent();
 	LogicAdd adder = new LogicAdd();
@@ -74,6 +74,7 @@ public class Logic extends Subject{
 		tempHistory = new ArrayList<Task>();
 		deletedTasks = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		observers = new ArrayList<myObserver>();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			LogicTaskModification.assignTaskIds(allTasks);
@@ -230,6 +231,16 @@ public class Logic extends Subject{
 			return true;
 		}
 		return false;
+	}
+	
+	public void attach(myObserver observer)	{
+		observers.add(observer);
+	}
+	
+	public void notifyAllObservers()	{
+		for (myObserver observer : observers)	{
+			observer.update();
+		}
 	}
 
 	/**
