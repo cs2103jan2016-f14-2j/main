@@ -7,6 +7,11 @@ package org.jimple.planner;
 
 import java.util.HashMap;
 
+import exceptions.DuplicateDateTimeFieldException;
+import exceptions.InvalidCommandException;
+import exceptions.InvalidDateTimeFieldException;
+import exceptions.MissingDateTimeFieldException;
+
 public class Parser {
 
 	/* ----------------------------|
@@ -67,24 +72,39 @@ public class Parser {
 	 * The main method that other components use. Returns an InputStruct
 	 * containing the variables of the user input.
 	 */
-	public InputStruct parseInput(String userInput) {
+	public InputStruct parseInput(String userInput) throws Exception {
+		assert(userInput != null);
+		assert(userInput.trim() != "");
 		String[] splitUserInput = userInput.split(" ");
-		switch (getCommandString(splitUserInput)) {
-		case "add":
-			return getStruct(splitUserInput, extendedCommandsAdd);
-		case "edit":
-			return getStruct(splitUserInput, extendedCommandsEdit);
-		default:
-			return getStruct(splitUserInput, noExtendedCommands);
+		String commandString = getCommandString(splitUserInput);
+		try {
+			switch (commandString) {
+				case "add" :
+					return getStruct(splitUserInput, extendedCommandsAdd);
+				case "edit" :
+					return getStruct(splitUserInput, extendedCommandsEdit);
+				case "delete" :
+				case "search" :
+				case "changedir" :
+					return getStruct(splitUserInput, noExtendedCommands);
+				default :
+					throw new InvalidCommandException("Command: \"" + commandString + "\" not recongnised.");
+			}
+		} catch (InvalidCommandException ice) {
+			throw ice;
+		} catch (DuplicateDateTimeFieldException dfe) {
+			throw dfe;
+		} catch (MissingDateTimeFieldException mfe) {
+			throw mfe;
 		}
 	}
 
 	/*
 	 * Detects and stores the variables in the user input.
 	 */
-	private InputStruct getStruct(String[] userInputStringArray,
-			HashMap<String, Integer> inputExtendedCommandsHashMap) {
-
+	private InputStruct getStruct(String[] userInputStringArray, 
+			HashMap<String, Integer> inputExtendedCommandsHashMap) throws Exception {
+		
 		// Creates the InputStruct to be returned.
 		InputStruct outputStruct = new InputStruct(getCommandString(userInputStringArray));
 
@@ -187,7 +207,7 @@ class InputStruct {
 		variableArray = new String[inputSize];
 	}
 
-	public String[] getVariableArray() {
+	public String[] getVariableArray(){
 		return variableArray;
 	}
 
