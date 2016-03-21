@@ -249,4 +249,23 @@ public class Logic {
 	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
+	
+	/**
+	 * temporary methods to be removed after refactor
+	 */
+	public ArrayList<Task> display(String type) {
+		checkOverCurrentTime();
+		if (type.equals(TYPE_TODO)) {
+			return todo;
+		} else if (type.equals(TYPE_EVENT)) {
+			return events;
+		} else if (type.equals(TYPE_DEADLINE)) {
+			return deadlines;
+		}
+		return null;
+	}
+	
+	public ArrayList<Task> searchWord(String wordToBeSearched)	{
+		return searcher.searchWord(wordToBeSearched, todo, deadlines, events);
+	}
 }
