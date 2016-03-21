@@ -82,7 +82,7 @@ public class Logic {
 		observers = new ArrayList<myObserver>();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
-			LogicTaskModification.assignTaskIdsAndTaskType(allTasks);
+			LogicTaskModification.assignTaskIds(allTasks);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);

@@ -85,6 +85,7 @@ public class Task{
 		} else {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
 		}
+		checkAndSetType();
 	}
 
 	public String getToTimeString() {
@@ -103,6 +104,7 @@ public class Task{
 		} else {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
+		checkAndSetType();
 	}
 	
 	public String getType() {

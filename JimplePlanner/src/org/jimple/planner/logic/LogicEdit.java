@@ -41,7 +41,6 @@ public class LogicEdit implements LogicTaskModification {
 					list.add(taskToBeEditted);
 					return false;
 				}
-				editedTask.checkAndSetType();
 				allocateCorrectTimeArray(editedTask, todo, deadlines, events);
 				return true;
 			}
