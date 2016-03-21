@@ -166,6 +166,10 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getAgendaList() {
+		if (!agenda.isEmpty())	{
+			agenda.removeAll(deadlines);
+			agenda.removeAll(events);
+		} 
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
 		Collections.sort(agenda, Task.getFromDateComparator());
