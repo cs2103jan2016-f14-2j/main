@@ -51,6 +51,11 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 public class Controller extends myObserver implements Initializable {
+	private static final String TYPE_SEARCH = "search";
+	private static final String TYPE_TODO = "floating";
+	private static final String TYPE_DEADLINE = "deadline";
+	private static final String TYPE_EVENT = "event";
+	private static final String TYPE_AGENDA = "agenda";
 	private static final Logger log= Logger.getLogger( Controller.class.getName() );
 	Logic logic = new Logic();
 	ListViewFormatter listFormatter = new ListViewFormatter();
@@ -151,25 +156,25 @@ public class Controller extends myObserver implements Initializable {
 	}
 	
 	public void loadAgendaList() {
-		listFormatter.formatList(new ArrayList<Task>());
+		listFormatter.formatList(logic.getAgendaList(),TYPE_AGENDA);
 		agendaContent.getChildren().clear();
 		agendaContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadEventsList() {
-		listFormatter.formatList(logic.getEventsList());
+		listFormatter.formatList(logic.getEventsList(),TYPE_EVENT);
 		eventsContent.getChildren().clear();
 		eventsContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadDeadlinesList() {
-		listFormatter.formatList(logic.getDeadlinesList());
+		listFormatter.formatList(logic.getDeadlinesList(),TYPE_DEADLINE);
 		deadlinesContent.getChildren().clear();
 		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadTodoList() {
-		listFormatter.formatList(logic.getToDoList());
+		listFormatter.formatList(logic.getToDoList(),TYPE_TODO);
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listFormatter.getFormattedList());
 	}
@@ -182,6 +187,12 @@ public class Controller extends myObserver implements Initializable {
 	private void updateMessagePrompt(String output){
 		messagePrompt.setText(output);
 		fadeOut(5, messagePrompt);
+	}
+	
+	private void selectTaskAtIndex(int index){
+		for(int i=0; i<getActiveListView().getItems().size(); i++)
+			if(getActiveListView().getItems().get(i).getTaskId() == index)
+				selectIndex(i);
 	}
 	
 	
@@ -252,8 +263,6 @@ public class Controller extends myObserver implements Initializable {
 			if(getSelectedListItem().getType().equals("static"))
 				return;
 			logic.execute("delete " + getSelectedListItem().getTaskId());
-
-			loadDisplay();
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
 			log.log(Level.WARNING, "IO exception. delete not successful", e);
@@ -264,23 +273,10 @@ public class Controller extends myObserver implements Initializable {
 		return getActiveListView().getSelectionModel().getSelectedItem();
 	}
 	
-	private void addAndReload(Tab tab) {
+	private void addAndReload(Tab tab, int index) {
 		loadDisplay();
 		tabPanes.getSelectionModel().select(tab);
-		switch (tab.getText()) {
-		case "Agenda":
-		case "Events":
-		case "Deadlines":
-			// selectIndex(num);
-			// implementation for Brandon: just search for input
-			break;
-		case "To-do":
-			selectLastItem();
-			break;
-		default:
-			break;
-		}
-
+		selectTaskAtIndex(index);
 	}
 
 	private void selectIndex(int num) {
@@ -621,17 +617,21 @@ public class Controller extends myObserver implements Initializable {
 
 	@Override
 	public void update(String[] displayType) {
-		switch (displayType[1]) {
-		case "event":
-			addAndReload(eventsTab);
+		int index = 0;
+		if(displayType[1].matches(".*\\d+.*"))
+		 index = Integer.parseInt(displayType[1].replaceAll("[^\\d.]", ""));
+		String tab = displayType[1].replaceAll("[0-9]","");
+		switch (tab) {
+		case TYPE_EVENT:
+			addAndReload(eventsTab,index);
 			break;
-		case "deadline":
-			addAndReload(deadlinesTab);
+		case TYPE_DEADLINE:
+			addAndReload(deadlinesTab,index);
 			break;
-		case "floating":
-			addAndReload(todoTab);
+		case TYPE_TODO:
+			addAndReload(todoTab,index);
 			break;
-		case "search":
+		case TYPE_SEARCH:
 //			showSearch(feedback[0]);
 //			searchPrompt(feedback[0]);
 			break;
