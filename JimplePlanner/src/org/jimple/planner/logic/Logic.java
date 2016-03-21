@@ -69,9 +69,11 @@ public class Logic {
 		deletedTasks = new ArrayList<Task>();
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
-			todo = store.getTasks().get(0);
-			deadlines = store.getTasks().get(1);
-			events = store.getTasks().get(2);
+			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
+			LogicTaskModification.assignTaskIds(allTasks);
+			todo = allTasks.get(0);
+			deadlines = allTasks.get(1);
+			events = allTasks.get(2);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();

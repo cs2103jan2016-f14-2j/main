@@ -61,7 +61,7 @@ public interface LogicTaskModification {
 		store.isSaved(allTasksArray);
 	}
 	
-	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
 			for (Task task : taskList) {
