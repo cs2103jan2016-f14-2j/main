@@ -5,9 +5,18 @@
 
 package org.jimple.planner;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import exceptions.DuplicateDateTimeFieldException;
+import exceptions.InvalidDateTimeFieldException;
+import exceptions.MissingDateTimeFieldException;
 
 public class TimeParser {
 	
@@ -55,6 +64,9 @@ public class TimeParser {
 	
 	private Calendar c = null;
 	
+	private static Logger LOGGER = Logger.getLogger("TimeParser");
+	FileHandler fh;
+	
 	public TimeParser() {
 		for (int i = 0; i < STRINGS_MONTH.length; i++) {
 			calendarMonths.put(STRINGS_MONTH[i], VALUES_MONTH[i]);
@@ -62,14 +74,23 @@ public class TimeParser {
 		for (int i = 0; i < STRINGS_DAY.length; i++) {
 			calendarDays.put(STRINGS_DAY[i], VALUES_DAY[i]);
 		}
+		try {
+			fh = new FileHandler("C:/Users/user/git/main/JimplePlanner/LogFile.log");
+			LOGGER.addHandler(fh);
+			SimpleFormatter formatter = new SimpleFormatter();
+			fh.setFormatter(formatter);
+		} catch (SecurityException e) {
+			LOGGER.log(Level.WARNING, "No permission to edit or create the log file.", e);
+		} catch (IOException e) {
+			LOGGER.log(Level.WARNING, "Log file cannot be found.", e);
+		}
 	}
 	
 	/* -------------------|
 	 * MAIN PARSER METHOD |
 	 * -------------------|
 	 */
-	public String timeParser(String extendedCommand, String input) {
-		System.out.println(input);
+	public String timeParser(String extendedCommand, String input) throws Exception {
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
 		for (String i: splitInput) {
@@ -80,12 +101,10 @@ public class TimeParser {
 			} else if (parseIfIs4DigitFloatingNumber(i)) {
 			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
 			} else {
-				System.out.println("Date/Time: \"" + i + "\" not recognised.");
-				return null;
+				throw new InvalidDateTimeFieldException("Date/Time: \"" + i + "\" not recognised.");
 			}
 		}
 		if (!formatCalendarIfValid(extendedCommand)) {
-			System.out.println("Invalid time.");
 			return null;
 		}
 		return calendarToStringFormat();
@@ -98,17 +117,15 @@ public class TimeParser {
 			String month = String.format("%02d", parsedDate.getMonth()+1);
 			String hours = String.format("%02d", parsedDate.getHours());
 			String minutes = String.format("%02d", parsedDate.getMinutes());
-			String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours
-			+ ":" + minutes;
+			String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
 			return outputDate;
 		}
 		return null;
 	}
 
-	private boolean formatCalendarIfValid(String extendedCommand) {
+	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
 		initSecondaryAndPresetFields(extendedCommand);
-		//System.out.println(getField("year"));
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
@@ -123,8 +140,7 @@ public class TimeParser {
 		return false;
 	}
 		
-	private boolean initSecondaryAndPresetFields(String extendedCommand) {
-		System.out.println(getField("hour") + getField("minute") + getField("day") + getField("month") + getField("year"));
+	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException{
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
@@ -133,7 +149,6 @@ public class TimeParser {
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
-			System.out.println("A" + getField("year"));
 		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
 			switch (extendedCommand) {
 				case "from" :
@@ -157,7 +172,6 @@ public class TimeParser {
 				c.add(Calendar.YEAR, 1);
 			}
 			setField("year", c.get(Calendar.YEAR));
-			System.out.println("B" + getField("year"));
 		}
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
@@ -191,9 +205,9 @@ public class TimeParser {
 	 * SETTERS, CHECKERS AND GETTERS |
 	 * ------------------------------|
 	 */
-	private boolean setCalendarField(String inputField, int inputValue) {
+	private boolean setCalendarField(String inputField, int inputValue) throws MissingDateTimeFieldException {
 		if (!isFieldSet(inputField)) {
-			System.out.println(inputField + " not set.");
+			throw new MissingDateTimeFieldException(inputField + " not set.");
 		} else {
 			switch (inputField) {
 				case "day" :
@@ -219,9 +233,9 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean setField(String inputField, int inputValue) {
+	private boolean setField(String inputField, int inputValue) throws DuplicateDateTimeFieldException {
 		if (isFieldSet(inputField)) {
-			System.out.println(inputField + " cannot be set to " + inputValue + ". " + inputField + " already set to " + getField(inputField));
+			throw new DuplicateDateTimeFieldException(inputField + " cannot be set to " + inputValue + ". " + inputField + " already set to " + getField(inputField));
 		} else {
 			switch (inputField) {
 				case "day" :
@@ -287,7 +301,7 @@ public class TimeParser {
 	 * PARSERS |
 	 * --------|
 	 */
-	private boolean parseIfIsDay(String input) {
+	private boolean parseIfIsDay(String input) throws DuplicateDateTimeFieldException{
 		if (calendarDays.containsKey(input)) {
 			c = Calendar.getInstance();
 			c.setTimeInMillis(System.currentTimeMillis());
@@ -304,7 +318,7 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean parseIfIsAMPMFormat(String input) {
+	private boolean parseIfIsAMPMFormat(String input) throws DuplicateDateTimeFieldException{
 		if (input.length() > 2) {
 			String last2Characters = input.substring(input.length()-2, input.length()).toLowerCase();
 			String beforeLast2Characters = input.substring(0, input.length()-2);
@@ -329,7 +343,7 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean parseIfIsTodayOrTomorrow(String input) {
+	private boolean parseIfIsTodayOrTomorrow(String input) throws DuplicateDateTimeFieldException{
 		c = Calendar.getInstance();
 		switch (input.toLowerCase()) {
 		case "today" :
@@ -351,7 +365,7 @@ public class TimeParser {
 		return inputNo > 0 && inputNo <= 12;
 	}
 	
-	private boolean parseIfIsMonth(String input) {
+	private boolean parseIfIsMonth(String input) throws DuplicateDateTimeFieldException {
 		if (calendarMonths.containsKey(input)) {
 			setField("month", calendarMonths.get(input));
 			return true;
@@ -359,7 +373,7 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) {
+	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) throws DuplicateDateTimeFieldException {
 		if (isANumber(input) && input.length() <= 2) {
 			setField("day", Integer.parseInt(input));
 			return true;
@@ -367,7 +381,7 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean parseIfIs4DigitFloatingNumber(String input) {
+	private boolean parseIfIs4DigitFloatingNumber(String input) throws DuplicateDateTimeFieldException{
 		if (input.length() == 4 && isANumber(input)) {
 			int inputNumber = Integer.parseInt(input);
 			if (!isValid24HourInput(inputNumber)) {
