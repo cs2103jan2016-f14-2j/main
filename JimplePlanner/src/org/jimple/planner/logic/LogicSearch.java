@@ -1,9 +1,14 @@
 package org.jimple.planner.logic;
+import org.jimple.planner.storage.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.Storage;
+import org.jimple.planner.Task;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.jimple.planner.Task;
 
 public class LogicSearch implements LogicTaskModification{

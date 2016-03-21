@@ -1,4 +1,11 @@
 package org.jimple.planner.logic;
+import org.jimple.planner.storage.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.jimple.planner.Task;
+
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -8,7 +15,6 @@ import java.util.logging.Logger;
 
 import org.jimple.planner.InputStruct;
 import org.jimple.planner.Parser;
-import org.jimple.planner.Storage;
 import org.jimple.planner.Task;
 import org.jimple.planner.observers.Subject;
 
@@ -55,7 +61,7 @@ public class Logic {
 	private ArrayList<Task>	searchResults;
 	private ArrayList<Task>	deletedTasks;
 	Parser parser = new Parser();
-	Storage store = new Storage();
+	Storage store = new StorageComponent();
 	LogicAdd adder = new LogicAdd();
 	LogicEdit editer = new LogicEdit();
 	LogicDelete deleter = new LogicDelete();
