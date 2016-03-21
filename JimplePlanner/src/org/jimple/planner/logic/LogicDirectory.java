@@ -1,6 +1,6 @@
 package org.jimple.planner.logic;
 
-import org.jimple.planner.Storage;
+import org.jimple.planner.storage.Storage;
 
 public class LogicDirectory {
 	private String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";

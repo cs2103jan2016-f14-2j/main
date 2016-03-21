@@ -3,7 +3,7 @@ package org.jimple.planner.logic;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.Storage;
+import org.jimple.planner.storage.Storage;
 import org.jimple.planner.Task;
 
 public class LogicAdd implements LogicTaskModification{

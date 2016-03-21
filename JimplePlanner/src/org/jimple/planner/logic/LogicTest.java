@@ -6,14 +6,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.jimple.planner.Formatter;
-import org.jimple.planner.Storage;
+import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.StorageComponent;
 import org.jimple.planner.Task;
 import org.junit.Test;
 
 public class LogicTest {
 	Formatter testformatter = new Formatter();
 	Logic testLogic = new Logic();
-	Storage testStore = new Storage();
+	Storage testStore = new StorageComponent();
 	LogicAdd testAdder = new LogicAdd();
 	LogicEdit testEditer = new LogicEdit();
 	LogicDelete testDeleter = new LogicDelete();
