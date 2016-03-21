@@ -152,8 +152,8 @@ public class ListViewFormatter {
 								t.setId(TYPE_DEADLINE);
 								vBox = new VBox(t);
 								hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox,
-										new Text(String.format("by %s %s", item.getPrettyToDate(),
-												item.getPrettyToTime())));
+										new Text(String.format("by %s %s", item.getPrettyFromDate(),
+												item.getPrettyFromTime())));
 							} else {
 								t.setId(TYPE_EVENT);
 								vBox = new VBox(t,
