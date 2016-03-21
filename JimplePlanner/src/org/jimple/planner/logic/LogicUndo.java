@@ -29,7 +29,7 @@ public class LogicUndo implements LogicTaskModification {
 	}
 
 	private void checkOverDeletedCacheLimit(ArrayList<Task> deletedTask) {
-		if (deletedTask.size() > DELETE_CACHE_LIMIT) {
+		while (deletedTask.size() > DELETE_CACHE_LIMIT) {
 			deletedTask.remove(0);
 		}
 	}
