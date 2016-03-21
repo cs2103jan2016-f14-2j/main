@@ -30,11 +30,11 @@ public class PropertiesUnit {
 	public boolean setPath(String pathName){
 		boolean setStatus = false;
 		if(isFilePathValid(pathName)){
-			if(isKeyUpdated(pathName)){
-				saveUnit.saveProperties(storageProperties);
+			if(isKeyChanged(pathName)){
 				setStatus = copyToNewLocation();
 			}
 		}
+		saveUnit.saveProperties(storageProperties);
 		return setStatus;
 	}
 	
@@ -51,25 +51,31 @@ public class PropertiesUnit {
         }
     }
 	
-	private boolean isKeyUpdated(String pathName){
+	private boolean isKeyChanged(String pathName){
 		String previousPath = this.storageProperties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
-		//isValueSame(pathName, previousPath);
 		if(previousPath.equals(pathName)){
 			return false;
+		} else if (isValueSame(pathName, previousPath)){ 
+			if(pathName.equals(PROPERTIES_SAVEPATH_TO_CWD)){
+				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, pathName);
+			} else if(previousPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
+				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, previousPath);
+				this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
+			}
+			return false;
+		} else{
+			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
+			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+			return true;
 		}
-		this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
-		this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
-		return true;
 	}
 
-	/*private boolean isValueSame(String pathName, String previousPath) {
-		if(previousPath.equals(pathName)){
-			return false;
-		} TODO take note of replacement, 
-		File fileDir = new File(pathName);
-		File previousFileDir = new File(previousPath);
-		
-	}*/
+	private boolean isValueSame(String pathName, String previousPath) {
+		String previousFileDir = (new File(getFileDirectory(previousPath))).getAbsolutePath();
+		String currentFileDir = (new File(getFileDirectory(pathName))).getAbsolutePath();
+		return (previousFileDir.equals(currentFileDir));
+	}
 	
 	private boolean copyToNewLocation(){
 		String newDir = getCurrentFileDirectory();
@@ -105,22 +111,25 @@ public class PropertiesUnit {
 		return consolidatedTasks;
 	}
 	
-	private String getFileDirectory(String filePath){
-		String fileDir = this.storageProperties.getProperty(filePath);
+	private String getFileDirectoryFromProperties(String key){
+		String fileDir = this.storageProperties.getProperty(key);
+		fileDir = getFileDirectory(fileDir);
+		return fileDir;
+	}
+
+	private String getFileDirectory(String fileDir) {
 		if(fileDir.equals(PROPERTIES_SAVEPATH_TO_CWD)){
 			fileDir = EMPTY_STRING;
 		}
 		return fileDir;
 	}
 	
-	
-	
 	private String getCurrentFileDirectory(){
-		return getFileDirectory(PROPERTIES_SAVEPATH_KEY_NAME);
+		return getFileDirectoryFromProperties(PROPERTIES_SAVEPATH_KEY_NAME);
 	}
 	
 	private String getOldFileDirectory(){
-		return getFileDirectory(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME);
+		return getFileDirectoryFromProperties(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME);
 	}
 	
 	private String getFullFilePath(String fileSaveDir, String fileName) {
