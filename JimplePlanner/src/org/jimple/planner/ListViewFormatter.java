@@ -1,6 +1,7 @@
 package org.jimple.planner;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -54,10 +55,11 @@ public class ListViewFormatter {
 		}
 	}
 
-	private void formatAgendaList() {
-		// TODO Auto-generated method stub
-		
+
+	public void formatList(ArrayList<Task> deadline, ArrayList<Task> event) {
+		formatAgendaList(deadline,event);
 	}
+
 
 	public ListView<Task> getFormattedList() {
 		fitToAnchorPane(listView);
@@ -70,19 +72,27 @@ public class ListViewFormatter {
 		AnchorPane.setRightAnchor(node, 0.0);
 		AnchorPane.setBottomAnchor(node, 0.0);
 	}
-
+	
 	private Task staticTask(String title) {
 		Task task = new Task(title);
 		task.setType("static");
 		return task;
 	}
 
+	private void formatAgendaList(ArrayList<Task> deadline, ArrayList<Task> event) {
+//		deadline.iterator().next();
+		Iterator<Task> deadlineIt = deadline.iterator();
+		Iterator<Task> eventIt = event.iterator();
+		
+//		deadline.get(0).getFromTime().toLocalDate().compareTo(arg0)
+	}
+	
 	private void formatDeadlinesList() {
 		String dateCounter = "";
 
 		for (Task task : arrList) {
-			if (!dateCounter.equals(task.getPrettyToDate())) {
-				dateCounter = task.getPrettyToDate();
+			if (!dateCounter.equals(task.getPrettyFromDate())) {
+				dateCounter = task.getPrettyFromDate();
 				formattedList.add(staticTask(dateCounter));
 			}
 
@@ -187,7 +197,7 @@ public class ListViewFormatter {
 
 							else {
 							VBox vBox = new VBox(t,
-									new Text(String.format("by: %s %s", item.getPrettyToDate(), item.getPrettyToTime())));
+									new Text(String.format("by: %s %s", item.getPrettyFromDate(), item.getPrettyFromTime())));
 							HBox hBox = new HBox(
 									new Text(String.format("#%d", item.getTaskId())),
 									vBox);

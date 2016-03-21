@@ -132,15 +132,8 @@ public class Controller extends myObserver implements Initializable {
 	public void enterTriggered() throws IOException {
 		String inputStr = getInputCommand();
 		if (!isEmpty(inputStr)) {
-			String[] feedback = logic.execute(inputStr);
-			messagePrompt.setText(feedback[0]);
-			fadeOut(5, messagePrompt);
-			
+			logic.execute(inputStr);
 			clearCommandBox();
-
-			String displayType = feedback[1];
-
-			
 		}
 	}
 
@@ -186,6 +179,11 @@ public class Controller extends myObserver implements Initializable {
 	 * TASK LIST DISPLAY CONTROLS:
 	 * 
 	========================================*/
+	private void updateMessagePrompt(String output){
+		messagePrompt.setText(output);
+		fadeOut(5, messagePrompt);
+	}
+	
 	
 	public void showSearch(String searchStr) {
 		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
@@ -641,6 +639,7 @@ public class Controller extends myObserver implements Initializable {
 			loadDisplay();
 			break;
 		}
+		updateMessagePrompt(displayType[0]);
 	}
 
 }
