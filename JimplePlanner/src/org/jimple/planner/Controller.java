@@ -172,50 +172,9 @@ public class Controller implements Initializable {
 	}
 
 	public void loadAgendaList() {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.display("deadline"));
-		taskList.addAll(logic.display("event"));
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
- 
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							VBox vBox = new VBox();
-							HBox hBox = new HBox();
-							if (item.getType() == "deadline") {
-								t.setId("deadline");
-								vBox = new VBox(t);
-								hBox = new HBox(
-										new Text(String.format("#%d",
-												super.getIndex() + logic.display("floating").size())),
-										vBox, new Text(String.format("by %s %s", item.getPrettyToDate(), item.getPrettyToTime())));
-							} else {
-								t.setId("event");
-								vBox = new VBox(t, new Text(String.format("from: %s %s", item.getPrettyFromDate(), item.getPrettyFromTime())),
-										new Text(String.format("to: %s %s", item.getPrettyToDate(), item.getPrettyToTime())));
-								hBox = new HBox(new Text(
-										String.format("#%d", super.getIndex() + logic.display("floating").size())),
-										vBox);
-							}
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
+		listFormatter.formatList(new ArrayList<Task>());
 		agendaContent.getChildren().clear();
-		agendaContent.getChildren().add(listView);
+		agendaContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadEventsList() {

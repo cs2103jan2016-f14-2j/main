@@ -34,6 +34,10 @@ public class ListViewFormatter {
 		this.arrList = newList;
 		formattedList.clear();
 
+		if(arrList.isEmpty()){
+			formatEmptyList();
+			return;
+		}
 		switch (arrList.get(0).getType()) {
 		case TYPE_DEADLINE:
 			formatDeadlinesList();
@@ -44,12 +48,17 @@ public class ListViewFormatter {
 		case TYPE_FLOATING:
 			formatTodoList();
 			break;
-		default:
+		default: //AGENDA LIST
+			formatEmptyList();
 			break;
 		}
 	}
 
-	// temp method (PLS DELETE)
+	private void formatAgendaList() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public ListView<Task> getFormattedList() {
 		fitToAnchorPane(listView);
 		return listView;
@@ -82,6 +91,11 @@ public class ListViewFormatter {
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
 		deadlinesCellFormat();
+	}
+	
+	private void formatEmptyList() {
+		data = FXCollections.observableArrayList(formattedList);
+		listView = new ListView<Task>(data);
 	}
 
 	private void formatEventsList() {
