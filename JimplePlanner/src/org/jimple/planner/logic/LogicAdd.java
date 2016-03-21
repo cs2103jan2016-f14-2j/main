@@ -22,7 +22,6 @@ public class LogicAdd implements LogicTaskModification{
 		if (!isFromAndToTimeCorrect(newTask)) {
 			return ERROR_ADDED_FEEDBACK;
 		}
-		newTask.checkAndSetType();
 		allocateCorrectTimeArray(newTask, todo, deadlines, events);
 		packageForSavingInFile(store, todo, deadlines, events);
 		tempHistory.add(newTask);
