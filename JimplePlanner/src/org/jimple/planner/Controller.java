@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jimple.planner.logic.Logic;
+
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -176,7 +178,7 @@ public class Controller implements Initializable {
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
+ 
 			@Override
 			public ListCell<Task> call(ListView<Task> arg0) {
 				return new ListCell<Task>() {

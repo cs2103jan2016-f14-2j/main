@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 
-class Task{
+public class Task{
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
@@ -19,7 +19,8 @@ class Task{
 	private static final String TYPE_STATIC = "static";
 	private Formatter formatter;
 	
-	// Constructors
+	// Constructor
+	
 	public Task(String aTitle) {
 		this.formatter = new Formatter();
 		this.title = aTitle;
@@ -30,6 +31,18 @@ class Task{
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
 		this.taskId = 1000;
+	}
+	
+	//Copy Constructor
+	public Task (Task taskToBeDuplicated)	{
+		this.formatter = new Formatter();
+		this.title = taskToBeDuplicated.getTitle();
+		this.description = taskToBeDuplicated.getDescription();
+		this.category = taskToBeDuplicated.getCategory();
+		this.fromDateTime = taskToBeDuplicated.getFromTime();
+		this.toDateTime = taskToBeDuplicated.getToTime();
+		this.type = taskToBeDuplicated.getType();
+		this.isOverDue = taskToBeDuplicated.getIsOverDue();
 	}
 	
 	public String getPrettyFromDate()	{

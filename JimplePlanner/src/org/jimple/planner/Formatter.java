@@ -15,6 +15,7 @@ public class Formatter {
 
 	public String formatPrettyDate(LocalDateTime dateTime) {
 		String prettyDate = new String("");
+		assert dateTime != null;
 		prettyDate += dateTime.getDayOfMonth();
 		prettyDate += "/";
 		prettyDate += dateTime.getMonthValue();
