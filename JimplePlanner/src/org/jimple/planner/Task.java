@@ -130,11 +130,11 @@ public class Task{
 	}
 	
 	private boolean isDeadline(){
-		return (getToTime() != null && getFromTime() == null);
+		return (getFromTime() != null && getToTime() == null);
 	}
 	
 	private boolean isEvent(){
-		return (getFromTime() != null);
+		return (getFromTime() != null && getToTime() != null);
 	}
 	
 	public String getTitle() {
@@ -183,7 +183,7 @@ public class Task{
 		return taskId;
 	}
 	
-	public static Comparator<Task> getFromDateComparator(){
+	public static Comparator<Task> getFromDateTimeComparator(){
 		return new Comparator<Task>(){
 			public int compare(Task task1, Task task2){
 				return task1.getFromTime().compareTo(task2.getFromTime());
@@ -191,10 +191,10 @@ public class Task{
 		};
 	}
 	
-	public static Comparator<Task> getToDateComparator(){
+	public static Comparator<Task> getFromDateComparator(){
 		return new Comparator<Task>(){
 			public int compare(Task task1, Task task2){
-				return task1.getToTime().compareTo(task2.getToTime());
+				return task1.getFromTime().toLocalDate().compareTo(task2.getFromTime().toLocalDate());
 			}
 		};
 	}

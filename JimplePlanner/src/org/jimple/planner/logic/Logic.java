@@ -15,6 +15,8 @@ import org.jimple.planner.InputStruct;
 import org.jimple.planner.Parser;
 import org.jimple.planner.Task;
 import org.jimple.planner.observers.Subject;
+import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.StorageComponent;
 
 import java.util.Collections;
 import java.util.Comparator;
