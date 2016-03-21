@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 
-class Task{
+public class Task{
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
@@ -12,13 +12,15 @@ class Task{
 	private String category;
 	private String type;
 	private boolean isOverDue;
+	private int taskId;
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String TYPE_STATIC = "static";
 	private Formatter formatter;
 	
-	// Constructors
+	// Constructor
+	
 	public Task(String aTitle) {
 		this.formatter = new Formatter();
 		this.title = aTitle;
@@ -28,6 +30,19 @@ class Task{
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
+		this.taskId = 1000;
+	}
+	
+	//Copy Constructor
+	public Task (Task taskToBeDuplicated)	{
+		this.formatter = new Formatter();
+		this.title = taskToBeDuplicated.getTitle();
+		this.description = taskToBeDuplicated.getDescription();
+		this.category = taskToBeDuplicated.getCategory();
+		this.fromDateTime = taskToBeDuplicated.getFromTime();
+		this.toDateTime = taskToBeDuplicated.getToTime();
+		this.type = taskToBeDuplicated.getType();
+		this.isOverDue = taskToBeDuplicated.getIsOverDue();
 	}
 	
 	public String getPrettyFromDate()	{
@@ -160,6 +175,14 @@ class Task{
 		this.category = category;
 	}
 	
+	public void setTaskId(int taskId){
+		this.taskId = taskId;
+	}
+	
+	public int getTaskId(){
+		return taskId;
+	}
+	
 	public static Comparator<Task> getFromDateComparator(){
 		return new Comparator<Task>(){
 			public int compare(Task task1, Task task2){
@@ -172,6 +195,24 @@ class Task{
 		return new Comparator<Task>(){
 			public int compare(Task task1, Task task2){
 				return task1.getToTime().compareTo(task2.getToTime());
+			}
+		};
+	}
+	
+	public static Comparator<Task> getTaskIdComparator(){
+		return new Comparator<Task>(){
+			public int compare(Task task1, Task task2){
+				int task1id = task1.getTaskId();
+				int task2id = task2.getTaskId();
+				int result;
+				if(task1id<task2id){
+					result = -1;
+				} else if (task1id==task2id){
+					result = 0;
+				} else {
+					result = 1;
+				}
+				return result;
 			}
 		};
 	}

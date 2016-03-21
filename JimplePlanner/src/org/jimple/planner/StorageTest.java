@@ -101,19 +101,21 @@ public class StorageTest {
 	}
 	
 	@Test
-	public void testGetTaskFromLine() throws IOException{
+	public void testGetTaskFromLine(){
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		
 		String line1 = "/:title:Go exercise, you fatty//:cat:Keep fit/";
 		String line2 = "/:title:register for Orbital//:desc:keep my summer occupied//:cat:Self-learning//:to:2016-05-15T16:00/";
 		String line3 = "/:title:Attend seminar//:desc:at SOC//:from:2016-08-11T11:00//:to:2016-08-11T17:00/";
 		String line4 = "/:title:banana king//:desc:tomahawk//:from:2016-08-11T11:00/";
+		String line5 = "/:title:attend wedding//:from:2016-03-15T15:00/";
 		
 		Storage storage = new Storage();
 		tasks.add(storage.testGetTaskFromLine(line1));
 		tasks.add(storage.testGetTaskFromLine(line2));
 		tasks.add(storage.testGetTaskFromLine(line3));
 		tasks.add(storage.testGetTaskFromLine(line4));
+		tasks.add(storage.testGetTaskFromLine(line5));
 		
 		String title1 = tasks.get(0).getTitle();
 		String desc1 = tasks.get(0).getDescription();
@@ -166,6 +168,19 @@ public class StorageTest {
 		assertEquals("from", "2016-08-11T11:00", from4);
 		assertEquals("to", "", to4);
 		assertEquals("type", "event", type4);
+		
+		String title5 = tasks.get(4).getTitle();
+		String desc5 = tasks.get(4).getDescription();
+		String cat5 = tasks.get(4).getCategory();
+		String from5 = tasks.get(4).getFromTimeString();
+		String to5 = tasks.get(4).getToTimeString();
+		String type5 = tasks.get(4).getType();
+		assertEquals("title", "attend wedding", title5);
+		assertEquals("desc", "", desc5);
+		assertEquals("cat", "", cat5);
+		assertEquals("from", "2016-03-15T15:00", from5);
+		assertEquals("to", "", to5);
+		assertEquals("type", "event", type5);
 	}
 	
 	@Test
