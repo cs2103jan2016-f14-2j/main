@@ -107,7 +107,7 @@ public class Logic {
 			case STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
 						events);
-				feedback[1] = Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId());
+				feedback[1] = Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId()) + tempHistory.get(tempHistory.size() - 1).getType();
 				break;
 			case STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events);
