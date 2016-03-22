@@ -41,10 +41,10 @@ public class Parser {
 	
 	// Stores the indexes for task fields. Used by "add" and "edit".
 	private final int INDEX_NAME = 1;
-	private final int INDEX_DESCRIPTION = 1;
-	private final int INDEX_FROM = 2;
-	private final int INDEX_TO = 3;
-	private final int INDEX_CATEGORY = 4;
+	private final int INDEX_DESCRIPTION = 2;
+	private final int INDEX_FROM = 3;
+	private final int INDEX_TO = 4;
+	private final int INDEX_CATEGORY = 5;
 	
 	
 
@@ -112,6 +112,9 @@ public class Parser {
 		assert(userInput.trim() != "");
 		
 		String[] splitUserInput = userInput.split(" ");
+		if (splitUserInput.length == 1) {
+			throw new InvalidCommandException("Command Invalid. Type \"help\" to see the list of commands.");
+		}
 		String mainCommand = getMainCommandString(splitUserInput);
 		String mainCommandUserInput = getMainCommandUserInputString(splitUserInput);
 		try {
@@ -183,7 +186,11 @@ public class Parser {
 			String currString = splitUserInput[i];
 			if (isExtendedCommand(currString, extendedCommands)) { // Word being read is an extended command.
 				if (currCommand == mainCommand) {
-					currInputStruct.setAtIndex(INDEX_BASE, currInputString);
+					if (currCommand == COMMAND_ADD) {
+						currInputStruct.setAtIndex(INDEX_NAME, currInputString);
+					} else {
+						currInputStruct.setAtIndex(INDEX_BASE, currInputString);
+					}
 				} else {
 					parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
 				}
@@ -194,7 +201,15 @@ public class Parser {
 				currInputString += currString + " ";
 			} 
 		}
-		parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
+		if (currCommand == mainCommand) {
+			if (currCommand == COMMAND_ADD) {
+				currInputStruct.setAtIndex(INDEX_NAME, currInputString);
+			} else {
+				currInputStruct.setAtIndex(INDEX_BASE, currInputString);
+			}
+		} else {
+			parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
+		}
 		return currInputStruct;
 	}
 		

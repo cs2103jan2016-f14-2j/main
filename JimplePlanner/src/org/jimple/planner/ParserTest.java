@@ -19,7 +19,7 @@ public class ParserTest {
 	
 	public static void main(String[] args) throws Exception {
 		testParser = new Parser();
-		InputStruct testOutput = testParser.parseInput("add YAHOR by 16 may");
+		InputStruct testOutput = testParser.parseInput("search 1");
 		String[] testOutputArray = testOutput.getVariableArray();
 		for (int i = 0; i < testOutputArray.length; i++) {
 			System.out.println(testOutputArray[i]);
