@@ -140,8 +140,7 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getSearchList() {
-		// searchResults = searcher.searchWord(wordToBeSearched, todo,
-		// deadlines, events)
+		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events);
 		return searchResults;
 	}
 

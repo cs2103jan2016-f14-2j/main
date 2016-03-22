@@ -106,13 +106,13 @@ public class LogicTest {
 		initializeThreeArrays();
 		//assertEquals("return same string", "task edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 		variableArray[0] = "10";
-		assertEquals("return same string", "task could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task 10 could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 	}
 	
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String[] parsedInput1 = {"finish 2103 homework", null, "2016-03-09T13:00", null, null};
-		assertEquals("task is added to file", "task added to planner", testAdder.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events));
+		String[] parsedInput1 = {"deadlines", "finish 2103 homework", null, "2016-03-09T13:00", null, null};
+		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events));
 	}
 	
 	@Test
@@ -158,9 +158,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-21T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-22T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-21T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-22T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test

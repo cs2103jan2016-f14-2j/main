@@ -8,9 +8,12 @@ import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
 public class LogicSearch implements LogicTaskModification	{
+	protected static String mostRecentlySearchedWord = new String("");
 	
 	protected ArrayList<Task> searchWord(String wordToBeSearched,  ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
+		mostRecentlySearchedWord = wordToBeSearched;
+		
 		if (todo.isEmpty() && deadlines.isEmpty() && events.isEmpty()) {
 		} else {
 			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, todo));
