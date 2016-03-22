@@ -35,6 +35,50 @@ public final class Constants {
 	public static final String TYPE_DEADLINE = "deadline";
 	public static final String EMPTY_STRING = "";
 	
+	/**
+	 * Logic component
+	 */
+	public static final String STRING_SEARCH = "search";
+	public static final String STRING_ADD = "add";
+	public static final String STRING_DELETE = "delete";
+	public static final String STRING_EDIT = "edit";
+	public static final String STRING_CHANGEDIR = "changedir";
+	public static final String STRING_UNDO = "undo";
+	
+	public static final String ADD_HELP_HEADER = "Add a new task:\n";
+	public static final String EDIT_HELP_HEADER = "Edit a current task:\n";
+	public static final String DISPLAY_HELP_HEADER = "Display all tasks:\n";
+	public static final String DELETE_HELP_HEADER = "Delete a task:\n";
+	
+	public static final String ADD_COMMAND_BY = "type \"add\" + <your event> by <time>\n";
+	public static final String ADD_COMMAND_AT = "type \"add\" + <your event> at <time>\n";
+	public static final String ADD_COMMAND_FROMTO = "type \"add\" + <your event> from <time> to <time>\n";
+	public static final String EDIT_COMMAND_ONE_TIMING = "type \"edit\" + <your event> to <time>\n";
+	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"edit\" + <your event> from <time> to <time>\n";
+	public static final String DISPLAY_COMMAND = "type \"display\"";
+	public static final String DELETE_COMMAND = "type \"delete\" <event name>";
+	
+	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
+	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
+	
+	public static final String ERROR_ADDED_FEEDBACK = "task could not be added";
+	public static final String ADDED_FEEDBACK = "task added to planner";
+	
+	public static final String UNDO_FEEDBACK = "task undone";
+	public static final String UNDO_FEEDBACK_ERROR = "no task to undo";
+	public static final int DELETE_CACHE_LIMIT = 20;
+	
+	public static final String EDITED_FEEDBACK = "task edited in planner";
+	public static final String ERROR_EDIT_FEEDBACK = "task could not be editted";
+	
+	public static final String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";
+	public static final String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed";
+	
+	public static final String DELETED_FEEDBACK = "task deleted";
+	public static final String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
+	
+	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
+	
 	private Constants(){
 		throw new AssertionError();
 	}
