@@ -34,6 +34,11 @@
                   </HBox>
                   <TabPane fx:id="tabPanes" prefHeight="525.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                     <tabs>
+                        <Tab fx:id="mainTab" text="Jimple">
+                          <content>
+                            <AnchorPane fx:id="mainContent" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
                       <Tab fx:id="agendaTab" text="Agenda">
                         <content>
                           <AnchorPane fx:id="agendaContent" minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="800.0">

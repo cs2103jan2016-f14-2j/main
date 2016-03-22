@@ -17,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class ListViewFormatter {
+	private static final String TYPE_STATIC = "static";
 	private static final String TYPE_AGENDA = "agenda";
 	private static final String TYPE_FLOATING = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
@@ -77,7 +78,7 @@ public class ListViewFormatter {
 	
 	private Task staticTask(String title) {
 		Task task = new Task(title);
-		task.setType("static");
+		task.setType(TYPE_STATIC);
 		return task;
 	}
 
@@ -141,10 +142,12 @@ public class ListViewFormatter {
 						super.updateItem(item, bln);
 						if (item != null) {
 							Text t = new Text(item.getTitle());
+							Text ID = new Text();
+							Text date = new Text();
 							VBox vBox = new VBox();
 							HBox hBox = new HBox();
-							if (item.getType().equals("static")) {
-//								this.setDisabled(true);
+							if (item.getType().equals(TYPE_STATIC)) {
+								this.setId(TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
@@ -154,17 +157,18 @@ public class ListViewFormatter {
 							else if (item.getType() == TYPE_DEADLINE) {
 								this.setId(TYPE_DEADLINE);
 								vBox = new VBox(t);
-								hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox,
-										new Text(String.format("by %s %s", item.getPrettyFromDate(),
-												item.getPrettyFromTime())));
+								ID.setText(String.format("  %d", item.getTaskId()));
+								date.setText(String.format("%s", item.getPrettyFromTime()));
+								hBox = new HBox(ID, vBox, date);
+								t.setId(TYPE_DEADLINE);
+								ID.setId(TYPE_DEADLINE);
+								date.setId(TYPE_DEADLINE);
 							} else {
-								t.setId(TYPE_EVENT);
+								this.setId(TYPE_EVENT);
 								vBox = new VBox(t,
-										new Text(String.format("from: %s %s", item.getPrettyFromDate(),
-												item.getPrettyFromTime())),
-										new Text(String.format("to: %s %s", item.getPrettyToDate(),
+										new Text(String.format("%s to %s", item.getPrettyFromTime(),
 												item.getPrettyToTime())));
-								hBox = new HBox(new Text(String.format("#%d", item.getTaskId())),
+								hBox = new HBox(new Text(String.format("%d", item.getTaskId())),
 										vBox);
 							}
 							hBox.setSpacing(10);
@@ -189,7 +193,7 @@ public class ListViewFormatter {
 								Text t = new Text(item.getTitle());
 								t.setId("fancytext");
 
-								if (item.getType().equals("static")) {
+								if (item.getType().equals(TYPE_STATIC)) {
 //									this.setDisabled(true);
 									this.setFocusTraversable(false);
 									VBox vBox = new VBox(t);
@@ -229,7 +233,7 @@ public class ListViewFormatter {
 						if (item != null) {
 							Text t = new Text(item.getTitle());
 							t.setId("fancytext");
-							if (item.getType().equals("static")) {
+							if (item.getType().equals(TYPE_STATIC)) {
 								this.setFocusTraversable(false);
 								VBox vBox = new VBox(t);
 								HBox hBox = new HBox(vBox);

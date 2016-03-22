@@ -208,7 +208,6 @@ public class Parser {
 	}
 
 	private void parseMainCommand(InputStruct currInputStruct, String currCommand, String currInputString) {
-		System.out.println(currCommand.equals(COMMAND_ADD));
 		if (currCommand.equals(COMMAND_ADD)) {
 			currInputStruct.setAtIndex(INDEX_NAME, currInputString);
 		} else {

@@ -20,19 +20,33 @@ public class ParserTest {
 	@Test
 	public void test() {
 		testParser = new Parser();
+		test0();
 		test1();
 		test2();
 		test3();
+		test4();
+		test5();
+	}
+	
+	private void test0() {
+		InputStruct testStruct = null;
+		System.out.println("A");
+		try {
+			testStruct = testParser.parseInput("add Learn Double Dream Hands from 3 mar 11am to 3 mar 12pm");
+			String[] test = testStruct.getVariableArray();
+			System.out.println(test.length);
+			for (int i = 0; i < test.length; i++) {
+				System.out.println(test[i]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void test1() {
 		InputStruct testStruct = null;
 		try {
 			testStruct = testParser.parseInput("add Learn Double Dream Hands from 12 may 8am to 13 may 12AM category DOWNDOG");
-			String[] test = testStruct.getVariableArray();
-			for (String i: test) {
-				System.out.println(i);
-			}
 			assertEquals(assertArray(testStruct, "event", "Learn Double Dream Hands", null, "2016-05-12T08:00", "2016-05-13T00:00", "DOWNDOG"), true);
 		} catch (Exception e) {}
 	}
@@ -52,6 +66,22 @@ public class ParserTest {
 		} catch (Exception e) {
 			assertEquals(e.getMessage(), "Command Invalid. Type \"help\" to see the list of commands.");
 		}
+	}
+	
+	private void test4() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("delete 2");
+			assertEquals(assertArray(testStruct, "2"), true);
+		} catch (Exception e) {}
+	}
+	
+	private void test5() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("search submit");
+			assertEquals(assertArray(testStruct, "submit"), true);
+		} catch (Exception e) {}
 	}
 	
 	private boolean assertArray(InputStruct inputStruct, String... args) {

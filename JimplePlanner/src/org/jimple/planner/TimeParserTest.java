@@ -20,7 +20,7 @@ public class TimeParserTest {
 			Calendar t = tp.parseTime(testInput);
 			if (t != null) {
 				System.out.println("Time parsed to:");
-				System.out.println(t.get);
+				System.out.println(t.getTime());
 			}
 		}
 	}
