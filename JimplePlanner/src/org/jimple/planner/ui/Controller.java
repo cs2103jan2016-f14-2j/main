@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.textfield.TextFields;
 import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
@@ -120,7 +121,11 @@ public class Controller extends myObserver implements Initializable {
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
-
+		
+		TextFields.bindAutoCompletion(
+                commandBox,
+                "add ", "edit ", "delete ", "search ");
+		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
