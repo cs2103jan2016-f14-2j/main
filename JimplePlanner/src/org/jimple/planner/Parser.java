@@ -70,6 +70,7 @@ public class Parser {
 	private static final String EXTENDED_COMMAND_CATEGORY = "category";
 	
 	private final int INDEX_MAIN_COMMAND = 0;
+	private final int INDEX_MAIN_COMMAND_USER_INPUT = 1;
 	private final String EMPTY_STRING = "";
 			
 	/* ---------|
@@ -111,19 +112,28 @@ public class Parser {
 		assert(userInput.trim() != "");
 		
 		String[] splitUserInput = userInput.split(" ");
-		String mainCommandString = getMainCommandString(splitUserInput);
+		String mainCommand = getMainCommandString(splitUserInput);
+		String mainCommandUserInput = getMainCommandUserInputString(splitUserInput);
 		try {
-			switch (mainCommandString) {
+			switch (mainCommand) {
 				case COMMAND_ADD :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
 				case COMMAND_EDIT :
-					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
+					if (isNumber(mainCommandUserInput)) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"" + mainCommandUserInput + "\" not valid.");
 				case COMMAND_DELETE :
+					if (isNumber(mainCommandUserInput)) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"" + mainCommandUserInput + "\" not valid.");
 				case COMMAND_SEARCH :
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_CHANGEDIR :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				default :
-					throw new InvalidCommandException("Command: \"" + mainCommandString + "\" not recongnised.");
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" not recongnised.");
 			}
 		} catch (InvalidCommandException ice) {
 			throw ice;
@@ -132,6 +142,24 @@ public class Parser {
 		} catch (MissingDateTimeFieldException mfe) {
 			throw mfe;
 		}
+	}
+	
+	private String getMainCommandUserInputString(String[] splitUserInput) {
+		return splitUserInput[INDEX_MAIN_COMMAND_USER_INPUT];
+	}
+	
+	private boolean isNumber(String input) {
+		if (input == "") {
+			return false;
+		}
+		boolean isNumber = true;
+		for (int i = 0; i < input.length(); i++) {
+			if (!Character.isDigit(input.charAt(i))) {
+				isNumber = false;
+				break;
+			}
+		}
+		return isNumber;
 	}
 
 	/*
@@ -246,14 +274,14 @@ public class Parser {
 		}
 	}
 	
-	public void parseAt(String userInput, InputStruct inputStruct) throws Exception {
+	private void parseAt(String userInput, InputStruct inputStruct) throws Exception {
 		Calendar parsedCalendar = timeParser.parseTime(userInput);
 		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
 		parsedCalendar.add(Calendar.HOUR_OF_DAY, 1);
 		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
 	}
 	
-	public void parseOn(String userInput, InputStruct inputStruct) throws Exception {
+	private void parseOn(String userInput, InputStruct inputStruct) throws Exception {
 		Calendar parsedCalendar = timeParser.parseTime(userInput);
 		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
 		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -262,7 +290,7 @@ public class Parser {
 		System.out.println(inputStruct.getAtIndex(INDEX_FROM) + " " + inputStruct.getAtIndex(INDEX_TO));
 	}
 	
-	public void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
+	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
 		if (!userInput.contains(" to ")) {
 			throw new MissingDateTimeFieldException("\"from\" must be accompanied by \"to\".");
 		} else {
@@ -273,11 +301,11 @@ public class Parser {
 		System.out.println(inputStruct.getAtIndex(INDEX_FROM) + " " + inputStruct.getAtIndex(INDEX_TO));
 	}
 	
-	public void parseBy(String userInput, InputStruct inputStruct) throws Exception {
+	private void parseBy(String userInput, InputStruct inputStruct) throws Exception {
 		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(userInput)));
 	}
 	
-	public void setCategory(String userInput, InputStruct inputStruct) {
+	private void setCategory(String userInput, InputStruct inputStruct) {
 		inputStruct.setAtIndex(INDEX_CATEGORY, userInput);
 	}
 	
@@ -289,20 +317,6 @@ public class Parser {
 		String minutes = String.format("%02d", parsedDate.getMinutes());
 		String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
 		return outputDate;
-	}
-	
-	private boolean isANumber(String input) {
-		if (input == "") {
-			return false;
-		}
-		boolean isNumber = true;
-		for (int i = 0; i < input.length(); i++) {
-			if (!Character.isDigit(input.charAt(i))) {
-				isNumber = false;
-				break;
-			}
-		}
-		return isNumber;
 	}
 	
 	private boolean isExtendedCommand(String input, String[] extendedCommands) {
