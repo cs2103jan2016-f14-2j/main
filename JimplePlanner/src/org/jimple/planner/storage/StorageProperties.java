@@ -7,6 +7,7 @@ import static org.jimple.planner.Constants.FILEPATH_DEFAULT_TEMP;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_KEY_NAME;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
+import static org.jimple.planner.Constants.DEFAULT_FILE_DIRECTORY;
 
 import java.io.File;
 import java.nio.file.InvalidPathException;
@@ -16,15 +17,15 @@ import java.util.HashSet;
 import java.util.Properties;
 import org.jimple.planner.Task;
 
-public class PropertiesUnit {
-	private static SaveUnit saveUnit = null;
-	private static LoadUnit loadUnit = null;
+public class StorageProperties {
+	private static StorageSave storageSave = null;
+	private static StorageLoad storageLoad = null;
 	private Properties storageProperties = null;
 	
-	public PropertiesUnit(){
-		saveUnit = new SaveUnit();
-		loadUnit = new LoadUnit();
-		storageProperties = loadUnit.loadProperties();
+	public StorageProperties(){
+		storageSave = new StorageSave();
+		storageLoad = new StorageLoad();
+		storageProperties = storageLoad.loadProperties();
 	}
 	
 	public boolean setPath(String pathName){
@@ -35,7 +36,7 @@ public class PropertiesUnit {
 				deleteResidualDirectory();
 			}
 		}
-		saveUnit.saveProperties(storageProperties);
+		storageSave.saveProperties(storageProperties);
 		return setStatus;
 	}
 	
@@ -90,14 +91,15 @@ public class PropertiesUnit {
 		String oldPath = getFilePath(oldDir);
 		
 		ArrayList<ArrayList<Task>> consolidatedTasks = getConsolidatedTasks(newPath, oldPath);
-		boolean saveStatus = saveUnit.isSavedSelect(consolidatedTasks, newPath, oldPath);
+		boolean saveStatus = storageSave.isSavedSelect(consolidatedTasks, newPath, oldPath);
 		return saveStatus;
 	}
 
 	private ArrayList<ArrayList<Task>> getConsolidatedTasks(String newPath, String oldPath){
-		ArrayList<ArrayList<Task>> oldPathTasks = loadUnit.getTaskSelect(oldPath);
-		ArrayList<ArrayList<Task>> newPathTasks = loadUnit.getTaskSelect(newPath);
+		ArrayList<ArrayList<Task>> oldPathTasks = storageLoad.getTaskSelect(oldPath);
+		ArrayList<ArrayList<Task>> newPathTasks = storageLoad.getTaskSelect(newPath);
 		ArrayList<ArrayList<Task>> consolidatedTasks = removeDuplicateTasks(oldPathTasks, newPathTasks);
+		storageSave.sortBeforeWritngToFile(consolidatedTasks);
 		return consolidatedTasks;
 	}
 
@@ -117,8 +119,9 @@ public class PropertiesUnit {
 	}
 	
 	private void deleteResidualDirectory(){
-		String oldFileDirPath = getOldFileDirectory();
-		if(!oldFileDirPath.equals(PROPERTIES_SAVEPATH_KEY_NAME)){
+		String oldFileDirPath = this.storageProperties.getProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME);
+		oldFileDirPath = getFullFilePath(oldFileDirPath, DEFAULT_FILE_DIRECTORY);
+		if(!oldFileDirPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
 			File oldFileDir = new File(oldFileDirPath);
 			if(oldFileDir.isDirectory()){
 				oldFileDir.delete();

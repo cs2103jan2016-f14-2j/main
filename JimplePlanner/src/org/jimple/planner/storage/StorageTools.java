@@ -4,8 +4,11 @@ import static org.jimple.planner.Constants.EMPTY_STRING;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
-public interface StorageCreateFile {
+import org.jimple.planner.Task;
+
+public interface StorageTools {
 	default File createFile(String fileName) {
 		File file = new File(fileName);
 		
@@ -20,5 +23,15 @@ public interface StorageCreateFile {
 			e.printStackTrace();
 		}
 		return file;
+	}
+	
+	default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+		int taskId = 1;
+		for (ArrayList<Task> taskList : allTasksArray) {
+			for (Task task : taskList) {
+				task.setTaskId(taskId);
+				taskId++;
+			}
+		}
 	}
 }

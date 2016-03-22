@@ -5,32 +5,32 @@ import java.util.ArrayList;
 import org.jimple.planner.Task;
 
 public class StorageComponent implements Storage{
-	private static SaveUnit saveUnit = null;
-	private static LoadUnit loadUnit = null;
-	private PropertiesUnit propertiesUnit = null;
+	private static StorageSave storageSave = null;
+	private static StorageLoad storageLoad = null;
+	private StorageProperties storageProperties = null;
 	
 	
 	public StorageComponent() {
-		saveUnit = new SaveUnit();
-		loadUnit = new LoadUnit();
-		propertiesUnit = new PropertiesUnit();
+		storageSave = new StorageSave();
+		storageLoad = new StorageLoad();
+		storageProperties = new StorageProperties();
 	}
 	@Override
 	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) {
-		String fileName = propertiesUnit.getCurrentFilePath();
-		String tempFileName = propertiesUnit.getCurrentTempFilePath();
-		return saveUnit.isSavedSelect(allTaskLists, fileName, tempFileName);
+		String fileName = storageProperties.getCurrentFilePath();
+		String tempFileName = storageProperties.getCurrentTempFilePath();
+		return storageSave.isSavedSelect(allTaskLists, fileName, tempFileName);
 	}
 
 	@Override
 	public ArrayList<ArrayList<Task>> getTasks(){
-		String fileName = propertiesUnit.getCurrentFilePath();
-		return loadUnit.getTaskSelect(fileName);
+		String fileName = storageProperties.getCurrentFilePath();
+		return storageLoad.getTaskSelect(fileName);
 	}
 
 	@Override
 	public boolean setPath(String pathName) {
-		return propertiesUnit.setPath(pathName);
+		return storageProperties.setPath(pathName);
 	}
 
 }
