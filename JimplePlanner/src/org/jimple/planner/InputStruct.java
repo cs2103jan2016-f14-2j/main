@@ -59,7 +59,11 @@ public class InputStruct {
 	}
 
 	public String[] getVariableArray(){
-		return variableArray;
+		if (variableArray != null) {
+			return variableArray;
+		} else {
+			throw new NullPointerException("No variable array found.");
+		}
 	}
 
 	/* ------------|

@@ -59,6 +59,8 @@ public class Parser {
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_CHANGEDIR = "changedir";
+	private static final String COMMAND_UNDO = "undo";
+	private static final String COMMAND_HELP = "help";
 	
 	// Extended commands.
 	private static final String EXTENDED_COMMAND_NAME = "name";
@@ -72,6 +74,7 @@ public class Parser {
 	
 	private final int INDEX_COMMAND = 0;
 	private final int INDEX_MAIN_COMMAND_USER_INPUT = 1;
+	private final int OFFSET_CALENDAR_MONTH = 1;
 	private final String EMPTY_STRING = "";
 			
 	/* ---------|
@@ -113,11 +116,7 @@ public class Parser {
 		assert(userInput.trim() != "");
 		
 		String[] splitUserInput = userInput.split(" ");
-		if (splitUserInput.length == 1) {
-			throw new InvalidCommandException("Command Invalid. Type \"help\" to see the list of commands.");
-		}
 		String mainCommand = getCommandString(splitUserInput);
-		String mainCommandUserInput = getMainCommandUserInputString(splitUserInput);
 		try {
 			switch (mainCommand) {
 				case COMMAND_ADD :
@@ -125,19 +124,29 @@ public class Parser {
 					addStruct.checkAndSetTaskType();
 					return addStruct;
 				case COMMAND_EDIT :
-					if (isNumber(mainCommandUserInput)) {
+					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"" + mainCommandUserInput + "\" not valid.");
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
 				case COMMAND_DELETE :
-					if (isNumber(mainCommandUserInput)) {
+					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"" + mainCommandUserInput + "\" not valid.");
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
 				case COMMAND_SEARCH :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_CHANGEDIR :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				case COMMAND_UNDO :
+					if (isCommandOnly(splitUserInput)) {
+						return new InputStruct(COMMAND_UNDO);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
+				case COMMAND_HELP :
+					if (isCommandOnly(splitUserInput)) {
+						return new InputStruct(COMMAND_HELP);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
 				default :
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" not recongnised.");
 			}
@@ -152,6 +161,10 @@ public class Parser {
 	
 	private String getMainCommandUserInputString(String[] splitUserInput) {
 		return splitUserInput[INDEX_MAIN_COMMAND_USER_INPUT];
+	}
+	
+	private boolean isCommandOnly(String[] splitUserInput) {
+		return splitUserInput.length == 1;
 	}
 	
 	private boolean isNumber(String input) {
@@ -328,7 +341,7 @@ public class Parser {
 	private String calendarToStringFormat(Calendar parsedCalendar) {
 		Date parsedDate = parsedCalendar.getTime();
 		String date = String.format("%02d", parsedDate.getDate());
-		String month = String.format("%02d", parsedDate.getMonth()+1);
+		String month = String.format("%02d", parsedDate.getMonth()+	OFFSET_CALENDAR_MONTH);
 		String hours = String.format("%02d", parsedDate.getHours());
 		String minutes = String.format("%02d", parsedDate.getMinutes());
 		String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
@@ -343,7 +356,7 @@ public class Parser {
 		}
 		return false;
 	}
-
+	
 	private String getCommandString(String[] userInputStringArray) {
 		return userInputStringArray[INDEX_COMMAND].toLowerCase();
 	}
