@@ -15,7 +15,7 @@ public class InputStruct {
 	 * ---------------|
 	 * Variables containing the intended size of the variable array for each command.
 	 */
-	private final int ARRAY_SIZE_ADD = 5;
+	private final int ARRAY_SIZE_ADD = 6;
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
@@ -42,9 +42,12 @@ public class InputStruct {
 		return variableArray;
 	}
 
+	/* ------------|
+	 * CONSTRUCTOR |
+	 * ------------|
+	 * */
 	public InputStruct(String inputCommandString) {
 		commandString = inputCommandString;
-
 		// Initializes the size of the variable array according to the commandString.
 		switch (commandString) {
 		case "add" :
@@ -69,11 +72,15 @@ public class InputStruct {
 	/* --------------|
 	 * ADD VARIABLES |
 	 * --------------|
-	 * Index 0: Event Name
-	 * Index 1: Event Description
-	 * Index 2: Event Time (From)
-	 * Index 3: Event Time (To)
-	 * Index 4: Event Category
+	 * Index 0: Task Type
+	 *  - 0: To-do
+	 *  - 1: Deadline
+	 *  - 2: Event
+	 * Index 1: Event Name
+	 * Index 2: Event Description
+	 * Index 3: Event Time (From)
+	 * Index 4: Event Time (To)
+	 * Index 5: Event Category
 	 */
 
 	/* --------------|

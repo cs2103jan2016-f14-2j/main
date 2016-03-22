@@ -1,4 +1,4 @@
-package exceptions;
+package parserExceptions;
 
 @SuppressWarnings("serial")
 public class DuplicateDateTimeFieldException extends Exception {

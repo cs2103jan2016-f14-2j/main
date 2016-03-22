@@ -14,9 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import exceptions.DuplicateDateTimeFieldException;
-import exceptions.InvalidDateTimeFieldException;
-import exceptions.MissingDateTimeFieldException;
+import parserExceptions.DuplicateDateTimeFieldException;
+import parserExceptions.InvalidDateTimeFieldException;
+import parserExceptions.MissingDateTimeFieldException;
 
 public class TimeParser {
 	
@@ -90,7 +90,7 @@ public class TimeParser {
 	 * MAIN PARSER METHOD |
 	 * -------------------|
 	 */
-	public String timeParser(String extendedCommand, String input) throws Exception {
+	public Calendar parseTime(String input) throws Exception {
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
 		for (String i: splitInput) {
@@ -104,28 +104,15 @@ public class TimeParser {
 				throw new InvalidDateTimeFieldException("Date/Time: \"" + i + "\" not recognised.");
 			}
 		}
-		if (!formatCalendarIfValid(extendedCommand)) {
+		if (!formatCalendarIfValid()) {
 			return null;
 		}
-		return calendarToStringFormat();
-	}
-	
-	private String calendarToStringFormat() {
-		if (c != null) {
-			Date parsedDate = c.getTime();
-			String date = String.format("%02d", parsedDate.getDate());
-			String month = String.format("%02d", parsedDate.getMonth()+1);
-			String hours = String.format("%02d", parsedDate.getHours());
-			String minutes = String.format("%02d", parsedDate.getMinutes());
-			String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
-			return outputDate;
-		}
-		return null;
+		return c;
 	}
 
-	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
+	private boolean formatCalendarIfValid() throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
-		initSecondaryAndPresetFields(extendedCommand);
+		initSecondaryAndPresetFields();
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
@@ -140,7 +127,9 @@ public class TimeParser {
 		return false;
 	}
 		
-	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException{
+	private boolean initSecondaryAndPresetFields() throws DuplicateDateTimeFieldException{
+		setField("hour", 0);
+		setField("minute", 0);
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
@@ -149,29 +138,14 @@ public class TimeParser {
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
-		} else if (!isFieldSet("hour") && !isFieldSet("minute") && isFieldSet("day") && isFieldSet("month")) {
-			switch (extendedCommand) {
-				case "from" :
-				case "at" :
-					setField("hour", 00);
-					setField("minute", 00);
-					break;
-				case "on" :
-				case "by" :
-				case "to" :
-					setField("hour", 23);
-					setField("minute", 59);
-					break;
-				default :
-					break;
-			}
 		}
 		if (!isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentDate(day, month)) {
 				c.add(Calendar.YEAR, 1);
+			} else {
+				setField("year", c.get(Calendar.YEAR));
 			}
-			setField("year", c.get(Calendar.YEAR));
 		}
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);

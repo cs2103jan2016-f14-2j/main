@@ -16,8 +16,17 @@
 }
 
 #deadline {	
-    -fx-font: 12px Tahoma ;
-    -fx-fill: red;
+    -fx-font: 24px Tahoma ;
+    -fx-fill: white;
+    
+    -fx-padding: 10px ;
+    -fx-background-color: yellow, -fx-background ;
+    -fx-background-color: yellow;
+    -fx-background-insets: 0px, 2px ;
+}
+
+#deadline:selected {
+	-fx-background-color: orange;
 }
 
 /* 
