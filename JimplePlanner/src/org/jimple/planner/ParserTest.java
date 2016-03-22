@@ -30,11 +30,9 @@ public class ParserTest {
 	
 	private void test0() {
 		InputStruct testStruct = null;
-		System.out.println("A");
 		try {
-			testStruct = testParser.parseInput("add Learn Double Dream Hands from 3 mar 11am to 3 mar 12pm");
+			testStruct = testParser.parseInput("edit 2 time from 12 may 1100 to 12 may 1200");
 			String[] test = testStruct.getVariableArray();
-			System.out.println(test.length);
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
 			}
