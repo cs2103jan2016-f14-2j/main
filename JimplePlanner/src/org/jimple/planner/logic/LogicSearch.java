@@ -4,19 +4,10 @@ import org.jimple.planner.storage.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.jimple.planner.Task;
-
-public class LogicSearch implements LogicTaskModification{
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_TODO = "floating";
-	private String WINDOW_CLOSED_FEEDBACK = "search window closed";
-
+public class LogicSearch implements LogicTaskModification	{
 	
 	protected ArrayList<Task> searchWord(String wordToBeSearched,  ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
@@ -70,16 +61,16 @@ public class LogicSearch implements LogicTaskModification{
 	
 	public String reInsertNewTasks(Storage store, ArrayList<Task> newList, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		for (Task aTask : newList) {
-			if (aTask.getType().equals(TYPE_EVENT)) {
+			if (aTask.getType().equals(Constants.TYPE_EVENT)) {
 				events.add(aTask);
-			} else if (aTask.getType().equals(TYPE_TODO)) {
+			} else if (aTask.getType().equals(Constants.TYPE_TODO)) {
 				todo.add(aTask);
-			} else if (aTask.getType().equals(TYPE_DEADLINE)) {
+			} else if (aTask.getType().equals(Constants.TYPE_DEADLINE)) {
 				deadlines.add(aTask);
 			}
 		}
 		packageForSavingInFile(store, todo, deadlines, events);
-		return WINDOW_CLOSED_FEEDBACK;
+		return Constants.WINDOW_CLOSED_FEEDBACK;
 	}
 
 	public boolean testIsContainKeyword(Task event, String keyword) {

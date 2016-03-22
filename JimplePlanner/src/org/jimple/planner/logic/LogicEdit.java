@@ -1,5 +1,6 @@
 package org.jimple.planner.logic;
 import org.jimple.planner.storage.*;
+import org.jimple.planner.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,10 +8,6 @@ import java.util.ArrayList;
 import org.jimple.planner.Task;
 
 public class LogicEdit implements LogicTaskModification {
-	private static final String EDITED_FEEDBACK = "task edited in planner";
-	private static final String ERROR_EDIT_FEEDBACK = "task could not be editted";
-	private static final String STRING_EDIT = "edit";
-	private static final String STRING_DELETE = "delete";
 
 	protected String editTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events) throws IOException {
@@ -26,9 +23,9 @@ public class LogicEdit implements LogicTaskModification {
 		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			packageForSavingInFile(store, todo, deadlines, events);
-			return EDITED_FEEDBACK;
+			return Constants.EDITED_FEEDBACK;
 		}
-		return ERROR_EDIT_FEEDBACK;
+		return Constants.ERROR_EDIT_FEEDBACK;
 	}
 
 	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, 

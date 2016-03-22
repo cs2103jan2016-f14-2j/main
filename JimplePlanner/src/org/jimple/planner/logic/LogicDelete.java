@@ -4,17 +4,10 @@ import org.jimple.planner.storage.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
 public class LogicDelete extends LogicEdit{
-	private static final String DELETED_FEEDBACK = "task deleted";
-	private static final String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
-	private static final String STRING_DELETE = "delete";
 	
 	protected String deleteTask(Storage store, String[] variableArray, 
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
@@ -33,9 +26,9 @@ public class LogicDelete extends LogicEdit{
 		}
 		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
 			packageForSavingInFile(store, todo, deadlines, events);
-			return DELETED_FEEDBACK;
+			return Constants.DELETED_FEEDBACK;
 		}
-		return ERROR_DELETED_FEEDBACK;
+		return Constants.ERROR_DELETED_FEEDBACK;
 	}
 	
 	private boolean findTaskToDelete(String[] variableArray, ArrayList<Task> list,
