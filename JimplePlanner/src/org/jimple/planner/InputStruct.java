@@ -20,6 +20,26 @@ public class InputStruct {
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
 	private final int ARRAY_SIZE_CHANGEDIR = 1;
+	
+	/* Stores the index for the user input after the main command.
+	 *  - "add": Index of the task name.
+	 *  - "edit": Index of the task ID.
+	 *  - "delete": Index of the task ID.
+	 *  - "search": Index of the query String.
+	 *  - "changedir": Index of the directory path.
+	 */
+	private final int INDEX_BASE = 0;
+	
+	// Stores the indexes for task fields. Used by "add" and "edit".
+	private final int INDEX_NAME = 1;
+	private final int INDEX_DESCRIPTION = 2;
+	private final int INDEX_FROM = 3;
+	private final int INDEX_TO = 4;
+	private final int INDEX_CATEGORY = 5;
+	
+	private final String TASK_TYPE_TODO = "todo";
+	private final String TASK_TYPE_DEADLINE = "deadline";
+	private final String TASK_TYPE_EVENT = "event";
 
 	private String commandString;
 
@@ -68,14 +88,36 @@ public class InputStruct {
 			break;
 		}
 	}
+	
+	public void checkAndSetTaskType() {
+		if (isTodo()) {
+			setAtIndex(INDEX_BASE, TASK_TYPE_TODO);
+		} else if (isDeadline()) {
+			setAtIndex(INDEX_BASE, TASK_TYPE_DEADLINE);
+		} else if (isEvent()) {
+			setAtIndex(INDEX_BASE, TASK_TYPE_EVENT);
+		}
+	}
+	
+	private boolean isTodo() {
+		return variableArray[INDEX_FROM] == null && variableArray[INDEX_TO] == null;
+	}
+	
+	private boolean isDeadline() {
+		return variableArray[INDEX_FROM] != null && variableArray[INDEX_TO] == null;
+	}
+	
+	private boolean isEvent() {
+		return variableArray[INDEX_FROM] != null && variableArray[INDEX_TO] != null;
+	}
 
 	/* --------------|
 	 * ADD VARIABLES |
 	 * --------------|
 	 * Index 0: Task Type
-	 *  - 0: To-do
-	 *  - 1: Deadline
-	 *  - 2: Event
+	 *  - "todo": To-do
+	 *  - "deadline": Deadline
+	 *  - "event": Event
 	 * Index 1: Event Name
 	 * Index 2: Event Description
 	 * Index 3: Event Time (From)
