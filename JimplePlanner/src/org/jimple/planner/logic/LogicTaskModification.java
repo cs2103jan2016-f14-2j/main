@@ -15,7 +15,7 @@ public interface LogicTaskModification {
 			if (variableArray[i] != null) {
 				switch (i) {
 				case 1:
-					editedTask.setTitle(variableArray[1]);
+					editedTask.setTitle(variableArray[i]);
 					break;
 				case 2:
 					editedTask.setDescription(variableArray[i]);

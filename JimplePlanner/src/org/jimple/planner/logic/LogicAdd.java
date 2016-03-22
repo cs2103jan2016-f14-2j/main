@@ -14,12 +14,12 @@ public class LogicAdd implements LogicTaskModification{
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
 		if (!isFromAndToTimeCorrect(newTask)) {
-			return Constants.ERROR_ADDED_FEEDBACK;
+			return  "\"" + parsedInput[1] +  "\"" + Constants.ERROR_ADDED_FEEDBACK;
 		}
 		allocateCorrectTimeArray(newTask, todo, deadlines, events);
 		packageForSavingInFile(store, todo, deadlines, events);
 		tempHistory.add(newTask);
-		return Constants.ADDED_FEEDBACK;
+		return "\"" + parsedInput[1] +  "\"" + Constants.ADDED_FEEDBACK;
 	}
 	
 	public String testAddToTaskList(Storage store, String[] parsedInput, ArrayList<Task> tempHistory, 

@@ -62,20 +62,20 @@ public final class Constants {
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 	
-	public static final String ERROR_ADDED_FEEDBACK = "task could not be added";
-	public static final String ADDED_FEEDBACK = "task added to planner";
+	public static final String ERROR_ADDED_FEEDBACK = " could not be added";
+	public static final String ADDED_FEEDBACK = " added to planner";
 	
-	public static final String UNDO_FEEDBACK = "task undone";
+	public static final String UNDO_FEEDBACK = " undone";
 	public static final String UNDO_FEEDBACK_ERROR = "no task to undo";
 	public static final int DELETE_CACHE_LIMIT = 20;
 	
-	public static final String EDITED_FEEDBACK = "task edited in planner";
-	public static final String ERROR_EDIT_FEEDBACK = "task could not be editted";
+	public static final String EDITED_FEEDBACK = " edited in planner";
+	public static final String ERROR_EDIT_FEEDBACK = " could not be editted";
 	
 	public static final String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";
-	public static final String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed";
+	public static final String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed to ";
 	
-	public static final String DELETED_FEEDBACK = "task deleted";
+	public static final String DELETED_FEEDBACK = " deleted";
 	public static final String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
 	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";

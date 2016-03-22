@@ -23,9 +23,9 @@ public class LogicEdit implements LogicTaskModification {
 		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			packageForSavingInFile(store, todo, deadlines, events);
-			return Constants.EDITED_FEEDBACK;
+			return "task " + variableArray[0] + Constants.EDITED_FEEDBACK;
 		}
-		return Constants.ERROR_EDIT_FEEDBACK;
+		return "task " + variableArray[0] + Constants.ERROR_EDIT_FEEDBACK;
 	}
 
 	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, 
@@ -33,7 +33,7 @@ public class LogicEdit implements LogicTaskModification {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
 				Task taskToBeEditted = list.remove(i);
-				Task editedTask = doEdit(createArrayWithoutFirstIndex(variableArray), taskToBeEditted);
+				Task editedTask = doEdit(variableArray, taskToBeEditted);
 				if (!isFromAndToTimeCorrect(editedTask)) {
 					list.add(taskToBeEditted);
 					return false;

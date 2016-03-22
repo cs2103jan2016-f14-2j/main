@@ -9,7 +9,7 @@ public class LogicDirectory {
 		if (!isValidPath(store, variableArray)) {
 			return Constants.ERROR_DIRECTORY_PATH_FEEDBACK;
 		}
-		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK;
+		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] +  "\"";
 	}
 
 	private boolean isValidPath(Storage store, String[] variableArray) {

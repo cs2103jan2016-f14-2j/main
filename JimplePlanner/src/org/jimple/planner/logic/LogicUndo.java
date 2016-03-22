@@ -18,7 +18,7 @@ public class LogicUndo implements LogicTaskModification {
 		Task aTask = deletedTask.remove(deletedTask.size() - 1);
 		allocateCorrectTimeArray(aTask, todo, deadlines, events);
 		packageForSavingInFile(store, todo, deadlines, events);
-		return Constants.UNDO_FEEDBACK;
+		return "task \"" + aTask.getTitle() +  "\"" +Constants.UNDO_FEEDBACK;
 	}
 
 	private void checkOverDeletedCacheLimit(ArrayList<Task> deletedTask) {
