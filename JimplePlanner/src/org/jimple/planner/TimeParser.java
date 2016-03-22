@@ -249,7 +249,7 @@ public class TimeParser {
 				return minute != FIELD_NOT_SET_VALUE;
 			default :
 				System.out.println("Invalid field for setting Date/Time");
-				return false;
+				return true;
 		}
 	}
 	
