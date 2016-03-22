@@ -11,22 +11,22 @@ public interface LogicTaskModification {
 
 	public default Task doEdit(String[] variableArray, Task aTask) {
 		Task editedTask = new Task(aTask);
-		for (int i = 0; i < variableArray.length; i++) {
+		for (int i = 1; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
 				switch (i) {
-				case 0:
-					editedTask.setTitle(variableArray[0]);
-					break;
 				case 1:
-					editedTask.setDescription(variableArray[i]);
+					editedTask.setTitle(variableArray[1]);
 					break;
 				case 2:
-					editedTask.setFromDate(variableArray[i]);
+					editedTask.setDescription(variableArray[i]);
 					break;
 				case 3:
-					editedTask.setToDate(variableArray[i]);
+					editedTask.setFromDate(variableArray[i]);
 					break;
 				case 4:
+					editedTask.setToDate(variableArray[i]);
+					break;
+				case 5:
 					editedTask.setCategory(variableArray[i]);
 					break;
 				default:
