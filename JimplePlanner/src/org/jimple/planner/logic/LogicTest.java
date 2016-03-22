@@ -85,6 +85,11 @@ public class LogicTest {
 	}
 	
 	@Test
+	public void ShouldReturnUndoCommand()	{
+		
+	}
+	
+	@Test
 	public void ShouldReturnTrueAfterDeleteFromArray() throws IOException	{
 		String[] variableArray = {"1"};
 		initializeThreeArrays();

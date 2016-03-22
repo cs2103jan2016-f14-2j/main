@@ -14,16 +14,10 @@ public class LogicUndo implements LogicTaskModification {
 		if (deletedTask.isEmpty())	{
 			return Constants.UNDO_FEEDBACK_ERROR;
 		}
-		checkOverDeletedCacheLimit(deletedTask);
 		Task aTask = deletedTask.remove(deletedTask.size() - 1);
 		allocateCorrectTimeArray(aTask, todo, deadlines, events);
 		packageForSavingInFile(store, todo, deadlines, events);
 		return "task \"" + aTask.getTitle() +  "\"" +Constants.UNDO_FEEDBACK;
 	}
 
-	private void checkOverDeletedCacheLimit(ArrayList<Task> deletedTask) {
-		while (deletedTask.size() > Constants.DELETE_CACHE_LIMIT) {
-			deletedTask.remove(0);
-		}
-	}
 }

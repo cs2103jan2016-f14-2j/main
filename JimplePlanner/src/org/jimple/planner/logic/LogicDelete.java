@@ -36,6 +36,7 @@ public class LogicDelete extends LogicEdit{
 			throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
+				checkOverDeletedCacheLimit(deletedTasks);
 				Task removedTask = list.remove(i);
 				deletedTasks.add(removedTask);
 				return true;
@@ -44,6 +45,12 @@ public class LogicDelete extends LogicEdit{
 		return false;
 	}
 	
+	private void checkOverDeletedCacheLimit(ArrayList<Task> deletedTasks) {
+		while (deletedTasks.size() > Constants.DELETE_CACHE_LIMIT) {
+			deletedTasks.remove(0);
+		}
+	}
+
 	public String testDeleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> deletedTasks) throws IOException {
 		return deleteTask(store, variableArray, todo, deadlines, events, deletedTasks);

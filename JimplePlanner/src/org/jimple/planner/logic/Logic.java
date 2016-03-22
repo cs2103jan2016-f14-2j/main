@@ -101,6 +101,11 @@ public class Logic {
 			case Constants.STRING_UNDO:
 				feedback[0] = undoer.undoPreviousChange(store, deletedTasks, todo, deadlines, events);
 				feedback[1] = Constants.STRING_UNDO;
+				break;
+			case Constants.STRING_HELP:
+				feedback[0] = helpCommand();
+				feedback[1] = Constants.STRING_HELP;
+				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
@@ -199,7 +204,7 @@ public class Logic {
 	 * gets a list of help commands for user to refer to
 	 *
 	 */
-	private String helpCommand(String[] parsedInput) {
+	private String helpCommand() {
 		String listOfCommands = new String();
 		listOfCommands += Constants.ADD_HELP_HEADER;
 		listOfCommands += Constants.ADD_COMMAND_BY;
@@ -209,9 +214,6 @@ public class Logic {
 		listOfCommands += Constants.EDIT_HELP_HEADER;
 		listOfCommands += Constants.EDIT_COMMAND_ONE_TIMING;
 		listOfCommands += Constants.EDIT_COMMAND_TWO_TIMINGS;
-
-		listOfCommands += Constants.DISPLAY_HELP_HEADER;
-		listOfCommands += Constants.DISPLAY_COMMAND;
 
 		listOfCommands += Constants.DELETE_HELP_HEADER;
 		listOfCommands += Constants.DELETE_COMMAND;
