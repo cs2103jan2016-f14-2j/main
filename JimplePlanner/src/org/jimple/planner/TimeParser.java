@@ -145,6 +145,7 @@ public class TimeParser {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentDate(day, month)) {
 				c.add(Calendar.YEAR, 1);
+				setField("year", c.get(Calendar.YEAR));
 			} else {
 				setField("year", c.get(Calendar.YEAR));
 			}
