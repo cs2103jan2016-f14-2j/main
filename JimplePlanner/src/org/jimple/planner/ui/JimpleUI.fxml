@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.Controller">
+<StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.Controller">
    <children>
       <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0">
          <children>
@@ -24,7 +24,7 @@
                      <children>
                         <ImageView fitHeight="71.0" fitWidth="94.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../Jimple-Logo.png" />
+                              <Image url="@../../../../Jimple-Logo.png" />
                            </image>
                         </ImageView>
                      </children>
