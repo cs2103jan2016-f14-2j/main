@@ -5,36 +5,73 @@
 
 package org.jimple.planner;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
-import exceptions.DuplicateDateTimeFieldException;
-import exceptions.InvalidCommandException;
-import exceptions.InvalidDateTimeFieldException;
-import exceptions.MissingDateTimeFieldException;
+import parserExceptions.DuplicateDateTimeFieldException;
+import parserExceptions.InvalidCommandException;
+import parserExceptions.MissingDateTimeFieldException;
 
 public class Parser {
-
+			
 	/* ----------------------------|
-	 * EXTENDED COMMANDS VARIABLES |
+	 * EXTENDED COMMANDS CONSTANTS |
 	 * ----------------------------| 
 	 * String[]: Stores the possible extended command strings for each command.
-	 * int[]: Stores the index on InputStruct which each extended command string affects.
 	 */
-	private final String[] EXTENDED_COMMANDS_ADD = { "desc", "at", "from", "by", "to", "cat" };
-	private final int[] EXTENDED_COMMANDS_ADD_INDEX = { 1, 2, 2, 3, 3, 4 };
-	private final String[] EXTENDED_COMMANDS_EDIT = { "name", "desc", "from", "to", "cat" };
-	private final int[] EXTENDED_COMMANDS_EDIT_INDEX = { 1, 2, 3, 4, 5 };
+	private final String[] EXTENDED_COMMANDS_ADD = {"description", "at", "from", "on", "by", "category"};
+	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "description", "time", "category"};
+	private final String[] EXTENDED_COMMANDS_NIL = {};
+	
+	/* ----------------------------|
+	 * INPUTSTRUCT INDEX CONSTANTS |
+	 * ----------------------------|
+	 * The constants here store the index they reference in the InputStruct class.
+	 */
+	
+	/* Stores the index for the user input after the main command.
+	 *  - "add": Index of the task name.
+	 *  - "edit": Index of the task ID.
+	 *  - "delete": Index of the task ID.
+	 *  - "search": Index of the query String.
+	 *  - "changedir": Index of the directory path.
+	 */
+	private final int INDEX_BASE = 0;
+	
+	// Stores the indexes for task fields. Used by "add" and "edit".
+	private final int INDEX_NAME = 1;
+	private final int INDEX_DESCRIPTION = 1;
+	private final int INDEX_FROM = 2;
+	private final int INDEX_TO = 3;
+	private final int INDEX_CATEGORY = 4;
+	
+	
 
 	/* ----------------|
-	 * FINAL VARIABLES |
+	 * CONSTANTS |
 	 * ----------------|
 	 */
-	private final int INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT = 0;
-	private final int STRING_INDEX_START = 0;
-	private final int STRING_INDEX_TRIM_LAST_SPACE_SIZE = 1;
-	private final int USER_INPUT_INDEX_COMMAND_STRING = 0;
-	private final String EMPTY_STRING = "";
 
+	// Main commands.
+	private static final String COMMAND_ADD = "add";
+	private static final String COMMAND_EDIT = "edit";
+	private static final String COMMAND_DELETE = "delete";
+	private static final String COMMAND_SEARCH = "search";
+	private static final String COMMAND_CHANGEDIR = "changedir";
+	
+	// Extended commands.
+	private static final String EXTENDED_COMMAND_NAME = "name";
+	private static final String EXTENDED_COMMAND_DESCRIPTION = "description";
+	private static final String EXTENDED_COMMAND_AT = "at";
+	private static final String EXTENDED_COMMAND_ON = "on";
+	private static final String EXTENDED_COMMAND_FROM = "from";
+	private static final String EXTENDED_COMMAND_BY = "by";
+	private static final String EXTENDED_COMMAND_CATEGORY = "category";
+	
+	private final int INDEX_MAIN_COMMAND = 0;
+	private final String EMPTY_STRING = "";
+			
 	/* ---------|
 	 * HASHMAPS |
 	 * ---------| 
@@ -59,13 +96,6 @@ public class Parser {
 		extendedCommandsAdd = new HashMap<String, Integer>();
 		extendedCommandsEdit = new HashMap<String, Integer>();
 		noExtendedCommands = new HashMap<String, Integer>();
-
-		for (int i = 0; i < EXTENDED_COMMANDS_ADD.length; i++) {
-			extendedCommandsAdd.put(EXTENDED_COMMANDS_ADD[i], EXTENDED_COMMANDS_ADD_INDEX[i]);
-		}
-		for (int i = 0; i < EXTENDED_COMMANDS_EDIT.length; i++) {
-			extendedCommandsEdit.put(EXTENDED_COMMANDS_EDIT[i], EXTENDED_COMMANDS_EDIT_INDEX[i]);
-		}
 	}
 
 	/*
@@ -73,22 +103,27 @@ public class Parser {
 	 * containing the variables of the user input.
 	 */
 	public InputStruct parseInput(String userInput) throws Exception {
+		
+		// Not null string.
 		assert(userInput != null);
+		
+		// Not whitespace String.
 		assert(userInput.trim() != "");
+		
 		String[] splitUserInput = userInput.split(" ");
-		String commandString = getCommandString(splitUserInput);
+		String mainCommandString = getMainCommandString(splitUserInput);
 		try {
-			switch (commandString) {
-				case "add" :
-					return getStruct(splitUserInput, extendedCommandsAdd);
-				case "edit" :
-					return getStruct(splitUserInput, extendedCommandsEdit);
-				case "delete" :
-				case "search" :
-				case "changedir" :
-					return getStruct(splitUserInput, noExtendedCommands);
+			switch (mainCommandString) {
+				case COMMAND_ADD :
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
+				case COMMAND_EDIT :
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
+				case COMMAND_DELETE :
+				case COMMAND_SEARCH :
+				case COMMAND_CHANGEDIR :
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				default :
-					throw new InvalidCommandException("Command: \"" + commandString + "\" not recongnised.");
+					throw new InvalidCommandException("Command: \"" + mainCommandString + "\" not recongnised.");
 			}
 		} catch (InvalidCommandException ice) {
 			throw ice;
@@ -102,70 +137,185 @@ public class Parser {
 	/*
 	 * Detects and stores the variables in the user input.
 	 */
-	private InputStruct getStruct(String[] userInputStringArray, 
-			HashMap<String, Integer> inputExtendedCommandsHashMap) throws Exception {
+	private InputStruct getStruct(String[] splitUserInput, String[] extendedCommands) throws Exception {
+		
+		String mainCommand = getMainCommandString(splitUserInput);
 		
 		// Creates the InputStruct to be returned.
-		InputStruct outputStruct = new InputStruct(getCommandString(userInputStringArray));
+		InputStruct currInputStruct = new InputStruct(mainCommand);
 
-		// currIndex is the index on the InputStruct that the strings currently
-		// being read affects.
-		int currIndex = INPUTSTRUCT_INDEX_MAIN_COMMAND_USER_INPUT;
+		String currCommand = mainCommand;
 
-		String currExtendedCommand = EMPTY_STRING;
+		// userInputString is the string currently being read. While an extended command is not found, words are added to this String.
+		String currInputString = EMPTY_STRING;
 
-		// userInputString is the string currently being read. Updates while the
-		// next extended command is not found.
-		String userInputString = EMPTY_STRING;
+		for (int i = 1; i < splitUserInput.length; i++) {
 
-		for (int i = 1; i < userInputStringArray.length; i++) {
-
-			// Updates userInputString if word being read is not an extended
-			// command.
-			String currString = userInputStringArray[i];
-			if (!inputExtendedCommandsHashMap.containsKey(currString.toLowerCase())) {
-				userInputString += currString + " ";
-			}
-			if (inputExtendedCommandsHashMap.containsKey(currString) || i == userInputStringArray.length - 1) {
-				// Word being read is an extended command.
-
-				// When word being read is an extended command, stores the "userInputString" into the index in the InputStruct specified by "currIndex". Removes the whitespace at the end.
-				if (isDateTimeInput(currExtendedCommand)) {
-					// Parses using theTimeFormat class first, if the extended command is date-time specific.
-					outputStruct.setAtIndex(currIndex, timeParser.timeParser(currExtendedCommand, userInputString));
+			// Updates userInputString if word being read is not an extended command.
+			String currString = splitUserInput[i];
+			if (isExtendedCommand(currString, extendedCommands)) { // Word being read is an extended command.
+				if (currCommand == mainCommand) {
+					currInputStruct.setAtIndex(INDEX_BASE, currInputString);
 				} else {
-					outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
+					parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
 				}
-
-				// Updates the "currIndex" and "currExtendedCommand" to the current extended command.
-				if (inputExtendedCommandsHashMap.containsKey(currString)) {
-					currExtendedCommand = currString.toLowerCase();
-					currIndex = inputExtendedCommandsHashMap.get(currExtendedCommand);
-				}
-
+				currCommand = currString.toLowerCase();
 				// Resets "userInputString".
-				userInputString = EMPTY_STRING;
+				currInputString = EMPTY_STRING;
+			} else {
+				currInputString += currString + " ";
+			} 
+		}
+		parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
+		return currInputStruct;
+	}
+		
+	private void parseExtendedCommand(String mainCommand, String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
+		switch (mainCommand) {
+			case COMMAND_ADD :
+				parseExtendedCommandAdd(extendedCommand, inputString, inputStruct);
+				break;
+			case COMMAND_EDIT :
+				parseExtendedCommandEdit(extendedCommand, inputString, inputStruct);
+				break;
+		}
+	}
+	
+	private void parseExtendedCommandAdd(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
+		switch (extendedCommand) {
+			case EXTENDED_COMMAND_DESCRIPTION :
+				setDescription(inputString, inputStruct);
+				break;
+			case EXTENDED_COMMAND_AT :
+			case EXTENDED_COMMAND_ON :
+			case EXTENDED_COMMAND_FROM :
+			case EXTENDED_COMMAND_BY :
+				setTime(extendedCommand, inputString, inputStruct);
+				break;
+			case EXTENDED_COMMAND_CATEGORY :
+				setCategory(inputString, inputStruct);
+				break;
+			default :
+				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+		}
+	}
+	
+	private void parseExtendedCommandEdit(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
+		switch (extendedCommand) {
+			case EXTENDED_COMMAND_NAME:
+				setName(inputString, inputStruct);
+			case EXTENDED_COMMAND_DESCRIPTION :
+				setDescription(inputString, inputStruct);
+				break;
+			case EXTENDED_COMMAND_AT :
+			case EXTENDED_COMMAND_ON :
+			case EXTENDED_COMMAND_FROM :
+			case EXTENDED_COMMAND_BY :
+				setTime(extendedCommand, inputString, inputStruct);
+				break;
+			case EXTENDED_COMMAND_CATEGORY :
+				setCategory(inputString, inputStruct);
+				break;
+			default :
+				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+		}
+	}
+	
+	private void setName(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(INDEX_NAME, userInput);
+	}
+	
+	private void setDescription(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(INDEX_DESCRIPTION, userInput);
+	}
+	
+	private void setTime(String extendedCommand, String userInput, InputStruct inputStruct) throws Exception {
+		switch (extendedCommand) {
+			case EXTENDED_COMMAND_AT :
+				parseAt(userInput, inputStruct);
+				break;
+			case EXTENDED_COMMAND_ON :
+				parseOn(userInput, inputStruct);
+				break;
+			case EXTENDED_COMMAND_FROM :
+				parseFrom(userInput, inputStruct);
+				break;
+			case EXTENDED_COMMAND_BY :
+				parseBy(userInput, inputStruct);
+				break;
+		}
+	}
+	
+	public void parseAt(String userInput, InputStruct inputStruct) throws Exception {
+		Calendar parsedCalendar = timeParser.parseTime(userInput);
+		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
+		parsedCalendar.add(Calendar.HOUR_OF_DAY, 1);
+		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
+	}
+	
+	public void parseOn(String userInput, InputStruct inputStruct) throws Exception {
+		Calendar parsedCalendar = timeParser.parseTime(userInput);
+		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
+		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
+		parsedCalendar.set(Calendar.MINUTE, 59);
+		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
+		System.out.println(inputStruct.getAtIndex(INDEX_FROM) + " " + inputStruct.getAtIndex(INDEX_TO));
+	}
+	
+	public void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
+		if (!userInput.contains(" to ")) {
+			throw new MissingDateTimeFieldException("\"from\" must be accompanied by \"to\".");
+		} else {
+			String[] splitFromTo = userInput.split(" to ");
+			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(splitFromTo[0])));
+			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(timeParser.parseTime(splitFromTo[1])));
+		}
+		System.out.println(inputStruct.getAtIndex(INDEX_FROM) + " " + inputStruct.getAtIndex(INDEX_TO));
+	}
+	
+	public void parseBy(String userInput, InputStruct inputStruct) throws Exception {
+		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(userInput)));
+	}
+	
+	public void setCategory(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(INDEX_CATEGORY, userInput);
+	}
+	
+	private String calendarToStringFormat(Calendar parsedCalendar) {
+		Date parsedDate = parsedCalendar.getTime();
+		String date = String.format("%02d", parsedDate.getDate());
+		String month = String.format("%02d", parsedDate.getMonth()+1);
+		String hours = String.format("%02d", parsedDate.getHours());
+		String minutes = String.format("%02d", parsedDate.getMinutes());
+		String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
+		return outputDate;
+	}
+	
+	private boolean isANumber(String input) {
+		if (input == "") {
+			return false;
+		}
+		boolean isNumber = true;
+		for (int i = 0; i < input.length(); i++) {
+			if (!Character.isDigit(input.charAt(i))) {
+				isNumber = false;
+				break;
 			}
 		}
-		if (!userInputString.equals("")) {
-			outputStruct.setAtIndex(currIndex, removeLastCharacter(userInputString));
-		}
-		return outputStruct;
+		return isNumber;
 	}
-
-	private boolean isDateTimeInput(String extendedCommand) {
-		if (extendedCommandsAdd.containsKey(extendedCommand)) {
-			return ((extendedCommandsAdd.get(extendedCommand) == 2) || (extendedCommandsAdd.get(extendedCommand) == 3));
+	
+	private boolean isExtendedCommand(String input, String[] extendedCommands) {
+		for (int i = 0; i < extendedCommands.length; i++) {
+			if (input.equals(extendedCommands[i])) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	private String getCommandString(String[] userInputStringArray) {
-		return userInputStringArray[USER_INPUT_INDEX_COMMAND_STRING];
-	}
-
-	private String removeLastCharacter(String inputString) {
-		return inputString.substring(STRING_INDEX_START, inputString.length() - STRING_INDEX_TRIM_LAST_SPACE_SIZE);
+	private String getMainCommandString(String[] userInputStringArray) {
+		return userInputStringArray[INDEX_MAIN_COMMAND].toLowerCase();
 	}
 
 }

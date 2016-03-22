@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class ParserTest {
 	
-	private Parser testParser;
+	private static Parser testParser;
 
 	private Date d = Calendar.getInstance().getTime();
 	private int year = d.getYear() + 1900;
@@ -17,7 +17,16 @@ public class ParserTest {
 	private String hours = String.format("%02d", d.getHours());
 	private String minutes = String.format("%02d", d.getMinutes());
 	
-	@Test
+	public static void main(String[] args) throws Exception {
+		testParser = new Parser();
+		InputStruct testOutput = testParser.parseInput("add YAHOR by 16 may");
+		String[] testOutputArray = testOutput.getVariableArray();
+		for (int i = 0; i < testOutputArray.length; i++) {
+			System.out.println(testOutputArray[i]);
+		}
+	}
+	
+	/*@Test
 	public void test() {
 		testParser = new Parser();
 		
@@ -39,6 +48,6 @@ public class ParserTest {
 		//assertEquals(year + "-" + month + "-" + date + "T" + minutes:00", variableArray[2]);
 		//assertEquals("10AM", variableArray[3]);
 		assertEquals(null, variableArray[4]);
-	}
+	}*/
 
 }
