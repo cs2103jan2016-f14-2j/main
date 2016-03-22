@@ -182,10 +182,15 @@ public class Logic {
 		}
 		return null;
 	}
-
-	public void setSearchList(ArrayList<Task> searchState) {
-		searchResults = searchState;
-		checkOverCurrentTime();
+	
+	
+	private String getTaskTypeAndTaskID() {
+		if (!tempHistory.isEmpty()) {
+			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId())
+					+ tempHistory.get(tempHistory.size() - 1).getType();
+		} else {
+			return "";
+		}
 	}
 
 	private void checkOverCurrentTime() {
@@ -204,7 +209,44 @@ public class Logic {
 			}
 		}
 	}
+	
+	public void attach(myObserver observer) {
+		observers.add(observer);
+	}
 
+	public void notifyAllObservers(String[] displayType) {
+		for (myObserver observer : observers) {
+			observer.update(displayType);
+		}
+	}
+
+	/**
+	 * gets a list of help commands for user to refer to
+	 *
+	 */
+	private String helpCommand(String[] parsedInput) {
+		String listOfCommands = new String();
+		listOfCommands += ADD_HELP_HEADER;
+		listOfCommands += ADD_COMMAND_BY;
+		listOfCommands += ADD_COMMAND_AT;
+		listOfCommands += ADD_COMMAND_FROMTO;
+
+		listOfCommands += EDIT_HELP_HEADER;
+		listOfCommands += EDIT_COMMAND_ONE_TIMING;
+		listOfCommands += EDIT_COMMAND_TWO_TIMINGS;
+
+		listOfCommands += DISPLAY_HELP_HEADER;
+		listOfCommands += DISPLAY_COMMAND;
+
+		listOfCommands += DELETE_HELP_HEADER;
+		listOfCommands += DELETE_COMMAND;
+		return listOfCommands;
+	}
+	
+	/**
+	 * 
+	 * unimplemented methods. may be used in the future
+	 */
 	private boolean isConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		boolean isConflict = false;
 		switch (newTask.getType()) {
@@ -243,48 +285,6 @@ public class Logic {
 		return false;
 	}
 
-	private String getTaskTypeAndTaskID() {
-		if (!tempHistory.isEmpty()) {
-			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId())
-					+ tempHistory.get(tempHistory.size() - 1).getType();
-		} else {
-			return "";
-		}
-	}
-
-	public void attach(myObserver observer) {
-		observers.add(observer);
-	}
-
-	public void notifyAllObservers(String[] displayType) {
-		for (myObserver observer : observers) {
-			observer.update(displayType);
-		}
-	}
-
-	/**
-	 * gets a list of help commands for user to refer to
-	 *
-	 */
-	private String helpCommand(String[] parsedInput) {
-		String listOfCommands = new String();
-		listOfCommands += ADD_HELP_HEADER;
-		listOfCommands += ADD_COMMAND_BY;
-		listOfCommands += ADD_COMMAND_AT;
-		listOfCommands += ADD_COMMAND_FROMTO;
-
-		listOfCommands += EDIT_HELP_HEADER;
-		listOfCommands += EDIT_COMMAND_ONE_TIMING;
-		listOfCommands += EDIT_COMMAND_TWO_TIMINGS;
-
-		listOfCommands += DISPLAY_HELP_HEADER;
-		listOfCommands += DISPLAY_COMMAND;
-
-		listOfCommands += DELETE_HELP_HEADER;
-		listOfCommands += DELETE_COMMAND;
-		return listOfCommands;
-	}
-
 	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
@@ -292,7 +292,6 @@ public class Logic {
 	/**
 	 * temporary methods to be removed after refactor
 	 */
-
 	public ArrayList<Task> searchWord(String wordToBeSearched) {
 		return searcher.searchWord(wordToBeSearched, todo, deadlines, events);
 	}
