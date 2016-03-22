@@ -11,6 +11,8 @@ import org.jimple.planner.InputStruct;
 import org.jimple.planner.Parser;
 import org.jimple.planner.storage.Storage;
 import org.jimple.planner.storage.StorageComponent;
+import parserExceptions.*;
+
 import org.jimple.planner.Constants;
 
 import java.util.Collections;
@@ -104,6 +106,18 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			}
+		} catch (DuplicateDateTimeFieldException dfe) {
+			feedback[0] = dfe.getMessage();
+			feedback[1] = "";
+		} catch (InvalidCommandException ice) {
+			feedback[0] = ice.getMessage();
+			feedback[1] = "";
+		} catch (InvalidDateTimeFieldException ife) {
+			feedback[0] = ife.getMessage();
+			feedback[1] = "";
+		} catch (MissingDateTimeFieldException mfe) {
+			feedback[0] = mfe.getMessage();
+			feedback[1] = "";
 		} catch (Exception e) {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
@@ -126,14 +140,13 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getSearchList() {
+		// searchResults = searcher.searchWord(wordToBeSearched, todo,
+		// deadlines, events)
 		return searchResults;
 	}
 
 	public ArrayList<Task> getAgendaList() {
-		if (!agenda.isEmpty())	{
-			agenda.removeAll(deadlines);
-			agenda.removeAll(events);
-		} 
+		agenda.clear();
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
 		Collections.sort(agenda, Task.getFromDateComparator());
@@ -146,7 +159,7 @@ public class Logic {
 		}
 		return null;
 	}
-	
+
 	private String getTaskTypeAndTaskID() {
 		if (!tempHistory.isEmpty()) {
 			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId())
@@ -172,7 +185,7 @@ public class Logic {
 			}
 		}
 	}
-	
+
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -205,7 +218,7 @@ public class Logic {
 		listOfCommands += Constants.DELETE_COMMAND;
 		return listOfCommands;
 	}
-	
+
 	/**
 	 * 
 	 * unimplemented methods. may be used in the future
