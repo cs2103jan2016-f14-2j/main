@@ -1,7 +1,6 @@
 package org.jimple.planner;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Comparator;
 
 public class Task{
@@ -19,8 +18,7 @@ public class Task{
 	private static final String TYPE_STATIC = "static";
 	private Formatter formatter;
 	
-	// Constructor
-	
+	// Default Constructor
 	public Task(String aTitle) {
 		this.formatter = new Formatter();
 		this.title = aTitle;
@@ -33,7 +31,7 @@ public class Task{
 		this.taskId = 1000;
 	}
 	
-	//Copy Constructor
+	//Constructor for creating a duplicate
 	public Task (Task taskToBeDuplicated)	{
 		this.formatter = new Formatter();
 		this.title = taskToBeDuplicated.getTitle();
