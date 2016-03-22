@@ -1,7 +1,9 @@
-package org.jimple.planner;
+package org.jimple.planner.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.jimple.planner.Task;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +21,7 @@ public class ListViewFormatter {
 	private static final String TYPE_FLOATING = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String TYPE_EVENT = "event";
+	
 	private ArrayList<Task> formattedList;
 	private ArrayList<Task> arrList;
 	private ObservableList<Task> data;
@@ -149,7 +152,7 @@ public class ListViewFormatter {
 								setGraphic(hBox);
 							}
 							else if (item.getType() == TYPE_DEADLINE) {
-								t.setId(TYPE_DEADLINE);
+								this.setId(TYPE_DEADLINE);
 								vBox = new VBox(t);
 								hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox,
 										new Text(String.format("by %s %s", item.getPrettyFromDate(),

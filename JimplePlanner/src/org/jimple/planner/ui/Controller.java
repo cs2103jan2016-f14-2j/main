@@ -1,4 +1,4 @@
-package org.jimple.planner;
+package org.jimple.planner.ui;
 
 import java.io.IOException;
 import java.net.URL;
@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
@@ -51,11 +52,13 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 public class Controller extends myObserver implements Initializable {
+	
 	private static final String TYPE_SEARCH = "search";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_AGENDA = "agenda";
+	
 	private static final Logger log= Logger.getLogger( Controller.class.getName() );
 	Logic logic = new Logic();
 	ListViewFormatter listFormatter = new ListViewFormatter();

@@ -1,4 +1,4 @@
-package org.jimple.planner;
+package org.jimple.planner.ui;
  
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
