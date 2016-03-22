@@ -31,11 +31,11 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("edit 2 time from 12 may 1100 to 12 may 1200");
-			String[] test = testStruct.getVariableArray();
+			testStruct = testParser.parseInput("help");
+			/*String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
-			}
+			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
