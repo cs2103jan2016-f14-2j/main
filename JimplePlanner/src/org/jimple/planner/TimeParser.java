@@ -64,8 +64,8 @@ public class TimeParser {
 	
 	private Calendar c = null;
 	
-	private static Logger LOGGER = Logger.getLogger("TimeParser");
-	FileHandler fh;
+	//private static Logger LOGGER = Logger.getLogger("TimeParser");
+	//FileHandler fh;
 	
 	public TimeParser() {
 		for (int i = 0; i < STRINGS_MONTH.length; i++) {
@@ -74,16 +74,16 @@ public class TimeParser {
 		for (int i = 0; i < STRINGS_DAY.length; i++) {
 			calendarDays.put(STRINGS_DAY[i], VALUES_DAY[i]);
 		}
-		try {
-			fh = new FileHandler("C:/Users/user/git/main/JimplePlanner/LogFile.log");
-			LOGGER.addHandler(fh);
-			SimpleFormatter formatter = new SimpleFormatter();
-			fh.setFormatter(formatter);
+		/*try {
+			//fh = new FileHandler("C:/Users/user/git/main/JimplePlanner/LogFile.log");
+			//LOGGER.addHandler(fh);
+			//SimpleFormatter formatter = new SimpleFormatter();
+			//fh.setFormatter(formatter);
 		} catch (SecurityException e) {
-			LOGGER.log(Level.WARNING, "No permission to edit or create the log file.", e);
+			//LOGGER.log(Level.WARNING, "No permission to edit or create the log file.", e);
 		} catch (IOException e) {
-			LOGGER.log(Level.WARNING, "Log file cannot be found.", e);
-		}
+			//LOGGER.log(Level.WARNING, "Log file cannot be found.", e);
+		}*/
 	}
 	
 	/* -------------------|
