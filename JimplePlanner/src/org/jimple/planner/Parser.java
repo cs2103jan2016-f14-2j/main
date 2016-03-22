@@ -63,13 +63,14 @@ public class Parser {
 	// Extended commands.
 	private static final String EXTENDED_COMMAND_NAME = "name";
 	private static final String EXTENDED_COMMAND_DESCRIPTION = "description";
+	private static final String EXTENDED_COMMAND_TIME = "time";
 	private static final String EXTENDED_COMMAND_AT = "at";
 	private static final String EXTENDED_COMMAND_ON = "on";
 	private static final String EXTENDED_COMMAND_FROM = "from";
 	private static final String EXTENDED_COMMAND_BY = "by";
 	private static final String EXTENDED_COMMAND_CATEGORY = "category";
 	
-	private final int INDEX_MAIN_COMMAND = 0;
+	private final int INDEX_COMMAND = 0;
 	private final int INDEX_MAIN_COMMAND_USER_INPUT = 1;
 	private final String EMPTY_STRING = "";
 			
@@ -115,7 +116,7 @@ public class Parser {
 		if (splitUserInput.length == 1) {
 			throw new InvalidCommandException("Command Invalid. Type \"help\" to see the list of commands.");
 		}
-		String mainCommand = getMainCommandString(splitUserInput);
+		String mainCommand = getCommandString(splitUserInput);
 		String mainCommandUserInput = getMainCommandUserInputString(splitUserInput);
 		try {
 			switch (mainCommand) {
@@ -172,7 +173,7 @@ public class Parser {
 	 */
 	private InputStruct getStruct(String[] splitUserInput, String[] extendedCommands) throws Exception {
 		
-		String mainCommand = getMainCommandString(splitUserInput);
+		String mainCommand = getCommandString(splitUserInput);
 		
 		// Creates the InputStruct to be returned.
 		InputStruct currInputStruct = new InputStruct(mainCommand);
@@ -252,11 +253,9 @@ public class Parser {
 			case EXTENDED_COMMAND_DESCRIPTION :
 				setDescription(inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_AT :
-			case EXTENDED_COMMAND_ON :
-			case EXTENDED_COMMAND_FROM :
-			case EXTENDED_COMMAND_BY :
-				setTime(extendedCommand, inputString, inputStruct);
+			case EXTENDED_COMMAND_TIME :
+				String dateTimeExtendedCommand = getCommandString(inputString.split(" "));
+				setTime(dateTimeExtendedCommand, inputString.substring(5), inputStruct);
 				break;
 			case EXTENDED_COMMAND_CATEGORY :
 				setCategory(inputString, inputStruct);
@@ -288,6 +287,8 @@ public class Parser {
 			case EXTENDED_COMMAND_BY :
 				parseBy(userInput, inputStruct);
 				break;
+			default :
+				throw new InvalidCommandException("Date/Time input: \"" + extendedCommand + "\" not recognised.");
 		}
 	}
 	
@@ -343,8 +344,8 @@ public class Parser {
 		return false;
 	}
 
-	private String getMainCommandString(String[] userInputStringArray) {
-		return userInputStringArray[INDEX_MAIN_COMMAND].toLowerCase();
+	private String getCommandString(String[] userInputStringArray) {
+		return userInputStringArray[INDEX_COMMAND].toLowerCase();
 	}
 
 }
