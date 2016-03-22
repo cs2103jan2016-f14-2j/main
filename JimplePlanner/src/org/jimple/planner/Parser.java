@@ -120,7 +120,9 @@ public class Parser {
 		try {
 			switch (mainCommand) {
 				case COMMAND_ADD :
-					return getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
+					InputStruct addStruct = getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
+					addStruct.checkAndSetTaskType();
+					return addStruct;
 				case COMMAND_EDIT :
 					if (isNumber(mainCommandUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
@@ -186,13 +188,9 @@ public class Parser {
 			String currString = splitUserInput[i];
 			if (isExtendedCommand(currString, extendedCommands)) { // Word being read is an extended command.
 				if (currCommand == mainCommand) {
-					if (currCommand == COMMAND_ADD) {
-						currInputStruct.setAtIndex(INDEX_NAME, currInputString);
-					} else {
-						currInputStruct.setAtIndex(INDEX_BASE, currInputString);
-					}
+					parseMainCommand(currInputStruct, currCommand, currInputString.trim());
 				} else {
-					parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
+					parseExtendedCommand(mainCommand, currCommand, currInputString.trim(), currInputStruct);
 				}
 				currCommand = currString.toLowerCase();
 				// Resets "userInputString".
@@ -202,15 +200,20 @@ public class Parser {
 			} 
 		}
 		if (currCommand == mainCommand) {
-			if (currCommand == COMMAND_ADD) {
-				currInputStruct.setAtIndex(INDEX_NAME, currInputString);
-			} else {
-				currInputStruct.setAtIndex(INDEX_BASE, currInputString);
-			}
+			parseMainCommand(currInputStruct, currCommand, currInputString.trim());
 		} else {
-			parseExtendedCommand(mainCommand, currCommand, currInputString, currInputStruct);
+			parseExtendedCommand(mainCommand, currCommand, currInputString.trim(), currInputStruct);
 		}
 		return currInputStruct;
+	}
+
+	private void parseMainCommand(InputStruct currInputStruct, String currCommand, String currInputString) {
+		System.out.println(currCommand.equals(COMMAND_ADD));
+		if (currCommand.equals(COMMAND_ADD)) {
+			currInputStruct.setAtIndex(INDEX_NAME, currInputString);
+		} else {
+			currInputStruct.setAtIndex(INDEX_BASE, currInputString);
+		}
 	}
 		
 	private void parseExtendedCommand(String mainCommand, String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
@@ -302,7 +305,6 @@ public class Parser {
 		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
 		parsedCalendar.set(Calendar.MINUTE, 59);
 		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
-		System.out.println(inputStruct.getAtIndex(INDEX_FROM) + " " + inputStruct.getAtIndex(INDEX_TO));
 	}
 	
 	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
@@ -313,7 +315,6 @@ public class Parser {
 			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(splitFromTo[0])));
 			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(timeParser.parseTime(splitFromTo[1])));
 		}
-		System.out.println(inputStruct.getAtIndex(INDEX_FROM) + " " + inputStruct.getAtIndex(INDEX_TO));
 	}
 	
 	private void parseBy(String userInput, InputStruct inputStruct) throws Exception {
