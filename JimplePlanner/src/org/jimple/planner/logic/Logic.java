@@ -214,9 +214,18 @@ public class Logic {
 		listOfCommands += Constants.EDIT_HELP_HEADER;
 		listOfCommands += Constants.EDIT_COMMAND_ONE_TIMING;
 		listOfCommands += Constants.EDIT_COMMAND_TWO_TIMINGS;
-
+		
 		listOfCommands += Constants.DELETE_HELP_HEADER;
 		listOfCommands += Constants.DELETE_COMMAND;
+		
+		listOfCommands += Constants.SEARCH_HELP_HEADER;
+		listOfCommands += Constants.SEARCH_COMMAND;
+		
+		listOfCommands += Constants.UNDO_HELP_HEADER;
+		listOfCommands += Constants.UNDO_COMMAND;
+		
+		listOfCommands += Constants.CHANGEDIR_HELP_HEADER;
+		listOfCommands += Constants.CHANGEDIR_COMMAND;
 		return listOfCommands;
 	}
 

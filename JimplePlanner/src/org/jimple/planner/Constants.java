@@ -45,20 +45,25 @@ public final class Constants {
 	public static final String STRING_EDIT = "edit";
 	public static final String STRING_CHANGEDIR = "changedir";
 	public static final String STRING_UNDO = "undo";
+	public static final String STRING_HELP = "help";
 	
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
 	public static final String EDIT_HELP_HEADER = "Edit a current task:\n";
-	public static final String DISPLAY_HELP_HEADER = "Display all tasks:\n";
+	public static final String SEARCH_HELP_HEADER = "Search tasks:\n";
 	public static final String DELETE_HELP_HEADER = "Delete a task:\n";
+	public static final String UNDO_HELP_HEADER = "Undo a task:\n";
+	public static final String CHANGEDIR_HELP_HEADER = "Change Jimple File Directory:\n";
 	
-	public static final String ADD_COMMAND_BY = "type \"add\" + <your event> by <time>\n";
-	public static final String ADD_COMMAND_AT = "type \"add\" + <your event> at <time>\n";
-	public static final String ADD_COMMAND_FROMTO = "type \"add\" + <your event> from <time> to <time>\n";
-	public static final String EDIT_COMMAND_ONE_TIMING = "type \"edit\" + <your event> to <time>\n";
-	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"edit\" + <your event> from <time> to <time>\n";
-	public static final String DISPLAY_COMMAND = "type \"display\"";
-	public static final String DELETE_COMMAND = "type \"delete\" <event name>";
-	
+	public static final String ADD_COMMAND_BY = "type \"add\" <your event> by <time>\n";
+	public static final String ADD_COMMAND_AT = "type \"add\" <your event> at <time>\n";
+	public static final String ADD_COMMAND_FROMTO = "type \"add\" <your event> from <time> to <time>\n";
+	public static final String EDIT_COMMAND_ONE_TIMING = "type \"edit\" <taskID> \"name\" <your event title> \"time\" by <date/time>\n";
+	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"edit\" <taskID> \"name\" <your event title> \"time\" from <date/time> to <date/time>\n";
+	public static final String DELETE_COMMAND = "type \"delete\" <taskID>";
+	public static final String SEARCH_COMMAND = "type \"search\" <task name>";
+	public static final String UNDO_COMMAND = "type \"undo\"";
+	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <path directory>";
+
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 	
