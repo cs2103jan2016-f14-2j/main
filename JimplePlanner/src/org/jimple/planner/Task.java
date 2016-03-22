@@ -1,5 +1,7 @@
 package org.jimple.planner;
 
+import org.jimple.planner.Constants;
+
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
@@ -12,10 +14,6 @@ public class Task{
 	private String type;
 	private boolean isOverDue;
 	private int taskId;
-	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_TODO = "floating";
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_STATIC = "static";
 	private Formatter formatter;
 	
 	// Default Constructor
@@ -26,7 +24,7 @@ public class Task{
 		this.category = new String("");
 		this.fromDateTime = null;
 		this.toDateTime = null;
-		this.type = TYPE_TODO;
+		this.type = Constants.TYPE_TODO;
 		this.isOverDue = false;
 		this.taskId = 1000;
 	}
@@ -113,11 +111,11 @@ public class Task{
 	
 	private void checkAndSetType(){
 		if(isTodo()){
-			this.type = TYPE_TODO;
+			this.type = Constants.TYPE_TODO;
 		} else if(isDeadline()){
-			this.type = TYPE_DEADLINE;
+			this.type = Constants.TYPE_DEADLINE;
 		} else if (isEvent()){
-			this.type = TYPE_EVENT;
+			this.type = Constants.TYPE_EVENT;
 		}
 	}
 	

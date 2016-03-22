@@ -10,7 +10,7 @@ import org.jimple.planner.Constants;
 public class LogicAdd implements LogicTaskModification{
 	
 	protected String addToTaskList(Storage store, String[] parsedInput, ArrayList<Task>tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
-		assert parsedInput.length == 5;
+		assert parsedInput.length == 6;
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
 		if (!isFromAndToTimeCorrect(newTask)) {

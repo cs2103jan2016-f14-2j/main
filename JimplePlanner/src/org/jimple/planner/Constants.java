@@ -33,6 +33,7 @@ public final class Constants {
 	public static final String TYPE_EVENT = "event";
 	public static final String TYPE_TODO = "floating";
 	public static final String TYPE_DEADLINE = "deadline";
+	public static final String TYPE_STATIC = "static";
 	public static final String EMPTY_STRING = "";
 	
 	/**
