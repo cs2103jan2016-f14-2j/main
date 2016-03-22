@@ -128,8 +128,6 @@ public class TimeParser {
 	}
 		
 	private boolean initSecondaryAndPresetFields() throws DuplicateDateTimeFieldException{
-		setField("hour", 0);
-		setField("minute", 0);
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
@@ -138,6 +136,10 @@ public class TimeParser {
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
+		}
+		if (!isFieldSet("hour") && !isFieldSet("minute")) {
+			setField("hour", 0);
+			setField("minute", 0);
 		}
 		if (!isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
