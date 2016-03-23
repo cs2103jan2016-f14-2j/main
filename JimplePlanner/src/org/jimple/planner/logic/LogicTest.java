@@ -57,34 +57,6 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnTrueIfNoTimeConflict()	{
-		Task event1 = new Task("a test only one");
-		event1.setToDate("2016-03-10T16:00");
-		Task event2 = new Task("a test only two");
-		event2.setFromDate("2016-03-11T09:00");
-		event2.setToDate("2016-03-11T17:00");
-		Task event3 = new Task("a test only three");
-		event3.setToDate("2016-03-10T16:00");
-		Task event4 = new Task("a test only three");
-		event4 = new Task("a test only four");
-		deadlines.add(event1);
-		events.add(event2);
-		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event3, deadlines, events));
-		event4.setFromDate("2016-03-11T07:00");
-		event4.setToDate("2016-03-11T16:00");
-		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
-		event4.setFromDate("2016-03-11T10:00");
-		event4.setToDate("2016-03-11T18:00");
-		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
-		event4.setFromDate("2016-03-11T12:00");
-		event4.setToDate("2016-03-11T13:00");
-		assertTrue("returns true", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
-		event4.setFromDate("2016-03-11T18:00");
-		event4.setToDate("2016-03-11T19:00");
-		assertFalse("returns false", testLogic.testConflictWithCurrentTasks(event4, deadlines, events));
-	}
-	
-	@Test
 	public void ShouldReturnUndoCommand()	{
 		
 	}
@@ -99,14 +71,14 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnTrueAfterEditting()	throws IOException{
+	public void ShouldReturnTrueAfterEditting()	throws IOException, InvalidFromAndToTime{
 		String[] variableArray = {"1", "task one", null, "2016-03-12T14:00", null, null};
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
 	}
 	
 	@Test
-	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException	{
+	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime	{
 		String[] variableArray = {"0", "task one", null, null, "2016-03-02T05:00", null};
 		initializeThreeArrays();
 		//assertEquals("return same string", "task edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
@@ -163,9 +135,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-22T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-23T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-22T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-23T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test

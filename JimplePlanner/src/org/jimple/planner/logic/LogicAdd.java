@@ -14,7 +14,7 @@ public class LogicAdd implements LogicTaskModification{
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask);
 		if (!isFromAndToTimeCorrect(newTask)) {
-			return  "\"" + parsedInput[1] +  "\"" + Constants.ERROR_ADDED_FEEDBACK;
+			return Constants.ERROR_WRONG_TIME_FEEDBACK;
 		}
 		allocateCorrectTimeArray(newTask, todo, deadlines, events);
 		packageForSavingInFile(store, todo, deadlines, events);
