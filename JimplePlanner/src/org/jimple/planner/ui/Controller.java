@@ -121,7 +121,6 @@ public class Controller extends myObserver implements Initializable {
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
-		
 		TextFields.bindAutoCompletion(
                 commandBox,
                 "add ", "edit ", "delete ", "search ");
@@ -181,7 +180,7 @@ public class Controller extends myObserver implements Initializable {
 		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
-	public void loadTodoList() {
+	public void loadTodoList()  {
 		listFormatter.formatList(logic.getToDoList(),TYPE_TODO);
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listFormatter.getFormattedList());
