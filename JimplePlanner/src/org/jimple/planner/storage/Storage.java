@@ -10,4 +10,6 @@ public interface Storage{
 	public ArrayList<ArrayList<Task>> getTasks();
 	
 	public boolean setPath(String pathName);
+	
+	public String checkPath();
 }

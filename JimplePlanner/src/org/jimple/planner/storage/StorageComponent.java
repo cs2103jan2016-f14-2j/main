@@ -32,5 +32,10 @@ public class StorageComponent implements Storage{
 	public boolean setPath(String pathName) {
 		return storageProperties.setPath(pathName);
 	}
+	
+	@Override
+	public String checkPath(){
+		return storageProperties.checkPath();
+	}
 
 }
