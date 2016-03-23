@@ -43,6 +43,8 @@ public class StorageProperties implements StorageTools{
 	private boolean isFilePathValid(String filePath){
 		if(filePath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
 			return true;
+		} else if(filePath.equals(EMPTY_STRING)){
+			return false;
 		}
         try {
             Paths.get(filePath);
@@ -176,5 +178,14 @@ public class StorageProperties implements StorageTools{
 	public String getCurrentTempFilePath(){
 		String currentFileDir = getCurrentFileDirectory();
 		return getTempFilePath(currentFileDir);
+	}
+	
+	public String checkPath(){
+		String currentPath = getCurrentFileDirectory();
+		if(currentPath.equals(EMPTY_STRING)){
+			File currentPathFile = new File(currentPath);
+			currentPath = currentPathFile.getAbsolutePath();
+		} 
+		return currentPath;
 	}
 }
