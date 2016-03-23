@@ -138,8 +138,8 @@ public class TimeParser {
 			setField("year", c.get(Calendar.YEAR));
 		}
 		if (!isFieldSet("hour") && !isFieldSet("minute")) {
-			setField("hour", 0);
-			setField("minute", 0);
+			setField("hour", 00);
+			setField("minute", 00);
 		}
 		if (!isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
