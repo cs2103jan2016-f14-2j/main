@@ -40,6 +40,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -54,6 +55,7 @@ import javafx.util.Duration;
 
 public class Controller extends myObserver implements Initializable {
 	
+	private static final String TYPE_HELP = "help";
 	private static final String TYPE_SEARCH = "search";
 	private static final String TYPE_TODO = "floating";
 	private static final String TYPE_DEADLINE = "deadline";
@@ -79,6 +81,8 @@ public class Controller extends myObserver implements Initializable {
 	AnchorPane mainController;
 
 	@FXML
+	Tab mainTab;
+	@FXML
 	Tab agendaTab;
 	@FXML
 	Tab eventsTab;
@@ -90,6 +94,9 @@ public class Controller extends myObserver implements Initializable {
 	@FXML
 	TabPane tabPanes;
 
+	@FXML
+	AnchorPane mainContent;
+	
 	@FXML
 	AnchorPane agendaContent;
 
@@ -124,7 +131,7 @@ public class Controller extends myObserver implements Initializable {
 		
 		TextFields.bindAutoCompletion(
                 commandBox,
-                "add ", "edit ", "delete ", "search ");
+                "add ", "edit ", "delete ", "search ", "help ");
 		
 		Platform.runLater(new Runnable() {
 			@Override
@@ -157,10 +164,22 @@ public class Controller extends myObserver implements Initializable {
 	========================================*/
 	
 	private void loadDisplay() {
+		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
 		loadDeadlinesList();
 		loadTodoList();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void loadMainTab(){
+		listFormatter.fomatList(logic.getDeadlinesList(), logic.getEventsList());
+		mainContent.getChildren().clear();
+		ListView emptyList = new ListView();
+		emptyList.setPrefSize(0, 0);
+		emptyList.setVisible(false);
+		mainContent.getChildren().add(emptyList);
+		mainContent.getChildren().add(listFormatter.getMainContent());
 	}
 	
 	public void loadAgendaList() {
@@ -460,7 +479,7 @@ public class Controller extends myObserver implements Initializable {
 	
 	private void searchPrompt(String searchStr) {
 
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
+		ArrayList<Task> taskList = new ArrayList<Task>(logic.getSearchList());
 		ObservableList<Task> data = FXCollections.observableArrayList();
 		data.addAll(taskList);
 		ListView<Task> listView = new ListView<Task>(data);
@@ -520,8 +539,8 @@ public class Controller extends myObserver implements Initializable {
 		popup.getChildren().add(dialogVbox);
 		popup.getStyleClass().add("popup");
 //		popup.setPrefSize(300, 500);
-		popupLayer.getChildren().add(popup);
-//		popupLayer.getChildren().add(makeDraggable(popup));
+//		popupLayer.getChildren().add(popup);
+		popupLayer.getChildren().add(makeDraggable(popup));
 		overlay.setVisible(true);
 		deletebtn.requestFocus();
 		
@@ -530,6 +549,32 @@ public class Controller extends myObserver implements Initializable {
 //		popup.getChildren().add(listView);
 	}	
 	
+private void helpPrompt(String helpStrings) {
+		Pane popup = new Pane();
+		VBox dialogVbox = new VBox(10);
+		Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		Button closebtn = new Button("x");
+		closebtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				popupLayer.getChildren().clear();
+				overlay.setVisible(false);
+			}
+		});
+		HBox closeBar = new HBox(new Text("Help Sheet"),spacer,closebtn);
+		
+		dialogVbox.getChildren().add(closeBar);
+		dialogVbox.getChildren().add(new Text(helpStrings));
+		dialogVbox.setPadding(new Insets(10));
+		popup.getChildren().add(dialogVbox);
+		popup.getStyleClass().add("popup");
+//		popupLayer.getChildren().add(popup);
+		popupLayer.getChildren().add(makeDraggable(popup));
+		overlay.setVisible(true);
+		closebtn.requestFocus();		
+	}
 	/*======================================
 	 * 
 	 * COMMAND BOX RELATED:
@@ -624,11 +669,11 @@ public class Controller extends myObserver implements Initializable {
 	}	
 
 	@Override
-	public void update(String[] displayType) {
+	public void update(String[] feedback) {
 		int index = 0;
-		if(displayType[1].matches(".*\\d+.*"))
-		 index = Integer.parseInt(displayType[1].replaceAll("[^\\d.]", ""));
-		String tab = displayType[1].replaceAll("[0-9]","");
+		if(feedback[1].matches(".*\\d+.*"))
+		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
+		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
 		case TYPE_EVENT:
 			addAndReload(eventsTab,index);
@@ -641,13 +686,17 @@ public class Controller extends myObserver implements Initializable {
 			break;
 		case TYPE_SEARCH:
 //			showSearch(feedback[0]);
-//			searchPrompt(feedback[0]);
+			searchPrompt(feedback[0]);
+//			helpPrompt("oasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\n");
+			break;
+		case TYPE_HELP:
+			helpPrompt(feedback[0]);
 			break;
 		default:
 			loadDisplay();
 			break;
 		}
-		updateMessagePrompt(displayType[0]);
+		updateMessagePrompt(feedback[0]);
 	}
 
 }

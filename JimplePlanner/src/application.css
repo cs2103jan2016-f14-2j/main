@@ -40,6 +40,21 @@
 	-fx-fill: red;
 }
 
+.hbox {
+    -fx-background-color: #ff0000;
+}
+
+.hboxDeadline {
+    -fx-background-color: #00ff00;
+}
+
+.mainVbox {
+    -fx-background-color: #ff00ff;
+}
+
+.vboxEvent {
+    -fx-background-color: #ffff00;
+}
 
 /* 
  .list-cell {
@@ -60,7 +75,7 @@
  
  .list-view {
     -fx-padding: 3px ;
-    -fx-background-color: white ;
+    -fx-background-color: transparent;
 }
 
 .list-cell {

@@ -7,11 +7,13 @@ import org.jimple.planner.Task;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -42,6 +44,30 @@ public class ListViewFormatter {
 		}
 		formatType(listType);
 	}
+	
+	public void fomatList(ArrayList<Task> deadlinesList, ArrayList<Task> eventsList) {
+		int counter = 0;
+		formattedList.clear();
+		for(Task task : deadlinesList){
+			formattedList.add(task);
+			if(++counter >= 3)
+				break;
+		}
+		
+		while(formattedList.size() < 3)
+			formattedList.add(new Task(""));
+		
+		counter = 0;
+		
+		for(Task task : eventsList){
+			formattedList.add(task);
+			if(++counter >= 3)
+				break;
+		}
+		
+		while(formattedList.size() < 6)
+			formattedList.add(new Task(""));
+	}
 
 	public void formatType(String listType) {
 		switch (listType) {
@@ -61,6 +87,78 @@ public class ListViewFormatter {
 			formatEmptyList();
 			break;
 		}		
+	}
+	
+	public VBox getMainContent(){
+
+		Text ID;
+		Text date;
+		Text time;
+		Text title;
+		VBox mainVbox = new VBox(10);
+		HBox eventsSection = new HBox(10);
+		mainVbox.getStyleClass().add("mainVbox");
+		eventsSection.getStyleClass().add("hbox");
+		VBox.setVgrow(eventsSection, Priority.ALWAYS);
+
+		fitToAnchorPane(mainVbox);
+		
+		//adding deadlines
+		for(int i=0; i<3; i++){
+			ID = new Text();
+			date = new Text();
+			time = new Text();
+			title = new Text();
+			if(!formattedList.get(i).getTitle().equals("")){
+			ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
+			date.setText(formattedList.get(i).getPrettyFromDate());
+			time.setText(formattedList.get(i).getPrettyFromTime());
+			title.setText(formattedList.get(i).getTitle());
+			HBox hbox = new HBox(ID,date,time,title);
+			hbox.setSpacing(10);
+			hbox.getStyleClass().add("hboxDeadline");
+			VBox.setVgrow(hbox, Priority.ALWAYS);
+			mainVbox.getChildren().add(hbox);
+			}
+			else{
+				System.out.println("empty deadline");
+				mainVbox.getChildren().add(new HBox());
+			}
+		}
+		
+		//adding events
+		for(int i=3; i<6; i++){
+			date = new Text();
+			time = new Text();
+			title = new Text();
+			if(!formattedList.get(i).getTitle().equals("")){
+			title.setText(String.format("%d %s", formattedList.get(i).getTaskId(), formattedList.get(i).getTitle()));
+			date.setText(String.format("FROM %s %s", formattedList.get(i).getPrettyFromDate(), formattedList.get(i).getPrettyFromTime()));
+			time.setText(String.format("TO %s %s", formattedList.get(i).getPrettyToDate(), formattedList.get(i).getPrettyToTime()));
+			VBox vbox = new VBox(title,date,time);
+			vbox.setSpacing(10);
+			vbox.getStyleClass().add("vboxEvent");
+			HBox.setHgrow(vbox, Priority.ALWAYS);
+			eventsSection.getChildren().add(vbox);
+			}
+			else{
+				System.out.println("empty event");
+				date = new Text();
+				time = new Text();
+				title = new Text();
+				title.setText(String.format(" "));
+				date.setText(String.format(" "));
+				time.setText(String.format(" "));
+				VBox vbox = new VBox(title,date,time);
+				vbox.getStyleClass().add("vboxEvent");
+				HBox.setHgrow(vbox, Priority.ALWAYS);
+				eventsSection.getChildren().add(vbox);
+			}
+		}
+		
+		mainVbox.getChildren().add(eventsSection);
+		mainVbox.setPadding(new Insets(10));
+		return mainVbox;
 	}
 
 
@@ -282,13 +380,5 @@ public class ListViewFormatter {
 			}
 
 		});
-	}
-	
-	public ListView<Task> getFormattedAgendaList() {
-		data = FXCollections.observableArrayList();
-		data.addAll(formattedList);
-		ListView<Task> listView = new ListView<Task>(data);
-		
-		return null;
 	}
 }
