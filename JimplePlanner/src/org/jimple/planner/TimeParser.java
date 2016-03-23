@@ -158,7 +158,7 @@ public class TimeParser {
 	private boolean isAfterCurrentDate(int inputDay, int inputMonth) {
 		c.setTimeInMillis(System.currentTimeMillis());
 		boolean case1 = inputMonth > c.get(Calendar.MONTH);
-		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay > c.get(Calendar.DAY_OF_MONTH);
+		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay >= c.get(Calendar.DAY_OF_MONTH);
 		return case1 || case2;
 	}
 	
