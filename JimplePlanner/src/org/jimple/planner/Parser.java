@@ -69,6 +69,7 @@ public class Parser {
 	private static final String EXTENDED_COMMAND_AT = "at";
 	private static final String EXTENDED_COMMAND_ON = "on";
 	private static final String EXTENDED_COMMAND_FROM = "from";
+	private static final String EXTENDED_COMMAND_TO = "to";
 	private static final String EXTENDED_COMMAND_BY = "by";
 	private static final String EXTENDED_COMMAND_CATEGORY = "category";
 	
@@ -306,14 +307,14 @@ public class Parser {
 	}
 	
 	private void parseAt(String userInput, InputStruct inputStruct) throws Exception {
-		Calendar parsedCalendar = timeParser.parseTime(userInput);
+		Calendar parsedCalendar = timeParser.parseTime(EXTENDED_COMMAND_AT, userInput);
 		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
 		parsedCalendar.add(Calendar.HOUR_OF_DAY, 1);
 		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
 	}
 	
 	private void parseOn(String userInput, InputStruct inputStruct) throws Exception {
-		Calendar parsedCalendar = timeParser.parseTime(userInput);
+		Calendar parsedCalendar = timeParser.parseTime(EXTENDED_COMMAND_ON, userInput);
 		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
 		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
 		parsedCalendar.set(Calendar.MINUTE, 59);
@@ -325,16 +326,13 @@ public class Parser {
 			throw new MissingDateTimeFieldException("\"from\" must be accompanied by \"to\".");
 		} else {
 			String[] splitFromTo = userInput.split(" to ");
-			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(splitFromTo[0])));
-			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(timeParser.parseTime(splitFromTo[1])));
+			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0])));
+			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_TO, splitFromTo[1])));
 		}
 	}
 	
 	private void parseBy(String userInput, InputStruct inputStruct) throws Exception {
-		Calendar byCalendar = timeParser.parseTime(userInput);
-		byCalendar.set(Calendar.HOUR_OF_DAY, 23);
-		byCalendar.set(Calendar.MINUTE, 59);
-		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(byCalendar));
+		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_BY, userInput)));
 	}
 	
 	private void setCategory(String userInput, InputStruct inputStruct) {

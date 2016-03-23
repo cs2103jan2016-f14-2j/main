@@ -62,6 +62,8 @@ public class TimeParser {
 	private int hour = FIELD_NOT_SET_VALUE;
 	private int minute = FIELD_NOT_SET_VALUE;
 	
+	private boolean fromSetToNextDay = false;
+	
 	private Calendar c = null;
 	
 	//private static Logger LOGGER = Logger.getLogger("TimeParser");
@@ -90,7 +92,7 @@ public class TimeParser {
 	 * MAIN PARSER METHOD |
 	 * -------------------|
 	 */
-	public Calendar parseTime(String input) throws Exception {
+	public Calendar parseTime(String extendedCommand, String input) throws Exception {
 		resetTimeAndDate();
 		String[] splitInput = input.split(" ");
 		for (String i: splitInput) {
@@ -104,15 +106,15 @@ public class TimeParser {
 				throw new InvalidDateTimeFieldException("Date/Time: \"" + i + "\" not recognised.");
 			}
 		}
-		if (!formatCalendarIfValid()) {
+		if (!formatCalendarIfValid(extendedCommand)) {
 			return null;
 		}
 		return c;
 	}
 
-	private boolean formatCalendarIfValid() throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
+	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
-		initSecondaryAndPresetFields();
+		initSecondaryAndPresetFields(extendedCommand);
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
@@ -127,19 +129,35 @@ public class TimeParser {
 		return false;
 	}
 		
-	private boolean initSecondaryAndPresetFields() throws DuplicateDateTimeFieldException{
+	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException{
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
-			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
+			if (!isAfterCurrentTime(getField("hour"), getField("minute")) || fromSetToNextDay) {
 				c.add(Calendar.DATE, 1);
+				if (extendedCommand == "from") {
+					fromSetToNextDay = true;
+				}
 			}
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
 		}
 		if (!isFieldSet("hour") && !isFieldSet("minute")) {
-			setField("hour", 00);
-			setField("minute", 00);
+			switch (extendedCommand) {
+				case "on" :
+				case "at" :
+				case "from" :
+					setField("hour", 00);
+					setField("minute", 00);
+					break;
+				case "to" :
+				case "by" :
+					setField("hour", 23);
+					setField("minute", 59);
+					break;
+				default :
+					break;
+			}
 		}
 		if (!isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
@@ -152,6 +170,9 @@ public class TimeParser {
 		}
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
+		if (extendedCommand == "to") {
+			fromSetToNextDay = false;
+		}
 		return true;
 	}
 	
