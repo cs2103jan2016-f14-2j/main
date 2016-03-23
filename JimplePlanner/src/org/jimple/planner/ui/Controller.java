@@ -131,7 +131,7 @@ public class Controller extends myObserver implements Initializable {
 		
 		TextFields.bindAutoCompletion(
                 commandBox,
-                "add ", "edit ", "delete ", "search ", "help");
+                "add ", "edit ", "delete ", "search ", "help", "changedir", "checkdir");
 		
 		Platform.runLater(new Runnable() {
 			@Override
