@@ -130,7 +130,7 @@ public class Controller extends myObserver implements Initializable {
 		logic.attach(this);
 		TextFields.bindAutoCompletion(
                 commandBox,
-                "add ", "edit ", "delete ", "search ", "help ");
+                "add ", "edit ", "delete ", "search ", "help");
 		
 		Platform.runLater(new Runnable() {
 			@Override
@@ -168,6 +168,7 @@ public class Controller extends myObserver implements Initializable {
 		loadEventsList();
 		loadDeadlinesList();
 		loadTodoList();
+		loadSearchList();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -219,40 +220,6 @@ public class Controller extends myObserver implements Initializable {
 		for(int i=0; i<getActiveListView().getItems().size(); i++)
 			if(getActiveListView().getItems().get(i).getTaskId() == index)
 				selectIndex(i);
-	}
-	
-	
-	public void showSearch(String searchStr) {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
-									new Text(String.format("to: %s", item.getToTime())));
-							HBox hBox = new HBox(vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
-		((Pane) getCurrentTab().getContent()).getChildren().clear();
-		((Pane) getCurrentTab().getContent()).getChildren().add(listView);
 	}
 
 	public String getCurrentTabName() {
@@ -476,34 +443,9 @@ public class Controller extends myObserver implements Initializable {
 		deletebtn.requestFocus();
 	}
 	
-	private void searchPrompt(String searchStr) {
-
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.getSearchList());
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t);
-							HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex())), vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
+	private void loadSearchList() {
+		listFormatter.formatList(logic.getSearchList(),TYPE_SEARCH);
+		ListView<Task> listView = listFormatter.getFormattedList();
 		listView.setPrefSize(stackPane.getWidth()/2, stackPane.getHeight()/2);
 		//		fitToAnchorPane(listView);
 		
@@ -537,15 +479,11 @@ public class Controller extends myObserver implements Initializable {
 		dialogVbox.setPadding(new Insets(10));
 		popup.getChildren().add(dialogVbox);
 		popup.getStyleClass().add("popup");
-//		popup.setPrefSize(300, 500);
-//		popupLayer.getChildren().add(popup);
+		if(!popupLayer.getChildren().isEmpty())
+			popupLayer.getChildren().clear();
 		popupLayer.getChildren().add(makeDraggable(popup));
-		overlay.setVisible(true);
-		deletebtn.requestFocus();
-		
-		
-//		popup.getChildren().clear();
-//		popup.getChildren().add(listView);
+//		overlay.setVisible(true);
+//		deletebtn.requestFocus();
 	}	
 	
 private void helpPrompt(String helpStrings) {
@@ -570,9 +508,11 @@ private void helpPrompt(String helpStrings) {
 		popup.getChildren().add(dialogVbox);
 		popup.getStyleClass().add("popup");
 //		popupLayer.getChildren().add(popup);
+		if(!popupLayer.getChildren().isEmpty())
+			popupLayer.getChildren().clear();
 		popupLayer.getChildren().add(makeDraggable(popup));
 		overlay.setVisible(true);
-		closebtn.requestFocus();		
+//		closebtn.requestFocus();		
 	}
 	/*======================================
 	 * 
@@ -670,7 +610,7 @@ private void helpPrompt(String helpStrings) {
 	@Override
 	public void update(String[] feedback) {
 		int index = 0;
-		if(feedback[1].matches(".*\\d+.*"))
+		if(feedback[1].matches(".*\\d+.*")) //if string contains digits
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
@@ -684,9 +624,8 @@ private void helpPrompt(String helpStrings) {
 			addAndReload(todoTab,index);
 			break;
 		case TYPE_SEARCH:
-//			showSearch(feedback[0]);
-			searchPrompt(feedback[0]);
-//			helpPrompt("oasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\n");
+			overlay.setVisible(true);
+			loadSearchList();
 			break;
 		case TYPE_HELP:
 			helpPrompt(feedback[0]);
