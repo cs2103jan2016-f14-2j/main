@@ -95,7 +95,7 @@ public class Logic {
 				feedback[1] = Constants.STRING_SEARCH;
 				break;
 			case Constants.STRING_CHANGEDIR:
-				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray());
+				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray(), todo, deadlines, events);
 				feedback[1] = Constants.STRING_CHANGEDIR;
 				break;
 			case Constants.STRING_UNDO:

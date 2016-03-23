@@ -60,14 +60,14 @@ public final class Constants {
 	public static final String EDIT_COMMAND_ONE_TIMING = "type \"edit\" <taskID> \"name\" <your event title> \"time\" by <date/time>\n";
 	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"edit\" <taskID> \"name\" <your event title> \"time\" from <date/time> to <date/time>\n";
 	public static final String DELETE_COMMAND = "type \"delete\" <taskID>";
-	public static final String SEARCH_COMMAND = "type \"search\" <task name>";
-	public static final String UNDO_COMMAND = "type \"undo\"";
+	public static final String SEARCH_COMMAND = "type \"search\" <task name>\n";
+	public static final String UNDO_COMMAND = "type \"undo\"\n";
 	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <path directory>";
 
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 	
-	public static final String ERROR_ADDED_FEEDBACK = " could not be added";
+	public static final String ERROR_WRONG_TIME_FEEDBACK = "please input a valid \"from\" and \"to\" time";
 	public static final String ADDED_FEEDBACK = " added to planner";
 	
 	public static final String UNDO_FEEDBACK = " undone";
