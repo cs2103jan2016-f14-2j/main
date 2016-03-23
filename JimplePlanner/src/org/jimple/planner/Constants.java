@@ -67,7 +67,7 @@ public final class Constants {
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 	
-	public static final String ERROR_ADDED_FEEDBACK = " could not be added";
+	public static final String ERROR_WRONG_TIME_FEEDBACK = "please input a valid \"from\" and \"to\" time";
 	public static final String ADDED_FEEDBACK = " added to planner";
 	
 	public static final String UNDO_FEEDBACK = " undone";

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Formatter;
 import org.jimple.planner.Task;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class LogicTest {
 	LogicDelete testDeleter = new LogicDelete();
 	LogicSearch testSearcher = new LogicSearch();
 	LogicDirectory testDirecter = new LogicDirectory();
+	LogicUndo testUndoer = new LogicUndo();
 	ArrayList<Task>	floating = new ArrayList<Task>();
 	ArrayList<Task>	deadlines = new ArrayList<Task>();
 	ArrayList<Task>	events = new ArrayList<Task>();
@@ -57,8 +59,13 @@ public class LogicTest {
 	}
 	
 	@Test
-	public void ShouldReturnUndoCommand()	{
-		
+	public void ShouldReturnUndoCommand() throws IOException	{
+		ArrayList<Task> deletedTasks = new ArrayList<Task>();
+		String[] variableArray = {"1"};
+		assertEquals(Constants.UNDO_FEEDBACK_ERROR, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
+		initializeThreeArrays();
+		testDeleter.deleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks);
+		assertEquals("task \"" + "a test only one" +  "\"" +Constants.UNDO_FEEDBACK, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
 	}
 	
 	@Test
