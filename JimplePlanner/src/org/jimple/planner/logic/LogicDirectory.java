@@ -24,7 +24,11 @@ public class LogicDirectory {
 		events.addAll(allTasks.get(2));
 		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] +  "\"";
 	}
-
+	
+	protected String checkPath(Storage store)	{
+		return store.checkPath();
+	}
+	
 	private boolean isValidPath(Storage store, String[] variableArray) {
 		if (store.setPath(variableArray[0])) {
 			return true;

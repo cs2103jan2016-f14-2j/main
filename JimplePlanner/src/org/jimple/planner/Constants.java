@@ -46,6 +46,7 @@ public final class Constants {
 	public static final String STRING_CHANGEDIR = "changedir";
 	public static final String STRING_UNDO = "undo";
 	public static final String STRING_HELP = "help";
+	public static final String STRING_CHECKDIR = "checkdir";
 	
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
 	public static final String EDIT_HELP_HEADER = "Edit a current task:\n";

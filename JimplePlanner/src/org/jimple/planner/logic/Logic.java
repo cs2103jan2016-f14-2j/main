@@ -109,6 +109,9 @@ public class Logic {
 				feedback[0] = helpCommand();
 				feedback[1] = Constants.STRING_HELP;
 				break;
+			case Constants.STRING_CHECKDIR:
+				feedback[0] = directer.checkPath(store);
+				feedback[1] = Constants.STRING_CHECKDIR;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
