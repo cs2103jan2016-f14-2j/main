@@ -59,6 +59,7 @@ public class Parser {
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_CHANGEDIR = "changedir";
+	private static final String COMMAND_CHECKDIR = "checkdir";
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
 	
@@ -138,6 +139,11 @@ public class Parser {
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_CHANGEDIR :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				case COMMAND_CHECKDIR :
+					if (isCommandOnly(splitUserInput)) {
+						return new InputStruct(COMMAND_CHECKDIR);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
 				case COMMAND_UNDO :
 					if (isCommandOnly(splitUserInput)) {
 						return new InputStruct(COMMAND_UNDO);

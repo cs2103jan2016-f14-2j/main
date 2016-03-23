@@ -31,7 +31,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("add task from 12pm to 7pm");
+			testStruct = testParser.parseInput("edit 1 time by 7pm");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
