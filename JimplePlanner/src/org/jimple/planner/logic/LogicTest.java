@@ -42,10 +42,15 @@ public class LogicTest {
 		todo1.setTaskId(1);
 		deadlines1.setType("deadline");
 		deadlines1.setTaskId(2);
+		deadlines1.setFromDate("2016-03-30T16:00");
 		events1.setType("event");
 		events1.setTaskId(3);
+		events1.setFromDate("2016-03-25T09:00");
+		events1.setToDate("2016-03-27T17:00");
 		events2.setType("event");
 		events2.setTaskId(4);
+		events2.setFromDate("2016-03-28T07:00");
+		events2.setToDate("2016-03-30T11:00");
 		floating.add(todo1);
 		deadlines.add(deadlines1);
 		events.add(events1);
@@ -58,6 +63,12 @@ public class LogicTest {
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
 	
+	/**
+	 * EP: 3 test cases
+	 * 1. Empty
+	 * 2. less than 20
+	 * 3. more than 20
+	 */
 	@Test
 	public void ShouldReturnUndoCommand() throws IOException	{
 		ArrayList<Task> deletedTasks = new ArrayList<Task>();
@@ -66,8 +77,17 @@ public class LogicTest {
 		initializeThreeArrays();
 		testDeleter.deleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks);
 		assertEquals("task \"" + "a test only one" +  "\"" +Constants.UNDO_FEEDBACK, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
+		for (int i=0;i<21;i++)	{
+			deletedTasks.add(new Task(Integer.toString(i)));
+		}
+		assertEquals("task \"" + "20" +  "\"" +Constants.UNDO_FEEDBACK, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
 	}
 	
+	/*
+	 * EP: 2 cases
+	 * 1. Task is found and deleted
+	 * 2. Task cannot be found and no deletion
+	 */
 	@Test
 	public void ShouldReturnTrueAfterDeleteFromArray() throws IOException	{
 		String[] variableArray = {"1"};
@@ -77,18 +97,25 @@ public class LogicTest {
 		assertFalse("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, deletedTasks));
 	}
 	
+	/*
+	 * EP: 2 cases
+	 * 1. able to find task and edit
+	 * 2. unable to find task and no edit
+	 */
 	@Test
 	public void ShouldReturnTrueAfterEditting()	throws IOException, InvalidFromAndToTime{
 		String[] variableArray = {"1", "task one", null, "2016-03-12T14:00", null, null};
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
+		variableArray[0] = "6";
+		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
 	}
 	
 	@Test
 	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime	{
-		String[] variableArray = {"0", "task one", null, null, "2016-03-02T05:00", null};
+		String[] variableArray = {"1", "task one", null, "2016-03-30T05:00", null, null};
 		initializeThreeArrays();
-		//assertEquals("return same string", "task edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task 1 edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 		variableArray[0] = "10";
 		assertEquals("return same string", "task 10 could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 	}

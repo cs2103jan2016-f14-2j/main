@@ -36,8 +36,10 @@ public class Logic {
 	LogicSearch searcher;
 	LogicDirectory directer;
 	LogicUndo undoer;
+	Thread timer;
 
 	public Logic() {
+		timer = null;
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
@@ -95,7 +97,8 @@ public class Logic {
 				feedback[1] = Constants.STRING_SEARCH;
 				break;
 			case Constants.STRING_CHANGEDIR:
-				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray(), todo, deadlines,
+						events);
 				feedback[1] = Constants.STRING_CHANGEDIR;
 				break;
 			case Constants.STRING_UNDO:
@@ -214,16 +217,16 @@ public class Logic {
 		listOfCommands += Constants.EDIT_HELP_HEADER;
 		listOfCommands += Constants.EDIT_COMMAND_ONE_TIMING;
 		listOfCommands += Constants.EDIT_COMMAND_TWO_TIMINGS;
-		
+
 		listOfCommands += Constants.DELETE_HELP_HEADER;
 		listOfCommands += Constants.DELETE_COMMAND;
-		
-		listOfCommands += Constants.SEARCH_HELP_HEADER;
-		listOfCommands += Constants.SEARCH_COMMAND;
-		
+
+		// listOfCommands += Constants.SEARCH_HELP_HEADER;
+		// listOfCommands += Constants.SEARCH_COMMAND;
+
 		listOfCommands += Constants.UNDO_HELP_HEADER;
 		listOfCommands += Constants.UNDO_COMMAND;
-		
+
 		listOfCommands += Constants.CHANGEDIR_HELP_HEADER;
 		listOfCommands += Constants.CHANGEDIR_COMMAND;
 		return listOfCommands;
