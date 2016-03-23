@@ -120,10 +120,20 @@ public class LogicTest {
 		assertEquals("return same string", "task 10 could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 	}
 	
+	/**
+	 * EP: 3 cases
+	 * 1. add for deadlines
+	 * 2. add for events
+	 * 3. add for todo
+	 */
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String[] parsedInput1 = {"deadlines", "finish 2103 homework", null, "2016-03-09T13:00", null, null};
+		String[] parsedInput1 = {"deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null};
 		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events));
+		String[] parsedInput2 = {"events", "finish 2010 homework", null, "2016-03-29T12:00", "2016-03-30T13:00", null};
+		assertEquals("\"finish 2010 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput2, tempHistory, floating, deadlines, events));
+		String[] parsedInput3 = {"events", "finish 3241 homework", null, null, null, null};
+		assertEquals("\"finish 3241 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput3, tempHistory, floating, deadlines, events));
 	}
 	
 	@Test
