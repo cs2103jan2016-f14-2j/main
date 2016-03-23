@@ -138,8 +138,8 @@ public class TimeParser {
 			setField("year", c.get(Calendar.YEAR));
 		}
 		if (!isFieldSet("hour") && !isFieldSet("minute")) {
-			setField("hour", 0);
-			setField("minute", 0);
+			setField("hour", 00);
+			setField("minute", 00);
 		}
 		if (!isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
@@ -158,7 +158,7 @@ public class TimeParser {
 	private boolean isAfterCurrentDate(int inputDay, int inputMonth) {
 		c.setTimeInMillis(System.currentTimeMillis());
 		boolean case1 = inputMonth > c.get(Calendar.MONTH);
-		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay > c.get(Calendar.DAY_OF_MONTH);
+		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay >= c.get(Calendar.DAY_OF_MONTH);
 		return case1 || case2;
 	}
 	

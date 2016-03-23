@@ -268,7 +268,7 @@ public class Parser {
 				break;
 			case EXTENDED_COMMAND_TIME :
 				String dateTimeExtendedCommand = getCommandString(inputString.split(" "));
-				setTime(dateTimeExtendedCommand, inputString.substring(5), inputStruct);
+				setTime(dateTimeExtendedCommand, inputString.substring(dateTimeExtendedCommand.length()+1), inputStruct);
 				break;
 			case EXTENDED_COMMAND_CATEGORY :
 				setCategory(inputString, inputStruct);
@@ -331,7 +331,10 @@ public class Parser {
 	}
 	
 	private void parseBy(String userInput, InputStruct inputStruct) throws Exception {
-		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(userInput)));
+		Calendar byCalendar = timeParser.parseTime(userInput);
+		byCalendar.set(Calendar.HOUR_OF_DAY, 23);
+		byCalendar.set(Calendar.MINUTE, 59);
+		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(byCalendar));
 	}
 	
 	private void setCategory(String userInput, InputStruct inputStruct) {
