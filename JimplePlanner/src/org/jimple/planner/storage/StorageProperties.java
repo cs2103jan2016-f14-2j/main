@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import org.jimple.planner.Task;
 
-public class StorageProperties {
+public class StorageProperties implements StorageTools{
 	private static StorageSave storageSave = null;
 	private static StorageLoad storageLoad = null;
 	private Properties storageProperties = null;
@@ -110,7 +110,7 @@ public class StorageProperties {
 			ArrayList<Task> newTasksByType = newPathTasks.get(i);
 			ArrayList<Task> oldTasksByType = oldPathTasks.get(i);
 			oldTasksByType.addAll(newTasksByType);
-			
+			assignTaskIds(oldPathTasks);
 			HashSet<Task> removeDuplicatedTasksByType = new HashSet<Task>(oldTasksByType);
 			ArrayList<Task> consolidatedTasksByType = new ArrayList<Task>(removeDuplicatedTasksByType);
 			consolidatedTasks.add(consolidatedTasksByType);
