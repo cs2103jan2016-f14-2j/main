@@ -453,18 +453,10 @@ public class Controller extends myObserver implements Initializable {
 		Pane popup = new Pane();
 		VBox dialogVbox = new VBox(10);
 		HBox dialogHbox = new HBox(10);
-		Button deletebtn = new Button();
-		Button closebtn = new Button();
-		deletebtn.setText("delete");
-		deletebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				deleteSelectedTask();
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		closebtn.setText("cancel");
+		Button closebtn = new Button("x");
+		Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		HBox.setHgrow(spacer, Priority.ALWAYS);
 		closebtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -472,9 +464,8 @@ public class Controller extends myObserver implements Initializable {
 				overlay.setVisible(false);
 			}
 		});
-		dialogVbox.getChildren().add(new Text("Search Results"));
-		dialogHbox.getChildren().add(deletebtn);
-		dialogHbox.getChildren().add(closebtn);
+		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
+		dialogVbox.getChildren().add(closeBar);
 		dialogVbox.getChildren().add(listView);
 		dialogVbox.getChildren().add(dialogHbox);
 		dialogVbox.setPadding(new Insets(10));
