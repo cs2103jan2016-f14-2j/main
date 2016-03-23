@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class UI extends Application {
 	@Override
@@ -17,6 +18,7 @@ public class UI extends Application {
 			primaryStage.getIcons().add(new Image("Jimple-Icon.png"));
             primaryStage.setTitle("Jimple Planner");
 			primaryStage.setScene(scene);
+//			primaryStage.initStyle(StageStyle.UNDECORATED);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
