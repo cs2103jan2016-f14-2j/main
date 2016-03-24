@@ -28,7 +28,7 @@ public class LogicDelete extends LogicEdit{
 			packageForSavingInFile(store, todo, deadlines, events);
 			return "task \"" + variableArray[0] +  "\"" + Constants.DELETED_FEEDBACK;
 		}
-		return "task \"" + variableArray[0] +  "\"" + Constants.ERROR_DELETED_FEEDBACK;
+		return "task " + variableArray[0] + Constants.ERROR_DELETED_FEEDBACK;
 	}
 	
 	private boolean findTaskToDelete(String[] variableArray, ArrayList<Task> list,
