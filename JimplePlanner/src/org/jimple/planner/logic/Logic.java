@@ -237,6 +237,9 @@ public class Logic {
 
 		listOfCommands += Constants.CHANGEDIR_HELP_HEADER;
 		listOfCommands += Constants.CHANGEDIR_COMMAND;
+		
+		listOfCommands += Constants.CHECKDIR_HELP_HEADER;
+		listOfCommands += Constants.CHECKDIR_COMMAND;
 		return listOfCommands;
 	}
 

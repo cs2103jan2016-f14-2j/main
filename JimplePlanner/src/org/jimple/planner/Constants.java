@@ -58,6 +58,7 @@ public final class Constants {
 	public static final String DELETE_HELP_HEADER = "Delete a task:\n";
 	public static final String UNDO_HELP_HEADER = "Undo a task:\n";
 	public static final String CHANGEDIR_HELP_HEADER = "Change Jimple File Directory:\n";
+	public static final String CHECKDIR_HELP_HEADER = "Check Jimple File Directory:\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
 	public static final String ADD_COMMAND_BY = "type \"add\" <your event name> by <time>\n";
@@ -69,8 +70,9 @@ public final class Constants {
 	public static final String DELETE_COMMAND = "type \"delete\" <taskID>\n\n";
 	public static final String SEARCH_COMMAND = "type \"search\" <task name>\n\n";
 	public static final String UNDO_COMMAND = "type \"undo\"\n\n";
-	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <full path directory>\n";
-
+	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <full path directory>\n\n";
+	public static final String CHECKDIR_COMMAND = "type \"checkdir\"\n";
+	
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 	
