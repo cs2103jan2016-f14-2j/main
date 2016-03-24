@@ -9,6 +9,22 @@
     /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
 }
 
+#floating {	
+    -fx-font: 16px Trebuchet ;
+    -fx-padding: 15;
+    -fx-background-radius: 15px;
+    -fx-background-color:  lightgrey; /* #FF9900;*/
+    /*-fx-background-insets: 0px, 2px ;*/
+}
+
+#floating:selected {	
+    -fx-font: 16px Trebuchet ;
+    -fx-padding: 15;
+    -fx-background-radius: 15px;
+    -fx-background-color:  ivory; /* #FF9900;*/
+    /*-fx-background-insets: 0px, 2px ;*/
+}
+
 #date {
     -fx-font: 8px Tahoma ;
     /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
