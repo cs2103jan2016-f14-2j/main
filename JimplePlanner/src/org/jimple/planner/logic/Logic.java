@@ -36,10 +36,8 @@ public class Logic {
 	LogicSearch searcher;
 	LogicDirectory directer;
 	LogicUndo undoer;
-	Thread timer;
 
 	public Logic() {
-		timer = null;
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
