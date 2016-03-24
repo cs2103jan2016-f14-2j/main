@@ -2,7 +2,10 @@ package org.jimple.planner.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +15,10 @@ import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -126,15 +132,21 @@ public class Controller extends myObserver implements Initializable {
 	VBox overlay;
 	
 	@FXML
+	Label clock;
+	
+	@FXML
 	ImageView closeButton;
 
-	
+
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
+		loadClock(); 
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
+		
 		
 		TextFields.bindAutoCompletion(
                 commandBox,
@@ -156,6 +168,19 @@ public class Controller extends myObserver implements Initializable {
 //		loadDisplay();
 		update();
 	 }
+
+	private void loadClock() {
+		final DateFormat format = SimpleDateFormat.getInstance();  
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
+		     @Override  
+		     public void handle(ActionEvent event) {  
+		          final Calendar cal = Calendar.getInstance();  
+		          clock.setText(format.format(cal.getTime()));  
+		     }  
+		}));  
+		timeline.setCycleCount(Animation.INDEFINITE);  
+		timeline.play();
+	}
 	
 	public void enterTriggered() throws IOException {
 		String inputStr = getInputCommand();

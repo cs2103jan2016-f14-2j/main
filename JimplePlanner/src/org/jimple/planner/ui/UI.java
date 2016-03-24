@@ -18,9 +18,6 @@ public class UI extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("JimpleUI.fxml"));
-			root.setStyle(
-			        "-fx-background-color : transparent;"
-			    );
 			root.setOnMousePressed(new EventHandler<MouseEvent>() {
 	            @Override
 	            public void handle(MouseEvent event) {
