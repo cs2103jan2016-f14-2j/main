@@ -15,6 +15,7 @@ import static org.jimple.planner.Constants.TAGS_TO_TIME;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_TODO;
+import static org.jimple.planner.Constants.ERROR_INVALID_TASK;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,6 +56,7 @@ public class StorageLoad implements StorageLoadInterface{
 			while ((fileLineContent = defaultFileReader.readLine()) != null) {
 				if(!fileLineContent.equals(EMPTY_STRING)){
 					Task task = getTaskFromLine(fileLineContent);
+					checkTaskValidity(task);
 					allocateTaskToArrayList(task, allTasksLists);
 				}
 			}
@@ -211,9 +213,5 @@ public class StorageLoad implements StorageLoadInterface{
 		result[4] = task.getToTimeString();
 		result[5] = task.getType();
 		return result;
-	}
-	
-	public ArrayList<ArrayList<Task>> testReadTasks(BufferedReader defaultFileReader){
-		return getTaskByReader(defaultFileReader);
 	}
 }

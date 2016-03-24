@@ -57,6 +57,7 @@ public class StorageSave implements StorageSaveInterface{
 		try {
 			for(ArrayList<Task> taskList: allTaskLists){
 				for(Task task: taskList){
+					checkTaskValidity(task);
 					String lineString = extractTaskToString(task);
 					tempWriter.write(lineString);
 					tempWriter.newLine();

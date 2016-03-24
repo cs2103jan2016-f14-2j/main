@@ -131,6 +131,19 @@ public class Task{
 		return (getFromTime() != null && getToTime() != null);
 	}
 	
+	public boolean isValidType(){
+		if(isTodo()){
+			return true;
+		} else if (isDeadline()){
+			return true;
+		} else if (isEvent()){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
 	public String getTitle() {
 		return title;
 	}

@@ -9,6 +9,8 @@ public final class Constants {
 	public static final String TYPE_STATIC = "static";
 	public static final String EMPTY_STRING = "";
 	
+	public static final String ERROR_INVALID_TASK = "Task is invalid";
+	
 	/*
 	 * Storage Component
 	 */
