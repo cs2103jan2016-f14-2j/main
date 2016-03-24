@@ -13,17 +13,27 @@ public class LogicDirectory {
 		if (!isValidPath(store, variableArray)) {
 			return Constants.ERROR_DIRECTORY_PATH_FEEDBACK;
 		}
-		todo = store.getTasks().get(0);
-		deadlines = store.getTasks().get(1);
-		events = store.getTasks().get(2);
+		//store = new StorageComponent();
+		ArrayList<ArrayList<Task>> allTasks = store.getTasks();
+		LogicTaskModification.assignTaskIds(allTasks);
+		todo.clear();
+		todo.addAll(allTasks.get(0));
+		deadlines.clear();
+		deadlines.addAll(allTasks.get(1));
+		events.clear();
+		events.addAll(allTasks.get(2));
 		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] +  "\"";
 	}
-
+	
+	protected String checkPath(Storage store)	{
+		return store.checkPath();
+	}
+	
 	private boolean isValidPath(Storage store, String[] variableArray) {
 		if (store.setPath(variableArray[0])) {
 			return true;
 		}
 		return false;
 	}
-
+	
 }
