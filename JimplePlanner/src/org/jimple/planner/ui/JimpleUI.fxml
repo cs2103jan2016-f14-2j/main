@@ -17,15 +17,39 @@
 
 <StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.Controller">
    <children>
-      <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0">
+      <VBox fx:id="overlay">
          <children>
-            <VBox prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Region VBox.vgrow="ALWAYS" />
+            <HBox>
                <children>
-                  <HBox>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <AnchorPane fx:id="popupLayer" />
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Region VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+      <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 15;">
+         <children>
+            <VBox prefHeight="600.0" prefWidth="800.0" style="-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox style="-fx-background-radius: 10;">
                      <children>
-                        <ImageView fitHeight="71.0" fitWidth="94.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="48.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../Jimple-Logo.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="58.0" fitWidth="259.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Jimple-Text-Logo.png" />
+                           </image>
+                        </ImageView>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ImageView fx:id="closeButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#closeButtonAction" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../closeBtn.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -221,18 +245,5 @@
             </VBox>
          </children>
       </AnchorPane>
-      <VBox fx:id="overlay">
-         <children>
-            <Region VBox.vgrow="ALWAYS" />
-            <HBox>
-               <children>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <AnchorPane fx:id="popupLayer" />
-                  <Region HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <Region VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
    </children>
 </StackPane>

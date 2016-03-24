@@ -34,6 +34,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -98,6 +99,9 @@ public class Controller extends myObserver implements Initializable {
 	AnchorPane mainContent;
 	
 	@FXML
+	AnchorPane mainContainer;
+	
+	@FXML
 	AnchorPane agendaContent;
 
 	@FXML
@@ -120,6 +124,9 @@ public class Controller extends myObserver implements Initializable {
 
 	@FXML
 	VBox overlay;
+	
+	@FXML
+	ImageView closeButton;
 
 	
 	@Override
@@ -139,6 +146,7 @@ public class Controller extends myObserver implements Initializable {
 				commandBox.requestFocus();
 			}
 		});
+//		stackPane.setId("main");
 		overlay.setVisible(false);
 		assert !overlay.isVisible();
 //		assert false;
@@ -539,6 +547,13 @@ private void helpPrompt(String helpStrings) {
 	 * UI INTERACTION:
 	 * 
 	========================================*/
+	@FXML
+	private void closeButtonAction(){
+	    // get a handle to the stage
+	    Stage stage = (Stage) closeButton.getScene().getWindow();
+	    // do what you have to do
+	    stage.close();
+	}
 	
 	private static final class DragContext {
         public double mouseAnchorX;
