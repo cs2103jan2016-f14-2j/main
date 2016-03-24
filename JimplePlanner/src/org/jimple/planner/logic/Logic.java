@@ -213,9 +213,13 @@ public class Logic {
 	 */
 	private String helpCommand() {
 		String listOfCommands = new String();
+		listOfCommands += Constants.TIME_FORMAT_HELP_HEADER;
+		listOfCommands += Constants.TIME_FORMAT;
+
 		listOfCommands += Constants.ADD_HELP_HEADER;
 		listOfCommands += Constants.ADD_COMMAND_BY;
 		listOfCommands += Constants.ADD_COMMAND_AT;
+		listOfCommands += Constants.ADD_COMMAND_ON;
 		listOfCommands += Constants.ADD_COMMAND_FROMTO;
 
 		listOfCommands += Constants.EDIT_HELP_HEADER;
@@ -225,8 +229,8 @@ public class Logic {
 		listOfCommands += Constants.DELETE_HELP_HEADER;
 		listOfCommands += Constants.DELETE_COMMAND;
 
-		// listOfCommands += Constants.SEARCH_HELP_HEADER;
-		// listOfCommands += Constants.SEARCH_COMMAND;
+		listOfCommands += Constants.SEARCH_HELP_HEADER;
+		listOfCommands += Constants.SEARCH_COMMAND;
 
 		listOfCommands += Constants.UNDO_HELP_HEADER;
 		listOfCommands += Constants.UNDO_COMMAND;
