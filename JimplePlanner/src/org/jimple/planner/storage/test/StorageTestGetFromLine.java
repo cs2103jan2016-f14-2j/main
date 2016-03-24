@@ -12,7 +12,7 @@ public class StorageTestGetFromLine {
 	private StorageLoad loadUnit = new StorageLoad();
 	
 	@Test
-	public void testGetTaskFromLine(){
+	public void testGetTaskFromLine1(){
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		
 		String line1 = "/:title:Go exercise, you fatty//:cat:Keep fit/";
