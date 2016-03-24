@@ -84,13 +84,13 @@ public final class Constants {
 	public static final int DELETE_CACHE_LIMIT = 20;
 	
 	public static final String EDITED_FEEDBACK = " edited in planner";
-	public static final String ERROR_EDIT_FEEDBACK = " could not be editted";
+	public static final String ERROR_EDIT_FEEDBACK = " could not be edited";
 	
 	public static final String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";
 	public static final String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed to ";
 	
 	public static final String DELETED_FEEDBACK = " deleted";
-	public static final String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
+	public static final String ERROR_DELETED_FEEDBACK = " could not be found";
 	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
