@@ -155,7 +155,7 @@ public class Parser {
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
 				default :
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" not recongnised.");
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" not recognised.");
 			}
 		} catch (InvalidCommandException ice) {
 			throw ice;

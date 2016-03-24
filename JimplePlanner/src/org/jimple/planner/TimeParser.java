@@ -309,8 +309,8 @@ public class TimeParser {
 			}
 			setField("day", c.get(Calendar.DATE));
 			setField("month", c.get(Calendar.MONTH));
-			setField("hour", 23);
-			setField("minute", 59);
+			/*setField("hour", 23);
+			setField("minute", 59);*/
 			return true;
 		}
 		return false;
