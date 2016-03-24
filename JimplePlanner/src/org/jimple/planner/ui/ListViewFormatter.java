@@ -14,11 +14,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class ListViewFormatter {
+	private static final String TYPE_SEARCH = "search";
 	private static final String TYPE_STATIC = "static";
 	private static final String TYPE_AGENDA = "agenda";
 	private static final String TYPE_FLOATING = "floating";
@@ -48,6 +50,7 @@ public class ListViewFormatter {
 	public void fomatList(ArrayList<Task> deadlinesList, ArrayList<Task> eventsList) {
 		int counter = 0;
 		formattedList.clear();
+		
 		for(Task task : deadlinesList){
 			formattedList.add(task);
 			if(++counter >= 3)
@@ -83,12 +86,15 @@ public class ListViewFormatter {
 		case TYPE_FLOATING:
 			formatTodoList();
 			break;
+		case TYPE_SEARCH:
+			formatSearchList();
+			break;
 		default: //AGENDA LIST
 			formatEmptyList();
 			break;
 		}		
 	}
-	
+
 	public VBox getMainContent(){
 
 		Text ID;
@@ -110,19 +116,26 @@ public class ListViewFormatter {
 			time = new Text();
 			title = new Text();
 			if(!formattedList.get(i).getTitle().equals("")){
-			ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
-			date.setText(formattedList.get(i).getPrettyFromDate());
-			time.setText(formattedList.get(i).getPrettyFromTime());
-			title.setText(formattedList.get(i).getTitle());
-			HBox hbox = new HBox(ID,date,time,title);
-			hbox.setSpacing(10);
-			hbox.getStyleClass().add("hboxDeadline");
-			VBox.setVgrow(hbox, Priority.ALWAYS);
-			mainVbox.getChildren().add(hbox);
+				ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
+				date.setText(formattedList.get(i).getPrettyFromDate());
+				time.setText(formattedList.get(i).getPrettyFromTime());
+				title.setText(formattedList.get(i).getTitle());
+				HBox hbox = new HBox(ID,date,time,title);
+				hbox.setSpacing(10);
+				hbox.getStyleClass().add("hboxDeadline");
+				VBox.setVgrow(hbox, Priority.ALWAYS);
+				mainVbox.getChildren().add(hbox);
 			}
 			else{
-				System.out.println("empty deadline");
-				mainVbox.getChildren().add(new HBox());
+				ID.setText("");
+				date.setText("");
+				time.setText("");
+				title.setText("NO MORE DEADLINES!");
+				HBox hbox = new HBox(ID,date,time,title);
+				hbox.setSpacing(10);
+				hbox.getStyleClass().add("hboxDeadline");
+				VBox.setVgrow(hbox, Priority.ALWAYS);
+				mainVbox.getChildren().add(hbox);
 			}
 		}
 		
@@ -142,11 +155,10 @@ public class ListViewFormatter {
 			eventsSection.getChildren().add(vbox);
 			}
 			else{
-				System.out.println("empty event");
 				date = new Text();
 				time = new Text();
 				title = new Text();
-				title.setText(String.format(" "));
+				title.setText(String.format("NO MORE EVENTS!"));
 				date.setText(String.format(" "));
 				time.setText(String.format(" "));
 				VBox vbox = new VBox(title,date,time);
@@ -228,6 +240,11 @@ public class ListViewFormatter {
 		todoCellFormat();
 	}
 	
+	private void formatSearchList() {
+		addTasksToFormattedList();
+		searchCellFormat();
+	}
+	
 	private void agendaCellFormat() {
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 
@@ -244,20 +261,21 @@ public class ListViewFormatter {
 							Text date = new Text();
 							VBox vBox = new VBox();
 							HBox hBox = new HBox();
+							Region spacer = new Region();
+							VBox.setVgrow(spacer, Priority.ALWAYS);
+							HBox.setHgrow(spacer, Priority.ALWAYS);
 							if (item.getType().equals(TYPE_STATIC)) {
 								this.setId(TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
-								hBox.setSpacing(10);
-								setGraphic(hBox);
 							}
 							else if (item.getType() == TYPE_DEADLINE) {
 								this.setId(TYPE_DEADLINE);
 								vBox = new VBox(t);
-								ID.setText(String.format("  %d", item.getTaskId()));
+								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
-								hBox = new HBox(ID, vBox, date);
+								hBox = new HBox(date, vBox, spacer, ID);
 								t.setId(TYPE_DEADLINE);
 								ID.setId(TYPE_DEADLINE);
 								date.setId(TYPE_DEADLINE);
@@ -266,8 +284,8 @@ public class ListViewFormatter {
 								vBox = new VBox(t,
 										new Text(String.format("%s to %s", item.getPrettyFromTime(),
 												item.getPrettyToTime())));
-								hBox = new HBox(new Text(String.format("%d", item.getTaskId())),
-										vBox);
+								hBox = new HBox(vBox, spacer,
+										new Text(String.format("%d", item.getTaskId())));
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -289,27 +307,32 @@ public class ListViewFormatter {
 							super.updateItem(item, bln);
 							if (item != null) {
 								Text t = new Text(item.getTitle());
-								t.setId("fancytext");
+								Text ID = new Text();
+								Text date = new Text();
+								VBox vBox = new VBox();
+								HBox hBox = new HBox();
 
+								Region spacer = new Region();
+								VBox.setVgrow(spacer, Priority.ALWAYS);
+								HBox.setHgrow(spacer, Priority.ALWAYS);
+								
 								if (item.getType().equals(TYPE_STATIC)) {
-//									this.setDisabled(true);
+									this.setId(TYPE_STATIC);
 									this.setFocusTraversable(false);
-									VBox vBox = new VBox(t);
-									HBox hBox = new HBox(vBox);
-									hBox.setSpacing(10);
-									setGraphic(hBox);
+									vBox = new VBox(t);
+									hBox = new HBox(vBox);
 								}
 
 								else {
-									VBox vBox = new VBox(t,
-											new Text(String.format("from: %s %s", item.getPrettyFromDate(),
-													item.getPrettyFromTime())),
-											new Text(String.format("to: %s %s", item.getPrettyToDate(),
+									this.setId(TYPE_EVENT);
+									vBox = new VBox(t,
+											new Text(String.format("%s to %s", item.getPrettyFromTime(),
 													item.getPrettyToTime())));
-									HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
-									hBox.setSpacing(10);
-									setGraphic(hBox);
+									hBox = new HBox(vBox, spacer,
+											new Text(String.format("%d", item.getTaskId())));
 								}
+								hBox.setSpacing(10);
+								setGraphic(hBox);
 							}
 						}
 					};
@@ -330,24 +353,32 @@ public class ListViewFormatter {
 						super.updateItem(item, bln);
 						if (item != null) {
 							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
+							Text ID = new Text();
+							Text date = new Text();
+							VBox vBox = new VBox();
+							HBox hBox = new HBox();
 							if (item.getType().equals(TYPE_STATIC)) {
+								this.setId(TYPE_STATIC);
 								this.setFocusTraversable(false);
-								VBox vBox = new VBox(t);
-								HBox hBox = new HBox(vBox);
-								hBox.setSpacing(10);
-								setGraphic(hBox);
+								vBox = new VBox(t);
+								hBox = new HBox(vBox);
 							}
 
 							else {
-							VBox vBox = new VBox(t,
-									new Text(String.format("by: %s %s", item.getPrettyFromDate(), item.getPrettyFromTime())));
-							HBox hBox = new HBox(
-									new Text(String.format("#%d", item.getTaskId())),
-									vBox);
+								this.setId(TYPE_DEADLINE);
+								vBox = new VBox(t);
+								ID.setText(String.format("  %d", item.getTaskId()));
+								date.setText(String.format("%s", item.getPrettyFromTime()));
+								Region spacer = new Region();
+								VBox.setVgrow(spacer, Priority.ALWAYS);
+								HBox.setHgrow(spacer, Priority.ALWAYS);
+								hBox = new HBox(date, vBox, spacer, ID);
+								t.setId(TYPE_DEADLINE);
+								ID.setId(TYPE_DEADLINE);
+								date.setId(TYPE_DEADLINE);
+							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
-							}
 						}
 					}
 				};
@@ -370,6 +401,31 @@ public class ListViewFormatter {
 							Text t = new Text(item.getTitle());
 							t.setId("fancytext");
 
+							VBox vBox = new VBox(t);
+							HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
+							hBox.setSpacing(10);
+							setGraphic(hBox);
+						}
+					}
+				};
+			}
+
+		});
+	}
+	
+	private void searchCellFormat(){
+		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+
+			@Override
+			public ListCell<Task> call(ListView<Task> arg0) {
+				return new ListCell<Task>() {
+
+					@Override
+					protected void updateItem(Task item, boolean bln) {
+						super.updateItem(item, bln);
+						if (item != null) {
+							Text t = new Text(item.getTitle());
+							t.setId("fancytext");
 							VBox vBox = new VBox(t);
 							HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
 							hBox.setSpacing(10);

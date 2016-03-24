@@ -2,7 +2,10 @@ package org.jimple.planner.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +15,10 @@ import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,6 +40,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -98,6 +105,9 @@ public class Controller extends myObserver implements Initializable {
 	AnchorPane mainContent;
 	
 	@FXML
+	AnchorPane mainContainer;
+	
+	@FXML
 	AnchorPane agendaContent;
 
 	@FXML
@@ -120,18 +130,27 @@ public class Controller extends myObserver implements Initializable {
 
 	@FXML
 	VBox overlay;
-
 	
+	@FXML
+	Label clock;
+	
+	@FXML
+	ImageView closeButton;
+
+
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
+		loadClock(); 
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
 		
+		
 		TextFields.bindAutoCompletion(
                 commandBox,
-                "add ", "edit ", "delete ", "search ", "help ");
+                "add ", "edit ", "delete ", "search ", "help", "changedir", "checkdir");
 		
 		Platform.runLater(new Runnable() {
 			@Override
@@ -139,6 +158,7 @@ public class Controller extends myObserver implements Initializable {
 				commandBox.requestFocus();
 			}
 		});
+//		stackPane.setId("main");
 		overlay.setVisible(false);
 		assert !overlay.isVisible();
 //		assert false;
@@ -148,6 +168,19 @@ public class Controller extends myObserver implements Initializable {
 //		loadDisplay();
 		update();
 	 }
+
+	private void loadClock() {
+		final DateFormat format = SimpleDateFormat.getInstance();  
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
+		     @Override  
+		     public void handle(ActionEvent event) {  
+		          final Calendar cal = Calendar.getInstance();  
+		          clock.setText(format.format(cal.getTime()));  
+		     }  
+		}));  
+		timeline.setCycleCount(Animation.INDEFINITE);  
+		timeline.play();
+	}
 	
 	public void enterTriggered() throws IOException {
 		String inputStr = getInputCommand();
@@ -169,6 +202,7 @@ public class Controller extends myObserver implements Initializable {
 		loadEventsList();
 		loadDeadlinesList();
 		loadTodoList();
+		loadSearchList();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -221,40 +255,6 @@ public class Controller extends myObserver implements Initializable {
 			if(getActiveListView().getItems().get(i).getTaskId() == index)
 				selectIndex(i);
 	}
-	
-	
-	public void showSearch(String searchStr) {
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.searchWord(searchStr));
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t, new Text(String.format("from: %s", item.getFromTime())),
-									new Text(String.format("to: %s", item.getToTime())));
-							HBox hBox = new HBox(vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
-		fitToAnchorPane(listView);
-		((Pane) getCurrentTab().getContent()).getChildren().clear();
-		((Pane) getCurrentTab().getContent()).getChildren().add(listView);
-	}
 
 	public String getCurrentTabName() {
 		return tabPanes.getSelectionModel().getSelectedItem().getText();
@@ -301,6 +301,9 @@ public class Controller extends myObserver implements Initializable {
 	}
 	
 	private void addAndReload(Tab tab, int index) {
+		if(overlay.isVisible()){
+			overlay.setVisible(false);
+		}
 		loadDisplay();
 		tabPanes.getSelectionModel().select(tab);
 		selectTaskAtIndex(index);
@@ -356,13 +359,17 @@ public class Controller extends myObserver implements Initializable {
 	 * KEYBOARD LISTENERS:
 	 * 
 	========================================*/
-	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ESCAPE)
+				if (t.getCode() == KeyCode.ESCAPE){
 					tabPanes.requestFocus();
+					
+					if(overlay.isVisible()){
+						overlay.setVisible(false);
+					}
+				}			
 			}
 		});
 	}
@@ -477,52 +484,19 @@ public class Controller extends myObserver implements Initializable {
 		deletebtn.requestFocus();
 	}
 	
-	private void searchPrompt(String searchStr) {
-
-		ArrayList<Task> taskList = new ArrayList<Task>(logic.getSearchList());
-		ObservableList<Task> data = FXCollections.observableArrayList();
-		data.addAll(taskList);
-		ListView<Task> listView = new ListView<Task>(data);
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new ListCell<Task>() {
-
-					@Override
-					protected void updateItem(Task item, boolean bln) {
-						super.updateItem(item, bln);
-						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
-							VBox vBox = new VBox(t);
-							HBox hBox = new HBox(new Text(String.format("#%d", super.getIndex())), vBox);
-							hBox.setSpacing(10);
-							setGraphic(hBox);
-						}
-					}
-				};
-			}
-
-		});
+	private void loadSearchList() {
+		listFormatter.formatList(logic.getSearchList(),TYPE_SEARCH);
+		ListView<Task> listView = listFormatter.getFormattedList();
 		listView.setPrefSize(stackPane.getWidth()/2, stackPane.getHeight()/2);
 		//		fitToAnchorPane(listView);
 		
 		Pane popup = new Pane();
 		VBox dialogVbox = new VBox(10);
 		HBox dialogHbox = new HBox(10);
-		Button deletebtn = new Button();
-		Button closebtn = new Button();
-		deletebtn.setText("delete");
-		deletebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				deleteSelectedTask();
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		closebtn.setText("cancel");
+		Button closebtn = new Button("x");
+		Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		HBox.setHgrow(spacer, Priority.ALWAYS);
 		closebtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -530,23 +504,18 @@ public class Controller extends myObserver implements Initializable {
 				overlay.setVisible(false);
 			}
 		});
-		dialogVbox.getChildren().add(new Text("Search Results"));
-		dialogHbox.getChildren().add(deletebtn);
-		dialogHbox.getChildren().add(closebtn);
+		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
+		dialogVbox.getChildren().add(closeBar);
 		dialogVbox.getChildren().add(listView);
 		dialogVbox.getChildren().add(dialogHbox);
 		dialogVbox.setPadding(new Insets(10));
 		popup.getChildren().add(dialogVbox);
 		popup.getStyleClass().add("popup");
-//		popup.setPrefSize(300, 500);
-//		popupLayer.getChildren().add(popup);
+		if(!popupLayer.getChildren().isEmpty())
+			popupLayer.getChildren().clear();
 		popupLayer.getChildren().add(makeDraggable(popup));
-		overlay.setVisible(true);
-		deletebtn.requestFocus();
-		
-		
-//		popup.getChildren().clear();
-//		popup.getChildren().add(listView);
+//		overlay.setVisible(true);
+//		closebtn.requestFocus();
 	}	
 	
 private void helpPrompt(String helpStrings) {
@@ -571,9 +540,11 @@ private void helpPrompt(String helpStrings) {
 		popup.getChildren().add(dialogVbox);
 		popup.getStyleClass().add("popup");
 //		popupLayer.getChildren().add(popup);
+		if(!popupLayer.getChildren().isEmpty())
+			popupLayer.getChildren().clear();
 		popupLayer.getChildren().add(makeDraggable(popup));
 		overlay.setVisible(true);
-		closebtn.requestFocus();		
+//		closebtn.requestFocus();		
 	}
 	/*======================================
 	 * 
@@ -601,6 +572,13 @@ private void helpPrompt(String helpStrings) {
 	 * UI INTERACTION:
 	 * 
 	========================================*/
+	@FXML
+	private void closeButtonAction(){
+	    // get a handle to the stage
+	    Stage stage = (Stage) closeButton.getScene().getWindow();
+	    // do what you have to do
+	    stage.close();
+	}
 	
 	private static final class DragContext {
         public double mouseAnchorX;
@@ -671,7 +649,7 @@ private void helpPrompt(String helpStrings) {
 	@Override
 	public void update(String[] feedback) {
 		int index = 0;
-		if(feedback[1].matches(".*\\d+.*"))
+		if(feedback[1].matches(".*\\d+.*")) //if string contains digits
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
@@ -685,9 +663,8 @@ private void helpPrompt(String helpStrings) {
 			addAndReload(todoTab,index);
 			break;
 		case TYPE_SEARCH:
-//			showSearch(feedback[0]);
-			searchPrompt(feedback[0]);
-//			helpPrompt("oasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\noasdkodkaspo\r\n");
+			overlay.setVisible(true);
+			loadSearchList();
 			break;
 		case TYPE_HELP:
 			helpPrompt(feedback[0]);

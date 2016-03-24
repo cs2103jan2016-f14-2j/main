@@ -13,19 +13,39 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.Controller">
    <children>
-      <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0">
+      <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 15;">
          <children>
-            <VBox prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox prefHeight="600.0" prefWidth="800.0" style="-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox>
+                  <HBox style="-fx-background-radius: 10;">
                      <children>
-                        <ImageView fitHeight="71.0" fitWidth="94.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="48.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../Jimple-Logo.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="58.0" fitWidth="259.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Jimple-Text-Logo.png" />
+                           </image>
+                        </ImageView>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="clock" alignment="CENTER" text="24/3/16 10:00AM" textFill="#808080" HBox.hgrow="ALWAYS">
+                           <padding>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </padding>
+                           <font>
+                              <Font name="HelveticaNeueLTPro-Roman" size="15.0" />
+                           </font>
+                        </Label>
+                        <ImageView fx:id="closeButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#closeButtonAction" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../closeBtn.png" />
                            </image>
                         </ImageView>
                      </children>
