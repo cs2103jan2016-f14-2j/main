@@ -281,11 +281,14 @@ public class ListViewFormatter {
 								date.setId(TYPE_DEADLINE);
 							} else {
 								this.setId(TYPE_EVENT);
-								vBox = new VBox(t,
-										new Text(String.format("%s to %s", item.getPrettyFromTime(),
-												item.getPrettyToTime())));
-								hBox = new HBox(vBox, spacer,
-										new Text(String.format("%d", item.getTaskId())));
+								ID.setText(String.format("%d", item.getTaskId()));
+								date.setText(String.format("%s %s to %s %s",
+										item.getPrettyFromDate(),
+										item.getPrettyFromTime(),
+										item.getPrettyToDate(),
+										item.getPrettyToTime()));
+								vBox = new VBox(t,date);
+								hBox = new HBox(vBox, spacer, ID);
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -325,11 +328,14 @@ public class ListViewFormatter {
 
 								else {
 									this.setId(TYPE_EVENT);
-									vBox = new VBox(t,
-											new Text(String.format("%s to %s", item.getPrettyFromTime(),
-													item.getPrettyToTime())));
-									hBox = new HBox(vBox, spacer,
-											new Text(String.format("%d", item.getTaskId())));
+									ID.setText(String.format("%d", item.getTaskId()));
+									date.setText(String.format("%s %s to %s %s",
+											item.getPrettyFromDate(),
+											item.getPrettyFromTime(),
+											item.getPrettyToDate(),
+											item.getPrettyToTime()));
+									vBox = new VBox(t,date);
+									hBox = new HBox(vBox, spacer, ID);
 								}
 								hBox.setSpacing(10);
 								setGraphic(hBox);

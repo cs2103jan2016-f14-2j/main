@@ -10,7 +10,7 @@
 }
 
 #floating {	
-    -fx-font: 16px Trebuchet ;
+    -fx-font: 20px Trebuchet ;
     -fx-padding: 15;
     -fx-background-radius: 15px;
     -fx-background-color:  lightgrey; /* #FF9900;*/
@@ -18,7 +18,7 @@
 }
 
 #floating:selected {	
-    -fx-font: 16px Trebuchet ;
+    -fx-font: 20px Trebuchet ;
     -fx-padding: 15;
     -fx-background-radius: 15px;
     -fx-background-color:  ivory; /* #FF9900;*/
@@ -31,7 +31,7 @@
 }
 
 #deadline {	
-    -fx-font: 14px Trebuchet ;
+    -fx-font: 16px Trebuchet ;
     -fx-padding: 6 8;
     -fx-background-radius: 50px;
     -fx-background-color: grey;
@@ -39,12 +39,13 @@
     -fx-fill: white;
 }
 
+
 #deadline:selected {
 	-fx-background-color: lightgrey;
 }
 
 #event {	
-    -fx-font: 14px Trebuchet ;
+    -fx-font: 16px Trebuchet ;
     -fx-fill: white;
     
     -fx-padding: 10px ;
@@ -56,6 +57,13 @@
     -fx-background-color: lightyellow;
 }
 
+#cellTitle {
+	-fx-font: 20px "Trebuchet MS";
+}
+
+#date {
+	-fx-font: 20px "Trebuchet MS";
+}
 #event{
 	-fx-fill: red;
 }
