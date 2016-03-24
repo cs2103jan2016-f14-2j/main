@@ -331,7 +331,6 @@ public class Controller extends myObserver implements Initializable {
 	}
 
 	
-	
 	/*======================================
 	 * 
 	 * FXML LAYOUT RELATED:

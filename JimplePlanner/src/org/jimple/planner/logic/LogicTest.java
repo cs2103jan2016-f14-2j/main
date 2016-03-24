@@ -111,13 +111,18 @@ public class LogicTest {
 		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
 	}
 	
+	/*
+	 * EP: 2 cases
+	 * 1. able to find task and edit and store inside storage
+	 * 2. unable to find task and no edit
+	 */
 	@Test
 	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime	{
 		String[] variableArray = {"1", "task one", null, "2016-03-30T05:00", null, null};
 		initializeThreeArrays();
 		assertEquals("return same string", "task 1 edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 		variableArray[0] = "10";
-		assertEquals("return same string", "task 10 could not be editted", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task 10 could not be edited", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
 	}
 	
 	/**
@@ -136,6 +141,11 @@ public class LogicTest {
 		assertEquals("\"finish 3241 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput3, tempHistory, floating, deadlines, events));
 	}
 	
+	/**
+	 * EP: 2 cases
+	 * 1. Return all tasks with titles inside name
+	 * 2. Return empty list
+	 */
 	@Test
 	public void ShoudReturnListOfTasksFromSearching()	{
 		String wordToBeSearched = "only";
@@ -147,6 +157,9 @@ public class LogicTest {
 		ArrayList<Task> searchResults = testSearcher.testgetSearchedTasks(wordToBeSearched, list);
 		assertEquals("some stuff only", searchResults.get(0).getTitle());
 		assertEquals("only stuff", searchResults.get(1).getTitle());
+		wordToBeSearched = "thing";
+		searchResults = testSearcher.testgetSearchedTasks(wordToBeSearched, list);
+		assertTrue(searchResults.isEmpty());
 	}
 	
 	@Test
@@ -179,9 +192,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage()	{
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-23T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-24T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-23T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-24T23:00", testformatter.testFormatTime("11pm"));
 	}
 	
 	@Test
