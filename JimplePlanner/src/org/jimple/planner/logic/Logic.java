@@ -288,11 +288,5 @@ public class Logic {
 	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
-
-	/**
-	 * temporary methods to be removed after refactor
-	 */
-	public ArrayList<Task> searchWord(String wordToBeSearched) {
-		return searcher.searchWord(wordToBeSearched, todo, deadlines, events);
-	}
+	
 }
