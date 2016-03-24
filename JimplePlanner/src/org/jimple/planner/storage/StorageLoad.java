@@ -45,6 +45,10 @@ public class StorageLoad implements StorageLoadInterface{
 	
 	public ArrayList<ArrayList<Task>> getTaskSelect(String filePath){
 		BufferedReader defaultFileReader = createFileReader(filePath);
+		return getTaskByReader(defaultFileReader);
+	}
+
+	private ArrayList<ArrayList<Task>> getTaskByReader(BufferedReader defaultFileReader) {
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
 		try {
@@ -59,10 +63,6 @@ public class StorageLoad implements StorageLoadInterface{
 			e.printStackTrace();
 		}
 		return allTasksLists;
-	}
-	
-	public ArrayList<ArrayList<Task>> getTestTasks(){
-		return getTaskSelect(FILEPATH_TEST);
 	}
 	
 	private ArrayList<ArrayList<Task>> populateArrayList(){
@@ -85,21 +85,6 @@ public class StorageLoad implements StorageLoadInterface{
 			setFields(task, field);
 		}
 		return task;
-	}
-	
-	public Task testGetTaskFromLine(String fileLineContent){
-		return getTaskFromLine(fileLineContent);
-	}
-	
-	public String[] testExtractTasksToStringArray(Task task){
-		String[] result = new String[6];
-		result[0] = task.getTitle();
-		result[1] = task.getDescription();
-		result[2] = task.getCategory();
-		result[3] = task.getFromTimeString();
-		result[4] = task.getToTimeString();
-		result[5] = task.getType();
-		return result;
 	}
 	
 	private void setFields(Task task, String field){
@@ -189,7 +174,6 @@ public class StorageLoad implements StorageLoadInterface{
 			property.load(configFileReader);
 				if(property.isEmpty()){
 					propertyKeysInitialise(property);
-					//storeProperties(property);
 				}
 				configFileReader.close();
 		} catch (IOException e) {
@@ -205,5 +189,31 @@ public class StorageLoad implements StorageLoadInterface{
 		if(property.getProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME) == null){
 			property.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, PROPERTIES_SAVEPATH_TO_CWD);
 		}
+	}
+	
+	/*
+	 * ALL TEST METHODS HERE
+	 */
+	public ArrayList<ArrayList<Task>> getTestTasks(){
+		return getTaskSelect(FILEPATH_TEST);
+	}
+	
+	public Task testGetTaskFromLine(String fileLineContent){
+		return getTaskFromLine(fileLineContent);
+	}
+	
+	public String[] testExtractTasksToStringArray(Task task){
+		String[] result = new String[6];
+		result[0] = task.getTitle();
+		result[1] = task.getDescription();
+		result[2] = task.getCategory();
+		result[3] = task.getFromTimeString();
+		result[4] = task.getToTimeString();
+		result[5] = task.getType();
+		return result;
+	}
+	
+	public ArrayList<ArrayList<Task>> testReadTasks(BufferedReader defaultFileReader){
+		return getTaskByReader(defaultFileReader);
 	}
 }

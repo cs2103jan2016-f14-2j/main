@@ -3,6 +3,15 @@ package org.jimple.planner;
 import java.io.File;
 
 public final class Constants {
+	public static final String TYPE_EVENT = "event";
+	public static final String TYPE_TODO = "floating";
+	public static final String TYPE_DEADLINE = "deadline";
+	public static final String TYPE_STATIC = "static";
+	public static final String EMPTY_STRING = "";
+	
+	/*
+	 * Storage Component
+	 */
 	public static final int ALL_ARRAY_SIZE = 3;
 	
 	public static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
@@ -29,12 +38,6 @@ public final class Constants {
 	public static final String TAGS_TO_TIME = ":to:";
 	public static final String TAGS_TITLE = ":title:";
 	public static final String TAGS_LINE_FIELD_SEPARATOR = "/";
-	
-	public static final String TYPE_EVENT = "event";
-	public static final String TYPE_TODO = "floating";
-	public static final String TYPE_DEADLINE = "deadline";
-	public static final String TYPE_STATIC = "static";
-	public static final String EMPTY_STRING = "";
 	
 	/**
 	 * Logic component

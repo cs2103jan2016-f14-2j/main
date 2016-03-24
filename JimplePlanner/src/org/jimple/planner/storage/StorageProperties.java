@@ -55,6 +55,7 @@ public class StorageProperties implements StorageTools{
         }
     }
 	
+	//TODO Refactor this method
 	private boolean isKeyChanged(String pathName){
 		String previousPath = this.storageProperties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
 		if(previousPath.equals(pathName)){
@@ -187,5 +188,12 @@ public class StorageProperties implements StorageTools{
 			currentPath = currentPathFile.getAbsolutePath();
 		} 
 		return currentPath;
+	}
+	
+	/*
+	 * ALL TEST METHODS ARE HERE
+	 */
+	public boolean testIsFilePathValid(String filePath){
+		return isFilePathValid(filePath);
 	}
 }

@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,12 +48,12 @@ public class StorageSave implements StorageSaveInterface{
 		return saveStatus;
 	}
 	
-	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists){
-		return isSavedSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
-	}
-	
 	private void writeTasksToFile(ArrayList<ArrayList<Task>> allTaskLists, String tempFilePath){
 		BufferedWriter tempWriter = createFileWriter(tempFilePath);
+		writeTasksUsingWriter(allTaskLists, tempWriter);
+	}
+
+	private void writeTasksUsingWriter(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
 		try {
 			for(ArrayList<Task> taskList: allTaskLists){
 				for(Task task: taskList){
@@ -63,6 +64,8 @@ public class StorageSave implements StorageSaveInterface{
 			}
 			tempWriter.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e){
 			e.printStackTrace();
 		}
 	}
@@ -149,5 +152,17 @@ public class StorageSave implements StorageSaveInterface{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * ALL TEST METHODS ARE HERE
+	 */
+	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists){
+		return isSavedSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
+	}
+	
+	public void testWriteTasks(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
+		sortBeforeWritngToFile(allTaskLists);
+		writeTasksUsingWriter(allTaskLists, tempWriter);
 	}
 }
