@@ -114,19 +114,26 @@ public class ListViewFormatter {
 			time = new Text();
 			title = new Text();
 			if(!formattedList.get(i).getTitle().equals("")){
-			ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
-			date.setText(formattedList.get(i).getPrettyFromDate());
-			time.setText(formattedList.get(i).getPrettyFromTime());
-			title.setText(formattedList.get(i).getTitle());
-			HBox hbox = new HBox(ID,date,time,title);
-			hbox.setSpacing(10);
-			hbox.getStyleClass().add("hboxDeadline");
-			VBox.setVgrow(hbox, Priority.ALWAYS);
-			mainVbox.getChildren().add(hbox);
+				ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
+				date.setText(formattedList.get(i).getPrettyFromDate());
+				time.setText(formattedList.get(i).getPrettyFromTime());
+				title.setText(formattedList.get(i).getTitle());
+				HBox hbox = new HBox(ID,date,time,title);
+				hbox.setSpacing(10);
+				hbox.getStyleClass().add("hboxDeadline");
+				VBox.setVgrow(hbox, Priority.ALWAYS);
+				mainVbox.getChildren().add(hbox);
 			}
 			else{
-				System.out.println("empty deadline");
-				mainVbox.getChildren().add(new HBox());
+				ID.setText("");
+				date.setText("");
+				time.setText("");
+				title.setText("NO MORE DEADLINES!");
+				HBox hbox = new HBox(ID,date,time,title);
+				hbox.setSpacing(10);
+				hbox.getStyleClass().add("hboxDeadline");
+				VBox.setVgrow(hbox, Priority.ALWAYS);
+				mainVbox.getChildren().add(hbox);
 			}
 		}
 		
@@ -146,11 +153,10 @@ public class ListViewFormatter {
 			eventsSection.getChildren().add(vbox);
 			}
 			else{
-				System.out.println("empty event");
 				date = new Text();
 				time = new Text();
 				title = new Text();
-				title.setText(String.format(" "));
+				title.setText(String.format("NO MORE EVENTS!"));
 				date.setText(String.format(" "));
 				time.setText(String.format(" "));
 				VBox vbox = new VBox(title,date,time);

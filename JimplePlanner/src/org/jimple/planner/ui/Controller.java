@@ -268,6 +268,9 @@ public class Controller extends myObserver implements Initializable {
 	}
 	
 	private void addAndReload(Tab tab, int index) {
+		if(overlay.isVisible()){
+			overlay.setVisible(false);
+		}
 		loadDisplay();
 		tabPanes.getSelectionModel().select(tab);
 		selectTaskAtIndex(index);
@@ -323,13 +326,17 @@ public class Controller extends myObserver implements Initializable {
 	 * KEYBOARD LISTENERS:
 	 * 
 	========================================*/
-	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ESCAPE)
+				if (t.getCode() == KeyCode.ESCAPE){
 					tabPanes.requestFocus();
+					
+					if(overlay.isVisible()){
+						overlay.setVisible(false);
+					}
+				}			
 			}
 		});
 	}
@@ -475,7 +482,7 @@ public class Controller extends myObserver implements Initializable {
 			popupLayer.getChildren().clear();
 		popupLayer.getChildren().add(makeDraggable(popup));
 //		overlay.setVisible(true);
-//		deletebtn.requestFocus();
+//		closebtn.requestFocus();
 	}	
 	
 private void helpPrompt(String helpStrings) {

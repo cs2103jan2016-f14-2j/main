@@ -12,10 +12,10 @@
 
 #deadline {	
     -fx-font: 14px Trebuchet ;
-    -fx-padding: 3 3 3 10;
+    -fx-padding: 6 3;
     -fx-background-radius: 50px;
     -fx-background-color: grey;
-    -fx-background-insets: 0px, 2px ;
+    /*-fx-background-insets: 0px, 2px ;*/
     -fx-fill: white;
 }
 
@@ -41,19 +41,22 @@
 }
 
 .hbox {
-    -fx-background-color: #ff0000;
+    -fx-background-color: transparent;
 }
 
 .hboxDeadline {
-    -fx-background-color: #00ff00;
+    -fx-background-color: grey;
+    -fx-background-radius: 50px;
+    -fx-padding: 20px;
 }
 
 .mainVbox {
-    -fx-background-color: #ff00ff;
+    -fx-background-color: white;
 }
 
 .vboxEvent {
-    -fx-background-color: #ffff00;
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 10px;
 }
 
 /* 
@@ -109,6 +112,7 @@
 
 #static {	
     -fx-font: 12px "Trebuchet MS";
+    -fx-background-color: transparent;
 }
 
 #static:selected {
