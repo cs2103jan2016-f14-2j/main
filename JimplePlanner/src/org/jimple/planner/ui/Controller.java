@@ -2,7 +2,10 @@ package org.jimple.planner.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +15,10 @@ import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,6 +40,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -98,6 +105,9 @@ public class Controller extends myObserver implements Initializable {
 	AnchorPane mainContent;
 	
 	@FXML
+	AnchorPane mainContainer;
+	
+	@FXML
 	AnchorPane agendaContent;
 
 	@FXML
@@ -120,17 +130,25 @@ public class Controller extends myObserver implements Initializable {
 
 	@FXML
 	VBox overlay;
-
 	
+	@FXML
+	Label clock;
+	
+	@FXML
+	ImageView closeButton;
+
+
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
+		loadClock(); 
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
 		TextFields.bindAutoCompletion(
                 commandBox,
-                "add ", "edit ", "delete ", "search ", "help");
+                "add ", "edit ", "delete ", "search ", "help", "changedir", "checkdir");
 		
 		Platform.runLater(new Runnable() {
 			@Override
@@ -138,6 +156,7 @@ public class Controller extends myObserver implements Initializable {
 				commandBox.requestFocus();
 			}
 		});
+//		stackPane.setId("main");
 		overlay.setVisible(false);
 		assert !overlay.isVisible();
 //		assert false;
@@ -147,6 +166,19 @@ public class Controller extends myObserver implements Initializable {
 //		loadDisplay();
 		update();
 	 }
+
+	private void loadClock() {
+		final DateFormat format = SimpleDateFormat.getInstance();  
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
+		     @Override  
+		     public void handle(ActionEvent event) {  
+		          final Calendar cal = Calendar.getInstance();  
+		          clock.setText(format.format(cal.getTime()));  
+		     }  
+		}));  
+		timeline.setCycleCount(Animation.INDEFINITE);  
+		timeline.play();
+	}
 	
 	public void enterTriggered() throws IOException {
 		String inputStr = getInputCommand();
@@ -267,6 +299,9 @@ public class Controller extends myObserver implements Initializable {
 	}
 	
 	private void addAndReload(Tab tab, int index) {
+		if(overlay.isVisible()){
+			overlay.setVisible(false);
+		}
 		loadDisplay();
 		tabPanes.getSelectionModel().select(tab);
 		selectTaskAtIndex(index);
@@ -322,13 +357,17 @@ public class Controller extends myObserver implements Initializable {
 	 * KEYBOARD LISTENERS:
 	 * 
 	========================================*/
-	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ESCAPE)
+				if (t.getCode() == KeyCode.ESCAPE){
 					tabPanes.requestFocus();
+					
+					if(overlay.isVisible()){
+						overlay.setVisible(false);
+					}
+				}			
 			}
 		});
 	}
@@ -452,18 +491,10 @@ public class Controller extends myObserver implements Initializable {
 		Pane popup = new Pane();
 		VBox dialogVbox = new VBox(10);
 		HBox dialogHbox = new HBox(10);
-		Button deletebtn = new Button();
-		Button closebtn = new Button();
-		deletebtn.setText("delete");
-		deletebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				deleteSelectedTask();
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		closebtn.setText("cancel");
+		Button closebtn = new Button("x");
+		Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		HBox.setHgrow(spacer, Priority.ALWAYS);
 		closebtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -471,9 +502,8 @@ public class Controller extends myObserver implements Initializable {
 				overlay.setVisible(false);
 			}
 		});
-		dialogVbox.getChildren().add(new Text("Search Results"));
-		dialogHbox.getChildren().add(deletebtn);
-		dialogHbox.getChildren().add(closebtn);
+		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
+		dialogVbox.getChildren().add(closeBar);
 		dialogVbox.getChildren().add(listView);
 		dialogVbox.getChildren().add(dialogHbox);
 		dialogVbox.setPadding(new Insets(10));
@@ -483,7 +513,7 @@ public class Controller extends myObserver implements Initializable {
 			popupLayer.getChildren().clear();
 		popupLayer.getChildren().add(makeDraggable(popup));
 //		overlay.setVisible(true);
-//		deletebtn.requestFocus();
+//		closebtn.requestFocus();
 	}	
 	
 private void helpPrompt(String helpStrings) {
@@ -540,6 +570,13 @@ private void helpPrompt(String helpStrings) {
 	 * UI INTERACTION:
 	 * 
 	========================================*/
+	@FXML
+	private void closeButtonAction(){
+	    // get a handle to the stage
+	    Stage stage = (Stage) closeButton.getScene().getWindow();
+	    // do what you have to do
+	    stage.close();
+	}
 	
 	private static final class DragContext {
         public double mouseAnchorX;

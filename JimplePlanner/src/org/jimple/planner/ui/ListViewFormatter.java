@@ -14,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -49,6 +50,7 @@ public class ListViewFormatter {
 	public void fomatList(ArrayList<Task> deadlinesList, ArrayList<Task> eventsList) {
 		int counter = 0;
 		formattedList.clear();
+		
 		for(Task task : deadlinesList){
 			formattedList.add(task);
 			if(++counter >= 3)
@@ -114,19 +116,26 @@ public class ListViewFormatter {
 			time = new Text();
 			title = new Text();
 			if(!formattedList.get(i).getTitle().equals("")){
-			ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
-			date.setText(formattedList.get(i).getPrettyFromDate());
-			time.setText(formattedList.get(i).getPrettyFromTime());
-			title.setText(formattedList.get(i).getTitle());
-			HBox hbox = new HBox(ID,date,time,title);
-			hbox.setSpacing(10);
-			hbox.getStyleClass().add("hboxDeadline");
-			VBox.setVgrow(hbox, Priority.ALWAYS);
-			mainVbox.getChildren().add(hbox);
+				ID.setText(String.format("%d", formattedList.get(i).getTaskId()));
+				date.setText(formattedList.get(i).getPrettyFromDate());
+				time.setText(formattedList.get(i).getPrettyFromTime());
+				title.setText(formattedList.get(i).getTitle());
+				HBox hbox = new HBox(ID,date,time,title);
+				hbox.setSpacing(10);
+				hbox.getStyleClass().add("hboxDeadline");
+				VBox.setVgrow(hbox, Priority.ALWAYS);
+				mainVbox.getChildren().add(hbox);
 			}
 			else{
-				System.out.println("empty deadline");
-				mainVbox.getChildren().add(new HBox());
+				ID.setText("");
+				date.setText("");
+				time.setText("");
+				title.setText("NO MORE DEADLINES!");
+				HBox hbox = new HBox(ID,date,time,title);
+				hbox.setSpacing(10);
+				hbox.getStyleClass().add("hboxDeadline");
+				VBox.setVgrow(hbox, Priority.ALWAYS);
+				mainVbox.getChildren().add(hbox);
 			}
 		}
 		
@@ -146,11 +155,10 @@ public class ListViewFormatter {
 			eventsSection.getChildren().add(vbox);
 			}
 			else{
-				System.out.println("empty event");
 				date = new Text();
 				time = new Text();
 				title = new Text();
-				title.setText(String.format(" "));
+				title.setText(String.format("NO MORE EVENTS!"));
 				date.setText(String.format(" "));
 				time.setText(String.format(" "));
 				VBox vbox = new VBox(title,date,time);
@@ -253,6 +261,9 @@ public class ListViewFormatter {
 							Text date = new Text();
 							VBox vBox = new VBox();
 							HBox hBox = new HBox();
+							Region spacer = new Region();
+							VBox.setVgrow(spacer, Priority.ALWAYS);
+							HBox.setHgrow(spacer, Priority.ALWAYS);
 							if (item.getType().equals(TYPE_STATIC)) {
 								this.setId(TYPE_STATIC);
 								this.setFocusTraversable(false);
@@ -262,9 +273,9 @@ public class ListViewFormatter {
 							else if (item.getType() == TYPE_DEADLINE) {
 								this.setId(TYPE_DEADLINE);
 								vBox = new VBox(t);
-								ID.setText(String.format("  %d", item.getTaskId()));
+								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
-								hBox = new HBox(ID, vBox, date);
+								hBox = new HBox(date, vBox, spacer, ID);
 								t.setId(TYPE_DEADLINE);
 								ID.setId(TYPE_DEADLINE);
 								date.setId(TYPE_DEADLINE);
@@ -273,8 +284,8 @@ public class ListViewFormatter {
 								vBox = new VBox(t,
 										new Text(String.format("%s to %s", item.getPrettyFromTime(),
 												item.getPrettyToTime())));
-								hBox = new HBox(new Text(String.format("%d", item.getTaskId())),
-										vBox);
+								hBox = new HBox(vBox, spacer,
+										new Text(String.format("%d", item.getTaskId())));
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -300,6 +311,10 @@ public class ListViewFormatter {
 								Text date = new Text();
 								VBox vBox = new VBox();
 								HBox hBox = new HBox();
+
+								Region spacer = new Region();
+								VBox.setVgrow(spacer, Priority.ALWAYS);
+								HBox.setHgrow(spacer, Priority.ALWAYS);
 								
 								if (item.getType().equals(TYPE_STATIC)) {
 									this.setId(TYPE_STATIC);
@@ -313,8 +328,8 @@ public class ListViewFormatter {
 									vBox = new VBox(t,
 											new Text(String.format("%s to %s", item.getPrettyFromTime(),
 													item.getPrettyToTime())));
-									hBox = new HBox(new Text(String.format("%d", item.getTaskId())),
-											vBox);
+									hBox = new HBox(vBox, spacer,
+											new Text(String.format("%d", item.getTaskId())));
 								}
 								hBox.setSpacing(10);
 								setGraphic(hBox);
@@ -354,7 +369,10 @@ public class ListViewFormatter {
 								vBox = new VBox(t);
 								ID.setText(String.format("  %d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
-								hBox = new HBox(ID, vBox, date);
+								Region spacer = new Region();
+								VBox.setVgrow(spacer, Priority.ALWAYS);
+								HBox.setHgrow(spacer, Priority.ALWAYS);
+								hBox = new HBox(date, vBox, spacer, ID);
 								t.setId(TYPE_DEADLINE);
 								ID.setId(TYPE_DEADLINE);
 								date.setId(TYPE_DEADLINE);
