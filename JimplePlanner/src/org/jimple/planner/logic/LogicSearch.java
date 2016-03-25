@@ -61,20 +61,6 @@ public class LogicSearch implements LogicTaskModification	{
 		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
 		return (isTitleSearched || isDescSearched || isCategorySearched);
 	}
-	
-	public String reInsertNewTasks(Storage store, ArrayList<Task> newList, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
-		for (Task aTask : newList) {
-			if (aTask.getType().equals(Constants.TYPE_EVENT)) {
-				events.add(aTask);
-			} else if (aTask.getType().equals(Constants.TYPE_TODO)) {
-				todo.add(aTask);
-			} else if (aTask.getType().equals(Constants.TYPE_DEADLINE)) {
-				deadlines.add(aTask);
-			}
-		}
-		packageForSavingInFile(store, todo, deadlines, events);
-		return Constants.WINDOW_CLOSED_FEEDBACK;
-	}
 
 	public boolean testIsContainKeyword(Task event, String keyword) {
 		return isContainKeyword(event, keyword);

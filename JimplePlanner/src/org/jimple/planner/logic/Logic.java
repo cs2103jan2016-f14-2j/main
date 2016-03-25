@@ -16,6 +16,7 @@ import parserExceptions.*;
 import org.jimple.planner.Constants;
 
 import java.util.Collections;
+import java.util.LinkedList;
 
 public class Logic {
 
@@ -25,7 +26,7 @@ public class Logic {
 	private ArrayList<Task> agenda;
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
-	private ArrayList<Task> deletedTasks;
+	private LinkedList<PreviousTask> undoTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	Parser parser;
@@ -41,7 +42,7 @@ public class Logic {
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
-		deletedTasks = new ArrayList<Task>();
+		undoTasks = new LinkedList<PreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
 		parser = new Parser();
@@ -77,16 +78,17 @@ public class Logic {
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						deletedTasks);
+						undoTasks);
 				feedback[1] = Constants.STRING_DELETE;
 				break;
 			case Constants.STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
-						events);
+						events, undoTasks);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_EDIT:
-				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events);
+				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
+						tempHistory, undoTasks);
 				feedback[1] = Constants.STRING_EDIT;
 				break;
 			case Constants.STRING_SEARCH:
@@ -100,7 +102,8 @@ public class Logic {
 				feedback[1] = Constants.STRING_CHANGEDIR;
 				break;
 			case Constants.STRING_UNDO:
-				feedback[0] = undoer.undoPreviousChange(store, deletedTasks, todo, deadlines, events);
+				feedback[0] = undoer.undoPreviousChange(store, undoTasks, 
+						todo, deadlines, events, tempHistory);
 				feedback[1] = Constants.STRING_UNDO;
 				break;
 			case Constants.STRING_HELP:
@@ -235,7 +238,7 @@ public class Logic {
 
 		listOfCommands += Constants.CHANGEDIR_HELP_HEADER;
 		listOfCommands += Constants.CHANGEDIR_COMMAND;
-		
+
 		listOfCommands += Constants.CHECKDIR_HELP_HEADER;
 		listOfCommands += Constants.CHECKDIR_COMMAND;
 		return listOfCommands;
@@ -286,5 +289,5 @@ public class Logic {
 	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		return isConflictWithCurrentTasks(newTask, deadlines, events);
 	}
-	
+
 }

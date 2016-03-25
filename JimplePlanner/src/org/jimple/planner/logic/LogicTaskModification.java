@@ -6,6 +6,7 @@ import org.jimple.planner.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public interface LogicTaskModification {
 
@@ -81,5 +82,15 @@ public interface LogicTaskModification {
 		}
 		return false;
 	}
-
+	
+	public default PreviousTask setNewPreviousTask(String command, Task previousTask)	{
+		PreviousTask aPreviousTask = new PreviousTask(command, previousTask);
+		return aPreviousTask;
+	}
+	
+	public default void checkOverCacheLimit(LinkedList<PreviousTask> undoTasks) {
+		while (undoTasks.size() > Constants.DELETE_CACHE_LIMIT) {
+			undoTasks.removeFirst();
+		}
+	}
 }

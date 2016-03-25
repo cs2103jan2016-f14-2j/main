@@ -1,9 +1,11 @@
 package org.jimple.planner.logic;
+
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.jimple.planner.Constants;
 import org.jimple.planner.Formatter;
@@ -21,19 +23,20 @@ public class LogicTest {
 	LogicSearch testSearcher = new LogicSearch();
 	LogicDirectory testDirecter = new LogicDirectory();
 	LogicUndo testUndoer = new LogicUndo();
-	ArrayList<Task>	floating = new ArrayList<Task>();
-	ArrayList<Task>	deadlines = new ArrayList<Task>();
-	ArrayList<Task>	events = new ArrayList<Task>();
-	ArrayList<Task> deletedTasks = new ArrayList<Task>();
-	ArrayList<Task>	tempHistory = new ArrayList<Task>();
-	
-	/*@Test
-	public void EditShouldReturnFeedback() throws IOException	{
-		String[] parsedInput = {"1", "go school", "that means NUS", "29 february 12pm", "", ""};
-		assertEquals("task is edited", "task edited in planner\n", testLogic.editTask(parsedInput));
-	}*/
-	
-	public void initializeThreeArrays()	{
+	ArrayList<Task> floating = new ArrayList<Task>();
+	ArrayList<Task> deadlines = new ArrayList<Task>();
+	ArrayList<Task> events = new ArrayList<Task>();
+	ArrayList<Task> tempHistory = new ArrayList<Task>();
+	LinkedList<PreviousTask> undoTasks = new LinkedList<PreviousTask>();
+
+	/*
+	 * @Test public void EditShouldReturnFeedback() throws IOException {
+	 * String[] parsedInput = {"1", "go school", "that means NUS",
+	 * "29 february 12pm", "", ""}; assertEquals("task is edited",
+	 * "task edited in planner\n", testLogic.editTask(parsedInput)); }
+	 */
+
+	public void initializeThreeArrays() {
 		Task todo1 = new Task("a test only one");
 		Task deadlines1 = new Task("a test only two");
 		Task events1 = new Task("a test only three");
@@ -56,104 +59,125 @@ public class LogicTest {
 		events.add(events1);
 		events.add(events2);
 	}
+
 	@Test
-	public void ShouldReturnPrettyDate()	{
+	public void ShouldReturnPrettyDate() {
 		LocalDateTime testDate = null;
 		testDate = LocalDateTime.parse("2016-01-12T15:30");
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
-	
+
 	/**
-	 * EP: 3 test cases
-	 * 1. Empty
-	 * 2. less than 20
-	 * 3. more than 20
+	 * EP: 5 test cases 1. Empty 2. when undo is for an "add" command 3. when
+	 * undo is for a "delete" command 4. when undo is for a "edit" command 5.
+	 * when delete cache is >20
+	 * 
+	 * @throws InvalidFromAndToTime
 	 */
 	@Test
-	public void ShouldReturnUndoCommand() throws IOException	{
-		ArrayList<Task> deletedTasks = new ArrayList<Task>();
-		String[] variableArray = {"1"};
-		assertEquals(Constants.UNDO_FEEDBACK_ERROR, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
+	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTime {
+		String[] variableArray1 = { "1" };
+		String[] variableArray2 = { "todo", "task to be undone", null, null, null, null };
+		String[] variableArray3 = { "1", "edit task to be undone", null, null, null, null };
+
+		// test for empty
+		assertEquals(Constants.UNDO_FEEDBACK_ERROR,
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
 		initializeThreeArrays();
-		testDeleter.deleteTask(testStore, variableArray, floating, deadlines, events, deletedTasks);
-		assertEquals("task \"" + "a test only one" +  "\"" +Constants.UNDO_FEEDBACK, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
-		for (int i=0;i<21;i++)	{
-			deletedTasks.add(new Task(Integer.toString(i)));
+
+		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks);
+		assertEquals("task \"" + "a test only one" + "\"" + Constants.UNDO_FEEDBACK,
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+		// test for add
+		testAdder.testAddToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, undoTasks);
+		assertEquals("task \"" + "task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+		// test for edit
+		testEditer.testEditTask(testStore, variableArray3, floating, deadlines, events, tempHistory, undoTasks);
+		assertEquals("task \"" + "edit task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+
+		// test for overshot
+		for (int i = 0; i < 22; i++) {
+			PreviousTask testTask = new PreviousTask("floating", new Task(Integer.toString(i)));
+			undoTasks.add(testTask);
 		}
-		assertEquals("task \"" + "20" +  "\"" +Constants.UNDO_FEEDBACK, testUndoer.undoPreviousChange(testStore, deletedTasks, floating, deadlines, events));
+		assertEquals("task \"" + "21" + "\"" + Constants.UNDO_FEEDBACK,
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
 	}
-	
+
 	/*
-	 * EP: 2 cases
-	 * 1. Task is found and deleted
-	 * 2. Task cannot be found and no deletion
+	 * EP: 2 cases 1. Task is found and deleted 2. Task cannot be found and no
+	 * deletion
 	 */
 	@Test
-	public void ShouldReturnTrueAfterDeleteFromArray() throws IOException	{
-		String[] variableArray = {"1"};
+	public void ShouldReturnTrueAfterDeleteFromArray() throws IOException {
+		String[] variableArray = { "1" };
 		initializeThreeArrays();
-		assertTrue("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, deletedTasks));
+		assertTrue("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, undoTasks));
 		variableArray[0] = "4";
-		assertFalse("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, deletedTasks));
+		assertFalse("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, undoTasks));
 	}
-	
+
 	/*
-	 * EP: 2 cases
-	 * 1. able to find task and edit
-	 * 2. unable to find task and no edit
+	 * EP: 2 cases 1. able to find task and edit 2. unable to find task and no
+	 * edit
 	 */
 	@Test
-	public void ShouldReturnTrueAfterEditting()	throws IOException, InvalidFromAndToTime{
-		String[] variableArray = {"1", "task one", null, "2016-03-12T14:00", null, null};
+	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTime {
+		String[] variableArray = { "1", "task one", null, "2016-03-12T14:00", null, null };
 		initializeThreeArrays();
-		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
+		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
+				deadlines, events, tempHistory, undoTasks));
 		variableArray[0] = "6";
-		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating, deadlines, events));
+		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
+				deadlines, events, tempHistory, undoTasks));
 	}
-	
+
 	/*
-	 * EP: 2 cases
-	 * 1. able to find task and edit and store inside storage
-	 * 2. unable to find task and no edit
+	 * EP: 2 cases 1. able to find task and edit and store inside storage 2.
+	 * unable to find task and no edit
 	 */
 	@Test
-	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime	{
-		String[] variableArray = {"1", "task one", null, "2016-03-30T05:00", null, null};
+	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime {
+		String[] variableArray = { "1", "task one", null, "2016-03-30T05:00", null, null };
 		initializeThreeArrays();
-		assertEquals("return same string", "task 1 edited in planner", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task 1 edited in planner",
+				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, undoTasks));
 		variableArray[0] = "10";
-		assertEquals("return same string", "task 10 could not be edited", testEditer.testEditTask(testStore, variableArray, floating, deadlines, events));
+		assertEquals("return same string", "task 10 could not be edited",
+				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, undoTasks));
 	}
-	
+
 	/**
-	 * EP: 3 cases
-	 * 1. add for deadlines
-	 * 2. add for events
-	 * 3. add for todo
+	 * EP: 3 cases 1. add for deadlines 2. add for events 3. add for todo
 	 */
 	@Test
 	public void AddShouldReturnFeedback() throws IOException {
-		String[] parsedInput1 = {"deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null};
-		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events));
-		String[] parsedInput2 = {"events", "finish 2010 homework", null, "2016-03-29T12:00", "2016-03-30T13:00", null};
-		assertEquals("\"finish 2010 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput2, tempHistory, floating, deadlines, events));
-		String[] parsedInput3 = {"events", "finish 3241 homework", null, null, null, null};
-		assertEquals("\"finish 3241 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput3, tempHistory, floating, deadlines, events));
+		String[] parsedInput1 = { "deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null };
+		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder
+				.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, undoTasks));
+		String[] parsedInput2 = { "events", "finish 2010 homework", null, "2016-03-29T12:00", "2016-03-30T13:00",
+				null };
+		assertEquals("\"finish 2010 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput2,
+				tempHistory, floating, deadlines, events, undoTasks));
+		String[] parsedInput3 = { "events", "finish 3241 homework", null, null, null, null };
+		assertEquals("\"finish 3241 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput3,
+				tempHistory, floating, deadlines, events, undoTasks));
 	}
-	
+
 	/**
-	 * EP: 2 cases
-	 * 1. Return all tasks with titles inside name
-	 * 2. Return empty list
+	 * EP: 2 cases 1. Return all tasks with titles inside name 2. Return empty
+	 * list
 	 */
 	@Test
-	public void ShoudReturnListOfTasksFromSearching()	{
+	public void ShoudReturnListOfTasksFromSearching() {
 		String wordToBeSearched = "only";
 		ArrayList<Task> list = new ArrayList<Task>();
 		list.add(new Task("stuff and stuff"));
 		list.add(new Task("some stuff only"));
-		list.add(new Task ("only stuff"));
-		
+		list.add(new Task("only stuff"));
+
 		ArrayList<Task> searchResults = testSearcher.testgetSearchedTasks(wordToBeSearched, list);
 		assertEquals("some stuff only", searchResults.get(0).getTitle());
 		assertEquals("only stuff", searchResults.get(1).getTitle());
@@ -161,12 +185,13 @@ public class LogicTest {
 		searchResults = testSearcher.testgetSearchedTasks(wordToBeSearched, list);
 		assertTrue(searchResults.isEmpty());
 	}
-	
+
 	@Test
-	public void ShouldReturnArrayListOfTasks() throws IOException	{
+	public void ShouldReturnArrayListOfTasks() throws IOException {
 		ArrayList<Task> expected = new ArrayList<Task>();
 		String wordToBeSearched = "only";
-		assertEquals("should be same", expected, testSearcher.testSearchWord(wordToBeSearched, floating, deadlines, events));
+		assertEquals("should be same", expected,
+				testSearcher.testSearchWord(wordToBeSearched, floating, deadlines, events));
 		initializeThreeArrays();
 		expected.add(new Task("a test only one"));
 		expected.add(new Task("a test only two"));
@@ -176,9 +201,9 @@ public class LogicTest {
 		assertEquals("should be the same", expected.get(1).getTitle(), result.get(1).getTitle());
 		assertEquals("should be the same", expected.get(2).getTitle(), result.get(2).getTitle());
 	}
-	
+
 	@Test
-	public void ShouldReturnTrueIfContainKeyword()	{
+	public void ShouldReturnTrueIfContainKeyword() {
 		Task event = new Task("a test only");
 		event.setDescription("good stuff");
 		event.setCategory("food");
@@ -188,26 +213,26 @@ public class LogicTest {
 		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "good food"));
 		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "a only"));
 	}
-	
+
 	@Test
-	public void ShouldReturnCorrectFormatMessage()	{
+	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-24T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-25T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-24T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-25T23:00", testformatter.testFormatTime("11pm"));
 	}
-	
+
 	@Test
-	public void ShouldReturnCorrectYear()	{
+	public void ShouldReturnCorrectYear() {
 		assertEquals("return year", null, testformatter.testCheckYear("today"));
 		assertEquals("return year", "2018", testformatter.testCheckYear("2018"));
 		assertEquals("return year", null, testformatter.testCheckYear("may"));
 		assertEquals("return year", null, testformatter.testCheckYear("6"));
-		//assertEquals("returns feedback", "taskEd")
+		// assertEquals("returns feedback", "taskEd")
 	}
-	
+
 	@Test
-	public void ShoudReturnCorrectMonth()	{
+	public void ShoudReturnCorrectMonth() {
 		assertEquals("return month", "-02-", testformatter.testCheckMonth("february"));
 		assertEquals("return month", "-05-", testformatter.testCheckMonth("May"));
 		assertEquals("return month", "-12-", testformatter.testCheckMonth("december"));
@@ -215,18 +240,18 @@ public class LogicTest {
 		assertEquals("return month", "", testformatter.testCheckMonth("10"));
 		assertEquals("return month", "", testformatter.testCheckMonth("2018"));
 	}
-	
+
 	@Test
-	public void ShouldReturnCorrectDay()	{
+	public void ShouldReturnCorrectDay() {
 		assertEquals("return day", "10T", testformatter.testCheckDay("10"));
 		assertEquals("return day", "05T", testformatter.testCheckDay("5"));
 		assertEquals("return day", "", testformatter.testCheckDay("today"));
 		assertEquals("return day", "", testformatter.testCheckDay("march"));
 		assertEquals("return day", "", testformatter.testCheckDay("2017"));
 	}
-	
+
 	@Test
-	public void ShouldReturnCorrectTime()	{
+	public void ShouldReturnCorrectTime() {
 		assertEquals("return time", "00:00", testformatter.testCheckTime("12am"));
 		assertEquals("return time", "09:00", testformatter.testCheckTime("9am"));
 		assertEquals("return time", "12:30", testformatter.testCheckTime("12.30pm"));
