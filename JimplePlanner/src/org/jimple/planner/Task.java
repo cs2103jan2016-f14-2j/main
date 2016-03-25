@@ -1,6 +1,8 @@
 package org.jimple.planner;
 
-import org.jimple.planner.Constants;
+import static org.jimple.planner.Constants.TYPE_TODO;
+import static org.jimple.planner.Constants.TYPE_EVENT;
+import static org.jimple.planner.Constants.TYPE_DEADLINE;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -14,24 +16,22 @@ public class Task{
 	private String type;
 	private boolean isOverDue;
 	private int taskId;
-	private Formatter formatter;
+	private static Formatter formatter = new Formatter();
 	
 	// Default Constructor
 	public Task(String aTitle) {
-		this.formatter = new Formatter();
 		this.title = aTitle;
 		this.description = new String("");
 		this.category = new String("");
 		this.fromDateTime = null;
 		this.toDateTime = null;
-		this.type = Constants.TYPE_TODO;
+		this.type = TYPE_TODO;
 		this.isOverDue = false;
 		this.taskId = 1000;
 	}
 	
 	//Constructor for creating a duplicate
 	public Task (Task taskToBeDuplicated)	{
-		this.formatter = new Formatter();
 		this.title = taskToBeDuplicated.getTitle();
 		this.description = taskToBeDuplicated.getDescription();
 		this.category = taskToBeDuplicated.getCategory();
@@ -111,11 +111,11 @@ public class Task{
 	
 	private void checkAndSetType(){
 		if(isTodo()){
-			this.type = Constants.TYPE_TODO;
+			this.type = TYPE_TODO;
 		} else if(isDeadline()){
-			this.type = Constants.TYPE_DEADLINE;
+			this.type = TYPE_DEADLINE;
 		} else if (isEvent()){
-			this.type = Constants.TYPE_EVENT;
+			this.type = TYPE_EVENT;
 		}
 	}
 	
