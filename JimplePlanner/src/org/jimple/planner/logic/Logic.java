@@ -2,6 +2,7 @@ package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.time.LocalDateTime;
 
 import org.jimple.planner.Task;
@@ -11,6 +12,13 @@ import org.jimple.planner.InputStruct;
 import org.jimple.planner.Parser;
 import org.jimple.planner.storage.Storage;
 import org.jimple.planner.storage.StorageComponent;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.util.Duration;
 import parserExceptions.*;
 
 import org.jimple.planner.Constants;
@@ -183,8 +191,8 @@ public class Logic {
 
 	private void checkOverCurrentTime() {
 		for (Task aTask : deadlines) {
-			if (aTask.getToTime() != null) {
-				if (aTask.getToTime().compareTo(LocalDateTime.now()) > 0) {
+			if (aTask.getFromTime() != null) {
+				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
 					aTask.setIsOverDue(true);
 				}
 			}
@@ -202,12 +210,29 @@ public class Logic {
 		observers.add(observer);
 	}
 
+	public void notifyAllObservers() {
+		for (myObserver observer : observers) {
+			observer.update();
+		}
+	}
+	
 	public void notifyAllObservers(String[] displayType) {
 		for (myObserver observer : observers) {
 			observer.update(displayType);
 		}
 	}
-
+	
+	public void refreshLists()	{
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {  
+		     @Override  
+		     public void handle(ActionEvent event) {  
+		         checkOverCurrentTime(); 
+		    	 notifyAllObservers(); 
+		     }  
+		}));  
+		timeline.setCycleCount(Animation.INDEFINITE);  
+		timeline.play();
+	}
 	/**
 	 * gets a list of help commands for user to refer to
 	 *

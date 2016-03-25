@@ -163,8 +163,7 @@ public class Controller extends myObserver implements Initializable {
 		log.log(Level.INFO,"initialising event listeners");
 		commandBoxListener();
 		tabPanesListener();
-//		loadDisplay();
-		update();
+		loadDisplay();
 	 }
 
 	private void loadClock() {
