@@ -60,6 +60,7 @@ public final class Constants {
 	public static final String DELETE_HELP_HEADER = "Delete a task:\n";
 	public static final String UNDO_HELP_HEADER = "Undo a task:\n";
 	public static final String CHANGEDIR_HELP_HEADER = "Change Jimple File Directory:\n";
+	public static final String CHECKDIR_HELP_HEADER = "Check Jimple File Directory:\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
 	public static final String ADD_COMMAND_BY = "type \"add\" <your event name> by <time>\n";
@@ -71,8 +72,9 @@ public final class Constants {
 	public static final String DELETE_COMMAND = "type \"delete\" <taskID>\n\n";
 	public static final String SEARCH_COMMAND = "type \"search\" <task name>\n\n";
 	public static final String UNDO_COMMAND = "type \"undo\"\n\n";
-	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <full path directory>\n";
-
+	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <full path directory>\n\n";
+	public static final String CHECKDIR_COMMAND = "type \"checkdir\"\n";
+	
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
 	
@@ -84,13 +86,13 @@ public final class Constants {
 	public static final int DELETE_CACHE_LIMIT = 20;
 	
 	public static final String EDITED_FEEDBACK = " edited in planner";
-	public static final String ERROR_EDIT_FEEDBACK = " could not be editted";
+	public static final String ERROR_EDIT_FEEDBACK = " could not be edited";
 	
 	public static final String ERROR_DIRECTORY_PATH_FEEDBACK = "invalid directory path";
 	public static final String DIRECTORY_PATH_CHANGED_FEEDBACK = "save directory path changed to ";
 	
 	public static final String DELETED_FEEDBACK = " deleted";
-	public static final String ERROR_DELETED_FEEDBACK = "could not find task to be deleted";
+	public static final String ERROR_DELETED_FEEDBACK = " could not be found";
 	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
