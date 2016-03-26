@@ -203,11 +203,10 @@ public class Controller extends myObserver implements Initializable {
 	========================================*/
 	
 	private void loadDisplay() {
-		for(int i=0; i<cmdHistory.size(); i++)
-			System.out.println(i + ": " + cmdHistory.get(i));
 		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
+		loadDeadlinesList();
 		loadTodoList();
 		loadSearchList();
 	}
@@ -314,6 +313,7 @@ public class Controller extends myObserver implements Initializable {
 		loadDisplay();
 		tabPanes.getSelectionModel().select(tab);
 		selectTaskAtIndex(index);
+		commandBox.requestFocus();
 	}
 
 	private void selectIndex(int num) {
@@ -374,7 +374,8 @@ public class Controller extends myObserver implements Initializable {
 			public void handle(KeyEvent t) {
 				switch(t.getCode()){
 			    case ESCAPE:
-					tabPanes.requestFocus();					
+					tabPanes.requestFocus();
+					getActiveListView().requestFocus();
 					if(overlay.isVisible())
 						overlay.setVisible(false);
 					break;
