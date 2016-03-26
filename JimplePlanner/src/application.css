@@ -53,8 +53,68 @@
     -fx-background-radius: 10px;
 }
 
-#event:selected{	
+#event:selected{
     -fx-background-color: lightyellow;
+}
+
+#overdue{
+	-fx-background-color: saddlebrown;
+	-fx-background-radius: 10px;
+}
+
+#overdue:selected{
+	-fx-background-color: rosybrown;
+	-fx-background-radius: 10px;
+}
+
+#green{
+	-fx-background-color: green;
+	-fx-background-radius: 10px;
+}
+
+#green:selected{
+	-fx-background-color: lightgreen;
+	-fx-background-radius: 10px;
+}
+
+#yellow{
+	-fx-background-color: yellow;
+	-fx-background-radius: 10px;
+}
+
+#yellow:selected{
+	-fx-background-color: lemonchiffon;
+	-fx-background-radius: 10px;
+}
+
+#orange{
+	-fx-background-color: darkorange;
+	-fx-background-radius: 10px;
+}
+
+#orange:selected{
+	-fx-background-color: orange;
+	-fx-background-radius: 10px;
+}
+
+#red{
+	-fx-background-color: red;
+	-fx-background-radius: 10px;
+}
+
+#red:selected{
+	-fx-background-color: salmon;
+	-fx-background-radius: 10px;
+}
+
+#darkred{
+	-fx-background-color: darkred;
+	-fx-background-radius: 10px;
+}
+
+#darkred:selected{
+	-fx-background-color: crimson;
+	-fx-background-radius: 10px;
 }
 
 #cellTitle {

@@ -1,5 +1,7 @@
 package org.jimple.planner.ui;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -281,6 +283,10 @@ public class ListViewFormatter {
 								date.setId(TYPE_DEADLINE);
 							} else {
 								this.setId(TYPE_EVENT);
+								if(!item.getIsOverDue()){
+									System.out.println(item.getTitle() + " is overdue");
+									this.setId("overdue");
+								}
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s %s to %s %s",
 										item.getPrettyFromDate(),
@@ -376,6 +382,22 @@ public class ListViewFormatter {
 
 							else {
 								this.setId(TYPE_DEADLINE);
+								//more than a day away
+								if(timeDifference(item.getFromTime())> 1440)
+									this.setId("green");
+								//less than a day
+								else if(timeDifference(item.getFromTime())> 60)
+									this.setId("yellow");
+								//less than an hour
+								else if(timeDifference(item.getFromTime())> 30)
+									this.setId("orange");
+								else if(timeDifference(item.getFromTime())> 10)
+									this.setId("red");
+								else if(timeDifference(item.getFromTime())> 0)
+									this.setId("darkred");
+								else
+									this.setId("overdue");
+								
 								vBox = new VBox(t);
 								ID.setText(String.format("  %d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
@@ -452,4 +474,10 @@ public class ListViewFormatter {
 
 		});
 	}
+	
+	private long timeDifference(LocalDateTime reference){
+		long seconds = Duration.between(LocalDateTime.now(),reference).toMinutes();
+		return seconds;
+	}
+	
 }
