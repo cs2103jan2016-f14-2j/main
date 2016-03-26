@@ -6,6 +6,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,6 +71,8 @@ public class Controller extends myObserver implements Initializable {
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_AGENDA = "agenda";
 	
+	private LinkedList<String> cmdHistory;
+	private int cmdHistoryPointer;
 	private static final Logger log= Logger.getLogger( Controller.class.getName() );
 	Logic logic = new Logic();
 	ListViewFormatter listFormatter = new ListViewFormatter();
@@ -143,7 +147,10 @@ public class Controller extends myObserver implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
-		loadClock(); 
+		loadClock();
+		cmdHistory = new LinkedList<String>();
+		cmdHistory.add("");
+		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
 		TextFields.bindAutoCompletion(
@@ -184,6 +191,7 @@ public class Controller extends myObserver implements Initializable {
 		String inputStr = getInputCommand();
 		if (!isEmpty(inputStr)) {
 			logic.execute(inputStr);
+			cmdHistory.add(1, inputStr);
 			clearCommandBox();
 		}
 	}
@@ -195,10 +203,11 @@ public class Controller extends myObserver implements Initializable {
 	========================================*/
 	
 	private void loadDisplay() {
+		for(int i=0; i<cmdHistory.size(); i++)
+			System.out.println(i + ": " + cmdHistory.get(i));
 		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
-		loadDeadlinesList();
 		loadTodoList();
 		loadSearchList();
 	}
@@ -356,17 +365,35 @@ public class Controller extends myObserver implements Initializable {
 	 * KEYBOARD LISTENERS:
 	 * 
 	========================================*/
+	
+	
+	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ESCAPE){
-					tabPanes.requestFocus();
-					
-					if(overlay.isVisible()){
+				switch(t.getCode()){
+			    case ESCAPE:
+					tabPanes.requestFocus();					
+					if(overlay.isVisible())
 						overlay.setVisible(false);
-					}
-				}			
+					break;
+			    case UP:
+					if(cmdHistoryPointer < cmdHistory.size() - 1)
+						commandBox.setText(cmdHistory.get(++cmdHistoryPointer));
+					commandBox.positionCaret(commandBox.getLength());
+					t.consume();
+					break;
+			    case DOWN:
+					if(cmdHistoryPointer > 0)
+						commandBox.setText(cmdHistory.get(--cmdHistoryPointer));
+					commandBox.positionCaret(commandBox.getLength());
+					t.consume();
+					break;
+				default:
+					cmdHistoryPointer = 0;
+					break;
+				}
 			}
 		});
 	}

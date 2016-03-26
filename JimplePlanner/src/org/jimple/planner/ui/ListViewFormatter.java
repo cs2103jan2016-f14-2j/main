@@ -267,25 +267,39 @@ public class ListViewFormatter {
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							if (item.getType().equals(TYPE_STATIC)) {
-								this.setId(TYPE_STATIC);
+								this.getStyleClass().add(TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
 							}
 							else if (item.getType() == TYPE_DEADLINE) {
-								this.setId(TYPE_DEADLINE);
+								this.getStyleClass().add(TYPE_DEADLINE);
+								//more than a day away
+								if(timeDifference(item.getFromTime())> 1440)
+									this.getStyleClass().add("green");
+								//less than a day
+								else if(timeDifference(item.getFromTime())> 60)
+									this.getStyleClass().add("yellow");
+								//less than an hour
+								else if(timeDifference(item.getFromTime())> 30)
+									this.getStyleClass().add("orange");
+								else if(timeDifference(item.getFromTime())> 10)
+									this.getStyleClass().add("red");
+								else if(timeDifference(item.getFromTime())> 0)
+									this.getStyleClass().add("darkred");
+								else
+									this.getStyleClass().add("overdue");
 								vBox = new VBox(t);
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.setId(TYPE_DEADLINE);
-								ID.setId(TYPE_DEADLINE);
-								date.setId(TYPE_DEADLINE);
+								t.getStyleClass().add(TYPE_DEADLINE);
+								ID.getStyleClass().add(TYPE_DEADLINE);
+								date.getStyleClass().add(TYPE_DEADLINE);
 							} else {
-								this.setId(TYPE_EVENT);
+								this.getStyleClass().add(TYPE_EVENT);
 								if(!item.getIsOverDue()){
-									System.out.println(item.getTitle() + " is overdue");
-									this.setId("overdue");
+									this.getStyleClass().add("overdue");
 								}
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s %s to %s %s",
@@ -326,14 +340,14 @@ public class ListViewFormatter {
 								HBox.setHgrow(spacer, Priority.ALWAYS);
 								
 								if (item.getType().equals(TYPE_STATIC)) {
-									this.setId(TYPE_STATIC);
+									this.getStyleClass().add(TYPE_STATIC);
 									this.setFocusTraversable(false);
 									vBox = new VBox(t);
 									hBox = new HBox(vBox);
 								}
 
 								else {
-									this.setId(TYPE_EVENT);
+									this.getStyleClass().add(TYPE_EVENT);
 									ID.setText(String.format("%d", item.getTaskId()));
 									date.setText(String.format("%s %s to %s %s",
 											item.getPrettyFromDate(),
@@ -374,37 +388,37 @@ public class ListViewFormatter {
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							
 							if (item.getType().equals(TYPE_STATIC)) {
-								this.setId(TYPE_STATIC);
+								this.getStyleClass().add(TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
 							}
 
 							else {
-								this.setId(TYPE_DEADLINE);
+								this.getStyleClass().add(TYPE_DEADLINE);
 								//more than a day away
 								if(timeDifference(item.getFromTime())> 1440)
-									this.setId("green");
+									this.getStyleClass().add("green");
 								//less than a day
 								else if(timeDifference(item.getFromTime())> 60)
-									this.setId("yellow");
+									this.getStyleClass().add("yellow");
 								//less than an hour
 								else if(timeDifference(item.getFromTime())> 30)
-									this.setId("orange");
+									this.getStyleClass().add("orange");
 								else if(timeDifference(item.getFromTime())> 10)
-									this.setId("red");
+									this.getStyleClass().add("red");
 								else if(timeDifference(item.getFromTime())> 0)
-									this.setId("darkred");
+									this.getStyleClass().add("darkred");
 								else
-									this.setId("overdue");
+									this.getStyleClass().add("overdue");
 								
 								vBox = new VBox(t);
 								ID.setText(String.format("  %d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.setId(TYPE_DEADLINE);
-								ID.setId(TYPE_DEADLINE);
-								date.setId(TYPE_DEADLINE);
+								t.getStyleClass().add(TYPE_DEADLINE);
+								ID.getStyleClass().add(TYPE_DEADLINE);
+								date.getStyleClass().add(TYPE_DEADLINE);
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -434,9 +448,9 @@ public class ListViewFormatter {
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							ID.setText(String.format("%d", item.getTaskId()));
 							
-							t.setId(TYPE_FLOATING);
-							ID.setId(TYPE_FLOATING);
-							this.setId(TYPE_FLOATING);
+							t.getStyleClass().add(TYPE_FLOATING);
+							ID.getStyleClass().add(TYPE_FLOATING);
+							this.getStyleClass().add(TYPE_FLOATING);
 							
 							VBox vBox = new VBox(t);
 							HBox hBox = new HBox(vBox, spacer, ID);
@@ -462,7 +476,7 @@ public class ListViewFormatter {
 						super.updateItem(item, bln);
 						if (item != null) {
 							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
+							t.getStyleClass().add("fancytext");
 							VBox vBox = new VBox(t);
 							HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
 							hBox.setSpacing(10);
