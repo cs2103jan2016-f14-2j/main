@@ -1,8 +1,11 @@
 package org.jimple.planner.ui;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
 import javafx.collections.FXCollections;
@@ -19,20 +22,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
-public class ListViewFormatter {
-	private static final String TYPE_SEARCH = "search";
-	private static final String TYPE_STATIC = "static";
-	private static final String TYPE_AGENDA = "agenda";
-	private static final String TYPE_FLOATING = "floating";
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_EVENT = "event";
-	
+public class UiFormatter {
 	private ArrayList<Task> formattedList;
 	private ArrayList<Task> arrList;
 	private ObservableList<Task> data;
 	private ListView<Task> listView;
 
-	public ListViewFormatter() {
+	public UiFormatter() {
 		formattedList = new ArrayList<Task>();
 	}
 
@@ -74,22 +70,22 @@ public class ListViewFormatter {
 
 	public void formatType(String listType) {
 		switch (listType) {
-		case TYPE_AGENDA:
+		case Constants.TYPE_AGENDA:
 			formatAgendaList();
 			break;
-		case TYPE_DEADLINE:
+		case Constants.TYPE_DEADLINE:
 			formatDeadlinesList();
 			break;
-		case TYPE_EVENT:
+		case Constants.TYPE_EVENT:
 			formatEventsList();
 			break;
-		case TYPE_FLOATING:
+		case Constants.TYPE_TODO:
 			formatTodoList();
 			break;
-		case TYPE_SEARCH:
+		case Constants.TYPE_SEARCH:
 			formatSearchList();
 			break;
-		default: //AGENDA LIST
+		default:
 			formatEmptyList();
 			break;
 		}		
@@ -188,7 +184,7 @@ public class ListViewFormatter {
 	
 	private Task staticTask(String title) {
 		Task task = new Task(title);
-		task.setType(TYPE_STATIC);
+		task.setType(Constants.TYPE_STATIC);
 		return task;
 	}
 
@@ -264,23 +260,41 @@ public class ListViewFormatter {
 							Region spacer = new Region();
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
-							if (item.getType().equals(TYPE_STATIC)) {
-								this.setId(TYPE_STATIC);
+							if (item.getType().equals(Constants.TYPE_STATIC)) {
+								this.getStyleClass().add(Constants.TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
 							}
-							else if (item.getType() == TYPE_DEADLINE) {
-								this.setId(TYPE_DEADLINE);
+							else if (item.getType() == Constants.TYPE_DEADLINE) {
+								this.getStyleClass().add(Constants.TYPE_DEADLINE);
+								//more than a day away
+								if(timeDifference(item.getFromTime())> 1440)
+									this.getStyleClass().add("green");
+								//less than a day
+								else if(timeDifference(item.getFromTime())> 60)
+									this.getStyleClass().add("yellow");
+								//less than an hour
+								else if(timeDifference(item.getFromTime())> 30)
+									this.getStyleClass().add("orange");
+								else if(timeDifference(item.getFromTime())> 10)
+									this.getStyleClass().add("red");
+								else if(timeDifference(item.getFromTime())> 0)
+									this.getStyleClass().add("darkred");
+								else
+									this.getStyleClass().add("overdue");
 								vBox = new VBox(t);
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.setId(TYPE_DEADLINE);
-								ID.setId(TYPE_DEADLINE);
-								date.setId(TYPE_DEADLINE);
+								t.getStyleClass().add(Constants.TYPE_DEADLINE);
+								ID.getStyleClass().add(Constants.TYPE_DEADLINE);
+								date.getStyleClass().add(Constants.TYPE_DEADLINE);
 							} else {
-								this.setId(TYPE_EVENT);
+								this.getStyleClass().add(Constants.TYPE_EVENT);
+								if(!item.getIsOverDue()){
+									this.getStyleClass().add("overdue");
+								}
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s %s to %s %s",
 										item.getPrettyFromDate(),
@@ -319,15 +333,15 @@ public class ListViewFormatter {
 								VBox.setVgrow(spacer, Priority.ALWAYS);
 								HBox.setHgrow(spacer, Priority.ALWAYS);
 								
-								if (item.getType().equals(TYPE_STATIC)) {
-									this.setId(TYPE_STATIC);
+								if (item.getType().equals(Constants.TYPE_STATIC)) {
+									this.getStyleClass().add(Constants.TYPE_STATIC);
 									this.setFocusTraversable(false);
 									vBox = new VBox(t);
 									hBox = new HBox(vBox);
 								}
 
 								else {
-									this.setId(TYPE_EVENT);
+									this.getStyleClass().add(Constants.TYPE_EVENT);
 									ID.setText(String.format("%d", item.getTaskId()));
 									date.setText(String.format("%s %s to %s %s",
 											item.getPrettyFromDate(),
@@ -367,22 +381,38 @@ public class ListViewFormatter {
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							
-							if (item.getType().equals(TYPE_STATIC)) {
-								this.setId(TYPE_STATIC);
+							if (item.getType().equals(Constants.TYPE_STATIC)) {
+								this.getStyleClass().add(Constants.TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
 							}
 
 							else {
-								this.setId(TYPE_DEADLINE);
+								this.getStyleClass().add(Constants.TYPE_DEADLINE);
+								//more than a day away
+								if(timeDifference(item.getFromTime())> 1440)
+									this.getStyleClass().add("green");
+								//less than a day
+								else if(timeDifference(item.getFromTime())> 60)
+									this.getStyleClass().add("yellow");
+								//less than an hour
+								else if(timeDifference(item.getFromTime())> 30)
+									this.getStyleClass().add("orange");
+								else if(timeDifference(item.getFromTime())> 10)
+									this.getStyleClass().add("red");
+								else if(timeDifference(item.getFromTime())> 0)
+									this.getStyleClass().add("darkred");
+								else
+									this.getStyleClass().add("overdue");
+								
 								vBox = new VBox(t);
 								ID.setText(String.format("  %d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.setId(TYPE_DEADLINE);
-								ID.setId(TYPE_DEADLINE);
-								date.setId(TYPE_DEADLINE);
+								t.getStyleClass().add(Constants.TYPE_DEADLINE);
+								ID.getStyleClass().add(Constants.TYPE_DEADLINE);
+								date.getStyleClass().add(Constants.TYPE_DEADLINE);
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -412,9 +442,9 @@ public class ListViewFormatter {
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							ID.setText(String.format("%d", item.getTaskId()));
 							
-							t.setId(TYPE_FLOATING);
-							ID.setId(TYPE_FLOATING);
-							this.setId(TYPE_FLOATING);
+							t.getStyleClass().add(Constants.TYPE_TODO);
+							ID.getStyleClass().add(Constants.TYPE_TODO);
+							this.getStyleClass().add(Constants.TYPE_TODO);
 							
 							VBox vBox = new VBox(t);
 							HBox hBox = new HBox(vBox, spacer, ID);
@@ -440,7 +470,7 @@ public class ListViewFormatter {
 						super.updateItem(item, bln);
 						if (item != null) {
 							Text t = new Text(item.getTitle());
-							t.setId("fancytext");
+							t.getStyleClass().add("fancytext");
 							VBox vBox = new VBox(t);
 							HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
 							hBox.setSpacing(10);
@@ -452,4 +482,10 @@ public class ListViewFormatter {
 
 		});
 	}
+	
+	private long timeDifference(LocalDateTime reference){
+		long seconds = Duration.between(LocalDateTime.now(),reference).toMinutes();
+		return seconds;
+	}
+	
 }

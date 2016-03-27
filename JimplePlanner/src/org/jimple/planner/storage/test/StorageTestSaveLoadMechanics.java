@@ -1,7 +1,6 @@
 package org.jimple.planner.storage.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +30,8 @@ public class StorageTestSaveLoadMechanics {
 		testFile.delete();
 		File tempTestFile = new File(tempTestFileName);
 		tempTestFile.delete();
-		assertTrue("test file deleted successfully", !testFile.exists());
-		assertTrue("test file deleted successfully", !tempTestFile.exists());
+		assertFalse("test file deleted successfully", testFile.exists());
+		assertFalse("test file deleted successfully", tempTestFile.exists());
 	}
 	
 	public void testIsSaved() throws IOException {

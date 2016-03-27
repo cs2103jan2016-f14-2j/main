@@ -6,8 +6,14 @@ public final class Constants {
 	public static final String TYPE_EVENT = "event";
 	public static final String TYPE_TODO = "floating";
 	public static final String TYPE_DEADLINE = "deadline";
+	public static final String TYPE_AGENDA = "agenda";
 	public static final String TYPE_STATIC = "static";
+	public static final String TYPE_SEARCH = "search";
+	public static final String TYPE_HELP = "help";
+	public static final String TYPE_POPUP = "popup";
 	public static final String EMPTY_STRING = "";
+	
+	public static final String ERROR_INVALID_TASK = "Task is invalid";
 	
 	/*
 	 * Storage Component

@@ -1,9 +1,12 @@
 package org.jimple.planner.storage.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.LinkedList;
 
+import static org.jimple.planner.Constants.TYPE_TODO;
+import static org.jimple.planner.Constants.TYPE_DEADLINE;
+import static org.jimple.planner.Constants.TYPE_EVENT;
 import org.jimple.planner.Task;
 import org.jimple.planner.storage.StorageLoad;
 import org.junit.Test;
@@ -12,6 +15,7 @@ public class StorageTestGetFromLine {
 	private StorageLoad loadUnit = new StorageLoad();
 	
 	@Test
+	//random sample of tasks in a normal situation
 	public void testGetTaskFromLine1(){
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		
@@ -91,5 +95,27 @@ public class StorageTestGetFromLine {
 		assertEquals("from", "2016-03-15T15:00", from5);
 		assertEquals("to", "", to5);
 		assertEquals("type", "deadline", type5);
+	}
+	
+	@Test
+	public void testGetTaskFromLine2(){
+		String line1 = "/:title:task1/";
+		String line2 = "/:title:task1//:to:2016-08-11T17:00/";
+		String line3 = "/:title:task1//:from:2016-08-11T11:00//:to:2016-08-11T17:00/";
+		String line4 = "/:title:task1//:from:2016-08-11T11:00/";
+		
+		Task task1 = loadUnit.testGetTaskFromLine(line1);
+		Task task2 = loadUnit.testGetTaskFromLine(line2);
+		Task task3 = loadUnit.testGetTaskFromLine(line3);
+		Task task4 = loadUnit.testGetTaskFromLine(line4);
+		
+		assertTrue("valid task", task1.isValidType());
+		assertFalse("invalid task", task2.isValidType());
+		assertTrue("valid task", task3.isValidType());
+		assertTrue("valid task", task4.isValidType());
+		
+		assertEquals("is todo", task1.getType(), TYPE_TODO);
+		assertEquals("is event", task3.getType(), TYPE_EVENT);
+		assertEquals("is deadline", task4.getType(), TYPE_DEADLINE);
 	}
 }

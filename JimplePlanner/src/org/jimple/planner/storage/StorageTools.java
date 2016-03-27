@@ -1,6 +1,7 @@
 package org.jimple.planner.storage;
 
 import static org.jimple.planner.Constants.EMPTY_STRING;
+import static org.jimple.planner.Constants.ERROR_INVALID_TASK;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,19 @@ public interface StorageTools {
 			for (Task task : taskList) {
 				task.setTaskId(taskId);
 				taskId++;
+			}
+		}
+	}
+	default void checkTaskValidity(Task task) {
+		if(!task.isValidType()){
+			InvalidTaskException invalidTaskException = new InvalidTaskException(ERROR_INVALID_TASK);
+			try {
+				throw invalidTaskException;
+			} catch (InvalidTaskException e) {
+				System.out.println("task title:" + task.getTitle());
+				System.out.println("task's fromTime is: "+task.getFromTime());
+				System.out.println("task's toTime is: "+task.getToTime());
+				e.printStackTrace();
 			}
 		}
 	}

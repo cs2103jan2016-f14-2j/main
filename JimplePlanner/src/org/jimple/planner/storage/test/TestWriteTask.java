@@ -14,6 +14,7 @@ public class TestWriteTask {
 	private StorageSave storageSave = new StorageSave();
 	private ExampleTasks exampleTasksGenerator = new ExampleTasks();
 	
+	//This is a normal use case for writing to file
 	@Test
 	public void writeTasksTest1() {
 		String[] linesToCheck = {
@@ -45,7 +46,8 @@ public class TestWriteTask {
 			assertEquals(message2, totalOutputArray[i], linesToCheck[i]);
 		}
 	}
-		
+	
+	//Boundary case, when all lists are empty
 	@Test
 	public final void writeTasksTest2(){
 		StringWriter sw = new StringWriter();
