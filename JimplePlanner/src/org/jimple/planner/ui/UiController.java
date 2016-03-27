@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
-import org.jimple.planner.Task;
+import org.jimple.planner.Constants;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
@@ -24,20 +22,13 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -47,29 +38,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 
 public class UiController extends myObserver implements Initializable {
-	
-	private static final String TYPE_HELP = "help";
-	private static final String TYPE_SEARCH = "search";
-	private static final String TYPE_TODO = "floating";
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_EVENT = "event";
-	private static final String TYPE_AGENDA = "agenda";
 	
 	protected UiPrompt prompt;
 	protected UiListViewControl listViewControl;
@@ -225,25 +200,25 @@ public class UiController extends myObserver implements Initializable {
 	}
 	
 	public void loadAgendaList() {
-		listFormatter.formatList(logic.getAgendaList(),TYPE_AGENDA);
+		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_AGENDA);
 		agendaContent.getChildren().clear();
 		agendaContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadEventsList() {
-		listFormatter.formatList(logic.getEventsList(),TYPE_EVENT);
+		listFormatter.formatList(logic.getEventsList(),Constants.TYPE_EVENT);
 		eventsContent.getChildren().clear();
 		eventsContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadDeadlinesList() {
-		listFormatter.formatList(logic.getDeadlinesList(),TYPE_DEADLINE);
+		listFormatter.formatList(logic.getDeadlinesList(),Constants.TYPE_DEADLINE);
 		deadlinesContent.getChildren().clear();
 		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadTodoList()  {
-		listFormatter.formatList(logic.getToDoList(),TYPE_TODO);
+		listFormatter.formatList(logic.getToDoList(),Constants.TYPE_TODO);
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listFormatter.getFormattedList());
 	}
@@ -472,20 +447,20 @@ public class UiController extends myObserver implements Initializable {
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
-		case TYPE_EVENT:
+		case Constants.TYPE_EVENT:
 			listViewControl.addAndReload(eventsTab,index);
 			break;
-		case TYPE_DEADLINE:
+		case Constants.TYPE_DEADLINE:
 			listViewControl.addAndReload(deadlinesTab,index);
 			break;
-		case TYPE_TODO:
+		case Constants.TYPE_TODO:
 			listViewControl.addAndReload(todoTab,index);
 			break;
-		case TYPE_SEARCH:
+		case Constants.TYPE_SEARCH:
 			prompt.searchPrompt();
 			overlay.setVisible(true);
 			break;
-		case TYPE_HELP:
+		case Constants.TYPE_HELP:
 			prompt.helpPrompt(feedback[0]);
 			break;
 		default:

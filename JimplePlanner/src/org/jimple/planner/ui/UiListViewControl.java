@@ -10,7 +10,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 
 public class UiListViewControl extends UiController{
-	UiController controller;
+	protected UiController controller;
+	
 	public UiListViewControl(UiController controller) {
 		this.controller = controller;
 	}

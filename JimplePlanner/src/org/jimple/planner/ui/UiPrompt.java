@@ -1,5 +1,6 @@
 package org.jimple.planner.ui;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
 import javafx.event.ActionEvent;
@@ -15,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class UiPrompt extends UiController{
-	UiController controller;
+	protected UiController controller;
 	
 	public UiPrompt(UiController controller){
 		this.controller = controller;
@@ -54,7 +55,7 @@ public class UiPrompt extends UiController{
 		dialogVbox.getChildren().add(dialogHbox);
 		dialogVbox.setPadding(new Insets(10));
 		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add("popup");
+		popup.getStyleClass().add(Constants.TYPE_POPUP);
 		controller.popupLayer.getChildren().clear();
 		controller.popupLayer.getChildren().add(popup);
 		controller.overlay.setVisible(true);
@@ -82,7 +83,7 @@ public class UiPrompt extends UiController{
 		dialogVbox.getChildren().add(new Text(helpStrings));
 		dialogVbox.setPadding(new Insets(10));
 		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add("popup");
+		popup.getStyleClass().add(Constants.TYPE_POPUP);
 //		popupLayer.getChildren().add(popup);
 		controller.popupLayer.getChildren().clear();
 		controller.popupLayer.getChildren().add(makeDraggable(popup));
@@ -93,7 +94,7 @@ public class UiPrompt extends UiController{
 
 	
 	protected void searchPrompt() {
-		controller.listFormatter.formatList(logic.getSearchList(),"search");
+		controller.listFormatter.formatList(logic.getSearchList(),Constants.TYPE_SEARCH);
 		ListView<Task> listView = controller.listFormatter.getFormattedList();
 		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
 		//		fitToAnchorPane(listView);
@@ -118,7 +119,7 @@ public class UiPrompt extends UiController{
 		dialogVbox.getChildren().add(dialogHbox);
 		dialogVbox.setPadding(new Insets(10));
 		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add("popup");
+		popup.getStyleClass().add(Constants.TYPE_POPUP);
 		controller.popupLayer.getChildren().clear();
 		controller.popupLayer.getChildren().add(makeDraggable(popup));
 //		overlay.setVisible(true);
