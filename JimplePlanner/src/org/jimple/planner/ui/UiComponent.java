@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class UI extends Application {
+public class UiComponent extends Application {
 	double xOffset;
 	double yOffset;
 	@Override

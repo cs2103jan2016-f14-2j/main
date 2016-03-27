@@ -1,10 +1,10 @@
 package org.jimple.planner;
 
-import org.jimple.planner.ui.UI;
+import org.jimple.planner.ui.UiComponent;
 
 public class JimplePlanner {
 	public static void main(String[] args){
-		UI Jimple = new UI();
+		UiComponent Jimple = new UiComponent();
 		Jimple.begin(args);
 	}
 }

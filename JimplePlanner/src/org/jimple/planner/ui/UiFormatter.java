@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
-public class ListViewFormatter {
+public class UiFormatter {
 	private static final String TYPE_SEARCH = "search";
 	private static final String TYPE_STATIC = "static";
 	private static final String TYPE_AGENDA = "agenda";
@@ -34,7 +34,7 @@ public class ListViewFormatter {
 	private ObservableList<Task> data;
 	private ListView<Task> listView;
 
-	public ListViewFormatter() {
+	public UiFormatter() {
 		formattedList = new ArrayList<Task>();
 	}
 

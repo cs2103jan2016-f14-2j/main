@@ -10,7 +10,7 @@ import org.junit.Test;
 public class ControllerTest {
 	
 	public void initialize(){
-		UI Jimple = new UI();
+		UiComponent Jimple = new UiComponent();
 		Jimple.begin();	
 	}
 

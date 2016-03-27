@@ -62,7 +62,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-public class Controller extends myObserver implements Initializable {
+public class UiController extends myObserver implements Initializable {
 	
 	private static final String TYPE_HELP = "help";
 	private static final String TYPE_SEARCH = "search";
@@ -71,11 +71,12 @@ public class Controller extends myObserver implements Initializable {
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_AGENDA = "agenda";
 	
+	private UiPrompt prompt;
 	private LinkedList<String> cmdHistory;
 	private int cmdHistoryPointer;
-	private static final Logger log= Logger.getLogger( Controller.class.getName() );
+	private static final Logger log= Logger.getLogger( UiController.class.getName() );
 	Logic logic = new Logic();
-	ListViewFormatter listFormatter = new ListViewFormatter();
+	UiFormatter listFormatter = new UiFormatter();
 	private final BooleanProperty dragModeActiveProperty =
             new SimpleBooleanProperty(this, "dragModeActive", true);
 
@@ -150,6 +151,7 @@ public class Controller extends myObserver implements Initializable {
 		loadClock();
 		cmdHistory = new LinkedList<String>();
 		cmdHistory.add("");
+		prompt = new UiPrompt(this);
 		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
@@ -163,14 +165,11 @@ public class Controller extends myObserver implements Initializable {
 				commandBox.requestFocus();
 			}
 		});
-//		stackPane.setId("main");
 		overlay.setVisible(false);
 		assert !overlay.isVisible();
-//		assert false;
 		log.log(Level.INFO,"initialising event listeners");
 		commandBoxListener();
 		tabPanesListener();
-//		loadDisplay();
 		update();
 	 }
 
@@ -208,7 +207,8 @@ public class Controller extends myObserver implements Initializable {
 		loadEventsList();
 		loadDeadlinesList();
 		loadTodoList();
-		loadSearchList();
+		prompt = new UiPrompt(this);
+		prompt.searchPrompt();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -282,12 +282,17 @@ public class Controller extends myObserver implements Initializable {
 	public int getCurrentTabItemIndex() {
 		return getActiveListView().getSelectionModel().getSelectedIndex();
 	}
+
+
+	private boolean isListViewSelectionEmpty() {
+		return getActiveListView().getSelectionModel().isEmpty();
+	}
 	
 	public void deselectTaskItem() {
 		getActiveListView().getSelectionModel().clearSelection();
 	}
 
-	private void deleteSelectedTask() {
+	protected void deleteSelectedTask() {
 		try {
 			log.log(Level.INFO, "attempting to delete selected task");
 			int selectedIndex = getCurrentTabItemIndex();
@@ -407,7 +412,6 @@ public class Controller extends myObserver implements Initializable {
 				if (t.getCode() == KeyCode.UP) {
 					if (getCurrentTabItemIndex() == 0) {
 						tabPanes.requestFocus();
-						// tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
 						deselectTaskItem();
 					}
 				}
@@ -420,7 +424,6 @@ public class Controller extends myObserver implements Initializable {
 
 			@Override
 			public void handle(MouseEvent event) {
-				// TODO Auto-generated method stub
 				deselectTaskItem();
 				tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
 			}
@@ -450,7 +453,7 @@ public class Controller extends myObserver implements Initializable {
 					break;
 				case BACK_SPACE:
 				case DELETE:
-//					deletePrompt();
+//					prompt.deletePrompt();
 					deleteSelectedTask();
 					break;
 				default:
@@ -460,116 +463,7 @@ public class Controller extends myObserver implements Initializable {
 					break;
 				}
 			}
-
-			private boolean isListViewSelectionEmpty() {
-				return getActiveListView().getSelectionModel().isEmpty();
-			}
 		});
-	}
-
-	
-	/*======================================
-	 * 
-	 * POPUP DIALOGUE BOXES:
-	 * 
-	========================================*/
-
-	private void deletePrompt() {
-		Pane popup = new Pane();
-		VBox dialogVbox = new VBox(10);
-		HBox dialogHbox = new HBox(10);
-		Button deletebtn = new Button();
-		Button closebtn = new Button();
-		deletebtn.setText("delete");
-		deletebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				deleteSelectedTask();
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		closebtn.setText("cancel");
-		closebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		dialogVbox.getChildren().add(new Text("Confirm delete?"));
-		dialogHbox.getChildren().add(deletebtn);
-		dialogHbox.getChildren().add(closebtn);
-		dialogVbox.getChildren().add(dialogHbox);
-		dialogVbox.setPadding(new Insets(10));
-		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add("popup");
-		popupLayer.getChildren().add(popup);
-		overlay.setVisible(true);
-		deletebtn.requestFocus();
-	}
-	
-	private void loadSearchList() {
-		listFormatter.formatList(logic.getSearchList(),TYPE_SEARCH);
-		ListView<Task> listView = listFormatter.getFormattedList();
-		listView.setPrefSize(stackPane.getWidth()/2, stackPane.getHeight()/2);
-		//		fitToAnchorPane(listView);
-		
-		Pane popup = new Pane();
-		VBox dialogVbox = new VBox(10);
-		HBox dialogHbox = new HBox(10);
-		Button closebtn = new Button("x");
-		Region spacer = new Region();
-		VBox.setVgrow(spacer, Priority.ALWAYS);
-		HBox.setHgrow(spacer, Priority.ALWAYS);
-		closebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
-		dialogVbox.getChildren().add(closeBar);
-		dialogVbox.getChildren().add(listView);
-		dialogVbox.getChildren().add(dialogHbox);
-		dialogVbox.setPadding(new Insets(10));
-		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add("popup");
-		if(!popupLayer.getChildren().isEmpty())
-			popupLayer.getChildren().clear();
-		popupLayer.getChildren().add(makeDraggable(popup));
-//		overlay.setVisible(true);
-//		closebtn.requestFocus();
-	}	
-	
-private void helpPrompt(String helpStrings) {
-		Pane popup = new Pane();
-		VBox dialogVbox = new VBox(10);
-		Region spacer = new Region();
-		VBox.setVgrow(spacer, Priority.ALWAYS);
-		HBox.setHgrow(spacer, Priority.ALWAYS);
-		Button closebtn = new Button("x");
-		closebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				popupLayer.getChildren().clear();
-				overlay.setVisible(false);
-			}
-		});
-		HBox closeBar = new HBox(new Text("Help Sheet"),spacer,closebtn);
-		
-		dialogVbox.getChildren().add(closeBar);
-		dialogVbox.getChildren().add(new Text(helpStrings));
-		dialogVbox.setPadding(new Insets(10));
-		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add("popup");
-//		popupLayer.getChildren().add(popup);
-		if(!popupLayer.getChildren().isEmpty())
-			popupLayer.getChildren().clear();
-		popupLayer.getChildren().add(makeDraggable(popup));
-		overlay.setVisible(true);
-//		closebtn.requestFocus();		
 	}
 	/*======================================
 	 * 
@@ -612,21 +506,10 @@ private void helpPrompt(String helpStrings) {
         public double initialTranslateY;
     }
 	
-	private Node makeDraggable(final Node node) {
+	protected Node makeDraggable(final Node node) {
         final DragContext dragContext = new DragContext();
         final Group wrapGroup = new Group(node);
-
-//        wrapGroup.addEventFilter(
-//                MouseEvent.ANY,
-//                new EventHandler<MouseEvent>() {
-//                    public void handle(final MouseEvent mouseEvent) {
-//                        if (dragModeActiveProperty.get()) {
-//                            // disable mouse events for all children
-//                            mouseEvent.consume();
-//                        }
-//                    }
-//                });
-//
+        
         wrapGroup.addEventFilter(
                 MouseEvent.MOUSE_PRESSED,
                 new EventHandler<MouseEvent>() {
@@ -688,11 +571,11 @@ private void helpPrompt(String helpStrings) {
 			addAndReload(todoTab,index);
 			break;
 		case TYPE_SEARCH:
+			prompt.searchPrompt();
 			overlay.setVisible(true);
-			loadSearchList();
 			break;
 		case TYPE_HELP:
-			helpPrompt(feedback[0]);
+			prompt.helpPrompt(feedback[0]);
 			break;
 		default:
 			loadDisplay();
