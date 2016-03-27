@@ -10,14 +10,14 @@ import org.jimple.planner.storage.*;
 
 public class LogicUndo implements LogicTaskModification {
 	
-	public String undoPreviousChange(Storage store, LinkedList<PreviousTask> undoTasks, ArrayList<Task> todo,
+	public String undoPreviousChange(Storage store, LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory) throws IOException {
 		String[] variableArray = new String[1];
 		if (undoTasks.size() == 0) {
 			return Constants.UNDO_FEEDBACK_ERROR;
 		}
 		checkOverCacheLimit(undoTasks);
-		PreviousTask aTask = undoTasks.removeLast();
+		LogicPreviousTask aTask = undoTasks.removeLast();
 		switch (aTask.getPreviousCommand()) {
 		case Constants.STRING_ADD:
 			variableArray[0] = Integer.toString(aTask.getPreviousTask().getTaskId());

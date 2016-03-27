@@ -34,7 +34,7 @@ public class Logic {
 	private ArrayList<Task> agenda;
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
-	private LinkedList<PreviousTask> undoTasks;
+	private LinkedList<LogicPreviousTask> undoTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	Parser parser;
@@ -50,7 +50,7 @@ public class Logic {
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
-		undoTasks = new LinkedList<PreviousTask>();
+		undoTasks = new LinkedList<LogicPreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
 		parser = new Parser();
@@ -173,9 +173,9 @@ public class Logic {
 		return agenda;
 	}
 
-	public ArrayList<String> getPastInputs() {
+	public String getPastInputs() {
 		if (!pastUserInputs.isEmpty()) {
-			return pastUserInputs;
+			return pastUserInputs.get(0);
 		}
 		return null;
 	}
