@@ -35,7 +35,7 @@ public class UiPrompt extends UiController{
 		deletebtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				controller.deleteSelectedTask();
+				listViewControl.deleteSelectedTask();
 				controller.popupLayer.getChildren().clear();
 				controller.overlay.setVisible(false);
 			}

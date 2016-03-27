@@ -71,10 +71,11 @@ public class UiController extends myObserver implements Initializable {
 	private static final String TYPE_EVENT = "event";
 	private static final String TYPE_AGENDA = "agenda";
 	
-	private UiPrompt prompt;
+	protected UiPrompt prompt;
+	protected UiListViewControl listViewControl;
 	private LinkedList<String> cmdHistory;
 	private int cmdHistoryPointer;
-	private static final Logger log= Logger.getLogger( UiController.class.getName() );
+	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
 	Logic logic = new Logic();
 	UiFormatter listFormatter = new UiFormatter();
 	private final BooleanProperty dragModeActiveProperty =
@@ -152,6 +153,7 @@ public class UiController extends myObserver implements Initializable {
 		cmdHistory = new LinkedList<String>();
 		cmdHistory.add("");
 		prompt = new UiPrompt(this);
+		listViewControl = new UiListViewControl(this);
 		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
@@ -193,6 +195,11 @@ public class UiController extends myObserver implements Initializable {
 			cmdHistory.add(1, inputStr);
 			clearCommandBox();
 		}
+	}	
+
+	private void updateMessagePrompt(String output){
+		messagePrompt.setText(output);
+		fadeOut(5, messagePrompt);
 	}
 
 	/*======================================
@@ -201,7 +208,7 @@ public class UiController extends myObserver implements Initializable {
 	 * 
 	========================================*/
 	
-	private void loadDisplay() {
+	protected void loadDisplay() {
 		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
@@ -211,14 +218,9 @@ public class UiController extends myObserver implements Initializable {
 		prompt.searchPrompt();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public void loadMainTab(){
 		listFormatter.fomatList(logic.getDeadlinesList(), logic.getEventsList());
 		mainContent.getChildren().clear();
-		ListView emptyList = new ListView();
-		emptyList.setPrefSize(0, 0);
-		emptyList.setVisible(false);
-		mainContent.getChildren().add(emptyList);
 		mainContent.getChildren().add(listFormatter.getMainContent());
 	}
 	
@@ -251,98 +253,7 @@ public class UiController extends myObserver implements Initializable {
 	 * TASK LIST DISPLAY CONTROLS:
 	 * 
 	========================================*/
-	private void updateMessagePrompt(String output){
-		messagePrompt.setText(output);
-		fadeOut(5, messagePrompt);
-	}
 	
-	private void selectTaskAtIndex(int index){
-		for(int i=0; i<getActiveListView().getItems().size(); i++)
-			if(getActiveListView().getItems().get(i).getTaskId() == index)
-				selectIndex(i);
-	}
-
-	public String getCurrentTabName() {
-		return tabPanes.getSelectionModel().getSelectedItem().getText();
-	}
-
-	public Tab getCurrentTab() {
-		return tabPanes.getSelectionModel().getSelectedItem();
-	}
-
-	public void updatePointer(int num) {
-		System.out.println(getActiveListView().getItems().size());
-		if (num >= getActiveListView().getItems().size())
-			num -= 1;
-		getActiveListView().requestFocus();
-		getActiveListView().getSelectionModel().select(num);
-		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
-	}
-
-	public int getCurrentTabItemIndex() {
-		return getActiveListView().getSelectionModel().getSelectedIndex();
-	}
-
-
-	private boolean isListViewSelectionEmpty() {
-		return getActiveListView().getSelectionModel().isEmpty();
-	}
-	
-	public void deselectTaskItem() {
-		getActiveListView().getSelectionModel().clearSelection();
-	}
-
-	protected void deleteSelectedTask() {
-		try {
-			log.log(Level.INFO, "attempting to delete selected task");
-			int selectedIndex = getCurrentTabItemIndex();
-			if (selectedIndex == -1)
-				return;
-			if(getSelectedListItem().getType().equals("static"))
-				return;
-			logic.execute("delete " + getSelectedListItem().getTaskId());
-			updatePointer(selectedIndex);
-		} catch (IOException e) {
-			log.log(Level.WARNING, "IO exception. delete not successful", e);
-		}
-	}
-
-	private Task getSelectedListItem() {
-		return getActiveListView().getSelectionModel().getSelectedItem();
-	}
-	
-	private void addAndReload(Tab tab, int index) {
-		if(overlay.isVisible()){
-			overlay.setVisible(false);
-		}
-		loadDisplay();
-		tabPanes.getSelectionModel().select(tab);
-		selectTaskAtIndex(index);
-		commandBox.requestFocus();
-	}
-
-	private void selectIndex(int num) {
-		getActiveListView().requestFocus();
-		getActiveListView().getSelectionModel().select(num);
-		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
-	}
-
-	private void selectLastItem() {
-		getActiveListView().requestFocus();
-		getActiveListView().getSelectionModel().selectLast();
-		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
-	}
-
-	@SuppressWarnings("unchecked")
-	private ListView<Task> getList(Tab tab) {
-		return (ListView<Task>) ((Pane) tab.getContent()).getChildren().get(0);
-	}
-
-	@SuppressWarnings("unchecked")
-	private ListView<Task> getActiveListView() {
-		return (ListView<Task>) ((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren()
-				.get(0);
-	}
 
 	
 	/*======================================
@@ -380,7 +291,7 @@ public class UiController extends myObserver implements Initializable {
 				switch(t.getCode()){
 			    case ESCAPE:
 					tabPanes.requestFocus();
-					getActiveListView().requestFocus();
+					listViewControl.getActiveListView().requestFocus();
 					if(overlay.isVisible())
 						overlay.setVisible(false);
 					break;
@@ -405,14 +316,14 @@ public class UiController extends myObserver implements Initializable {
 	}
 
 	public void taskSelectionListener(){
-		getList(getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
+		listViewControl.getList(listViewControl.getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent t) {
 				if (t.getCode() == KeyCode.UP) {
-					if (getCurrentTabItemIndex() == 0) {
+					if (listViewControl.getCurrentTabItemIndex() == 0) {
 						tabPanes.requestFocus();
-						deselectTaskItem();
+						listViewControl.deselectTaskItem();
 					}
 				}
 			}
@@ -424,7 +335,7 @@ public class UiController extends myObserver implements Initializable {
 
 			@Override
 			public void handle(MouseEvent event) {
-				deselectTaskItem();
+				listViewControl.deselectTaskItem();
 				tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
 			}
 		});
@@ -436,25 +347,25 @@ public class UiController extends myObserver implements Initializable {
 
 				switch (t.getCode()) {
 				case DOWN:
-					getActiveListView().requestFocus();
-					if (isListViewSelectionEmpty())
-						getActiveListView().getSelectionModel().select(0);
+					listViewControl.getActiveListView().requestFocus();
+					if (listViewControl.isListViewSelectionEmpty())
+						listViewControl.getActiveListView().getSelectionModel().select(0);
 					break;
 				case UP:
 					taskSelectionListener();
 					break;
 				case LEFT:
 					tabPanes.requestFocus();
-					deselectTaskItem();
+					listViewControl.deselectTaskItem();
 					break;
 				case RIGHT:
 					tabPanes.requestFocus();
-					deselectTaskItem();
+					listViewControl.deselectTaskItem();
 					break;
 				case BACK_SPACE:
 				case DELETE:
 //					prompt.deletePrompt();
-					deleteSelectedTask();
+					listViewControl.deleteSelectedTask();
 					break;
 				default:
 					taskSelectionListener();
@@ -562,13 +473,13 @@ public class UiController extends myObserver implements Initializable {
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
 		case TYPE_EVENT:
-			addAndReload(eventsTab,index);
+			listViewControl.addAndReload(eventsTab,index);
 			break;
 		case TYPE_DEADLINE:
-			addAndReload(deadlinesTab,index);
+			listViewControl.addAndReload(deadlinesTab,index);
 			break;
 		case TYPE_TODO:
-			addAndReload(todoTab,index);
+			listViewControl.addAndReload(todoTab,index);
 			break;
 		case TYPE_SEARCH:
 			prompt.searchPrompt();
