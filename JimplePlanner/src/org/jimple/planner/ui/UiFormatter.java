@@ -43,6 +43,7 @@ public class UiFormatter {
 		formatType(listType);
 	}
 	
+	//Agenda formatter
 	public void fomatList(ArrayList<Task> deadlinesList, ArrayList<Task> eventsList) {
 		int counter = 0;
 		formattedList.clear();
@@ -70,27 +71,41 @@ public class UiFormatter {
 
 	public void formatType(String listType) {
 		switch (listType) {
+		case Constants.TYPE_TODAY:
+			addTodayTasksToFormattedDateList();
+			agendaCellFormat();
+			break;
 		case Constants.TYPE_AGENDA:
-			formatAgendaList();
+			addTasksToFormattedDateList();
+			agendaCellFormat();
 			break;
 		case Constants.TYPE_DEADLINE:
-			formatDeadlinesList();
+			addTasksToFormattedDateList();
+			deadlinesCellFormat();
 			break;
 		case Constants.TYPE_EVENT:
-			formatEventsList();
+			addTasksToFormattedDateList();
+			eventsCellFormat();
 			break;
 		case Constants.TYPE_TODO:
-			formatTodoList();
+			addTasksToFormattedList();
+			todoCellFormat();
 			break;
 		case Constants.TYPE_SEARCH:
-			formatSearchList();
+			addTasksToFormattedList();
+			searchCellFormat();
 			break;
 		default:
 			formatEmptyList();
 			break;
 		}		
 	}
-
+	
+	private void formatEmptyList() {
+		data = FXCollections.observableArrayList(formattedList);
+		listView = new ListView<Task>(data);
+	}
+	
 	public VBox getMainContent(){
 
 		Text ID;
@@ -185,9 +200,21 @@ public class UiFormatter {
 	private Task staticTask(String title) {
 		Task task = new Task(title);
 		task.setType(Constants.TYPE_STATIC);
+		task.setIsOverDue(false);
 		return task;
 	}
 
+	private void addTodayTasksToFormattedDateList() {
+		formattedList.add(staticTask("Today"));
+		for (Task task : arrList) {
+			if (timeDifference(task.getFromTime())>0 && timeDifference(task.getFromTime()) <= 1440) {
+				formattedList.add(task);
+			}
+		}
+		data = FXCollections.observableArrayList(formattedList);
+		listView = new ListView<Task>(data);
+	}
+		
 	private void addTasksToFormattedDateList() {
 		String dateCounter = "";
 
@@ -211,35 +238,7 @@ public class UiFormatter {
 		listView = new ListView<Task>(data);
 	}
 	
-	private void formatEmptyList() {
-		data = FXCollections.observableArrayList(formattedList);
-		listView = new ListView<Task>(data);
-	}
-	
-	private void formatAgendaList() {
-		addTasksToFormattedDateList();
-		agendaCellFormat();
-	}
 
-	private void formatDeadlinesList() {
-		addTasksToFormattedDateList();
-		deadlinesCellFormat();
-	}
-
-	private void formatEventsList() {
-		addTasksToFormattedDateList();
-		eventsCellFormat();
-	}
-	
-	private void formatTodoList() {
-		addTasksToFormattedList();
-		todoCellFormat();
-	}
-	
-	private void formatSearchList() {
-		addTasksToFormattedList();
-		searchCellFormat();
-	}
 	
 	private void agendaCellFormat() {
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
@@ -252,7 +251,7 @@ public class UiFormatter {
 					protected void updateItem(Task item, boolean bln) {
 						super.updateItem(item, bln);
 						if (item != null) {
-							Text t = new Text(item.getTitle());
+							Text title = new Text(item.getTitle());
 							Text ID = new Text();
 							Text date = new Text();
 							VBox vBox = new VBox();
@@ -260,13 +259,19 @@ public class UiFormatter {
 							Region spacer = new Region();
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
+							
+							//STATIC
 							if (item.getType().equals(Constants.TYPE_STATIC)) {
+								this.getStyleClass().clear();
 								this.getStyleClass().add(Constants.TYPE_STATIC);
 								this.setFocusTraversable(false);
-								vBox = new VBox(t);
+								vBox = new VBox(title);
 								hBox = new HBox(vBox);
 							}
-							else if (item.getType() == Constants.TYPE_DEADLINE) {
+							
+							//DEADLINE
+							else if (item.getType().equals(Constants.TYPE_DEADLINE)) {
+								this.getStyleClass().clear();
 								this.getStyleClass().add(Constants.TYPE_DEADLINE);
 								//more than a day away
 								if(timeDifference(item.getFromTime())> 1440)
@@ -283,14 +288,18 @@ public class UiFormatter {
 									this.getStyleClass().add("darkred");
 								else
 									this.getStyleClass().add("overdue");
-								vBox = new VBox(t);
+								vBox = new VBox(title);
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.getStyleClass().add(Constants.TYPE_DEADLINE);
+								title.getStyleClass().add(Constants.TYPE_DEADLINE);
 								ID.getStyleClass().add(Constants.TYPE_DEADLINE);
 								date.getStyleClass().add(Constants.TYPE_DEADLINE);
-							} else {
+							}
+							
+							//EVENT
+							else {
+								this.getStyleClass().clear();
 								this.getStyleClass().add(Constants.TYPE_EVENT);
 								if(!item.getIsOverDue()){
 									this.getStyleClass().add("overdue");
@@ -301,7 +310,7 @@ public class UiFormatter {
 										item.getPrettyFromTime(),
 										item.getPrettyToDate(),
 										item.getPrettyToTime()));
-								vBox = new VBox(t,date);
+								vBox = new VBox(title,date);
 								hBox = new HBox(vBox, spacer, ID);
 							}
 							hBox.setSpacing(10);
@@ -323,7 +332,7 @@ public class UiFormatter {
 						protected void updateItem(Task item, boolean bln) {
 							super.updateItem(item, bln);
 							if (item != null) {
-								Text t = new Text(item.getTitle());
+								Text title = new Text(item.getTitle());
 								Text ID = new Text();
 								Text date = new Text();
 								VBox vBox = new VBox();
@@ -333,13 +342,15 @@ public class UiFormatter {
 								VBox.setVgrow(spacer, Priority.ALWAYS);
 								HBox.setHgrow(spacer, Priority.ALWAYS);
 								
+								//STATIC
 								if (item.getType().equals(Constants.TYPE_STATIC)) {
 									this.getStyleClass().add(Constants.TYPE_STATIC);
 									this.setFocusTraversable(false);
-									vBox = new VBox(t);
+									vBox = new VBox(title);
 									hBox = new HBox(vBox);
 								}
 
+								//EVENT
 								else {
 									this.getStyleClass().add(Constants.TYPE_EVENT);
 									ID.setText(String.format("%d", item.getTaskId()));
@@ -348,7 +359,7 @@ public class UiFormatter {
 											item.getPrettyFromTime(),
 											item.getPrettyToDate(),
 											item.getPrettyToTime()));
-									vBox = new VBox(t,date);
+									vBox = new VBox(title,date);
 									hBox = new HBox(vBox, spacer, ID);
 								}
 								hBox.setSpacing(10);
@@ -372,7 +383,7 @@ public class UiFormatter {
 					protected void updateItem(Task item, boolean bln) {
 						super.updateItem(item, bln);
 						if (item != null) {
-							Text t = new Text(item.getTitle());
+							Text title = new Text(item.getTitle());
 							Text ID = new Text();
 							Text date = new Text();
 							VBox vBox = new VBox();
@@ -381,13 +392,15 @@ public class UiFormatter {
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							
+							//STATIC
 							if (item.getType().equals(Constants.TYPE_STATIC)) {
 								this.getStyleClass().add(Constants.TYPE_STATIC);
 								this.setFocusTraversable(false);
-								vBox = new VBox(t);
+								vBox = new VBox(title);
 								hBox = new HBox(vBox);
 							}
 
+							//DEADLINE
 							else {
 								this.getStyleClass().add(Constants.TYPE_DEADLINE);
 								//more than a day away
@@ -406,11 +419,11 @@ public class UiFormatter {
 								else
 									this.getStyleClass().add("overdue");
 								
-								vBox = new VBox(t);
+								vBox = new VBox(title);
 								ID.setText(String.format("  %d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.getStyleClass().add(Constants.TYPE_DEADLINE);
+								title.getStyleClass().add(Constants.TYPE_DEADLINE);
 								ID.getStyleClass().add(Constants.TYPE_DEADLINE);
 								date.getStyleClass().add(Constants.TYPE_DEADLINE);
 							}
@@ -435,18 +448,18 @@ public class UiFormatter {
 					protected void updateItem(Task item, boolean bln) {
 						super.updateItem(item, bln);
 						if (item != null) {
-							Text t = new Text(item.getTitle());
+							Text title = new Text(item.getTitle());
 							Text ID = new Text();
 							Region spacer = new Region();
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							ID.setText(String.format("%d", item.getTaskId()));
 							
-							t.getStyleClass().add(Constants.TYPE_TODO);
+							title.getStyleClass().add(Constants.TYPE_TODO);
 							ID.getStyleClass().add(Constants.TYPE_TODO);
 							this.getStyleClass().add(Constants.TYPE_TODO);
 							
-							VBox vBox = new VBox(t);
+							VBox vBox = new VBox(title);
 							HBox hBox = new HBox(vBox, spacer, ID);
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -469,9 +482,9 @@ public class UiFormatter {
 					protected void updateItem(Task item, boolean bln) {
 						super.updateItem(item, bln);
 						if (item != null) {
-							Text t = new Text(item.getTitle());
-							t.getStyleClass().add("fancytext");
-							VBox vBox = new VBox(t);
+							Text title = new Text(item.getTitle());
+							title.getStyleClass().add("fancytext");
+							VBox vBox = new VBox(title);
 							HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
 							hBox.setSpacing(10);
 							setGraphic(hBox);

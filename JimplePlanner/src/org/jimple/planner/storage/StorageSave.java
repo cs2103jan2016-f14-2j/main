@@ -42,7 +42,7 @@ public class StorageSave implements StorageSaveInterface{
 	
 	public boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
 		assert allTaskLists.size() == 3;
-		sortBeforeWritngToFile(allTaskLists);
+		sortTasks(allTaskLists);
 		writeTasksToFile(allTaskLists, tempFilePath);
 		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
 		return saveStatus;
@@ -122,7 +122,7 @@ public class StorageSave implements StorageSaveInterface{
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
 	
-	public void sortBeforeWritngToFile(ArrayList<ArrayList<Task>> allTaskLists){
+	public void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
 		sortById(allTaskLists);
 		sortDeadlines(allTaskLists);
 		sortEvents(allTaskLists);
@@ -163,7 +163,7 @@ public class StorageSave implements StorageSaveInterface{
 	}
 	
 	public void testWriteTasks(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
-		sortBeforeWritngToFile(allTaskLists);
+		sortTasks(allTaskLists);
 		writeTasksUsingWriter(allTaskLists, tempWriter);
 	}
 }
