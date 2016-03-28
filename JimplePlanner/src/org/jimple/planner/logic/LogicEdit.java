@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.exceptions.InvalidFromAndToTime;
 
 public class LogicEdit implements LogicTaskModification {
 

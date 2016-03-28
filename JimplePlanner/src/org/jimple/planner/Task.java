@@ -163,6 +163,20 @@ public class Task{
 		this.description = description;
 	}
 
+	/**
+	 * labels:
+	 * 0 - default
+	 * 1 - blue
+	 * 2 - green
+	 * 3 - yellow
+	 * 4 - orange
+	 * 5 - red
+	 * 6 - dark red
+	 */
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
 	public String getCategory() {
 		if (category == null) {
 			return "";
@@ -176,10 +190,6 @@ public class Task{
 	
 	public boolean getIsOverDue()	{
 		return isOverDue;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
 	}
 	
 	public void setTaskId(int taskId){

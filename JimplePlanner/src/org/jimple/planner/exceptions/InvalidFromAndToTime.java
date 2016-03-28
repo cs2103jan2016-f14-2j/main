@@ -1,4 +1,4 @@
-package org.jimple.planner.logic;
+package org.jimple.planner.exceptions;
 
 @SuppressWarnings("serial")
 public class InvalidFromAndToTime extends Exception {
