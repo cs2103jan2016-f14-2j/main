@@ -102,7 +102,7 @@ public class StorageProperties implements StorageTools{
 		ArrayList<ArrayList<Task>> oldPathTasks = storageLoad.getTaskSelect(oldPath);
 		ArrayList<ArrayList<Task>> newPathTasks = storageLoad.getTaskSelect(newPath);
 		ArrayList<ArrayList<Task>> consolidatedTasks = removeDuplicateTasks(oldPathTasks, newPathTasks);
-		storageSave.sortTasks(consolidatedTasks);
+		Task.sortTasks(consolidatedTasks);
 		return consolidatedTasks;
 	}
 

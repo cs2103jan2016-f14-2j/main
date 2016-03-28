@@ -169,7 +169,7 @@ public class Logic {
 		agenda.clear();
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
-		Collections.sort(agenda, Task.getFromDateComparator());
+		Task.sortTasksForAgenda(agenda);
 		return agenda;
 	}
 

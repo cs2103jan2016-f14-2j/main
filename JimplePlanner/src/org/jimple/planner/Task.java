@@ -3,18 +3,10 @@ package org.jimple.planner;
 import static org.jimple.planner.Constants.TYPE_TODO;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
-import static org.jimple.planner.Constants.TASK_LABEL_BLUE;
-import static org.jimple.planner.Constants.TASK_LABEL_DARK_RED;
 import static org.jimple.planner.Constants.TASK_LABEL_DEFAULT;
-import static org.jimple.planner.Constants.TASK_LABEL_GREEN;
-import static org.jimple.planner.Constants.TASK_LABEL_ORANGE;
-import static org.jimple.planner.Constants.TASK_LABEL_RED;
-import static org.jimple.planner.Constants.TASK_LABEL_YELLOW;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class Task{
 	private LocalDateTime fromDateTime;
@@ -26,6 +18,7 @@ public class Task{
 	private int taskId;
 	private int label;
 	private static Formatter formatter = new Formatter();
+	private static TaskSorter taskSorter = new TaskSorter();
 	
 	// Default Constructor
 	public Task(String aTitle) {
@@ -197,62 +190,12 @@ public class Task{
 		return taskId;
 	}
 	
-	private static Comparator<Task> getFromDateTimeComparator(){
-		return new Comparator<Task>(){
-			public int compare(Task task1, Task task2){
-				return task1.getFromTime().compareTo(task2.getFromTime());
-			}
-		};
-	}
-	
-	private static Comparator<Task> getFromDateComparator(){
-		return new Comparator<Task>(){
-			public int compare(Task task1, Task task2){
-				return task1.getFromTime().toLocalDate().compareTo(task2.getFromTime().toLocalDate());
-			}
-		};
-	}
-	
-	private static Comparator<Task> getTaskIdComparator(){
-		return new Comparator<Task>(){
-			public int compare(Task task1, Task task2){
-				int task1id = task1.getTaskId();
-				int task2id = task2.getTaskId();
-				int result;
-				if(task1id<task2id){
-					result = -1;
-				} else if (task1id==task2id){
-					result = 0;
-				} else {
-					result = 1;
-				}
-				return result;
-			}
-		};
-	}
-	
-	private static void sortDeadlines(ArrayList<Task> deadlineList){
-		Comparator<Task> fromDateComparator = Task.getFromDateTimeComparator();
-		Collections.sort(deadlineList, fromDateComparator);
-	}
-	
-	private static void sortEvents(ArrayList<Task> eventList){
-		Comparator<Task> fromDateComparator = Task.getFromDateTimeComparator();
-		Collections.sort(eventList, fromDateComparator);
-	}
-	
-	private static void sortById(ArrayList<ArrayList<Task>> allTaskLists){
-		Comparator<Task> taskIdComparator = Task.getTaskIdComparator();
-		for(ArrayList<Task> taskList: allTaskLists){
-			Collections.sort(taskList, taskIdComparator);
-		}
-	}
-	
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
-		assert allTaskLists.size() == 3;
-		sortById(allTaskLists);
-		sortDeadlines(allTaskLists.get(1));
-		sortEvents(allTaskLists.get(2));
+		taskSorter.sortTasks(allTaskLists);
+	}
+	
+	public static void sortTasksForAgenda(ArrayList<Task> agenda){
+		taskSorter.sortTasksForAgenda(agenda);
 	}
 	
 	/*
