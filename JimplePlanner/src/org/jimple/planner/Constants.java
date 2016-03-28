@@ -46,7 +46,7 @@ public final class Constants {
 	public static final String FILEPATH_TEST_TEMP = DEFAULT_FILE_DIRECTORY + TEST_TEMP_FILE_NAME;
 	public static final String FILEPATH_CONFIG = DEFAULT_FILE_DIRECTORY+PROPERTIES_CONFIG_FILE_NAME;
 	
-	public static final String TAGS_CATEGORY = ":cat:";
+	public static final String TAGS_LABEL = ":label:";
 	public static final String TAGS_DESCRIPTION = ":desc:";
 	public static final String TAGS_FROM_TIME = ":from:";
 	public static final String TAGS_TO_TIME = ":to:";
