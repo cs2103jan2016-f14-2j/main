@@ -26,7 +26,7 @@ public interface LogicTaskModification {
 					break;
 				//change to label
 				case 5:
-					editedTask.setCategory(variableArray[i]);
+					editedTask.setLabel(Integer.parseInt(variableArray[i]));
 					break;
 				default:
 					break;

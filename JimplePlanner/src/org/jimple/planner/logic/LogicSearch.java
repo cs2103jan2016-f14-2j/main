@@ -58,8 +58,7 @@ public class LogicSearch implements LogicTaskModification	{
 	private boolean isContainKeyword(Task event, String keyword) {
 		boolean isTitleSearched = isContainSubstring(event.getTitle(), keyword);
 		boolean isDescSearched = isContainSubstring(event.getDescription(), keyword);
-		boolean isCategorySearched = isContainSubstring(event.getCategory(), keyword);
-		return (isTitleSearched || isDescSearched || isCategorySearched);
+		return (isTitleSearched || isDescSearched);
 	}
 
 	public boolean testIsContainKeyword(Task event, String keyword) {

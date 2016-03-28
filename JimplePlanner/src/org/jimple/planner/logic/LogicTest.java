@@ -207,7 +207,7 @@ public class LogicTest {
 	public void ShouldReturnTrueIfContainKeyword() {
 		Task event = new Task("a test only");
 		event.setDescription("good stuff");
-		event.setCategory("food");
+		event.setLabel(0);
 		assertTrue("returns true", testSearcher.testIsContainKeyword(event, "good"));
 		assertTrue("returns true", testSearcher.testIsContainKeyword(event, "a test only"));
 		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "wrong"));
@@ -218,9 +218,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-25T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-28T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-25T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-28T23:00", testformatter.testFormatTime("11pm"));
 	}
 
 	@Test
