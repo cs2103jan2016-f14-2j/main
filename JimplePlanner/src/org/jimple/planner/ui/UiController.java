@@ -139,6 +139,7 @@ public class UiController extends myObserver implements Initializable {
 		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
+		logic.refreshLists();
 		TextFields.bindAutoCompletion(
                 commandBox,
                 "add ", "edit ", "delete ", "search ", "help", "changedir", "checkdir");
@@ -159,12 +160,11 @@ public class UiController extends myObserver implements Initializable {
 
 	private void loadClock() {
 		final DateFormat format = SimpleDateFormat.getInstance();  
-		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
 		          final Calendar cal = Calendar.getInstance();  
 		          clock.setText(format.format(cal.getTime()));
-		          logic.refreshLists();
 		     }  
 		}));  
 		timeline.setCycleCount(Animation.INDEFINITE);  
@@ -192,6 +192,8 @@ public class UiController extends myObserver implements Initializable {
 	========================================*/
 	
 	protected void loadDisplay() {
+		int i = listViewControl.getCurrentTabItemIndex();
+		boolean cmb = commandBox.isFocused();
 		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
@@ -199,6 +201,12 @@ public class UiController extends myObserver implements Initializable {
 		loadTodoList();
 		prompt = new UiPrompt(this);
 		prompt.searchPrompt();
+		if(!cmb)
+			listViewControl.selectIndex(i);
+		if(cmb){
+//			commandBox.requestFocus();
+//			commandBox.positionCaret(commandBox.getLength());
+		}
 	}
 	
 	public void loadMainTab(){
@@ -294,11 +302,12 @@ public class UiController extends myObserver implements Initializable {
 
 	public void taskSelectionListener(){
 		listViewControl.getList(listViewControl.getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
-
+			
 			@Override
 			public void handle(KeyEvent t) {
 				if (t.getCode() == KeyCode.UP) {
 					if (listViewControl.getCurrentTabItemIndex() == 0) {
+						listViewControl.selectIndex(-1);
 						tabPanes.requestFocus();
 						listViewControl.deselectTaskItem();
 					}
@@ -308,19 +317,20 @@ public class UiController extends myObserver implements Initializable {
 	}
 
 	public void tabPanesListener() {
-		tabPanes.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				listViewControl.deselectTaskItem();
-				tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
-			}
-		});
+//		tabPanes.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//
+//			@Override
+//			public void handle(MouseEvent event) {
+//				listViewControl.deselectTaskItem();
+//				tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
+//			}
+//		});
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
-				if (t.getCode().isArrowKey())
+				if (t.getCode().isArrowKey()){
 					taskSelectionListener();
+				}
 
 				switch (t.getCode()) {
 				case DOWN:
@@ -329,6 +339,7 @@ public class UiController extends myObserver implements Initializable {
 						listViewControl.getActiveListView().getSelectionModel().select(0);
 					break;
 				case UP:
+					System.out.println("uptriggered");
 					taskSelectionListener();
 					break;
 				case LEFT:
