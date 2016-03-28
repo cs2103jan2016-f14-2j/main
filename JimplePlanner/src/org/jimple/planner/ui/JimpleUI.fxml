@@ -92,14 +92,14 @@
                                           </VBox>
                                           <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <Label text="Now" textFill="#6f6161">
+                                                <Label text="Ongoing" textFill="#6f6161">
                                                    <font>
                                                       <Font name="Trebuchet MS" size="18.0" />
                                                    </font>
                                                 </Label>
                                                 <AnchorPane fx:id="nowPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                                    <children>
-                                                      <Label layoutX="62.0" layoutY="81.0" text="nothing going on now!" AnchorPane.bottomAnchor="81.0" />
+                                                      <Label layoutX="62.0" layoutY="81.0" text="nothing going on now!" />
                                                    </children></AnchorPane>
                                                 <Label text="Upcoming" textFill="#6f6161">
                                                    <font>

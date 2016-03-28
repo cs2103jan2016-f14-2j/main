@@ -67,7 +67,7 @@
     -fx-font: 16px Trebuchet ;
     -fx-padding: 6 8;
     -fx-background-radius: 50px;
-    -fx-background-color: #7895A4;
+    -fx-background-color: #D8D3C7;
     /*-fx-background-insets: 0px, 2px ;*/
     -fx-fill: white;
 	-fx-background-insets: 3px;
@@ -75,20 +75,20 @@
 
 
 .deadline:selected {
-	-fx-background-color: #D8EAED;
+	-fx-background-color: #C1B9A5;
 }
 .event {	
     -fx-font: 16px Trebuchet ;
     -fx-fill: white;
     
     -fx-padding: 10px ;
-    -fx-background-color: #7895A4;
+    -fx-background-color: #D8D3C7;
     -fx-background-radius: 10px;
 	-fx-background-insets: 3px;
 }
 
 .event:selected{
-    -fx-background-color: #D8EAED;
+    -fx-background-color: #C1B9A5;
 }
 
 .cellTitle {
@@ -162,21 +162,21 @@
 
 
  .overdue{
-	-fx-background-color: #ADC6B9;	
+	-fx-background-color: #AFABA0;	
 }
 
 .overdue:selected{
-	-fx-background-color: #EFF4F1;
+	-fx-background-color: #7F7967;
 	
 }
 
 .green{
-	-fx-background-color: #79A96F;
+	-fx-background-color: #D8C39E;
 	
 }
 
 .green:selected{
-	-fx-background-color: #DAEEC8;
+	-fx-background-color: #C19F64;
 	
 }
 
@@ -186,7 +186,7 @@
 }
 
 .yellow:selected{
-	-fx-background-color: #FEF8AF;
+	-fx-background-color: #DABF24;
 	
 }
 
@@ -196,7 +196,7 @@
 }
 
 .orange:selected{
-	-fx-background-color: #FEEC31;
+	-fx-background-color: #F5670B;
 	
 }
 
@@ -206,7 +206,7 @@
 }
 
 .red:selected{
-	-fx-background-color: #F55E3F;
+	-fx-background-color: #B2150E;
 	
 }
 
@@ -216,6 +216,6 @@
 }
 
 .darkred:selected{
-	-fx-background-color: #EC3D24;
+	-fx-background-color: #650E08;
 	
 }

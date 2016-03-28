@@ -215,7 +215,7 @@ public class UiFormatter {
 
 	private void addTodayTasksToFormattedDateList() {
 		for (Task task : arrList) {
-			if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()) {
+			if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear() && timeDifference(task.getFromTime()) >= 0) {
 				formattedList.add(task);
 			}
 		}
