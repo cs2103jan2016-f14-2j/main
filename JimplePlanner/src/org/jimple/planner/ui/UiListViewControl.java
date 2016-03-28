@@ -68,6 +68,8 @@ public class UiListViewControl extends UiController{
 	}
 
 	protected Task getSelectedListItem() {
+		if(getActiveListView().getSelectionModel().isEmpty())
+			return null;
 		return getActiveListView().getSelectionModel().getSelectedItem();
 	}
 	
