@@ -53,7 +53,7 @@ public interface LogicMasterListModification {
 		}
 		for (Task aTask : events) {
 			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) < 0) {
+				if (aTask.getToTime().compareTo(LocalDateTime.now()) < 0) {
 					aTask.setIsOverDue(true);
 				}
 			}

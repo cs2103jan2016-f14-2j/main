@@ -55,14 +55,6 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 		return false;
 	}
 
-	private String[] createArrayWithoutFirstIndex(String[] variableArray) {
-		String[] parsedInput = new String[5];
-		for (int i = 1; i < variableArray.length; i++) {
-			parsedInput[i - 1] = variableArray[i];
-		}
-		return parsedInput;
-	}
-
 	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory, LinkedList<LogicPreviousTask> undoTasks) throws IOException, InvalidFromAndToTime {
 		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, undoTasks);

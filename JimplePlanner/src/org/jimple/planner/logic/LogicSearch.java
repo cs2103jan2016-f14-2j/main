@@ -1,13 +1,10 @@
 package org.jimple.planner.logic;
-import org.jimple.planner.storage.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
-public class LogicSearch implements LogicTaskModification	{
+public class LogicSearch {
 	protected static String mostRecentlySearchedWord = new String("");
 	
 	protected ArrayList<Task> searchWord(String wordToBeSearched,  ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
