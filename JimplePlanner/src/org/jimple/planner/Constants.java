@@ -11,6 +11,7 @@ public final class Constants {
 	public static final String TYPE_SEARCH = "search";
 	public static final String TYPE_HELP = "help";
 	public static final String TYPE_POPUP = "popup";
+	public static final String TYPE_TODAY = "today";
 	public static final String EMPTY_STRING = "";
 	
 	public static final int TASK_LABEL_DEFAULT = 0;
