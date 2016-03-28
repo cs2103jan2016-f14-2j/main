@@ -24,7 +24,6 @@ public interface LogicTaskModification {
 				case 4:
 					editedTask.setToDate(variableArray[i]);
 					break;
-				//change to label
 				case 5:
 					editedTask.setLabel(Integer.parseInt(variableArray[i]));
 					break;

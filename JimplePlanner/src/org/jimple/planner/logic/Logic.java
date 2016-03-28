@@ -205,7 +205,7 @@ public class Logic {
 	}
 
 	public void refreshLists()	{
-		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
 		    	 notifyAllObservers(); 
