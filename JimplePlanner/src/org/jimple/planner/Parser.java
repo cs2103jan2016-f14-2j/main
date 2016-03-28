@@ -20,23 +20,18 @@ public class Parser {
 	 * ----------------------------| 
 	 * String[]: Stores the possible extended command strings for each command.
 	 */
-	private final String[] EXTENDED_COMMANDS_ADD = {"description", "at", "from", "on", "by", "category"};
-	private final String[] EXTENDED_COMMANDS_EDIT = {"name", "description", "time", "category"};
+	private final String[] EXTENDED_COMMANDS_ADD = {"DESC", "AT", "FROM", "ON", "BY", "LABEL"};
+	private final String[] EXTENDED_COMMANDS_EDIT = {"NAME", "DESC", "TIME", "LABEL"};
+	private final String[] EXTENDED_COMMANDS_EDITLABEL = {"NAME", "COLOUR"};
 	private final String[] EXTENDED_COMMANDS_NIL = {};
 	
-	/* ----------------------------|
-	 * INPUTSTRUCT INDEX CONSTANTS |
-	 * ----------------------------|
-	 * The constants here store the index they reference in the InputStruct class.
+	/* --------------|
+	 * VALID COLOURS |
+	 * --------------|
 	 */
 	
-	/* Stores the index for the user input after the main command.
-	 *  - "add": Index of the task name.
-	 *  - "edit": Index of the task ID.
-	 *  - "delete": Index of the task ID.
-	 *  - "search": Index of the query String.
-	 *  - "changedir": Index of the directory path.
-	 */
+	private final String[] VALID_COLOURS = {"blue", "green", "yellow", "orange", "red", "purple"};
+	
 	private final int INDEX_BASE = 0;
 	
 	// Stores the indexes for task fields. Used by "add" and "edit".
@@ -44,7 +39,10 @@ public class Parser {
 	private final int INDEX_DESCRIPTION = 2;
 	private final int INDEX_FROM = 3;
 	private final int INDEX_TO = 4;
-	private final int INDEX_CATEGORY = 5;
+	private final int INDEX_LABEL = 5;
+	// Stores the indexes for task fields. Used by "editlabel".
+	private final int INDEX_EDITLABEL_NAME = 1;
+	private final int INDEX_EDITLABEL_COLOUR = 2;
 	
 	
 
@@ -54,39 +52,32 @@ public class Parser {
 	 */
 
 	// Main commands.
-	private static final String COMMAND_ADD = "add";
-	private static final String COMMAND_EDIT = "edit";
-	private static final String COMMAND_DELETE = "delete";
-	private static final String COMMAND_SEARCH = "search";
-	private static final String COMMAND_CHANGEDIR = "changedir";
-	private static final String COMMAND_CHECKDIR = "checkdir";
-	private static final String COMMAND_UNDO = "undo";
-	private static final String COMMAND_HELP = "help";
+	private static final String COMMAND_ADD = "ADD";
+	private static final String COMMAND_EDIT = "EDIT";
+	private static final String COMMAND_DELETE = "DELETE";
+	private static final String COMMAND_SEARCH = "SEARCH";
+	private static final String COMMAND_EDITLABEL = "EDITLABEL";
+	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
+	private static final String COMMAND_CHECKDIR = "CHECKDIR";
+	private static final String COMMAND_UNDO = "UNDO";
+	private static final String COMMAND_HELP = "DELP";
 	
 	// Extended commands.
-	private static final String EXTENDED_COMMAND_NAME = "name";
-	private static final String EXTENDED_COMMAND_DESCRIPTION = "description";
-	private static final String EXTENDED_COMMAND_TIME = "time";
-	private static final String EXTENDED_COMMAND_AT = "at";
-	private static final String EXTENDED_COMMAND_ON = "on";
-	private static final String EXTENDED_COMMAND_FROM = "from";
-	private static final String EXTENDED_COMMAND_TO = "to";
-	private static final String EXTENDED_COMMAND_BY = "by";
-	private static final String EXTENDED_COMMAND_CATEGORY = "category";
+	private static final String EXTENDED_COMMAND_NAME = "NAME";
+	private static final String EXTENDED_COMMAND_DESCRIPTION = "DESC";
+	private static final String EXTENDED_COMMAND_TIME = "TIME";
+	private static final String EXTENDED_COMMAND_AT = "AT";
+	private static final String EXTENDED_COMMAND_ON = "ON";
+	private static final String EXTENDED_COMMAND_FROM = "FROM";
+	private static final String EXTENDED_COMMAND_TO = "TO";
+	private static final String EXTENDED_COMMAND_BY = "BY";
+	private static final String EXTENDED_COMMAND_LABEL = "LABEL";
+	private static final String EXTENDED_COMMAND_COLOUR = "COLOUR";
 	
 	private final int INDEX_COMMAND = 0;
 	private final int INDEX_MAIN_COMMAND_USER_INPUT = 1;
 	private final int OFFSET_CALENDAR_MONTH = 1;
 	private final String EMPTY_STRING = "";
-			
-	/* ---------|
-	 * HASHMAPS |
-	 * ---------| 
-	 * Stores the extended command strings with the index for easy access.
-	 */
-	private HashMap<String, Integer> extendedCommandsAdd;
-	private HashMap<String, Integer> extendedCommandsEdit;
-	private HashMap<String, Integer> noExtendedCommands;
 
 	/*
 	 * ---------------------|
@@ -95,15 +86,8 @@ public class Parser {
 	 * Class that can parse "natural language" inputs for date and time.
 	 */
 	private TimeParser timeParser = new TimeParser();
-
-	/*
-	 * Stores the extended commands variables into the respective hashmaps.
-	 */
-	public Parser() {
-		extendedCommandsAdd = new HashMap<String, Integer>();
-		extendedCommandsEdit = new HashMap<String, Integer>();
-		noExtendedCommands = new HashMap<String, Integer>();
-	}
+	
+	public Parser() {}
 
 	/*
 	 * The main method that other components use. Returns an InputStruct
@@ -137,6 +121,8 @@ public class Parser {
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
 				case COMMAND_SEARCH :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				case COMMAND_EDITLABEL :
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
 				case COMMAND_CHANGEDIR :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_CHECKDIR :
@@ -213,7 +199,7 @@ public class Parser {
 				} else {
 					parseExtendedCommand(mainCommand, currCommand, currInputString.trim(), currInputStruct);
 				}
-				currCommand = currString.toLowerCase();
+				currCommand = currString;
 				// Resets "userInputString".
 				currInputString = EMPTY_STRING;
 			} else {
@@ -244,6 +230,9 @@ public class Parser {
 			case COMMAND_EDIT :
 				parseExtendedCommandEdit(extendedCommand, inputString, inputStruct);
 				break;
+			case COMMAND_EDITLABEL :
+				parseExtendedCommandEditLabel(extendedCommand, inputString, inputStruct);
+				break;
 		}
 	}
 	
@@ -258,7 +247,7 @@ public class Parser {
 			case EXTENDED_COMMAND_BY :
 				setTime(extendedCommand, inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_CATEGORY :
+			case EXTENDED_COMMAND_LABEL :
 				setCategory(inputString, inputStruct);
 				break;
 			default :
@@ -268,7 +257,7 @@ public class Parser {
 	
 	private void parseExtendedCommandEdit(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
 		switch (extendedCommand) {
-			case EXTENDED_COMMAND_NAME:
+			case EXTENDED_COMMAND_NAME :
 				setName(inputString, inputStruct);
 			case EXTENDED_COMMAND_DESCRIPTION :
 				setDescription(inputString, inputStruct);
@@ -277,11 +266,35 @@ public class Parser {
 				String dateTimeExtendedCommand = getCommandString(inputString.split(" "));
 				setTime(dateTimeExtendedCommand, inputString.substring(dateTimeExtendedCommand.length()+1), inputStruct);
 				break;
-			case EXTENDED_COMMAND_CATEGORY :
+			case EXTENDED_COMMAND_LABEL :
 				setCategory(inputString, inputStruct);
 				break;
 			default :
 				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+		}
+	}
+	private void parseExtendedCommandEditLabel(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
+		switch (extendedCommand) {
+			case EXTENDED_COMMAND_NAME :
+				setLabelName(inputString, inputStruct);
+				break;
+			case EXTENDED_COMMAND_COLOUR :
+				setLabelColour(inputString.toLowerCase(), inputStruct);
+				break;
+			default :
+				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+		}
+	}
+	
+	private void setLabelName(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(INDEX_EDITLABEL_NAME, userInput);
+	}
+	
+	private void setLabelColour(String userInput, InputStruct inputStruct) throws InvalidCommandException {
+		if (isValidColour(userInput)) {
+			inputStruct.setAtIndex(INDEX_EDITLABEL_COLOUR, userInput);
+		} else {
+			throw new InvalidCommandException("Label Colour: \"" + userInput + "\" invalid. Type \"help\" to see the list of valid label colours.");
 		}
 	}
 	
@@ -342,7 +355,7 @@ public class Parser {
 	}
 	
 	private void setCategory(String userInput, InputStruct inputStruct) {
-		inputStruct.setAtIndex(INDEX_CATEGORY, userInput);
+		inputStruct.setAtIndex(INDEX_LABEL, userInput);
 	}
 	
 	private String calendarToStringFormat(Calendar parsedCalendar) {
@@ -364,8 +377,17 @@ public class Parser {
 		return false;
 	}
 	
+	private boolean isValidColour(String input) {
+		for (int i = 0; i < VALID_COLOURS.length; i++) {
+			if (input.equals(VALID_COLOURS[i])) {
+				return true;
+			}
+		}
+		return false; 
+	}
+	
 	private String getCommandString(String[] userInputStringArray) {
-		return userInputStringArray[INDEX_COMMAND].toLowerCase();
+		return userInputStringArray[INDEX_COMMAND];
 	}
 
 }

@@ -20,7 +20,7 @@ public class ParserTest {
 	@Test
 	public void test() {
 		testParser = new Parser();
-		//test0();
+		test0();
 		test1(); // Command: command:add/name/from-to/category
 		test2(); // Command: command:add/name:symbols/from-to/description
 		test3(); // Command: command:add/ - exception
@@ -30,13 +30,13 @@ public class ParserTest {
 		test7(); // Command: command:add/name/on
 		test8(); // Command: command:invalid - exception
 		test9(); // Command: command:add/name/at
-		test10(); // Command:  command:add/name/by
+		test10(); // Command: command:add/name/by
 	}
 	
-	/*private void test0() {
+	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("edit 1 time by 7pm");
+			testStruct = testParser.parseInput("EDITLABEL POKEMON NAME CHANMALICHAN COLOUR ASDFASDF");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
@@ -44,7 +44,7 @@ public class ParserTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	private void test1() {
 		InputStruct testStruct = null;

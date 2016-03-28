@@ -10,6 +10,17 @@ package org.jimple.planner;
 
 public class InputStruct {
 
+	// Main commands.
+	private static final String COMMAND_ADD = "ADD";
+	private static final String COMMAND_EDIT = "EDIT";
+	private static final String COMMAND_DELETE = "DELETE";
+	private static final String COMMAND_SEARCH = "SEARCH";
+	private static final String COMMAND_EDITLABEL = "EDITLABEL";
+	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
+	private static final String COMMAND_CHECKDIR = "CHECKDIR";
+	private static final String COMMAND_UNDO = "UNDO";
+	private static final String COMMAND_HELP = "DELP";
+	
 	/* ---------------|
 	 * SIZE VARIABLES |
 	 * ---------------|
@@ -19,6 +30,7 @@ public class InputStruct {
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
+	private final int ARRAY_SIZE_EDITLABEL = 3;
 	private final int ARRAY_SIZE_CHANGEDIR = 1;
 	
 	/* Stores the index for the user input after the main command.
@@ -36,6 +48,10 @@ public class InputStruct {
 	private final int INDEX_FROM = 3;
 	private final int INDEX_TO = 4;
 	private final int INDEX_CATEGORY = 5;
+	
+	//Stores the indexes for task fields. Used by "editlabel".
+	private final int INDEX_EDITLABEL_NAME = 1;
+	private final int INDEX_EDITLABEL_COLOUR = 2;
 	
 	private final String TASK_TYPE_TODO = "todo";
 	private final String TASK_TYPE_DEADLINE = "deadline";
@@ -74,19 +90,22 @@ public class InputStruct {
 		commandString = inputCommandString;
 		// Initializes the size of the variable array according to the commandString.
 		switch (commandString) {
-		case "add" :
+		case COMMAND_ADD :
 			setVariableArraySize(ARRAY_SIZE_ADD);
 			break;
-		case "edit" :
+		case COMMAND_EDIT :
 			setVariableArraySize(ARRAY_SIZE_EDIT);
 			break;
-		case "delete" :
+		case COMMAND_DELETE :
 			setVariableArraySize(ARRAY_SIZE_DELETE);
 			break;
-		case "search" :
+		case COMMAND_SEARCH :
 			setVariableArraySize(ARRAY_SIZE_SEARCH);
 			break;
-		case "changedir" :
+		case COMMAND_EDITLABEL :
+			setVariableArraySize(ARRAY_SIZE_EDITLABEL);
+			break;
+		case COMMAND_CHANGEDIR :
 			setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
 		default:
 			break;
@@ -126,7 +145,7 @@ public class InputStruct {
 	 * Index 2: Event Description
 	 * Index 3: Event Time (From)
 	 * Index 4: Event Time (To)
-	 * Index 5: Event Category
+	 * Index 5: Event Label
 	 */
 
 	/* --------------|
@@ -137,7 +156,7 @@ public class InputStruct {
 	 * Index 2: Event Description
 	 * Index 3: Event Time (From)
 	 * Index 4: Event Time (To)
-	 * Index 5: Event Category
+	 * Index 5: Event Label
 	 */
 
 	/* ----------------|
