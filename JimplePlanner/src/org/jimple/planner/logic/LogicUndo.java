@@ -41,14 +41,13 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 	private void deletionForUndo(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events)	{
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
-		boolean isEventsDeleted = false;
 		
 		isFloatDeleted = findTaskToDeleteForUndo(variableArray, todo);
 		if (!isFloatDeleted) {
 			isDeadlineDeleted = findTaskToDeleteForUndo(variableArray, deadlines);
 		}
 		if (!isFloatDeleted && !isDeadlineDeleted) {
-			isEventsDeleted = findTaskToDeleteForUndo(variableArray, events);
+			findTaskToDeleteForUndo(variableArray, events);
 		}
 	}
 	
