@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 public class UiPrompt extends UiController{
 	protected UiController controller;
 	
+	
 	public UiPrompt(UiController controller){
 		this.controller = controller;
 	}

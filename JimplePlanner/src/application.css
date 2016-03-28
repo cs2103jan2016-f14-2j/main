@@ -3,16 +3,16 @@
 	-fx-background-color: transparent;
 }
 
- .list-view {
+.list-view {
     -fx-padding: 3px ;
     -fx-background-color: transparent;
 }
 
-.list-cell {
+ .list-cell {
     -fx-padding: 10px ;
     -fx-background-color: transparent, -fx-background ;
     -fx-background-insets: 3px;
-}
+	}
 
 
 .list-cell:empty {
@@ -139,7 +139,11 @@
 
 .static {	
     -fx-font: 12px "Trebuchet MS";
+	
+    -fx-padding: 10px ;
+    -fx-background-color: transparent, -fx-background ;
     -fx-background-color: transparent;
+    -fx-background-insets: 3px;
 }
 
 .static:selected {
@@ -148,14 +152,14 @@
 }
 
 
-.overdue{
+/* .overdue{
 	-fx-background-color: saddlebrown;	
 }
 
 .overdue:selected{
 	-fx-background-color: rosybrown;
 	
-}
+} */
 
 .green{
 	-fx-background-color: green;

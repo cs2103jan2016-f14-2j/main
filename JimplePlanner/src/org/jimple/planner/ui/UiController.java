@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
 import org.jimple.planner.Constants;
+import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
@@ -84,6 +85,12 @@ public class UiController extends myObserver implements Initializable {
 
 	@FXML
 	AnchorPane mainContent;
+	
+	@FXML
+	AnchorPane todayPane;
+	
+	@FXML
+	AnchorPane upcomingPane;
 	
 	@FXML
 	AnchorPane mainContainer;
@@ -194,9 +201,13 @@ public class UiController extends myObserver implements Initializable {
 	}
 	
 	public void loadMainTab(){
-		listFormatter.fomatList(logic.getDeadlinesList(), logic.getEventsList());
-		mainContent.getChildren().clear();
-		mainContent.getChildren().add(listFormatter.getMainContent());
+//		listFormatter.fomatList(logic.getDeadlinesList(), logic.getEventsList());
+		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_TODAY);
+		todayPane.getChildren().clear();
+//		todayPane.getChildren().add(listFormatter.getMainContent());
+		ListView<Task> list = listFormatter.getFormattedList();
+		list.setFocusTraversable(false);
+		todayPane.getChildren().add(list);
 	}
 	
 	public void loadAgendaList() {
@@ -222,14 +233,6 @@ public class UiController extends myObserver implements Initializable {
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listFormatter.getFormattedList());
 	}
-
-	/*======================================
-	 * 
-	 * TASK LIST DISPLAY CONTROLS:
-	 * 
-	========================================*/
-	
-
 	
 	/*======================================
 	 * 
@@ -256,8 +259,6 @@ public class UiController extends myObserver implements Initializable {
 	 * KEYBOARD LISTENERS:
 	 * 
 	========================================*/
-	
-	
 	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -448,9 +449,17 @@ public class UiController extends myObserver implements Initializable {
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
 		case Constants.TYPE_EVENT:
+			if(listViewControl.getCurrentTabName().equals("Jimple")){
+				listViewControl.addAndReload(mainTab, index);
+				break;
+			}
 			listViewControl.addAndReload(eventsTab,index);
 			break;
 		case Constants.TYPE_DEADLINE:
+			if(listViewControl.getCurrentTabName().equals("Jimple")){
+				listViewControl.addAndReload(mainTab, index);
+				break;
+			}
 			listViewControl.addAndReload(deadlinesTab,index);
 			break;
 		case Constants.TYPE_TODO:
