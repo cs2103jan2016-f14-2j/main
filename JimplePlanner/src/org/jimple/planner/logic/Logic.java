@@ -2,9 +2,11 @@ package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.LinkedList;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 import org.jimple.planner.observers.myObserver;
 
@@ -21,11 +23,6 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 import parserExceptions.*;
 
-import org.jimple.planner.Constants;
-
-import java.util.Collections;
-import java.util.LinkedList;
-
 public class Logic {
 
 	private ArrayList<Task> deadlines;
@@ -37,14 +34,14 @@ public class Logic {
 	private LinkedList<LogicPreviousTask> undoTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
-	Parser parser;
-	Storage store;
-	LogicAdd adder;
-	LogicEdit editer;
-	LogicDelete deleter;
-	LogicSearch searcher;
-	LogicDirectory directer;
-	LogicUndo undoer;
+	private Parser parser;
+	private Storage store;
+	private LogicAdd adder;
+	private LogicEdit editer;
+	private LogicDelete deleter;
+	private LogicSearch searcher;
+	private LogicDirectory directer;
+	private LogicUndo undoer;
 
 	public Logic() {
 		agenda = new ArrayList<Task>();
@@ -167,17 +164,18 @@ public class Logic {
 
 	public ArrayList<Task> getAgendaList() {
 		agenda.clear();
+		checkOverCurrentTime();
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
 		Collections.sort(agenda, Task.getFromDateComparator());
 		return agenda;
 	}
 
-	public String getPastInputs() {
+	public String getPastInputs(int cmdHistoryPointer) {
 		if (!pastUserInputs.isEmpty()) {
-			return pastUserInputs.get(0);
+			return pastUserInputs.get(cmdHistoryPointer);
 		}
-		return null;
+		return "";
 	}
 
 	private String getTaskTypeAndTaskID() {
@@ -192,20 +190,20 @@ public class Logic {
 	private void checkOverCurrentTime() {
 		for (Task aTask : deadlines) {
 			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
+				if (aTask.getFromTime().compareTo(LocalDateTime.now()) < 0) {
 					aTask.setIsOverDue(true);
 				}
 			}
 		}
 		for (Task aTask : events) {
 			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
+				if (aTask.getFromTime().compareTo(LocalDateTime.now()) < 0) {
 					aTask.setIsOverDue(true);
 				}
 			}
 		}
 	}
-
+	
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -221,7 +219,7 @@ public class Logic {
 			observer.update(displayType);
 		}
 	}
-	
+
 	public void refreshLists()	{
 		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {  
 		     @Override  
