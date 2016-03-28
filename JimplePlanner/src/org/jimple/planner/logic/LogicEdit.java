@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import org.jimple.planner.Task;
 import org.jimple.planner.exceptions.InvalidFromAndToTime;
 
-public class LogicEdit implements LogicTaskModification {
+public class LogicEdit implements LogicTaskModification, LogicMasterListModification {
 
 	protected String editTask(Storage store, String[] variableArray, 
 			ArrayList<Task> todo, ArrayList<Task> deadlines,

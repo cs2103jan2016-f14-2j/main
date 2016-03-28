@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import org.jimple.planner.Task;
 import org.jimple.planner.Constants;
 
-public class LogicAdd implements LogicTaskModification{
+public class LogicAdd implements LogicTaskModification, LogicMasterListModification {
 	
 	protected String addToTaskList(Storage store, String[] parsedInput, ArrayList<Task>tempHistory, 
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks) throws IOException {

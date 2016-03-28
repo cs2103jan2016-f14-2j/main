@@ -8,7 +8,7 @@ import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 import org.jimple.planner.storage.*;
 
-public class LogicUndo implements LogicTaskModification {
+public class LogicUndo implements LogicTaskModification, LogicMasterListModification {
 	
 	public String undoPreviousChange(Storage store, LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory) throws IOException {

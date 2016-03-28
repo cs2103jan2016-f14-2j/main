@@ -60,11 +60,11 @@ public class Logic {
 		undoer = new LogicUndo();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
-			LogicTaskModification.assignTaskIds(allTasks);
+			LogicMasterListModification.assignTaskIds(allTasks);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);
-			checkOverCurrentTime();
+			LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -149,12 +149,12 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getDeadlinesList() {
-		checkOverCurrentTime();
+		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		return deadlines;
 	}
 
 	public ArrayList<Task> getEventsList() {
-		checkOverCurrentTime();
+		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		return events;
 	}
 
@@ -165,7 +165,7 @@ public class Logic {
 
 	public ArrayList<Task> getAgendaList() {
 		agenda.clear();
-		checkOverCurrentTime();
+		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
 		Collections.sort(agenda, Task.getFromDateComparator());
@@ -185,23 +185,6 @@ public class Logic {
 					+ tempHistory.get(tempHistory.size() - 1).getType();
 		} else {
 			return "";
-		}
-	}
-
-	private void checkOverCurrentTime() {
-		for (Task aTask : deadlines) {
-			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) < 0) {
-					aTask.setIsOverDue(true);
-				}
-			}
-		}
-		for (Task aTask : events) {
-			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) < 0) {
-					aTask.setIsOverDue(true);
-				}
-			}
 		}
 	}
 	
