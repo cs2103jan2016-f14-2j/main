@@ -3,6 +3,13 @@ package org.jimple.planner;
 import static org.jimple.planner.Constants.TYPE_TODO;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
+import static org.jimple.planner.Constants.TASK_LABEL_BLUE;
+import static org.jimple.planner.Constants.TASK_LABEL_DARK_RED;
+import static org.jimple.planner.Constants.TASK_LABEL_DEFAULT;
+import static org.jimple.planner.Constants.TASK_LABEL_GREEN;
+import static org.jimple.planner.Constants.TASK_LABEL_ORANGE;
+import static org.jimple.planner.Constants.TASK_LABEL_RED;
+import static org.jimple.planner.Constants.TASK_LABEL_YELLOW;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -16,6 +23,7 @@ public class Task{
 	private String type;
 	private boolean isOverDue;
 	private int taskId;
+	private int label;
 	private static Formatter formatter = new Formatter();
 	
 	// Default Constructor
@@ -28,6 +36,7 @@ public class Task{
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
 		this.taskId = 1000;
+		this.label = TASK_LABEL_DEFAULT;
 	}
 	
 	//Constructor for creating a duplicate
