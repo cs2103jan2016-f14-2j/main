@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -90,6 +91,9 @@ public class UiController extends myObserver implements Initializable {
 	AnchorPane todayPane;
 	
 	@FXML
+	AnchorPane nowPane;
+	
+	@FXML
 	AnchorPane upcomingPane;
 	
 	@FXML
@@ -139,7 +143,12 @@ public class UiController extends myObserver implements Initializable {
 		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
-		logic.refreshLists();
+//		logic.refreshLists();
+		
+		todayPane.getStyleClass().add("today-pane");
+		nowPane.getStyleClass().add("today-pane");
+		upcomingPane.getStyleClass().add("today-pane");
+		
 		TextFields.bindAutoCompletion(
                 commandBox,
                 "add ", "edit ", "delete ", "search ", "help", "changedir", "checkdir");
@@ -159,12 +168,17 @@ public class UiController extends myObserver implements Initializable {
 	 }
 
 	private void loadClock() {
-		final DateFormat format = SimpleDateFormat.getInstance();  
-		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {  
+		final DateFormat format = SimpleDateFormat.getInstance();
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
 		          final Calendar cal = Calendar.getInstance();  
 		          clock.setText(format.format(cal.getTime()));
+//		          update();
+		          if(LocalDateTime.now().getSecond() == 0){
+		        	  System.out.println("update");
+		        	  update();
+		          }
 		     }  
 		}));  
 		timeline.setCycleCount(Animation.INDEFINITE);  
@@ -192,8 +206,10 @@ public class UiController extends myObserver implements Initializable {
 	========================================*/
 	
 	protected void loadDisplay() {
+		tabPanesListener();
 		int i = listViewControl.getCurrentTabItemIndex();
 		boolean cmb = commandBox.isFocused();
+		int pos = commandBox.getCaretPosition();
 		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
@@ -201,22 +217,42 @@ public class UiController extends myObserver implements Initializable {
 		loadTodoList();
 		prompt = new UiPrompt(this);
 		prompt.searchPrompt();
-		if(!cmb)
-			listViewControl.selectIndex(i);
+		listViewControl.selectIndex(i);
+		listViewControl.getActiveListView().scrollTo(i);
 		if(cmb){
-//			commandBox.requestFocus();
-//			commandBox.positionCaret(commandBox.getLength());
+			commandBox.requestFocus();
+			commandBox.positionCaret(pos);
 		}
 	}
 	
 	public void loadMainTab(){
-//		listFormatter.fomatList(logic.getDeadlinesList(), logic.getEventsList());
 		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_TODAY);
-		todayPane.getChildren().clear();
-//		todayPane.getChildren().add(listFormatter.getMainContent());
 		ListView<Task> list = listFormatter.getFormattedList();
-		list.setFocusTraversable(false);
-		todayPane.getChildren().add(list);
+		todayPane.getChildren().clear();
+		if(list != null){
+			list.setFocusTraversable(false);
+			todayPane.getChildren().add(list);
+		}
+		else {
+			Label label = new Label("you have no events today!");
+			label.setLayoutX(192);
+			label.setLayoutY(196);
+			todayPane.getChildren().add(label);
+		}
+		
+		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_NOW);
+		list = listFormatter.getFormattedList();
+		nowPane.getChildren().clear();
+		if(list != null){
+			list.setFocusTraversable(false);
+			nowPane.getChildren().add(list);
+		}
+		else {
+			Label label = new Label("nothing going on now!");
+			label.setLayoutX(62);
+			label.setLayoutY(81);
+			nowPane.getChildren().add(label);
+		}
 	}
 	
 	public void loadAgendaList() {
@@ -326,6 +362,7 @@ public class UiController extends myObserver implements Initializable {
 //			}
 //		});
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			
 			@Override
 			public void handle(KeyEvent t) {
 				if (t.getCode().isArrowKey()){

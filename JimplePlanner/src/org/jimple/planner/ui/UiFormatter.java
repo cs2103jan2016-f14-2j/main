@@ -75,6 +75,13 @@ public class UiFormatter {
 			addTodayTasksToFormattedDateList();
 			agendaCellFormat();
 			break;
+			
+		case Constants.TYPE_NOW:
+			addNowTasksToFormattedDateList();
+			agendaCellFormat();
+			break;
+		case Constants.TYPE_UPCOMING:
+			break;
 		case Constants.TYPE_AGENDA:
 			addTasksToFormattedDateList();
 			agendaCellFormat();
@@ -184,8 +191,10 @@ public class UiFormatter {
 		return mainVbox;
 	}
 
-
+	
 	public ListView<Task> getFormattedList() {
+		if(listView == null)
+			return null;
 		fitToAnchorPane(listView);
 		return listView;
 	}
@@ -205,14 +214,28 @@ public class UiFormatter {
 	}
 
 	private void addTodayTasksToFormattedDateList() {
-		formattedList.add(staticTask("Today"));
 		for (Task task : arrList) {
-			if (timeDifference(task.getFromTime())>0 && timeDifference(task.getFromTime()) <= 1440) {
+			if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()) {
 				formattedList.add(task);
 			}
 		}
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
+		if(formattedList.isEmpty())
+			listView = null;
+	}
+	
+	private void addNowTasksToFormattedDateList() {
+		for (Task task : arrList) {
+			if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()) {
+				if(task.getType().equals(Constants.TYPE_EVENT) && timeDifference(task.getFromTime()) < 1 && !task.getIsOverDue())
+					formattedList.add(task);
+			}
+		}
+		data = FXCollections.observableArrayList(formattedList);
+		listView = new ListView<Task>(data);
+		if(formattedList.isEmpty())
+			listView = null;
 	}
 		
 	private void addTasksToFormattedDateList() {
@@ -241,6 +264,7 @@ public class UiFormatter {
 
 	
 	private void agendaCellFormat() {
+		if(listView != null){
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 
 			@Override
@@ -274,17 +298,17 @@ public class UiFormatter {
 								this.getStyleClass().clear();
 								this.getStyleClass().add(Constants.TYPE_DEADLINE);
 								//more than a day away
-								if(timeDifference(item.getFromTime())> 1440)
+								if(timeDifference(item.getFromTime())>=1440)
 									this.getStyleClass().add("green");
 								//less than a day
-								else if(timeDifference(item.getFromTime())> 60)
+								else if(timeDifference(item.getFromTime())>=60)
 									this.getStyleClass().add("yellow");
 								//less than an hour
-								else if(timeDifference(item.getFromTime())> 30)
+								else if(timeDifference(item.getFromTime())>=30)
 									this.getStyleClass().add("orange");
-								else if(timeDifference(item.getFromTime())> 10)
+								else if(timeDifference(item.getFromTime())>=10)
 									this.getStyleClass().add("red");
-								else if(timeDifference(item.getFromTime())> 0)
+								else if(timeDifference(item.getFromTime())>=0)
 									this.getStyleClass().add("darkred");
 								else
 									this.getStyleClass().add("overdue");
@@ -301,7 +325,7 @@ public class UiFormatter {
 							else {
 								this.getStyleClass().clear();
 								this.getStyleClass().add(Constants.TYPE_EVENT);
-								if(!item.getIsOverDue()){
+								if(item.getIsOverDue()){
 									this.getStyleClass().add("overdue");
 								}
 								ID.setText(String.format("%d", item.getTaskId()));
@@ -321,6 +345,7 @@ public class UiFormatter {
 			}
 
 		});
+		}
 	}
 
 	private void eventsCellFormat() {
@@ -394,7 +419,9 @@ public class UiFormatter {
 							
 							//STATIC
 							if (item.getType().equals(Constants.TYPE_STATIC)) {
-								this.getStyleClass().add(Constants.TYPE_STATIC);
+								double value = (double)LocalDateTime.now().getSecond()/60.0 * 255.0;
+								String color = "-fx-background-color: #ffff" + Integer.toHexString((int)value).toString();
+								setStyle(color);
 								this.setFocusTraversable(false);
 								vBox = new VBox(title);
 								hBox = new HBox(vBox);
@@ -402,19 +429,20 @@ public class UiFormatter {
 
 							//DEADLINE
 							else {
+								this.getStyleClass().clear();
 								this.getStyleClass().add(Constants.TYPE_DEADLINE);
 								//more than a day away
-								if(timeDifference(item.getFromTime())> 1440)
+								if(timeDifference(item.getFromTime())>=1440)
 									this.getStyleClass().add("green");
 								//less than a day
-								else if(timeDifference(item.getFromTime())> 60)
+								else if(timeDifference(item.getFromTime())>=60)
 									this.getStyleClass().add("yellow");
 								//less than an hour
-								else if(timeDifference(item.getFromTime())> 30)
+								else if(timeDifference(item.getFromTime())>=30)
 									this.getStyleClass().add("orange");
-								else if(timeDifference(item.getFromTime())> 10)
+								else if(timeDifference(item.getFromTime())>=10)
 									this.getStyleClass().add("red");
-								else if(timeDifference(item.getFromTime())> 0)
+								else if(timeDifference(item.getFromTime())>=0)
 									this.getStyleClass().add("darkred");
 								else
 									this.getStyleClass().add("overdue");
@@ -496,9 +524,9 @@ public class UiFormatter {
 		});
 	}
 	
-	private long timeDifference(LocalDateTime reference){
-		long seconds = Duration.between(LocalDateTime.now(),reference).toMinutes();
-		return seconds;
+	private double timeDifference(LocalDateTime reference){
+		double minutes = Duration.between(LocalDateTime.now(),reference).toMillis() / 6000.0;
+		return minutes;
 	}
 	
 }
