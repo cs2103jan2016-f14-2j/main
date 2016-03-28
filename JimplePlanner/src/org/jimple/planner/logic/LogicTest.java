@@ -27,7 +27,7 @@ public class LogicTest {
 	ArrayList<Task> deadlines = new ArrayList<Task>();
 	ArrayList<Task> events = new ArrayList<Task>();
 	ArrayList<Task> tempHistory = new ArrayList<Task>();
-	LinkedList<PreviousTask> undoTasks = new LinkedList<PreviousTask>();
+	LinkedList<LogicPreviousTask> undoTasks = new LinkedList<LogicPreviousTask>();
 
 	/*
 	 * @Test public void EditShouldReturnFeedback() throws IOException {
@@ -99,7 +99,7 @@ public class LogicTest {
 
 		// test for overshot
 		for (int i = 0; i < 22; i++) {
-			PreviousTask testTask = new PreviousTask("floating", new Task(Integer.toString(i)));
+			LogicPreviousTask testTask = new LogicPreviousTask("floating", new Task(Integer.toString(i)));
 			undoTasks.add(testTask);
 		}
 		assertEquals("task \"" + "21" + "\"" + Constants.UNDO_FEEDBACK,

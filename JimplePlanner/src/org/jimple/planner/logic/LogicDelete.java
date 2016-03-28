@@ -11,7 +11,7 @@ public class LogicDelete extends LogicEdit{
 	
 	protected String deleteTask(Storage store, String[] variableArray, 
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
-			LinkedList<PreviousTask> undoTasks)
+			LinkedList<LogicPreviousTask> undoTasks)
 			throws IOException {
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
@@ -32,7 +32,7 @@ public class LogicDelete extends LogicEdit{
 	}
 	
 	private boolean findTaskToDelete(String[] variableArray, ArrayList<Task> list,
-			LinkedList<PreviousTask> undoTasks)
+			LinkedList<LogicPreviousTask> undoTasks)
 			throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
@@ -46,11 +46,11 @@ public class LogicDelete extends LogicEdit{
 	}
 
 	public String testDeleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, LinkedList<PreviousTask> undoTasks) throws IOException {
+			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks) throws IOException {
 		return deleteTask(store, variableArray, todo, deadlines, events, undoTasks);
 	}
 	
-	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list, LinkedList<PreviousTask> undoTasks) throws IOException	{
+	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list, LinkedList<LogicPreviousTask> undoTasks) throws IOException	{
 		return findTaskToDelete(variableArray, list, undoTasks);
 	}
 

@@ -14,6 +14,14 @@ public final class Constants {
 	public static final String TYPE_TODAY = "today";
 	public static final String EMPTY_STRING = "";
 	
+	public static final int TASK_LABEL_DEFAULT = 0;
+	public static final int TASK_LABEL_BLUE= 1;
+	public static final int TASK_LABEL_GREEN = 2;
+	public static final int TASK_LABEL_YELLOW = 3;
+	public static final int TASK_LABEL_ORANGE = 4;
+	public static final int TASK_LABEL_RED = 5;
+	public static final int TASK_LABEL_DARK_RED = 6;
+	
 	public static final String ERROR_INVALID_TASK = "Task is invalid";
 	
 	/*
