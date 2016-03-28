@@ -6,7 +6,7 @@ import static org.jimple.planner.Constants.FILEPATH_TEST;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_KEY_NAME;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
-import static org.jimple.planner.Constants.TAGS_CATEGORY;
+import static org.jimple.planner.Constants.TAGS_LABEL;
 import static org.jimple.planner.Constants.TAGS_DESCRIPTION;
 import static org.jimple.planner.Constants.TAGS_FROM_TIME;
 import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
@@ -15,8 +15,6 @@ import static org.jimple.planner.Constants.TAGS_TO_TIME;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_TODO;
-import static org.jimple.planner.Constants.ERROR_INVALID_TASK;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,6 +62,7 @@ public class StorageLoad implements StorageLoadInterface{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		Task.sortTasks(allTasksLists);
 		return allTasksLists;
 	}
 	
@@ -93,9 +92,9 @@ public class StorageLoad implements StorageLoadInterface{
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
 			task.setTitle(titleString);
-		} else if(isCategory(field)){
-			String catField = getRemovedCategoryTagString(field);
-			task.setCategory(catField);
+		} else if(isLabel(field)){
+			int labelValue = getRemovedLabelTagValue(field);
+			task.setLabel(labelValue);
 		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
 			task.setDescription(descField);
@@ -112,8 +111,8 @@ public class StorageLoad implements StorageLoadInterface{
 		return field.contains(TAGS_TITLE);
 	}
 	
-	private boolean isCategory(String field){
-		return field.contains(TAGS_CATEGORY);
+	private boolean isLabel(String field){
+		return field.contains(TAGS_LABEL);
 	}
 	
 	private boolean isDescription(String field){
@@ -133,9 +132,16 @@ public class StorageLoad implements StorageLoadInterface{
 		return removedTag;
 	}
 	
-	private String getRemovedCategoryTagString(String field){
-		String removedTag = field.replace(TAGS_CATEGORY, EMPTY_STRING);
-		return removedTag;
+	private int getRemovedLabelTagValue(String field){
+		String removedTag = field.replace(TAGS_LABEL, EMPTY_STRING);
+		int labelValue = 0;
+		try {
+			labelValue = Integer.parseInt(removedTag);
+		} catch (NumberFormatException e) {
+			System.out.println("Label value is not valid, label value is: "+removedTag);
+			e.printStackTrace();
+		}
+		return labelValue;
 	}
 	
 	private String getRemovedDescriptionTagString(String field){
@@ -208,7 +214,7 @@ public class StorageLoad implements StorageLoadInterface{
 		String[] result = new String[6];
 		result[0] = task.getTitle();
 		result[1] = task.getDescription();
-		result[2] = task.getCategory();
+		result[2] = String.valueOf(task.getLabel());
 		result[3] = task.getFromTimeString();
 		result[4] = task.getToTimeString();
 		result[5] = task.getType();

@@ -4,7 +4,7 @@ import static org.jimple.planner.Constants.FILEPATH_CONFIG;
 import static org.jimple.planner.Constants.FILEPATH_TEST;
 import static org.jimple.planner.Constants.FILEPATH_TEST_TEMP;
 import static org.jimple.planner.Constants.PROPERTIES_COMMENT_HEADER;
-import static org.jimple.planner.Constants.TAGS_CATEGORY;
+import static org.jimple.planner.Constants.TAGS_LABEL;
 import static org.jimple.planner.Constants.TAGS_DESCRIPTION;
 import static org.jimple.planner.Constants.TAGS_FROM_TIME;
 import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
@@ -17,11 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Properties;
 
 import org.jimple.planner.Task;
@@ -42,7 +39,7 @@ public class StorageSave implements StorageSaveInterface{
 	
 	public boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
 		assert allTaskLists.size() == 3;
-		sortTasks(allTaskLists);
+		Task.sortTasks(allTaskLists);
 		writeTasksToFile(allTaskLists, tempFilePath);
 		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
 		return saveStatus;
@@ -86,10 +83,6 @@ public class StorageSave implements StorageSaveInterface{
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + task.getDescription());
 			lineString = lineString + descriptionString;
 		} 
-		if(isCategoryExist(task)) {
-			String categoryString = formatToSaveString(TAGS_CATEGORY + task.getCategory());
-			lineString = lineString + categoryString;
-		} 
 		if (isFromTimeExist(task)){
 			String fromTimeString = formatToSaveString(TAGS_FROM_TIME + task.getFromTime());
 			lineString = lineString + fromTimeString;
@@ -98,15 +91,13 @@ public class StorageSave implements StorageSaveInterface{
 			String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
 			lineString = lineString + fromToString;
 		}
+		String labelString = formatToSaveString(TAGS_LABEL + String.valueOf(task.getLabel()));
+		lineString = lineString + labelString;
 		return lineString;
 	}
 	
 	private boolean isDescriptionExist(Task task){
 		return !(task.getDescription().length()==0);
-	}
-	
-	private boolean isCategoryExist(Task task){
-		return !(task.getCategory().length()==0);
 	}
 	
 	private boolean isFromTimeExist(Task task){
@@ -120,29 +111,6 @@ public class StorageSave implements StorageSaveInterface{
 	//Minor formatting of string such that each "field" is enclosed with a "/"
 	private String formatToSaveString(String string){
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
-	}
-	
-	public void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
-		sortById(allTaskLists);
-		sortDeadlines(allTaskLists);
-		sortEvents(allTaskLists);
-	}
-	
-	private void sortDeadlines(ArrayList<ArrayList<Task>> allTaskLists){
-		Comparator<Task> fromDateComparator = Task.getFromDateTimeComparator();
-		Collections.sort(allTaskLists.get(1), fromDateComparator);
-	}
-	
-	private void sortEvents(ArrayList<ArrayList<Task>> allTaskLists){
-		Comparator<Task> fromDateComparator = Task.getFromDateTimeComparator();
-		Collections.sort(allTaskLists.get(2), fromDateComparator);
-	}
-	
-	private void sortById(ArrayList<ArrayList<Task>> allTaskLists){
-		Comparator<Task> taskIdComparator = Task.getTaskIdComparator();
-		for(ArrayList<Task> taskList: allTaskLists){
-			Collections.sort(taskList, taskIdComparator);
-		}
 	}
 	
 	public void saveProperties(Properties property){
@@ -163,7 +131,7 @@ public class StorageSave implements StorageSaveInterface{
 	}
 	
 	public void testWriteTasks(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
-		sortTasks(allTaskLists);
+		Task.sortTasks(allTaskLists);
 		writeTasksUsingWriter(allTaskLists, tempWriter);
 	}
 }

@@ -3,34 +3,27 @@ package org.jimple.planner;
 import static org.jimple.planner.Constants.TYPE_TODO;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
-import static org.jimple.planner.Constants.TASK_LABEL_BLUE;
-import static org.jimple.planner.Constants.TASK_LABEL_DARK_RED;
 import static org.jimple.planner.Constants.TASK_LABEL_DEFAULT;
-import static org.jimple.planner.Constants.TASK_LABEL_GREEN;
-import static org.jimple.planner.Constants.TASK_LABEL_ORANGE;
-import static org.jimple.planner.Constants.TASK_LABEL_RED;
-import static org.jimple.planner.Constants.TASK_LABEL_YELLOW;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
+import java.util.ArrayList;
 
 public class Task{
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
 	private String description;
-	private String category;
 	private String type;
 	private boolean isOverDue;
 	private int taskId;
 	private int label;
 	private static Formatter formatter = new Formatter();
+	private static TaskSorter taskSorter = new TaskSorter();
 	
 	// Default Constructor
 	public Task(String aTitle) {
 		this.title = aTitle;
 		this.description = new String("");
-		this.category = new String("");
 		this.fromDateTime = null;
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
@@ -43,11 +36,11 @@ public class Task{
 	public Task (Task taskToBeDuplicated)	{
 		this.title = taskToBeDuplicated.getTitle();
 		this.description = taskToBeDuplicated.getDescription();
-		this.category = taskToBeDuplicated.getCategory();
 		this.fromDateTime = taskToBeDuplicated.getFromTime();
 		this.toDateTime = taskToBeDuplicated.getToTime();
 		this.type = taskToBeDuplicated.getType();
 		this.isOverDue = taskToBeDuplicated.getIsOverDue();
+		this.label = taskToBeDuplicated.getLabel();
 	}
 	
 	public String getPrettyFromDate()	{
@@ -114,6 +107,7 @@ public class Task{
 		return type;
 	}
 	
+	//THIS METHOD IS USED ONLY FOR TEST PURPOSES
 	public void setType(String type){
 		this.type = type;
 	}
@@ -172,25 +166,8 @@ public class Task{
 		this.description = description;
 	}
 
-	/**
-	 * labels:
-	 * 0 - default
-	 * 1 - blue
-	 * 2 - green
-	 * 3 - yellow
-	 * 4 - orange
-	 * 5 - red
-	 * 6 - dark red
-	 */
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
-	public String getCategory() {
-		if (category == null) {
-			return "";
-		}
-		return category;
+	public int getLabel() {
+		return label;
 	}
 	
 	public void setIsOverDue(boolean overDueStatus)	{
@@ -201,6 +178,20 @@ public class Task{
 		return isOverDue;
 	}
 	
+	/**
+	 * labels:
+	 * 0 - default
+	 * 1 - blue
+	 * 2 - green
+	 * 3 - yellow
+	 * 4 - orange
+	 * 5 - red
+	 * 6 - dark red
+	 */
+	public void setLabel(int label) {
+		this.label = label;
+	}
+	
 	public void setTaskId(int taskId){
 		this.taskId = taskId;
 	}
@@ -209,38 +200,12 @@ public class Task{
 		return taskId;
 	}
 	
-	public static Comparator<Task> getFromDateTimeComparator(){
-		return new Comparator<Task>(){
-			public int compare(Task task1, Task task2){
-				return task1.getFromTime().compareTo(task2.getFromTime());
-			}
-		};
+	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
+		taskSorter.sortTasks(allTaskLists);
 	}
 	
-	public static Comparator<Task> getFromDateComparator(){
-		return new Comparator<Task>(){
-			public int compare(Task task1, Task task2){
-				return task1.getFromTime().toLocalDate().compareTo(task2.getFromTime().toLocalDate());
-			}
-		};
-	}
-	
-	public static Comparator<Task> getTaskIdComparator(){
-		return new Comparator<Task>(){
-			public int compare(Task task1, Task task2){
-				int task1id = task1.getTaskId();
-				int task2id = task2.getTaskId();
-				int result;
-				if(task1id<task2id){
-					result = -1;
-				} else if (task1id==task2id){
-					result = 0;
-				} else {
-					result = 1;
-				}
-				return result;
-			}
-		};
+	public static void sortTasksForAgenda(ArrayList<Task> agenda){
+		taskSorter.sortTasksForAgenda(agenda);
 	}
 	
 	/*
@@ -249,56 +214,74 @@ public class Task{
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 97;
+		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((fromDateTime == null) ? 0 : fromDateTime.hashCode());
+		result = prime * result + label;
+		result = prime * result + taskId;
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((toDateTime == null) ? 0 : toDateTime.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof Task)){
 			return false;
+		}
 		Task other = (Task) obj;
-		if (category == null) {
-			if (other.category != null)
-				return false;
-		} else if (!category.equals(other.category))
-			return false;
 		if (description == null) {
-			if (other.description != null)
+			if (other.description != null){
 				return false;
-		} else if (!description.equals(other.description))
+			}
+		} else if (!description.equals(other.description)){
 			return false;
+		}
 		if (fromDateTime == null) {
-			if (other.fromDateTime != null)
+			if (other.fromDateTime != null){
 				return false;
-		} else if (!fromDateTime.equals(other.fromDateTime))
+			}
+		} else if (!fromDateTime.equals(other.fromDateTime)){
 			return false;
+		}
+		if (label != other.label){
+			return false;
+		}
+		if (taskId != other.taskId){
+			return false;
+		}
 		if (title == null) {
-			if (other.title != null)
+			if (other.title != null){
 				return false;
-		} else if (!title.equals(other.title))
+			}
+		} else if (!title.equals(other.title)){
 			return false;
+		}
 		if (toDateTime == null) {
-			if (other.toDateTime != null)
+			if (other.toDateTime != null){
 				return false;
-		} else if (!toDateTime.equals(other.toDateTime))
+			}
+		} else if (!toDateTime.equals(other.toDateTime)){
 			return false;
+		}
 		if (type == null) {
-			if (other.type != null)
+			if (other.type != null){
 				return false;
-		} else if (!type.equals(other.type))
+			}
+		} else if (!type.equals(other.type)){
 			return false;
+		}
 		return true;
 	}
 }

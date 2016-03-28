@@ -168,7 +168,7 @@ public class Logic {
 		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
-		Collections.sort(agenda, Task.getFromDateComparator());
+		Task.sortTasksForAgenda(agenda);
 		return agenda;
 	}
 
