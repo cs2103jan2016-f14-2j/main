@@ -2,11 +2,11 @@ package org.jimple.planner.logic;
 
 import org.jimple.planner.Task;
 
-public class PreviousTask {
+public class LogicPreviousTask {
 	private Task previousTask;
 	private String previousCommand;
 
-	public PreviousTask(String previousCommand, Task previousTask) {
+	public LogicPreviousTask(String previousCommand, Task previousTask) {
 		this.previousCommand = previousCommand;
 		this.previousTask = previousTask;
 	}

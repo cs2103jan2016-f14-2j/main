@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
-import org.jimple.planner.Constants;
+import org.jimple.planner.Task;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
 
@@ -22,13 +22,20 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -38,19 +45,31 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
-public class UiController extends myObserver implements Initializable {
+public class Controller extends myObserver implements Initializable {
 	
-	protected UiPrompt prompt;
-	protected UiListViewControl listViewControl;
-	private LinkedList<String> cmdHistory;
-	private int cmdHistoryPointer;
-	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
+	private static final String TYPE_HELP = "help";
+	private static final String TYPE_SEARCH = "search";
+	private static final String TYPE_TODO = "floating";
+	private static final String TYPE_DEADLINE = "deadline";
+	private static final String TYPE_EVENT = "event";
+	private static final String TYPE_AGENDA = "agenda";
+	
+	private static final Logger log= Logger.getLogger( Controller.class.getName() );
 	Logic logic = new Logic();
 	UiFormatter listFormatter = new UiFormatter();
 	private final BooleanProperty dragModeActiveProperty =
@@ -124,12 +143,7 @@ public class UiController extends myObserver implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
-		loadClock();
-		cmdHistory = new LinkedList<String>();
-		cmdHistory.add("");
-		prompt = new UiPrompt(this);
-		listViewControl = new UiListViewControl(this);
-		cmdHistoryPointer = 0;
+		loadClock(); 
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
 		TextFields.bindAutoCompletion(
@@ -142,12 +156,14 @@ public class UiController extends myObserver implements Initializable {
 				commandBox.requestFocus();
 			}
 		});
+//		stackPane.setId("main");
 		overlay.setVisible(false);
 		assert !overlay.isVisible();
+//		assert false;
 		log.log(Level.INFO,"initialising event listeners");
 		commandBoxListener();
 		tabPanesListener();
-		update();
+		loadDisplay();
 	 }
 
 	private void loadClock() {
@@ -167,14 +183,8 @@ public class UiController extends myObserver implements Initializable {
 		String inputStr = getInputCommand();
 		if (!isEmpty(inputStr)) {
 			logic.execute(inputStr);
-			cmdHistory.add(1, inputStr);
 			clearCommandBox();
 		}
-	}	
-
-	private void updateMessagePrompt(String output){
-		messagePrompt.setText(output);
-		fadeOut(5, messagePrompt);
 	}
 
 	/*======================================
@@ -183,42 +193,46 @@ public class UiController extends myObserver implements Initializable {
 	 * 
 	========================================*/
 	
-	protected void loadDisplay() {
+	private void loadDisplay() {
 		loadMainTab();
 		loadAgendaList();
 		loadEventsList();
 		loadDeadlinesList();
 		loadTodoList();
-		prompt = new UiPrompt(this);
-		prompt.searchPrompt();
+		loadSearchList();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void loadMainTab(){
 		listFormatter.fomatList(logic.getDeadlinesList(), logic.getEventsList());
 		mainContent.getChildren().clear();
+		ListView emptyList = new ListView();
+		emptyList.setPrefSize(0, 0);
+		emptyList.setVisible(false);
+		mainContent.getChildren().add(emptyList);
 		mainContent.getChildren().add(listFormatter.getMainContent());
 	}
 	
 	public void loadAgendaList() {
-		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_AGENDA);
+		listFormatter.formatList(logic.getAgendaList(),TYPE_AGENDA);
 		agendaContent.getChildren().clear();
 		agendaContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadEventsList() {
-		listFormatter.formatList(logic.getEventsList(),Constants.TYPE_EVENT);
+		listFormatter.formatList(logic.getEventsList(),TYPE_EVENT);
 		eventsContent.getChildren().clear();
 		eventsContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadDeadlinesList() {
-		listFormatter.formatList(logic.getDeadlinesList(),Constants.TYPE_DEADLINE);
+		listFormatter.formatList(logic.getDeadlinesList(),TYPE_DEADLINE);
 		deadlinesContent.getChildren().clear();
 		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 	public void loadTodoList()  {
-		listFormatter.formatList(logic.getToDoList(),Constants.TYPE_TODO);
+		listFormatter.formatList(logic.getToDoList(),TYPE_TODO);
 		todoContent.getChildren().clear();
 		todoContent.getChildren().add(listFormatter.getFormattedList());
 	}
@@ -228,7 +242,92 @@ public class UiController extends myObserver implements Initializable {
 	 * TASK LIST DISPLAY CONTROLS:
 	 * 
 	========================================*/
+	private void updateMessagePrompt(String output){
+		messagePrompt.setText(output);
+		fadeOut(5, messagePrompt);
+	}
 	
+	private void selectTaskAtIndex(int index){
+		for(int i=0; i<getActiveListView().getItems().size(); i++)
+			if(getActiveListView().getItems().get(i).getTaskId() == index)
+				selectIndex(i);
+	}
+
+	public String getCurrentTabName() {
+		return tabPanes.getSelectionModel().getSelectedItem().getText();
+	}
+
+	public Tab getCurrentTab() {
+		return tabPanes.getSelectionModel().getSelectedItem();
+	}
+
+	public void updatePointer(int num) {
+		System.out.println(getActiveListView().getItems().size());
+		if (num >= getActiveListView().getItems().size())
+			num -= 1;
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().select(num);
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+	}
+
+	public int getCurrentTabItemIndex() {
+		return getActiveListView().getSelectionModel().getSelectedIndex();
+	}
+	
+	public void deselectTaskItem() {
+		getActiveListView().getSelectionModel().clearSelection();
+	}
+
+	private void deleteSelectedTask() {
+		try {
+			log.log(Level.INFO, "attempting to delete selected task");
+			int selectedIndex = getCurrentTabItemIndex();
+			if (selectedIndex == -1)
+				return;
+			if(getSelectedListItem().getType().equals("static"))
+				return;
+			logic.execute("delete " + getSelectedListItem().getTaskId());
+			updatePointer(selectedIndex);
+		} catch (IOException e) {
+			log.log(Level.WARNING, "IO exception. delete not successful", e);
+		}
+	}
+
+	private Task getSelectedListItem() {
+		return getActiveListView().getSelectionModel().getSelectedItem();
+	}
+	
+	private void addAndReload(Tab tab, int index) {
+		if(overlay.isVisible()){
+			overlay.setVisible(false);
+		}
+		loadDisplay();
+		tabPanes.getSelectionModel().select(tab);
+		selectTaskAtIndex(index);
+	}
+
+	private void selectIndex(int num) {
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().select(num);
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+	}
+
+	private void selectLastItem() {
+		getActiveListView().requestFocus();
+		getActiveListView().getSelectionModel().selectLast();
+		getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+	}
+
+	@SuppressWarnings("unchecked")
+	private ListView<Task> getList(Tab tab) {
+		return (ListView<Task>) ((Pane) tab.getContent()).getChildren().get(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private ListView<Task> getActiveListView() {
+		return (ListView<Task>) ((Pane) tabPanes.getSelectionModel().getSelectedItem().getContent()).getChildren()
+				.get(0);
+	}
 
 	
 	/*======================================
@@ -256,49 +355,31 @@ public class UiController extends myObserver implements Initializable {
 	 * KEYBOARD LISTENERS:
 	 * 
 	========================================*/
-	
-	
-	
 	public void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
-				switch(t.getCode()){
-			    case ESCAPE:
+				if (t.getCode() == KeyCode.ESCAPE){
 					tabPanes.requestFocus();
-					listViewControl.getActiveListView().requestFocus();
-					if(overlay.isVisible())
+					
+					if(overlay.isVisible()){
 						overlay.setVisible(false);
-					break;
-			    case UP:
-					if(cmdHistoryPointer < cmdHistory.size() - 1)
-						commandBox.setText(cmdHistory.get(++cmdHistoryPointer));
-					commandBox.positionCaret(commandBox.getLength());
-					t.consume();
-					break;
-			    case DOWN:
-					if(cmdHistoryPointer > 0)
-						commandBox.setText(cmdHistory.get(--cmdHistoryPointer));
-					commandBox.positionCaret(commandBox.getLength());
-					t.consume();
-					break;
-				default:
-					cmdHistoryPointer = 0;
-					break;
-				}
+					}
+				}			
 			}
 		});
 	}
 
 	public void taskSelectionListener(){
-		listViewControl.getList(listViewControl.getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
+		getList(getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent t) {
 				if (t.getCode() == KeyCode.UP) {
-					if (listViewControl.getCurrentTabItemIndex() == 0) {
+					if (getCurrentTabItemIndex() == 0) {
 						tabPanes.requestFocus();
-						listViewControl.deselectTaskItem();
+						// tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
+						deselectTaskItem();
 					}
 				}
 			}
@@ -310,7 +391,8 @@ public class UiController extends myObserver implements Initializable {
 
 			@Override
 			public void handle(MouseEvent event) {
-				listViewControl.deselectTaskItem();
+				// TODO Auto-generated method stub
+				deselectTaskItem();
 				tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
 			}
 		});
@@ -322,25 +404,25 @@ public class UiController extends myObserver implements Initializable {
 
 				switch (t.getCode()) {
 				case DOWN:
-					listViewControl.getActiveListView().requestFocus();
-					if (listViewControl.isListViewSelectionEmpty())
-						listViewControl.getActiveListView().getSelectionModel().select(0);
+					getActiveListView().requestFocus();
+					if (isListViewSelectionEmpty())
+						getActiveListView().getSelectionModel().select(0);
 					break;
 				case UP:
 					taskSelectionListener();
 					break;
 				case LEFT:
 					tabPanes.requestFocus();
-					listViewControl.deselectTaskItem();
+					deselectTaskItem();
 					break;
 				case RIGHT:
 					tabPanes.requestFocus();
-					listViewControl.deselectTaskItem();
+					deselectTaskItem();
 					break;
 				case BACK_SPACE:
 				case DELETE:
-//					prompt.deletePrompt();
-					listViewControl.deleteSelectedTask();
+//					deletePrompt();
+					deleteSelectedTask();
 					break;
 				default:
 					taskSelectionListener();
@@ -349,7 +431,116 @@ public class UiController extends myObserver implements Initializable {
 					break;
 				}
 			}
+
+			private boolean isListViewSelectionEmpty() {
+				return getActiveListView().getSelectionModel().isEmpty();
+			}
 		});
+	}
+
+	
+	/*======================================
+	 * 
+	 * POPUP DIALOGUE BOXES:
+	 * 
+	========================================*/
+
+	private void deletePrompt() {
+		Pane popup = new Pane();
+		VBox dialogVbox = new VBox(10);
+		HBox dialogHbox = new HBox(10);
+		Button deletebtn = new Button();
+		Button closebtn = new Button();
+		deletebtn.setText("delete");
+		deletebtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				deleteSelectedTask();
+				popupLayer.getChildren().clear();
+				overlay.setVisible(false);
+			}
+		});
+		closebtn.setText("cancel");
+		closebtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				popupLayer.getChildren().clear();
+				overlay.setVisible(false);
+			}
+		});
+		dialogVbox.getChildren().add(new Text("Confirm delete?"));
+		dialogHbox.getChildren().add(deletebtn);
+		dialogHbox.getChildren().add(closebtn);
+		dialogVbox.getChildren().add(dialogHbox);
+		dialogVbox.setPadding(new Insets(10));
+		popup.getChildren().add(dialogVbox);
+		popup.getStyleClass().add("popup");
+		popupLayer.getChildren().add(popup);
+		overlay.setVisible(true);
+		deletebtn.requestFocus();
+	}
+	
+	private void loadSearchList() {
+		listFormatter.formatList(logic.getSearchList(),TYPE_SEARCH);
+		ListView<Task> listView = listFormatter.getFormattedList();
+		listView.setPrefSize(stackPane.getWidth()/2, stackPane.getHeight()/2);
+		//		fitToAnchorPane(listView);
+		
+		Pane popup = new Pane();
+		VBox dialogVbox = new VBox(10);
+		HBox dialogHbox = new HBox(10);
+		Button closebtn = new Button("x");
+		Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		closebtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				popupLayer.getChildren().clear();
+				overlay.setVisible(false);
+			}
+		});
+		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
+		dialogVbox.getChildren().add(closeBar);
+		dialogVbox.getChildren().add(listView);
+		dialogVbox.getChildren().add(dialogHbox);
+		dialogVbox.setPadding(new Insets(10));
+		popup.getChildren().add(dialogVbox);
+		popup.getStyleClass().add("popup");
+		if(!popupLayer.getChildren().isEmpty())
+			popupLayer.getChildren().clear();
+		popupLayer.getChildren().add(makeDraggable(popup));
+//		overlay.setVisible(true);
+//		closebtn.requestFocus();
+	}	
+	
+private void helpPrompt(String helpStrings) {
+		Pane popup = new Pane();
+		VBox dialogVbox = new VBox(10);
+		Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		Button closebtn = new Button("x");
+		closebtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				popupLayer.getChildren().clear();
+				overlay.setVisible(false);
+			}
+		});
+		HBox closeBar = new HBox(new Text("Help Sheet"),spacer,closebtn);
+		
+		dialogVbox.getChildren().add(closeBar);
+		dialogVbox.getChildren().add(new Text(helpStrings));
+		dialogVbox.setPadding(new Insets(10));
+		popup.getChildren().add(dialogVbox);
+		popup.getStyleClass().add("popup");
+//		popupLayer.getChildren().add(popup);
+		if(!popupLayer.getChildren().isEmpty())
+			popupLayer.getChildren().clear();
+		popupLayer.getChildren().add(makeDraggable(popup));
+		overlay.setVisible(true);
+//		closebtn.requestFocus();		
 	}
 	/*======================================
 	 * 
@@ -392,10 +583,21 @@ public class UiController extends myObserver implements Initializable {
         public double initialTranslateY;
     }
 	
-	protected Node makeDraggable(final Node node) {
+	private Node makeDraggable(final Node node) {
         final DragContext dragContext = new DragContext();
         final Group wrapGroup = new Group(node);
-        
+
+//        wrapGroup.addEventFilter(
+//                MouseEvent.ANY,
+//                new EventHandler<MouseEvent>() {
+//                    public void handle(final MouseEvent mouseEvent) {
+//                        if (dragModeActiveProperty.get()) {
+//                            // disable mouse events for all children
+//                            mouseEvent.consume();
+//                        }
+//                    }
+//                });
+//
         wrapGroup.addEventFilter(
                 MouseEvent.MOUSE_PRESSED,
                 new EventHandler<MouseEvent>() {
@@ -447,21 +649,21 @@ public class UiController extends myObserver implements Initializable {
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
-		case Constants.TYPE_EVENT:
-			listViewControl.addAndReload(eventsTab,index);
+		case TYPE_EVENT:
+			addAndReload(eventsTab,index);
 			break;
-		case Constants.TYPE_DEADLINE:
-			listViewControl.addAndReload(deadlinesTab,index);
+		case TYPE_DEADLINE:
+			addAndReload(deadlinesTab,index);
 			break;
-		case Constants.TYPE_TODO:
-			listViewControl.addAndReload(todoTab,index);
+		case TYPE_TODO:
+			addAndReload(todoTab,index);
 			break;
-		case Constants.TYPE_SEARCH:
-			prompt.searchPrompt();
+		case TYPE_SEARCH:
 			overlay.setVisible(true);
+			loadSearchList();
 			break;
-		case Constants.TYPE_HELP:
-			prompt.helpPrompt(feedback[0]);
+		case TYPE_HELP:
+			helpPrompt(feedback[0]);
 			break;
 		default:
 			loadDisplay();

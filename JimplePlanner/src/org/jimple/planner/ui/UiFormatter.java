@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
 import javafx.collections.FXCollections;
@@ -22,13 +23,6 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class UiFormatter {
-	private static final String TYPE_SEARCH = "search";
-	private static final String TYPE_STATIC = "static";
-	private static final String TYPE_AGENDA = "agenda";
-	private static final String TYPE_FLOATING = "floating";
-	private static final String TYPE_DEADLINE = "deadline";
-	private static final String TYPE_EVENT = "event";
-	
 	private ArrayList<Task> formattedList;
 	private ArrayList<Task> arrList;
 	private ObservableList<Task> data;
@@ -76,22 +70,22 @@ public class UiFormatter {
 
 	public void formatType(String listType) {
 		switch (listType) {
-		case TYPE_AGENDA:
+		case Constants.TYPE_AGENDA:
 			formatAgendaList();
 			break;
-		case TYPE_DEADLINE:
+		case Constants.TYPE_DEADLINE:
 			formatDeadlinesList();
 			break;
-		case TYPE_EVENT:
+		case Constants.TYPE_EVENT:
 			formatEventsList();
 			break;
-		case TYPE_FLOATING:
+		case Constants.TYPE_TODO:
 			formatTodoList();
 			break;
-		case TYPE_SEARCH:
+		case Constants.TYPE_SEARCH:
 			formatSearchList();
 			break;
-		default: //AGENDA LIST
+		default:
 			formatEmptyList();
 			break;
 		}		
@@ -190,7 +184,7 @@ public class UiFormatter {
 	
 	private Task staticTask(String title) {
 		Task task = new Task(title);
-		task.setType(TYPE_STATIC);
+		task.setType(Constants.TYPE_STATIC);
 		return task;
 	}
 
@@ -266,14 +260,14 @@ public class UiFormatter {
 							Region spacer = new Region();
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
-							if (item.getType().equals(TYPE_STATIC)) {
-								this.getStyleClass().add(TYPE_STATIC);
+							if (item.getType().equals(Constants.TYPE_STATIC)) {
+								this.getStyleClass().add(Constants.TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
 							}
-							else if (item.getType() == TYPE_DEADLINE) {
-								this.getStyleClass().add(TYPE_DEADLINE);
+							else if (item.getType() == Constants.TYPE_DEADLINE) {
+								this.getStyleClass().add(Constants.TYPE_DEADLINE);
 								//more than a day away
 								if(timeDifference(item.getFromTime())> 1440)
 									this.getStyleClass().add("green");
@@ -293,11 +287,11 @@ public class UiFormatter {
 								ID.setText(String.format("%d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.getStyleClass().add(TYPE_DEADLINE);
-								ID.getStyleClass().add(TYPE_DEADLINE);
-								date.getStyleClass().add(TYPE_DEADLINE);
+								t.getStyleClass().add(Constants.TYPE_DEADLINE);
+								ID.getStyleClass().add(Constants.TYPE_DEADLINE);
+								date.getStyleClass().add(Constants.TYPE_DEADLINE);
 							} else {
-								this.getStyleClass().add(TYPE_EVENT);
+								this.getStyleClass().add(Constants.TYPE_EVENT);
 								if(!item.getIsOverDue()){
 									this.getStyleClass().add("overdue");
 								}
@@ -339,15 +333,15 @@ public class UiFormatter {
 								VBox.setVgrow(spacer, Priority.ALWAYS);
 								HBox.setHgrow(spacer, Priority.ALWAYS);
 								
-								if (item.getType().equals(TYPE_STATIC)) {
-									this.getStyleClass().add(TYPE_STATIC);
+								if (item.getType().equals(Constants.TYPE_STATIC)) {
+									this.getStyleClass().add(Constants.TYPE_STATIC);
 									this.setFocusTraversable(false);
 									vBox = new VBox(t);
 									hBox = new HBox(vBox);
 								}
 
 								else {
-									this.getStyleClass().add(TYPE_EVENT);
+									this.getStyleClass().add(Constants.TYPE_EVENT);
 									ID.setText(String.format("%d", item.getTaskId()));
 									date.setText(String.format("%s %s to %s %s",
 											item.getPrettyFromDate(),
@@ -387,15 +381,15 @@ public class UiFormatter {
 							VBox.setVgrow(spacer, Priority.ALWAYS);
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							
-							if (item.getType().equals(TYPE_STATIC)) {
-								this.getStyleClass().add(TYPE_STATIC);
+							if (item.getType().equals(Constants.TYPE_STATIC)) {
+								this.getStyleClass().add(Constants.TYPE_STATIC);
 								this.setFocusTraversable(false);
 								vBox = new VBox(t);
 								hBox = new HBox(vBox);
 							}
 
 							else {
-								this.getStyleClass().add(TYPE_DEADLINE);
+								this.getStyleClass().add(Constants.TYPE_DEADLINE);
 								//more than a day away
 								if(timeDifference(item.getFromTime())> 1440)
 									this.getStyleClass().add("green");
@@ -416,9 +410,9 @@ public class UiFormatter {
 								ID.setText(String.format("  %d", item.getTaskId()));
 								date.setText(String.format("%s", item.getPrettyFromTime()));
 								hBox = new HBox(date, vBox, spacer, ID);
-								t.getStyleClass().add(TYPE_DEADLINE);
-								ID.getStyleClass().add(TYPE_DEADLINE);
-								date.getStyleClass().add(TYPE_DEADLINE);
+								t.getStyleClass().add(Constants.TYPE_DEADLINE);
+								ID.getStyleClass().add(Constants.TYPE_DEADLINE);
+								date.getStyleClass().add(Constants.TYPE_DEADLINE);
 							}
 							hBox.setSpacing(10);
 							setGraphic(hBox);
@@ -448,9 +442,9 @@ public class UiFormatter {
 							HBox.setHgrow(spacer, Priority.ALWAYS);
 							ID.setText(String.format("%d", item.getTaskId()));
 							
-							t.getStyleClass().add(TYPE_FLOATING);
-							ID.getStyleClass().add(TYPE_FLOATING);
-							this.getStyleClass().add(TYPE_FLOATING);
+							t.getStyleClass().add(Constants.TYPE_TODO);
+							ID.getStyleClass().add(Constants.TYPE_TODO);
+							this.getStyleClass().add(Constants.TYPE_TODO);
 							
 							VBox vBox = new VBox(t);
 							HBox hBox = new HBox(vBox, spacer, ID);

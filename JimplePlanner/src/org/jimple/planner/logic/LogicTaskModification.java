@@ -83,12 +83,12 @@ public interface LogicTaskModification {
 		return false;
 	}
 	
-	public default PreviousTask setNewPreviousTask(String command, Task previousTask)	{
-		PreviousTask aPreviousTask = new PreviousTask(command, previousTask);
+	public default LogicPreviousTask setNewPreviousTask(String command, Task previousTask)	{
+		LogicPreviousTask aPreviousTask = new LogicPreviousTask(command, previousTask);
 		return aPreviousTask;
 	}
 	
-	public default void checkOverCacheLimit(LinkedList<PreviousTask> undoTasks) {
+	public default void checkOverCacheLimit(LinkedList<LogicPreviousTask> undoTasks) {
 		while (undoTasks.size() > Constants.DELETE_CACHE_LIMIT) {
 			undoTasks.removeFirst();
 		}
