@@ -59,14 +59,14 @@ public final class Constants {
 	/**
 	 * Logic component
 	 */
-	public static final String STRING_SEARCH = "search";
-	public static final String STRING_ADD = "add";
-	public static final String STRING_DELETE = "delete";
-	public static final String STRING_EDIT = "edit";
-	public static final String STRING_CHANGEDIR = "changedir";
-	public static final String STRING_UNDO = "undo";
-	public static final String STRING_HELP = "help";
-	public static final String STRING_CHECKDIR = "checkdir";
+	public static final String STRING_SEARCH = "SEARCH";
+	public static final String STRING_ADD = "ADD";
+	public static final String STRING_DELETE = "DELETE";
+	public static final String STRING_EDIT = "EDIT";
+	public static final String STRING_CHANGEDIR = "CHANGEDIR";
+	public static final String STRING_UNDO = "UNDO";
+	public static final String STRING_HELP = "HELP";
+	public static final String STRING_CHECKDIR = "CHECKDIR";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
