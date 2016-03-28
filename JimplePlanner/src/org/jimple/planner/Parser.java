@@ -9,9 +9,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import parserExceptions.DuplicateDateTimeFieldException;
-import parserExceptions.InvalidCommandException;
-import parserExceptions.MissingDateTimeFieldException;
+import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;
+import org.jimple.planner.exceptions.InvalidCommandException;
+import org.jimple.planner.exceptions.MissingDateTimeFieldException;
 
 public class Parser {
 			

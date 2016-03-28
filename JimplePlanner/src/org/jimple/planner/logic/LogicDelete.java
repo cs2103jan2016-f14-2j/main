@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
-public class LogicDelete extends LogicEdit{
+public class LogicDelete extends LogicEdit {
 	
 	protected String deleteTask(Storage store, String[] variableArray, 
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,

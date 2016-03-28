@@ -1,4 +1,4 @@
-package parserExceptions;
+package org.jimple.planner.exceptions;
 
 @SuppressWarnings("serial")
 public class DuplicateDateTimeFieldException extends Exception {

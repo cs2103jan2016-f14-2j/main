@@ -177,7 +177,17 @@ public class Task{
 	public boolean getIsOverDue()	{
 		return isOverDue;
 	}
-
+	
+	/**
+	 * labels:
+	 * 0 - default
+	 * 1 - blue
+	 * 2 - green
+	 * 3 - yellow
+	 * 4 - orange
+	 * 5 - red
+	 * 6 - dark red
+	 */
 	public void setLabel(int label) {
 		this.label = label;
 	}

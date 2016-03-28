@@ -1,11 +1,8 @@
 package org.jimple.planner.logic;
 
-import org.jimple.planner.storage.*;
 import org.jimple.planner.Task;
 import org.jimple.planner.Constants;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public interface LogicTaskModification {
@@ -27,6 +24,7 @@ public interface LogicTaskModification {
 				case 4:
 					editedTask.setToDate(variableArray[i]);
 					break;
+				//change to label
 				case 5:
 					editedTask.setCategory(variableArray[i]);
 					break;
@@ -36,40 +34,6 @@ public interface LogicTaskModification {
 			}
 		}
 		return editedTask;
-	}
-
-	public default void allocateCorrectTimeArray(Task newTask, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events) throws IOException {
-		// check if null
-		if (newTask.getType().compareTo(Constants.TYPE_TODO) == 0) {
-			todo.add(newTask);
-		}
-		// check if whole day task
-		else if (newTask.getType().compareTo(Constants.TYPE_DEADLINE) == 0) {
-			deadlines.add(newTask);
-		} else if (newTask.getType().compareTo(Constants.TYPE_EVENT) == 0) {
-			events.add(newTask);
-		}
-	}
-
-	public default void packageForSavingInFile(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events) throws IOException {
-		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
-		allTasksArray.add(todo);
-		allTasksArray.add(deadlines);
-		allTasksArray.add(events);
-		assignTaskIds(allTasksArray);
-		store.isSaved(allTasksArray);
-	}
-
-	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
-		int taskId = 1;
-		for (ArrayList<Task> taskList : allTasksArray) {
-			for (Task task : taskList) {
-				task.setTaskId(taskId);
-				taskId++;
-			}
-		}
 	}
 
 	public default boolean isFromAndToTimeCorrect(Task task) {

@@ -2,10 +2,13 @@ package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.LinkedList;
 
+import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
+import org.jimple.planner.exceptions.*;
 import org.jimple.planner.observers.myObserver;
 
 import org.jimple.planner.InputStruct;
@@ -19,12 +22,6 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
-import parserExceptions.*;
-
-import org.jimple.planner.Constants;
-
-import java.util.Collections;
-import java.util.LinkedList;
 
 public class Logic {
 
@@ -34,17 +31,17 @@ public class Logic {
 	private ArrayList<Task> agenda;
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
-	private LinkedList<LogicPreviousTask> undoTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
-	Parser parser;
-	Storage store;
-	LogicAdd adder;
-	LogicEdit editer;
-	LogicDelete deleter;
-	LogicSearch searcher;
-	LogicDirectory directer;
-	LogicUndo undoer;
+	private LinkedList<LogicPreviousTask> undoTasks;
+	private Parser parser;
+	private Storage store;
+	private LogicAdd adder;
+	private LogicEdit editer;
+	private LogicDelete deleter;
+	private LogicSearch searcher;
+	private LogicDirectory directer;
+	private LogicUndo undoer;
 
 	public Logic() {
 		agenda = new ArrayList<Task>();
@@ -63,10 +60,11 @@ public class Logic {
 		undoer = new LogicUndo();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
-			LogicTaskModification.assignTaskIds(allTasks);
+			LogicMasterListModification.assignTaskIds(allTasks);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);
+			LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -151,12 +149,12 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getDeadlinesList() {
-		checkOverCurrentTime();
+		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		return deadlines;
 	}
 
 	public ArrayList<Task> getEventsList() {
-		checkOverCurrentTime();
+		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		return events;
 	}
 
@@ -167,17 +165,18 @@ public class Logic {
 
 	public ArrayList<Task> getAgendaList() {
 		agenda.clear();
+		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
 		agenda.addAll(deadlines);
 		agenda.addAll(events);
 		Task.sortTasksForAgenda(agenda);
 		return agenda;
 	}
 
-	public String getPastInputs() {
+	public String getPastInputs(int cmdHistoryPointer) {
 		if (!pastUserInputs.isEmpty()) {
-			return pastUserInputs.get(0);
+			return pastUserInputs.get(cmdHistoryPointer);
 		}
-		return null;
+		return "";
 	}
 
 	private String getTaskTypeAndTaskID() {
@@ -188,24 +187,7 @@ public class Logic {
 			return "";
 		}
 	}
-
-	private void checkOverCurrentTime() {
-		for (Task aTask : deadlines) {
-			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
-					aTask.setIsOverDue(true);
-				}
-			}
-		}
-		for (Task aTask : events) {
-			if (aTask.getFromTime() != null) {
-				if (aTask.getFromTime().compareTo(LocalDateTime.now()) > 0) {
-					aTask.setIsOverDue(true);
-				}
-			}
-		}
-	}
-
+	
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -221,18 +203,18 @@ public class Logic {
 			observer.update(displayType);
 		}
 	}
-	
+
 	public void refreshLists()	{
 		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
-		         checkOverCurrentTime(); 
 		    	 notifyAllObservers(); 
 		     }  
 		}));  
 		timeline.setCycleCount(Animation.INDEFINITE);  
 		timeline.play();
 	}
+	
 	/**
 	 * gets a list of help commands for user to refer to
 	 *

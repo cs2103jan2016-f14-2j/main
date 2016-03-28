@@ -15,7 +15,7 @@ public class LogicDirectory {
 		}
 		//store = new StorageComponent();
 		ArrayList<ArrayList<Task>> allTasks = store.getTasks();
-		LogicTaskModification.assignTaskIds(allTasks);
+		LogicMasterListModification.assignTaskIds(allTasks);
 		todo.clear();
 		todo.addAll(allTasks.get(0));
 		deadlines.clear();

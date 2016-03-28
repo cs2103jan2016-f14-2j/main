@@ -14,9 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import parserExceptions.DuplicateDateTimeFieldException;
-import parserExceptions.InvalidDateTimeFieldException;
-import parserExceptions.MissingDateTimeFieldException;
+import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;
+import org.jimple.planner.exceptions.InvalidDateTimeFieldException;
+import org.jimple.planner.exceptions.MissingDateTimeFieldException;
 
 public class TimeParser {
 	

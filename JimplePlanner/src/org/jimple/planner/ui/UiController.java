@@ -163,7 +163,8 @@ public class UiController extends myObserver implements Initializable {
 		     @Override  
 		     public void handle(ActionEvent event) {  
 		          final Calendar cal = Calendar.getInstance();  
-		          clock.setText(format.format(cal.getTime()));  
+		          clock.setText(format.format(cal.getTime()));
+		          logic.refreshLists();
 		     }  
 		}));  
 		timeline.setCycleCount(Animation.INDEFINITE);  
