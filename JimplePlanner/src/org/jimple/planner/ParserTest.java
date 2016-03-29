@@ -36,7 +36,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("EDITLABEL POKEMON NAME CHANMALICHAN COLOUR ASDFASDF");
+			testStruct = testParser.parseInput("ADD YOLO BY 12 may");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);

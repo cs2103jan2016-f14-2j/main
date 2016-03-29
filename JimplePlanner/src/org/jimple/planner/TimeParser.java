@@ -143,15 +143,16 @@ public class TimeParser {
 			setField("year", c.get(Calendar.YEAR));
 		}
 		if (!isFieldSet("hour") && !isFieldSet("minute")) {
+			System.out.println("A");
 			switch (extendedCommand) {
-				case "on" :
-				case "at" :
-				case "from" :
+				case "ON" :
+				case "AT" :
+				case "FROM" :
 					setField("hour", 00);
 					setField("minute", 00);
 					break;
-				case "to" :
-				case "by" :
+				case "TO" :
+				case "BY" :
 					setField("hour", 23);
 					setField("minute", 59);
 					break;
