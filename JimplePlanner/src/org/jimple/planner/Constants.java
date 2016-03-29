@@ -16,6 +16,9 @@ public final class Constants {
 	public static final String TYPE_UPCOMING = "upcoming";
 	public static final String EMPTY_STRING = "";
 	
+	/*
+	 * Task Label Class
+	 */
 	public static final int TASK_LABEL_COLOUR_DEFAULT = 0;
 	public static final int TASK_LABEL_COLOUR_BLUE= 1;
 	public static final int TASK_LABEL_COLOUR_GREEN = 2;

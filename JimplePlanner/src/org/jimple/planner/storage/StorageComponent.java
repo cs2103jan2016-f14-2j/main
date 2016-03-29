@@ -15,6 +15,7 @@ public class StorageComponent implements Storage{
 		storageLoad = new StorageLoad();
 		storageProperties = new StorageProperties();
 	}
+	
 	@Override
 	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) {
 		String fileName = storageProperties.getCurrentFilePath();

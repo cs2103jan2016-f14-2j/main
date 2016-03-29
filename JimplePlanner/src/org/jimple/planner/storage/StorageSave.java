@@ -91,8 +91,8 @@ public class StorageSave implements StorageSaveInterface{
 			String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
 			lineString = lineString + fromToString;
 		}
-		String labelString = formatToSaveString(TAGS_LABEL + String.valueOf(task.getLabel()));
-		lineString = lineString + labelString;
+		//String labelString = formatToSaveString(TAGS_LABEL + String.valueOf(task.getLabel()));//TODO label field
+		//lineString = lineString + labelString;
 		return lineString;
 	}
 	
