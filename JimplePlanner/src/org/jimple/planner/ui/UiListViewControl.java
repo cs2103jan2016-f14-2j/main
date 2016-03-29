@@ -60,7 +60,7 @@ public class UiListViewControl extends UiController{
 				return;
 			if(getSelectedListItem().getType().equals("static"))
 				return;
-			controller.logic.execute("delete " + getSelectedListItem().getTaskId());
+			controller.logic.execute("DELETE " + getSelectedListItem().getTaskId());
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
 			log.log(Level.WARNING, "IO exception. delete not successful", e);
