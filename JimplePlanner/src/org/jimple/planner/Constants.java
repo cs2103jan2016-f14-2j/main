@@ -16,13 +16,15 @@ public final class Constants {
 	public static final String TYPE_UPCOMING = "upcoming";
 	public static final String EMPTY_STRING = "";
 	
-	public static final int TASK_LABEL_DEFAULT = 0;
-	public static final int TASK_LABEL_BLUE= 1;
-	public static final int TASK_LABEL_GREEN = 2;
-	public static final int TASK_LABEL_YELLOW = 3;
-	public static final int TASK_LABEL_ORANGE = 4;
-	public static final int TASK_LABEL_RED = 5;
-	public static final int TASK_LABEL_DARK_RED = 6;
+	public static final int TASK_LABEL_COLOUR_DEFAULT = 0;
+	public static final int TASK_LABEL_COLOUR_BLUE= 1;
+	public static final int TASK_LABEL_COLOUR_GREEN = 2;
+	public static final int TASK_LABEL_COLOUR_YELLOW = 3;
+	public static final int TASK_LABEL_COLOUR_ORANGE = 4;
+	public static final int TASK_LABEL_COLOUR_RED = 5;
+	public static final int TASK_LABEL_COLOUR_DARK_RED = 6;
+	public static final String TASK_LABEL_NAME_DEFAULT = "default";
+	public static final String ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS = "total number of labels exceeded";
 	
 	public static final String ERROR_INVALID_TASK = "Task is invalid";
 	

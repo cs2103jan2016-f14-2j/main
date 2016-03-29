@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.exceptions.InvalidTaskException;
 
 public interface StorageTools {
 	default File createFile(String fileName) {
@@ -41,6 +42,7 @@ public interface StorageTools {
 			try {
 				throw invalidTaskException;
 			} catch (InvalidTaskException e) {
+				System.out.println(e.getMessage());
 				System.out.println("task title:" + task.getTitle());
 				System.out.println("task's fromTime is: "+task.getFromTime());
 				System.out.println("task's toTime is: "+task.getToTime());
