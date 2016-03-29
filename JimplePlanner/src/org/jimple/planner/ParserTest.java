@@ -21,22 +21,22 @@ public class ParserTest {
 	public void test() {
 		testParser = new Parser();
 		test0();
-		test1(); // Command: command:add/name/from-to/category
-		test2(); // Command: command:add/name:symbols/from-to/description
-		test3(); // Command: command:add/ - exception
+		test1(); // Command: command:ADD/name/FROM-TO/category
+		test2(); // Command: command:ADD/name:symbols/FROM-TO/description
+		test3(); // Command: command:ADD/ - exception
 		test4(); // Command: command:delete/index
 		test5(); // Command: command:search/string
-		test6(); // Command: command:add/command:add - exception
-		test7(); // Command: command:add/name/on
+		test6(); // Command: command:ADD/command:ADD - exception
+		test7(); // Command: command:ADD/name/on
 		test8(); // Command: command:invalid - exception
-		test9(); // Command: command:add/name/at
-		test10(); // Command: command:add/name/by
+		test9(); // Command: command:ADD/name/at
+		test10(); // Command: command:ADD/name/BY
 	}
 	
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("EDITLABEL POKEMON NAME CHANMALICHAN COLOUR ASDFASDF");
+			testStruct = testParser.parseInput("ADD YOLO FROM 12 may TO 13 may");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
@@ -49,7 +49,7 @@ public class ParserTest {
 	private void test1() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("add Learn Double Dream Hands from 12 may 8am to 13 may 12AM category DOWNDOG");
+			testStruct = testParser.parseInput("ADD Learn Double Dream Hands FROM 12 may 8am TO 13 may 12AM category DOWNDOG");
 			assertEquals(assertArray(testStruct, "event", "Learn Double Dream Hands", null, "2016-05-12T08:00", "2016-05-13T00:00", "DOWNDOG"), true);
 		} catch (Exception e) {}
 	}
@@ -57,7 +57,7 @@ public class ParserTest {
 	private void test2() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("add !@#$%^&*() from 12 jun 0123 to 12 june 2030 description UPDOG");
+			testStruct = testParser.parseInput("ADD !@#$%^&*() FROM 12 jun 0123 TO 12 june 2030 DESCRIPTION UPDOG");
 			assertEquals(assertArray(testStruct, "event", "!@#$%^&*()", "UPDOG", "2016-06-12T01:23", "2016-06-12T20:30", null), true);
 		} catch (Exception e) {}
 	}
@@ -65,9 +65,9 @@ public class ParserTest {
 	private void test3() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("add");
+			testStruct = testParser.parseInput("ADD");
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Command Invalid. Type \"help\" to see the list of commands.");
+			assertEquals(e.getMessage(), "Command Invalid. Type \"help\" TO see the list of commands.");
 		}
 	}
 	
@@ -90,15 +90,15 @@ public class ParserTest {
 	private void test6() {
 		InputStruct testStruct;
 		try {
-			testStruct = testParser.parseInput("add add");
-			assertEquals(assertArray(testStruct, "todo", "add", null, null, null, null), true);
+			testStruct = testParser.parseInput("ADD ADD");
+			assertEquals(assertArray(testStruct, "todo", "ADD", null, null, null, null), true);
 		} catch (Exception e) {}
 	}
 	
 	private void test7() {
 		InputStruct testStruct;
 		try {
-			testStruct = testParser.parseInput("add test7 on 13 may");
+			testStruct = testParser.parseInput("ADD test7 ON 13 may");
 			assertEquals(assertArray(testStruct, "event", "test7", null, "2016-05-13T00:00", "2016-05-13T23:59", null), true);
 		} catch (Exception e) {}
 	}
@@ -115,7 +115,7 @@ public class ParserTest {
 	private void test9() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("add test9 at 12 may");
+			testStruct = testParser.parseInput("ADD test9 AT 12 may");
 			assertEquals(assertArray(testStruct, "event", "test9", null, "2016-05-12T00:00", "2016-05-12T01:00", null), true);
 		} catch (Exception e) {}
 	}
@@ -123,7 +123,7 @@ public class ParserTest {
 	private void test10() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("add test10 by 12 may");
+			testStruct = testParser.parseInput("ADD test10 BY 12 may");
 			assertEquals(assertArray(testStruct, "deadline", "test10", null, "2016-05-12T00:00", null, null), true);
 		} catch (Exception e) {}
 	}

@@ -151,7 +151,10 @@ public class UiController extends myObserver implements Initializable {
 		
 		TextFields.bindAutoCompletion(
                 commandBox,
-                "add ", "edit ", "delete ", "search ", "help", "changedir", "checkdir");
+                Constants.STRING_ADD, Constants.STRING_EDIT,
+                Constants.STRING_DELETE, Constants.STRING_SEARCH,
+                Constants.STRING_UNDO, Constants.STRING_HELP,
+                Constants.STRING_CHANGEDIR, Constants.STRING_CHECKDIR);
 		
 		Platform.runLater(new Runnable() {
 			@Override
@@ -176,7 +179,6 @@ public class UiController extends myObserver implements Initializable {
 		          clock.setText(format.format(cal.getTime()));
 //		          update();
 		          if(LocalDateTime.now().getSecond() == 0){
-		        	  System.out.println("update");
 		        	  update();
 		          }
 		     }  
@@ -252,6 +254,20 @@ public class UiController extends myObserver implements Initializable {
 			label.setLayoutX(62);
 			label.setLayoutY(81);
 			nowPane.getChildren().add(label);
+		}
+		
+		listFormatter.formatList(logic.getDeadlinesList(),Constants.TYPE_UPCOMING);
+		list = listFormatter.getFormattedList();
+		upcomingPane.getChildren().clear();
+		if(list != null){
+			list.setFocusTraversable(false);
+			upcomingPane.getChildren().add(list);
+		}
+		else {
+			Label label = new Label("no more deadlines!");
+			label.setLayoutX(71);
+			label.setLayoutY(81);
+			upcomingPane.getChildren().add(label);
 		}
 	}
 	
@@ -376,7 +392,6 @@ public class UiController extends myObserver implements Initializable {
 						listViewControl.getActiveListView().getSelectionModel().select(0);
 					break;
 				case UP:
-					System.out.println("uptriggered");
 					taskSelectionListener();
 					break;
 				case LEFT:

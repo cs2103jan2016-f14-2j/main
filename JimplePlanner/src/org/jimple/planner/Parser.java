@@ -341,10 +341,10 @@ public class Parser {
 	}
 	
 	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
-		if (!userInput.contains(" to ")) {
+		if (!userInput.contains(" TO ")) {
 			throw new MissingDateTimeFieldException("\"from\" must be accompanied by \"to\".");
 		} else {
-			String[] splitFromTo = userInput.split(" to ");
+			String[] splitFromTo = userInput.split(" TO ");
 			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0])));
 			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_TO, splitFromTo[1])));
 		}
