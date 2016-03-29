@@ -85,7 +85,7 @@ public class Logic {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
 						undoTasks);
-				feedback[1] = Constants.STRING_DELETE;
+				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
@@ -95,30 +95,30 @@ public class Logic {
 			case Constants.STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
 						tempHistory, undoTasks);
-				feedback[1] = Constants.STRING_EDIT;
+				feedback[1] = "";
 				break;
 			case Constants.STRING_SEARCH:
 				searchResults = searcher.searchWord(parsedInput.getVariableArray()[0], todo, deadlines, events);
 				feedback[0] = "";
-				feedback[1] = Constants.STRING_SEARCH;
+				feedback[1] = Constants.TYPE_SEARCH;
 				break;
 			case Constants.STRING_CHANGEDIR:
 				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray(), todo, deadlines,
 						events);
-				feedback[1] = Constants.STRING_CHANGEDIR;
+				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDO:
 				feedback[0] = undoer.undoPreviousChange(store, undoTasks, 
 						todo, deadlines, events, tempHistory);
-				feedback[1] = Constants.STRING_UNDO;
+				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:
 				feedback[0] = helpCommand();
-				feedback[1] = Constants.STRING_HELP;
+				feedback[1] = Constants.TYPE_HELP;
 				break;
 			case Constants.STRING_CHECKDIR:
 				feedback[0] = directer.checkPath(store);
-				feedback[1] = Constants.STRING_CHECKDIR;
+				feedback[1] = "";
 				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
