@@ -68,6 +68,25 @@ public class LogicTest {
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
 
+	@Test
+	public void ShouldReturnMultipleTaskOfDifferentDays()	{
+		Task aTask = new Task("test Task");
+		aTask.setFromDate("2016-04-10T10:00");
+		aTask.setToDate("2016-04-12T15:00");
+		ArrayList<Task>	modifiedTasks = new ArrayList<Task>();
+		while (!LogicTaskModification.isFromDateEqualToDate(aTask))	{
+			Task dividedTask = LogicTaskModification.divideMultipleDays(aTask);
+			modifiedTasks.add(dividedTask);
+		}
+		modifiedTasks.add(aTask);
+		assertEquals("2016-04-10T10:00", modifiedTasks.get(0).getFromTimeString());
+		assertEquals("2016-04-10T23:59", modifiedTasks.get(0).getToTimeString());
+		assertEquals("2016-04-11T00:00", modifiedTasks.get(1).getFromTimeString());
+		assertEquals("2016-04-11T23:59", modifiedTasks.get(1).getToTimeString());
+		assertEquals("2016-04-12T00:00", modifiedTasks.get(2).getFromTimeString());
+		assertEquals("2016-04-12T15:00", modifiedTasks.get(2).getToTimeString());
+	}
+	
 	/**
 	 * EP: 5 test cases 1. Empty 2. when undo is for an "add" command 3. when
 	 * undo is for a "delete" command 4. when undo is for a "edit" command 5.
@@ -154,7 +173,7 @@ public class LogicTest {
 	 * EP: 3 cases 1. add for deadlines 2. add for events 3. add for todo
 	 */
 	@Test
-	public void AddShouldReturnFeedback() throws IOException {
+	public void ShouldReturnFeedbackAfterAdding() throws IOException {
 		String[] parsedInput1 = { "deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null };
 		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder
 				.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, undoTasks));
@@ -187,6 +206,9 @@ public class LogicTest {
 		assertTrue(searchResults.isEmpty());
 	}
 
+	/**
+	 * Searches for strings in master arrays and returns results that are the same
+	 */
 	@Test
 	public void ShouldReturnArrayListOfTasks() throws IOException {
 		ArrayList<Task> expected = new ArrayList<Task>();
@@ -218,9 +240,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-28T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-29T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-28T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-29T23:00", testformatter.testFormatTime("11pm"));
 	}
 
 	@Test

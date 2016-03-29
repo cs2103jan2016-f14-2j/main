@@ -45,15 +45,27 @@ public interface LogicTaskModification {
 		}
 		return false;
 	}
-	
-	public default LogicPreviousTask setNewPreviousTask(String command, Task previousTask)	{
+
+	public default LogicPreviousTask setNewPreviousTask(String command, Task previousTask) {
 		LogicPreviousTask aPreviousTask = new LogicPreviousTask(command, previousTask);
 		return aPreviousTask;
 	}
-	
+
 	public default void checkOverCacheLimit(LinkedList<LogicPreviousTask> undoTasks) {
 		while (undoTasks.size() > Constants.DELETE_CACHE_LIMIT) {
 			undoTasks.removeFirst();
 		}
 	}
+
+	public static Task divideMultipleDays(Task aTask) {
+		Task newTask = new Task(aTask);
+		newTask.setToDate(newTask.getFromTime().toLocalDate().toString() + "T23:59");
+		aTask.setFromDate(aTask.getFromTime().toLocalDate().plusDays(1).toString() + "T00:00");
+		return newTask;
+	}
+
+	public static boolean isFromDateEqualToDate(Task aTask) {
+		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
+	}
+
 }
