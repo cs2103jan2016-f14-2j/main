@@ -3,7 +3,6 @@ package org.jimple.planner;
 import static org.jimple.planner.Constants.TYPE_TODO;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
-import static org.jimple.planner.Constants.TASK_LABEL_DEFAULT;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class Task{
 	private String type;
 	private boolean isOverDue;
 	private int taskId;
-	private int label;
+	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
 	private static TaskSorter taskSorter = new TaskSorter();
 	
@@ -29,7 +28,7 @@ public class Task{
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
 		this.taskId = 1000;
-		this.label = TASK_LABEL_DEFAULT;
+		this.taskLabel = TaskLabel.getDefaultLabel();
 	}
 	
 	//Constructor for creating a duplicate
@@ -40,7 +39,7 @@ public class Task{
 		this.toDateTime = taskToBeDuplicated.getToTime();
 		this.type = taskToBeDuplicated.getType();
 		this.isOverDue = taskToBeDuplicated.getIsOverDue();
-		this.label = taskToBeDuplicated.getLabel();
+		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 	}
 	
 	public String getPrettyFromDate()	{
@@ -165,8 +164,8 @@ public class Task{
 		this.description = description;
 	}
 
-	public int getLabel() {
-		return label;
+	public TaskLabel getTaskLabel() {
+		return taskLabel;
 	}
 	
 	public void setIsOverDue(boolean overDueStatus)	{
@@ -187,8 +186,8 @@ public class Task{
 	 * 5 - red
 	 * 6 - dark red
 	 */
-	public void setLabel(int label) {
-		this.label = label;
+	public void setTaskLabel(TaskLabel label) {
+		this.taskLabel = label;
 	}
 	
 	public void setTaskId(int taskId){
@@ -210,77 +209,63 @@ public class Task{
 	/*
 	 * the following methods are to be used only for non hashing purposes, if a hashset is to be used,
 	 * DO NOT EDIT any of the tasks inside this hashset for it will cause a memory leak
+	 * AUTO-GENEERATED by Eclipse
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 97;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((fromDateTime == null) ? 0 : fromDateTime.hashCode());
-		result = prime * result + label;
 		result = prime * result + taskId;
+		result = prime * result + ((taskLabel == null) ? 0 : taskLabel.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((toDateTime == null) ? 0 : toDateTime.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj){
+		if (this == obj)
 			return true;
-		}
-		if (obj == null){
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof Task)){
+		if (!(obj instanceof Task))
 			return false;
-		}
 		Task other = (Task) obj;
 		if (description == null) {
-			if (other.description != null){
+			if (other.description != null)
 				return false;
-			}
-		} else if (!description.equals(other.description)){
+		} else if (!description.equals(other.description))
 			return false;
-		}
 		if (fromDateTime == null) {
-			if (other.fromDateTime != null){
+			if (other.fromDateTime != null)
 				return false;
-			}
-		} else if (!fromDateTime.equals(other.fromDateTime)){
+		} else if (!fromDateTime.equals(other.fromDateTime))
 			return false;
-		}
-		if (label != other.label){
+		if (taskId != other.taskId)
 			return false;
-		}
-		if (taskId != other.taskId){
+		if (taskLabel == null) {
+			if (other.taskLabel != null)
+				return false;
+		} else if (!taskLabel.equals(other.taskLabel))
 			return false;
-		}
 		if (title == null) {
-			if (other.title != null){
+			if (other.title != null)
 				return false;
-			}
-		} else if (!title.equals(other.title)){
+		} else if (!title.equals(other.title))
 			return false;
-		}
 		if (toDateTime == null) {
-			if (other.toDateTime != null){
+			if (other.toDateTime != null)
 				return false;
-			}
-		} else if (!toDateTime.equals(other.toDateTime)){
+		} else if (!toDateTime.equals(other.toDateTime))
 			return false;
-		}
 		if (type == null) {
-			if (other.type != null){
+			if (other.type != null)
 				return false;
-			}
-		} else if (!type.equals(other.type)){
+		} else if (!type.equals(other.type))
 			return false;
-		}
 		return true;
 	}
 }

@@ -3,18 +3,19 @@ package org.jimple.planner.storage;
 import java.util.ArrayList;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 
 public class StorageComponent implements Storage{
 	private static StorageSave storageSave = null;
 	private static StorageLoad storageLoad = null;
 	private StorageProperties storageProperties = null;
 	
-	
 	public StorageComponent() {
 		storageSave = new StorageSave();
 		storageLoad = new StorageLoad();
 		storageProperties = new StorageProperties();
 	}
+	
 	@Override
 	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) {
 		String fileName = storageProperties.getCurrentFilePath();

@@ -92,10 +92,10 @@ public class StorageLoad implements StorageLoadInterface{
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
 			task.setTitle(titleString);
-		} else if(isLabel(field)){
+		} /*else if(isLabel(field)){
 			int labelValue = getRemovedLabelTagValue(field);
-			task.setLabel(labelValue);
-		} else if(isDescription(field)){
+			task.setLabel(labelValue); //TODO label field
+		}*/ else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
 			task.setDescription(descField);
 		} else if(isFromTime(field)){
@@ -214,7 +214,7 @@ public class StorageLoad implements StorageLoadInterface{
 		String[] result = new String[6];
 		result[0] = task.getTitle();
 		result[1] = task.getDescription();
-		result[2] = String.valueOf(task.getLabel());
+		//result[2] = String.valueOf(task.getLabel()); //TODO label field
 		result[3] = task.getFromTimeString();
 		result[4] = task.getToTimeString();
 		result[5] = task.getType();
