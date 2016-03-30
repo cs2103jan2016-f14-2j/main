@@ -34,10 +34,10 @@ public class Logic {
 	private ArrayList<Task> searchResults;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
-	private ArrayList<TaskLabel> taskLabels;
 	private LinkedList<LogicPreviousTask> undoTasks;
 	private Parser parser;
 	private Storage store;
+	private ArrayList<TaskLabel> taskLabels;
 	private LogicAdd adder;
 	private LogicEdit editer;
 	private LogicDelete deleter;
@@ -64,7 +64,7 @@ public class Logic {
 		labeler = new LogicLabel();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
-			taskLabels = store.getLabels();
+			//taskLabels = store.getLabels();
 			LogicMasterListModification.assignTaskIds(allTasks);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);

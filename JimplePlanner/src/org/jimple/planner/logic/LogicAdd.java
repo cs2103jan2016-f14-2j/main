@@ -28,10 +28,4 @@ public class LogicAdd implements LogicTaskModification, LogicMasterListModificat
 		undoTasks.add(setNewPreviousTask(Constants.STRING_ADD, newTask));
 		return "\"" + parsedInput[1] + "\"" + Constants.ADDED_FEEDBACK;
 	}
-
-	public String testAddToTaskList(Storage store, String[] parsedInput, ArrayList<Task> tempHistory,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
-			LinkedList<LogicPreviousTask> undoTasks) throws IOException, LabelExceedTotalException {
-		return addToTaskList(store, parsedInput, tempHistory, todo, deadlines, events, taskLabels, undoTasks);
-	}
 }

@@ -19,6 +19,8 @@ public final class Constants {
 	/*
 	 * Task Label Class
 	 */
+	public static final String STRING_LABELNAME = "LABEL";
+	public static final String STRING_LABELCOLOUR = "COLOUR";
 	public static final int TASK_LABEL_COLOUR_DEFAULT = 0;
 	public static final int TASK_LABEL_COLOUR_BLUE= 1;
 	public static final int TASK_LABEL_COLOUR_GREEN = 2;
@@ -72,6 +74,7 @@ public final class Constants {
 	public static final String STRING_UNDO = "UNDO";
 	public static final String STRING_HELP = "HELP";
 	public static final String STRING_CHECKDIR = "CHECKDIR";
+	public static final String STRING_EDITLABEL = "EDITLABEL";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
@@ -113,6 +116,13 @@ public final class Constants {
 	
 	public static final String DELETED_FEEDBACK = " deleted";
 	public static final String ERROR_DELETED_FEEDBACK = " could not be found";
+	
+	public static final String LABEL_COLOR_FEEDBACK = " colour changed to ";
+	public static final String LABEL_NAME_FEEDBACK = " name changed to ";
+	public static final String ERROR_LABEL_FEEDBACK = "label could not be changed";
+	
+	public static final String LABEL_DELETED_FEEDBACK = "label is deleted";
+	public static final String ERROR_LABEL_DELETED_FEEDBACK = "label could not be deleted";
 	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	

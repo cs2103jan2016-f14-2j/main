@@ -42,10 +42,12 @@ public interface LogicTaskModification {
 	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels) throws LabelExceedTotalException	{
 		for (TaskLabel aLabel : taskLabels)	{
 			if (aLabel.getLabelName().equals(name))	{
-				return aLabel;
+				return TaskLabel.duplicateTaskLabel(aLabel);
 			}
-		} 
-		return TaskLabel.getNewLabel(name);
+		}
+		TaskLabel newLabel = TaskLabel.getNewLabel(name);
+		taskLabels.add(newLabel);
+		return newLabel;
 	}
 
 	public default boolean isFromAndToTimeCorrect(Task task) {
