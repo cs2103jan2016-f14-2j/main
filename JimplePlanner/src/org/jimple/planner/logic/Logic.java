@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 import org.jimple.planner.exceptions.*;
 import org.jimple.planner.observers.myObserver;
 
@@ -33,6 +34,7 @@ public class Logic {
 	private ArrayList<Task> searchResults;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
+	private ArrayList<TaskLabel> taskLabels;
 	private LinkedList<LogicPreviousTask> undoTasks;
 	private Parser parser;
 	private Storage store;
@@ -42,6 +44,7 @@ public class Logic {
 	private LogicSearch searcher;
 	private LogicDirectory directer;
 	private LogicUndo undoer;
+	private LogicLabel labeler;
 
 	public Logic() {
 		agenda = new ArrayList<Task>();
@@ -58,8 +61,10 @@ public class Logic {
 		searcher = new LogicSearch();
 		directer = new LogicDirectory();
 		undoer = new LogicUndo();
+		labeler = new LogicLabel();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
+			taskLabels = store.getLabels();
 			LogicMasterListModification.assignTaskIds(allTasks);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
@@ -69,6 +74,7 @@ public class Logic {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
+			taskLabels = new ArrayList<TaskLabel>();
 		}
 	}
 
@@ -89,12 +95,12 @@ public class Logic {
 				break;
 			case Constants.STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
-						events, undoTasks);
+						events, taskLabels, undoTasks);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						tempHistory, undoTasks);
+						tempHistory, taskLabels, undoTasks);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_SEARCH:
@@ -108,8 +114,7 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDO:
-				feedback[0] = undoer.undoPreviousChange(store, undoTasks, 
-						todo, deadlines, events, tempHistory);
+				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:
@@ -120,6 +125,9 @@ public class Logic {
 				feedback[0] = directer.checkPath(store);
 				feedback[1] = "";
 				break;
+			case Constants.STRING_EDITLABEL:
+				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels);
+				feedback[1] = "";
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
@@ -134,8 +142,14 @@ public class Logic {
 		} catch (InvalidDateTimeFieldException ife) {
 			feedback[0] = ife.getMessage();
 			feedback[1] = "";
+		} catch (InvalidFromAndToTime ift) {
+			feedback[0] =  ift.getMessage();
+			feedback[1] = "";
 		} catch (MissingDateTimeFieldException mfe) {
 			feedback[0] = mfe.getMessage();
+			feedback[1] = "";
+		} catch (LabelExceedTotalException let) {
+			feedback[0] = let.getMessage();
 			feedback[1] = "";
 		} catch (Exception e) {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
@@ -187,7 +201,7 @@ public class Logic {
 			return "";
 		}
 	}
-	
+
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -197,24 +211,24 @@ public class Logic {
 			observer.update();
 		}
 	}
-	
+
 	public void notifyAllObservers(String[] displayType) {
 		for (myObserver observer : observers) {
 			observer.update(displayType);
 		}
 	}
 
-	public void refreshLists()	{
-		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {  
-		     @Override  
-		     public void handle(ActionEvent event) {  
-		    	 notifyAllObservers(); 
-		     }  
-		}));  
-		timeline.setCycleCount(Animation.INDEFINITE);  
+	public void refreshLists() {
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				notifyAllObservers();
+			}
+		}));
+		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 	}
-	
+
 	/**
 	 * gets a list of help commands for user to refer to
 	 *
