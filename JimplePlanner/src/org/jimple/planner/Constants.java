@@ -43,10 +43,17 @@ public final class Constants {
 	public static final String TEST_TEMP_FILE_NAME = "testtempplanner.jim";
 	
 	public static final String PROPERTIES_CONFIG_FILE_NAME = "jimpleConfig.properties";
-	public static final String PROPERTIES_SAVEPATH_KEY_NAME = "savepath";
-	public static final String PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME = "prevsavepath";
 	public static final String PROPERTIES_COMMENT_HEADER = "PATH SETTINGS";
 	public static final String PROPERTIES_SAVEPATH_TO_CWD = "origin";
+	
+	public static final String PROPERTIES_KEY_CURRENT_SAVEPATH = "savepath";
+	public static final String PROPERTIES_KEY_PREV_SAVEPATH = "prevsavepath";
+	public static final String PROPERTIES_KEY_COLOUR_BLUE_1 = "blue";
+	public static final String PROPERTIES_KEY_COLOUR_GREEN_2 = "green";
+	public static final String PROPERTIES_KEY_COLOUR_YELLOW_3 = "yellow";
+	public static final String PROPERTIES_KEY_COLOUR_ORANGE_4 = "orange";
+	public static final String PROPERTIES_KEY_COLOUR_RED_5 = "red";
+	public static final String PROPERTIES_KEY_COLOUR_DARKRED_6 = "darkred";
 	
 	public static final String FILEPATH_DEFAULT = DEFAULT_FILE_DIRECTORY + DEFAULT_FILE_NAME;
 	public static final String FILEPATH_DEFAULT_TEMP = DEFAULT_FILE_DIRECTORY + DEFAULT_TEMP_FILE_NAME;
@@ -59,7 +66,8 @@ public final class Constants {
 	public static final String TAGS_FROM_TIME = ":from:";
 	public static final String TAGS_TO_TIME = ":to:";
 	public static final String TAGS_TITLE = ":title:";
-	public static final String TAGS_LINE_FIELD_SEPARATOR = "/";
+	public static final String TAGS_LINE_FIELD_SEPARATOR = "[/s/]";
+	public static final String TAGS_LABEL_FIELD_SEPARATOR = "[/tl/]";
 	
 	/**
 	 * Logic component
