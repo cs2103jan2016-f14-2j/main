@@ -10,7 +10,9 @@ import java.util.LinkedList;
 import org.jimple.planner.Constants;
 import org.jimple.planner.Formatter;
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 import org.jimple.planner.exceptions.InvalidFromAndToTime;
+import org.jimple.planner.exceptions.LabelExceedTotalException;
 import org.junit.Test;
 import org.jimple.planner.storage.*;
 
@@ -24,10 +26,12 @@ public class LogicTest {
 	LogicSearch testSearcher = new LogicSearch();
 	LogicDirectory testDirecter = new LogicDirectory();
 	LogicUndo testUndoer = new LogicUndo();
+	LogicLabel testLabeler = new LogicLabel();
 	ArrayList<Task> floating = new ArrayList<Task>();
 	ArrayList<Task> deadlines = new ArrayList<Task>();
 	ArrayList<Task> events = new ArrayList<Task>();
 	ArrayList<Task> tempHistory = new ArrayList<Task>();
+	ArrayList<TaskLabel> taskLabels = new ArrayList<TaskLabel>();
 	LinkedList<LogicPreviousTask> undoTasks = new LinkedList<LogicPreviousTask>();
 
 	/*
@@ -67,16 +71,58 @@ public class LogicTest {
 		testDate = LocalDateTime.parse("2016-01-12T15:30");
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
-
+	
+	/**
+	 * EP: 2 test cases
+	 * 1. change label color
+	 * 2. change label name
+	 * 3. no label to change
+	 * 
+	 * @throws LabelExceedTotalException 
+	 */
+	@Test
+	public void ShouldReturnChangedLabel() throws LabelExceedTotalException	{
+		taskLabels.add(TaskLabel.getNewLabel("food"));
+		taskLabels.add(TaskLabel.getNewLabel("work"));
+		String[] variableArray1 = {"food", "orange"};
+		String[] variableArray2 = {"exercise", "green"};
+		String[] variableArray3 = {"stuff", "yellow"};
+		assertEquals("food name changed to orange", testLabeler.changeLabel(variableArray1, taskLabels));
+		assertEquals("green colour changed to exercise", testLabeler.changeLabel(variableArray2, taskLabels));
+		assertEquals("label could not be changed", testLabeler.changeLabel(variableArray3, taskLabels));
+		
+		taskLabels.clear();
+	}
+	
+	@Test
+	public void ShouldReturnMultipleTaskOfDifferentDays()	{
+		Task aTask = new Task("test Task");
+		aTask.setFromDate("2016-04-10T10:00");
+		aTask.setToDate("2016-04-12T15:00");
+		ArrayList<Task>	modifiedTasks = new ArrayList<Task>();
+		while (!LogicTaskModification.isFromDateEqualToDate(aTask))	{
+			Task dividedTask = LogicTaskModification.divideMultipleDays(aTask);
+			modifiedTasks.add(dividedTask);
+		}
+		modifiedTasks.add(aTask);
+		assertEquals("2016-04-10T10:00", modifiedTasks.get(0).getFromTimeString());
+		assertEquals("2016-04-10T23:59", modifiedTasks.get(0).getToTimeString());
+		assertEquals("2016-04-11T00:00", modifiedTasks.get(1).getFromTimeString());
+		assertEquals("2016-04-11T23:59", modifiedTasks.get(1).getToTimeString());
+		assertEquals("2016-04-12T00:00", modifiedTasks.get(2).getFromTimeString());
+		assertEquals("2016-04-12T15:00", modifiedTasks.get(2).getToTimeString());
+	}
+	
 	/**
 	 * EP: 5 test cases 1. Empty 2. when undo is for an "add" command 3. when
 	 * undo is for a "delete" command 4. when undo is for a "edit" command 5.
 	 * when delete cache is >20
 	 * 
 	 * @throws InvalidFromAndToTime
+	 * @throws LabelExceedTotalException 
 	 */
 	@Test
-	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTime {
+	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
 		String[] variableArray1 = { "1" };
 		String[] variableArray2 = { "todo", "task to be undone", null, null, null, null };
 		String[] variableArray3 = { "1", "edit task to be undone", null, null, null, null };
@@ -90,11 +136,11 @@ public class LogicTest {
 		assertEquals("task \"" + "a test only one" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
 		// test for add
-		testAdder.testAddToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, undoTasks);
+		testAdder.addToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
 		assertEquals("task \"" + "task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
 		// test for edit
-		testEditer.testEditTask(testStore, variableArray3, floating, deadlines, events, tempHistory, undoTasks);
+		testEditer.editTask(testStore, variableArray3, floating, deadlines, events, tempHistory, taskLabels, undoTasks);
 		assertEquals("task \"" + "edit task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
 
@@ -125,14 +171,14 @@ public class LogicTest {
 	 * edit
 	 */
 	@Test
-	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTime {
+	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
 		String[] variableArray = { "1", "task one", null, "2016-03-12T14:00", null, null };
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
-				deadlines, events, tempHistory, undoTasks));
+				deadlines, events, tempHistory, taskLabels, undoTasks));
 		variableArray[0] = "6";
 		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
-				deadlines, events, tempHistory, undoTasks));
+				deadlines, events, tempHistory, taskLabels, undoTasks));
 	}
 
 	/*
@@ -140,31 +186,53 @@ public class LogicTest {
 	 * unable to find task and no edit
 	 */
 	@Test
-	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime {
+	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
 		String[] variableArray = { "1", "task one", null, "2016-03-30T05:00", null, null };
 		initializeThreeArrays();
 		assertEquals("return same string", "task 1 edited in planner",
-				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, undoTasks));
+				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks));
 		variableArray[0] = "10";
 		assertEquals("return same string", "task 10 could not be edited",
-				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, undoTasks));
+				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks));
 	}
 
 	/**
-	 * EP: 3 cases 1. add for deadlines 2. add for events 3. add for todo
+	 * EP: 5 cases 
+	 * 1. add for deadlines 
+	 * 2. add for events 
+	 * 3. add for todo
+	 * 4. add a label when does not exist
+	 * 5. add a label when exist
+	 * 6. add a label with "default" if null
+	 * @throws LabelExceedTotalException 
 	 */
 	@Test
-	public void AddShouldReturnFeedback() throws IOException {
+	public void ShouldReturnFeedbackAfterAdding() throws IOException, LabelExceedTotalException {
 		String[] parsedInput1 = { "deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null };
 		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder
-				.testAddToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, undoTasks));
+				.addToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, taskLabels, undoTasks));
+		
 		String[] parsedInput2 = { "events", "finish 2010 homework", null, "2016-03-29T12:00", "2016-03-30T13:00",
 				null };
-		assertEquals("\"finish 2010 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput2,
-				tempHistory, floating, deadlines, events, undoTasks));
-		String[] parsedInput3 = { "events", "finish 3241 homework", null, null, null, null };
-		assertEquals("\"finish 3241 homework\" added to planner", testAdder.testAddToTaskList(testStore, parsedInput3,
-				tempHistory, floating, deadlines, events, undoTasks));
+		assertEquals("\"finish 2010 homework\" added to planner", testAdder.addToTaskList(testStore, parsedInput2,
+				tempHistory, floating, deadlines, events, taskLabels, undoTasks));
+		
+		String[] parsedInput3 = { "todo", "finish 3241 homework", null, null, null, null };
+		assertEquals("\"finish 3241 homework\" added to planner", testAdder.addToTaskList(testStore, parsedInput3,
+				tempHistory, floating, deadlines, events, taskLabels, undoTasks));
+		
+		String[] parsedInput4 = { "todo", "finish 3241 homework", null, null, null, "work" };
+		testAdder.addToTaskList(testStore, parsedInput4, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		assertEquals("work", taskLabels.get(0).getLabelName());
+		
+		taskLabels.add(TaskLabel.getNewLabel("food"));
+		String[] parsedInput5 = { "todo", "buy hotpot ingredients", null, null, null, "food" };
+		testAdder.addToTaskList(testStore, parsedInput5, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		assertEquals("food", floating.get(2).getTaskLabel().getLabelName());
+		
+		String[] parsedInput6 = { "todo", "do some running", null, null, null, null };
+		testAdder.addToTaskList(testStore, parsedInput6, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		assertEquals("default", floating.get(3).getTaskLabel().getLabelName());
 	}
 
 	/**
@@ -187,6 +255,9 @@ public class LogicTest {
 		assertTrue(searchResults.isEmpty());
 	}
 
+	/**
+	 * Searches for strings in master arrays and returns results that are the same
+	 */
 	@Test
 	public void ShouldReturnArrayListOfTasks() throws IOException {
 		ArrayList<Task> expected = new ArrayList<Task>();
@@ -207,7 +278,6 @@ public class LogicTest {
 	public void ShouldReturnTrueIfContainKeyword() {
 		Task event = new Task("a test only");
 		event.setDescription("good stuff");
-		event.setLabel(0);
 		assertTrue("returns true", testSearcher.testIsContainKeyword(event, "good"));
 		assertTrue("returns true", testSearcher.testIsContainKeyword(event, "a test only"));
 		assertFalse("returns false", testSearcher.testIsContainKeyword(event, "wrong"));
@@ -218,9 +288,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-28T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-30T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-28T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-30T23:00", testformatter.testFormatTime("11pm"));
 	}
 
 	@Test

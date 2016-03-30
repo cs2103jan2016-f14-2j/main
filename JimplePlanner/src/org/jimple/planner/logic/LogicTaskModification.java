@@ -1,13 +1,16 @@
 package org.jimple.planner.logic;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
+import org.jimple.planner.exceptions.LabelExceedTotalException;
 import org.jimple.planner.Constants;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public interface LogicTaskModification {
 
-	public default Task doEdit(String[] variableArray, Task aTask) {
+	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels) throws LabelExceedTotalException {
 		Task editedTask = new Task(aTask);
 		for (int i = 1; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
@@ -25,7 +28,8 @@ public interface LogicTaskModification {
 					editedTask.setToDate(variableArray[i]);
 					break;
 				case 5:
-					editedTask.setLabel(Integer.parseInt(variableArray[i]));
+					TaskLabel label = checkNewTaskLabel(variableArray[i], taskLabels);
+					editedTask.setTaskLabel(label);
 					break;
 				default:
 					break;
@@ -33,6 +37,19 @@ public interface LogicTaskModification {
 			}
 		}
 		return editedTask;
+	}
+
+	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels) throws LabelExceedTotalException	{
+		for (TaskLabel aLabel : taskLabels)	{
+			if (aLabel.getLabelName().equals(name))	{
+				return TaskLabel.duplicateTaskLabel(aLabel);
+			} else if (name == null)	{
+				return TaskLabel.getDefaultLabel();
+			}
+		}
+		TaskLabel newLabel = TaskLabel.getNewLabel(name);
+		taskLabels.add(newLabel);
+		return newLabel;
 	}
 
 	public default boolean isFromAndToTimeCorrect(Task task) {
@@ -45,15 +62,27 @@ public interface LogicTaskModification {
 		}
 		return false;
 	}
-	
-	public default LogicPreviousTask setNewPreviousTask(String command, Task previousTask)	{
+
+	public default LogicPreviousTask setNewPreviousTask(String command, Task previousTask) {
 		LogicPreviousTask aPreviousTask = new LogicPreviousTask(command, previousTask);
 		return aPreviousTask;
 	}
-	
+
 	public default void checkOverCacheLimit(LinkedList<LogicPreviousTask> undoTasks) {
 		while (undoTasks.size() > Constants.DELETE_CACHE_LIMIT) {
 			undoTasks.removeFirst();
 		}
 	}
+
+	public static Task divideMultipleDays(Task aTask) {
+		Task newTask = new Task(aTask);
+		newTask.setToDate(newTask.getFromTime().toLocalDate().toString() + "T23:59");
+		aTask.setFromDate(aTask.getFromTime().toLocalDate().plusDays(1).toString() + "T00:00");
+		return newTask;
+	}
+
+	public static boolean isFromDateEqualToDate(Task aTask) {
+		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
+	}
+
 }
