@@ -77,6 +77,7 @@ public class LogicTest {
 	 * 1. change label color
 	 * 2. change label name
 	 * 3. no label to change
+	 * 
 	 * @throws LabelExceedTotalException 
 	 */
 	@Test
@@ -89,6 +90,8 @@ public class LogicTest {
 		assertEquals("food name changed to orange", testLabeler.changeLabel(variableArray1, taskLabels));
 		assertEquals("green colour changed to exercise", testLabeler.changeLabel(variableArray2, taskLabels));
 		assertEquals("label could not be changed", testLabeler.changeLabel(variableArray3, taskLabels));
+		
+		taskLabels.clear();
 	}
 	
 	@Test
@@ -200,6 +203,7 @@ public class LogicTest {
 	 * 3. add for todo
 	 * 4. add a label when does not exist
 	 * 5. add a label when exist
+	 * 6. add a label with "default" if null
 	 * @throws LabelExceedTotalException 
 	 */
 	@Test
@@ -225,6 +229,10 @@ public class LogicTest {
 		String[] parsedInput5 = { "todo", "buy hotpot ingredients", null, null, null, "food" };
 		testAdder.addToTaskList(testStore, parsedInput5, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
 		assertEquals("food", floating.get(2).getTaskLabel().getLabelName());
+		
+		String[] parsedInput6 = { "todo", "do some running", null, null, null, null };
+		testAdder.addToTaskList(testStore, parsedInput6, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		assertEquals("default", floating.get(3).getTaskLabel().getLabelName());
 	}
 
 	/**
