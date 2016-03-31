@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
@@ -77,7 +78,9 @@ public class StorageLoad implements StorageLoadInterface{
 	}
 	
 	private ArrayList<String> getSeparateFields(String fileLineContent){
-		ArrayList<String> separatedContents = new ArrayList<String>(Arrays.asList(fileLineContent.split(TAGS_LINE_FIELD_SEPARATOR)));
+		Pattern pattern = Pattern.compile(TAGS_LINE_FIELD_SEPARATOR);
+		String[] separatedContentsArray = pattern.split(fileLineContent);
+		ArrayList<String> separatedContents = new ArrayList<String>(Arrays.asList(separatedContentsArray));
 		return separatedContents;
 	}
 	
@@ -96,8 +99,8 @@ public class StorageLoad implements StorageLoadInterface{
 			task.setTitle(titleString);
 		} else if(isLabel(field)){
 			//TODO label field
-			String[] labelStringArray = getRemovedLabelTagStringArray(field);
-			TaskLabel taskLabel = TaskLabel.getDummyLabel(labelStringArray[0], Integer.parseInt(labelStringArray[1]));
+			ArrayList<String> labelStringArray = getRemovedLabelTagStringArray(field);
+			TaskLabel taskLabel = TaskLabel.getDummyLabel(labelStringArray.get(0), Integer.parseInt(labelStringArray.get(1)));
 			task.setTaskLabel(taskLabel);
 		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
@@ -136,10 +139,18 @@ public class StorageLoad implements StorageLoadInterface{
 		return removedTag;
 	}
 	
-	private String[] getRemovedLabelTagStringArray(String field){
+	private ArrayList<String> getRemovedLabelTagStringArray(String field){
 		String removedTag = field.replace(TAGS_LABEL, EMPTY_STRING);
-		String[] splitLabelFields = removedTag.split(TAGS_LABEL_FIELD_SEPARATOR);
-		return splitLabelFields;
+		Pattern pattern = Pattern.compile(TAGS_LABEL_FIELD_SEPARATOR);
+		String[] splitLabelFields = pattern.split(removedTag);
+		ArrayList<String> splitLabelFieldsWithNoEmptyString = new ArrayList<String>();
+		for(String string: splitLabelFields){
+			if(string.equals(EMPTY_STRING) || string==null){
+				continue;
+			}
+			splitLabelFieldsWithNoEmptyString.add(string);
+		}
+		return splitLabelFieldsWithNoEmptyString;
 	}
 	
 	private String getRemovedDescriptionTagString(String field){

@@ -36,15 +36,14 @@ import org.jimple.planner.TaskLabel;
 import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 public class StorageProperties implements StorageTools{
-	private static StorageSave storageSave = null;
-	private static StorageLoad storageLoad = null;
-	private Properties storageProperties = null;
+	private StorageSave storageSave;
+	private StorageLoad storageLoad;
+	//private Properties storageProperties = null;
 	private static HashMap<String, Integer> colourToId = new HashMap<String, Integer>();
 	
 	public StorageProperties(){
 		storageSave = new StorageSave();
 		storageLoad = new StorageLoad();
-		storageProperties = storageLoad.loadProperties();
 		initialiseHashMap();
 	}
 	
@@ -58,6 +57,7 @@ public class StorageProperties implements StorageTools{
 	}
 	
 	public boolean setPath(String pathName){
+		Properties storageProperties = storageLoad.loadProperties();
 		boolean setStatus = false;
 		if(isFilePathValid(pathName)){
 			if(isKeyChanged(pathName)){
@@ -86,26 +86,28 @@ public class StorageProperties implements StorageTools{
 	
 	//TODO Refactor this method
 	private boolean isKeyChanged(String pathName){
-		String previousPath = this.storageProperties.getProperty(PROPERTIES_KEY_CURRENT_SAVEPATH);
+		Properties storageProperties = storageLoad.loadProperties();
+		String previousPath = storageProperties.getProperty(PROPERTIES_KEY_CURRENT_SAVEPATH);
 		if(previousPath.equals(pathName)){
 			return false;
 		} else if (isValueSame(pathName, previousPath)){ 
 			setIfOrigin(pathName, previousPath);
 			return false;
 		} else{
-			this.storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, previousPath);
-			this.storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, pathName);
+			storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, previousPath);
+			storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, pathName);
 			return true;
 		}
 	}
 
 	private void setIfOrigin(String pathName, String previousPath) {
+		Properties storageProperties = storageLoad.loadProperties();
 		if(pathName.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-			this.storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, pathName);
-			this.storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, pathName);
+			storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, pathName);
+			storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, pathName);
 		} else if(previousPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-			this.storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, previousPath);
-			this.storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, previousPath);
+			storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, previousPath);
+			storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, previousPath);
 		}
 	}
 
@@ -151,7 +153,8 @@ public class StorageProperties implements StorageTools{
 	}
 	
 	private void deleteResidualDirectory(){
-		String oldFileDirPath = this.storageProperties.getProperty(PROPERTIES_KEY_PREV_SAVEPATH);
+		Properties storageProperties = storageLoad.loadProperties();
+		String oldFileDirPath = storageProperties.getProperty(PROPERTIES_KEY_PREV_SAVEPATH);
 		oldFileDirPath = getFullFilePath(oldFileDirPath, DEFAULT_FILE_DIRECTORY);
 		if(!oldFileDirPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
 			File oldFileDir = new File(oldFileDirPath);
@@ -162,7 +165,8 @@ public class StorageProperties implements StorageTools{
 	}
 	
 	private String getFileDirectoryFromProperties(String key){
-		String fileDir = this.storageProperties.getProperty(key);
+		Properties storageProperties = storageLoad.loadProperties();
+		String fileDir = storageProperties.getProperty(key);
 		fileDir = getFileDirectory(fileDir);
 		return fileDir;
 	}
@@ -220,6 +224,7 @@ public class StorageProperties implements StorageTools{
 	}
 	
 	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
+		Properties storageProperties = storageLoad.loadProperties();
 		for(TaskLabel taskLabel: labelLists){
 			if(taskLabel.equals(TaskLabel.getDefaultLabel())){
 				continue;
@@ -255,13 +260,14 @@ public class StorageProperties implements StorageTools{
 				System.out.println("Error, no label should be null here");
 				return false;
 			}
-			this.storageProperties.setProperty(labelName, labelColourString);
+			storageProperties.setProperty(labelName, labelColourString);
 		}
 		storageSave.saveProperties(storageProperties);
 		return true;
 	}
 	
 	public ArrayList<TaskLabel> getLabels() throws LabelExceedTotalException{
+		Properties storageProperties = storageLoad.loadProperties();
 		ArrayList<TaskLabel> labelList = new ArrayList<TaskLabel>();
 		labelList.add(TaskLabel.getDefaultLabel()); //1st element of labelList is always default label
 		

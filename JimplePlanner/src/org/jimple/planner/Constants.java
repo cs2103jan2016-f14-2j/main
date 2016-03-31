@@ -69,8 +69,8 @@ public final class Constants {
 	public static final String TAGS_FROM_TIME = ":from:";
 	public static final String TAGS_TO_TIME = ":to:";
 	public static final String TAGS_TITLE = ":title:";
-	public static final String TAGS_LINE_FIELD_SEPARATOR = "[/s/]";
-	public static final String TAGS_LABEL_FIELD_SEPARATOR = "[/tl/]";
+	public static final String TAGS_LINE_FIELD_SEPARATOR = "/s/";
+	public static final String TAGS_LABEL_FIELD_SEPARATOR = "/tl/";
 	
 	/**
 	 * Logic component
