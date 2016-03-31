@@ -132,9 +132,6 @@ public class TimeParser {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
 				c.add(Calendar.DATE, 1);
-				/*if (extendedCommand == "FROM") {
-					fromSetToNextDay = true;
-				}*/
 			}
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
@@ -168,9 +165,6 @@ public class TimeParser {
 		}
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
-		/*if (extendedCommand == "TO") {
-			fromSetToNextDay = false;
-		}*/
 		return true;
 	}
 	
