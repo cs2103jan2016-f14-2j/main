@@ -316,6 +316,9 @@ public class TimeParser {
 	
 	// Parses am and pm. E.g 12am, 5.30pm, 6:25pm.
 	private boolean parseIfIsAMPMFormat(String input) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
+		if (input.length() < 3) {
+			return false;
+		}
 		String last2Characters = input.substring(input.length()-2, input.length()).toLowerCase();
 		if (last2Characters.equals("am") || last2Characters.equals("pm")) {
 			String beforeLast2Characters = input.substring(0, input.length()-2);
