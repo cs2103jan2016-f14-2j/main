@@ -57,6 +57,7 @@ public class Parser {
 	private static final String COMMAND_DELETE = "DELETE";
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final String COMMAND_EDITLABEL = "EDITLABEL";
+	private static final String COMMAND_DELETELABEL = "DELETELABEL";
 	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
 	private static final String COMMAND_CHECKDIR = "CHECKDIR";
 	private static final String COMMAND_UNDO = "UNDO";

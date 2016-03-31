@@ -16,6 +16,7 @@ public class InputStruct {
 	private static final String COMMAND_DELETE = "DELETE";
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final String COMMAND_EDITLABEL = "EDITLABEL";
+	private static final String COMMAND_DELETELABEL = "DELETELABEL";
 	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
 	private static final String COMMAND_CHECKDIR = "CHECKDIR";
 	private static final String COMMAND_UNDO = "UNDO";
@@ -31,6 +32,7 @@ public class InputStruct {
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
 	private final int ARRAY_SIZE_EDITLABEL = 3;
+	private final int ARRAY_SIZE_DELETELABEL = 1;
 	private final int ARRAY_SIZE_CHANGEDIR = 1;
 	
 	/* Stores the index for the user input after the main command.
@@ -104,6 +106,9 @@ public class InputStruct {
 			break;
 		case COMMAND_EDITLABEL :
 			setVariableArraySize(ARRAY_SIZE_EDITLABEL);
+			break;
+		case COMMAND_DELETELABEL :
+			setVariableArraySize(ARRAY_SIZE_DELETELABEL);
 			break;
 		case COMMAND_CHANGEDIR :
 			setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
