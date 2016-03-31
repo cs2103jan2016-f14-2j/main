@@ -60,8 +60,8 @@ public class Parser {
 	private static final String COMMAND_DELETELABEL = "DELETELABEL";
 	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
 	private static final String COMMAND_CHECKDIR = "CHECKDIR";
-	private static final String COMMAND_UNDO = "UNDO";
-	private static final String COMMAND_HELP = "DELP";
+	private static final String COMMAND_UNDOTASK = "UNDOTASK";
+	private static final String COMMAND_HELP = "HELP";
 	
 	// Extended commands.
 	private static final String EXTENDED_COMMAND_NAME = "NAME";
@@ -133,9 +133,9 @@ public class Parser {
 						return new InputStruct(COMMAND_CHECKDIR);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
-				case COMMAND_UNDO :
+				case COMMAND_UNDOTASK :
 					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(COMMAND_UNDO);
+						return new InputStruct(COMMAND_UNDOTASK);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
 				case COMMAND_HELP :
