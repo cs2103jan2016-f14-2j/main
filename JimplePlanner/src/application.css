@@ -18,8 +18,7 @@
  .list-cell {
     -fx-padding: 10px ;
     -fx-background-color: transparent, -fx-background ;
-    -fx-background-insets: 3px;
-	}
+}
 
 
 .list-cell:empty {
@@ -79,12 +78,10 @@
 }
 .event {	
     -fx-font: 16px Trebuchet ;
-    -fx-fill: white;
-    
+    -fx-fill: white;    
     -fx-padding: 10px ;
     -fx-background-color: #D8D3C7;
     -fx-background-radius: 10px;
-	-fx-background-insets: 3px;
 }
 
 .event:selected{
@@ -121,23 +118,6 @@
     -fx-background-radius: 10px;
 }
 
-/* 
- .list-cell {
-   -fx-padding: 10 10 10 10;
-   -fx-background-color: white;
- }
- 
- .list-cell:odd {
-   -fx-background-color: lightgrey;
- }
- 
-.list-cell:selected {
-   -fx-border-style: dotted;
-   -fx-border-width: 3;
-   -fx-border-color: white;
-   -fx-background-color: lightyellow;
- }*/
-
 .popup{
 	-fx-background-radius: 10px;
     -fx-background-color: white;
@@ -160,14 +140,21 @@
     -fx-background-insets: 16 75;
 }
 
-
- .overdue{
-	-fx-background-color: #AFABA0;	
+.overdue{
+	-fx-border-radius: 10px;
+	-fx-border-color:#AFABA0;
+	-fx-border-width: 1px;
+	-fx-background-color: transparent;
+	-fx-background-radius: 10px;
+    -fx-fill: #AFABA0;
+	-fx-background-insets: 3px;
 }
 
 .overdue:selected{
-	-fx-background-color: #7F7967;
-	
+	-fx-border-color: #7F7967;
+	-fx-background-color: transparent;
+	-fx-fill: #7F7967;
+	-fx-background-insets: 3px;
 }
 
 .green{
@@ -218,4 +205,44 @@
 .darkred:selected{
 	-fx-background-color: #650E08;
 	
+}
+
+/*
+*	LABEL COLORS
+*/
+
+/* default */
+.color0{
+	-fx-background-color: #FFFFFF;
+	-fx-fill: #000000;
+}
+/* blue */
+.color1{
+	-fx-background-color: #72CFFF;	
+	-fx-fill: #0068FF;
+}
+/* green */
+.color2{
+	-fx-background-color: #44FF7D;	
+	-fx-fill: #258E13;
+}
+/* yellow */
+.color3{
+	-fx-background-color: #CEFF7D;	
+	-fx-fill: #809916;
+}
+/* orange */
+.color4{
+	-fx-background-color: #FFDE87;	
+	-fx-fill: #FF5500;
+}
+/* red */
+.color5{
+	-fx-background-color: #FF957D;	
+	-fx-fill: #FF2612;
+}
+/* purple */
+.color6{
+	-fx-background-color: #9F86FF;	
+	-fx-fill: #6700C1;
 }

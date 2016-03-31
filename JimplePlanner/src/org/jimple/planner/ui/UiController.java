@@ -537,6 +537,7 @@ public class UiController extends myObserver implements Initializable {
 			prompt.helpPrompt(feedback[0]);
 			break;
 		default:
+			System.out.println("default");
 			loadDisplay();
 			break;
 		}
