@@ -33,7 +33,6 @@ import java.util.Set;
 
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
-import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 public class StorageProperties implements StorageTools{
 	private StorageSave storageSave;
@@ -266,7 +265,7 @@ public class StorageProperties implements StorageTools{
 		return true;
 	}
 	
-	public ArrayList<TaskLabel> getLabels() throws LabelExceedTotalException{
+	public ArrayList<TaskLabel> getLabels(){
 		Properties storageProperties = storageLoad.loadProperties();
 		ArrayList<TaskLabel> labelList = new ArrayList<TaskLabel>();
 		labelList.add(TaskLabel.getDefaultLabel()); //1st element of labelList is always default label

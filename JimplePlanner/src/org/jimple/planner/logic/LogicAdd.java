@@ -8,14 +8,13 @@ import java.util.LinkedList;
 
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
-import org.jimple.planner.exceptions.LabelExceedTotalException;
 import org.jimple.planner.Constants;
 
 public class LogicAdd implements LogicTaskModification, LogicMasterListModification {
 
 	protected String addToTaskList(Storage store, String[] parsedInput, ArrayList<Task> tempHistory,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
-			LinkedList<LogicPreviousTask> undoTasks) throws IOException, LabelExceedTotalException {
+			LinkedList<LogicPreviousTask> undoTasks) throws IOException {
 		assert parsedInput.length == 6;
 		Task newTask = new Task("");
 		newTask = doEdit(parsedInput, newTask, taskLabels);
