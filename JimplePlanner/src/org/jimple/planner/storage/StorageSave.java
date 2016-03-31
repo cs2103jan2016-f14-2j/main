@@ -10,6 +10,7 @@ import static org.jimple.planner.Constants.TAGS_FROM_TIME;
 import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
 import static org.jimple.planner.Constants.TAGS_TITLE;
 import static org.jimple.planner.Constants.TAGS_TO_TIME;
+import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 
 public class StorageSave implements StorageSaveInterface{
 	private BufferedWriter createFileWriter(String fileName){
@@ -37,7 +39,7 @@ public class StorageSave implements StorageSaveInterface{
 		return writer;
 	}
 	
-	public boolean isSavedSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
+	public boolean isSavedTasksSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
 		assert allTaskLists.size() == 3;
 		Task.sortTasks(allTaskLists);
 		writeTasksToFile(allTaskLists, tempFilePath);
@@ -77,6 +79,7 @@ public class StorageSave implements StorageSaveInterface{
 			return true;
 		}
 	}
+	
 	private String extractTaskToString(Task task){
 		String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
 		if(isDescriptionExist(task)){
@@ -91,8 +94,12 @@ public class StorageSave implements StorageSaveInterface{
 			String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
 			lineString = lineString + fromToString;
 		}
-		//String labelString = formatToSaveString(TAGS_LABEL + String.valueOf(task.getLabel()));//TODO label field
-		//lineString = lineString + labelString;
+		//TODO label field implemented but need to test
+		TaskLabel taskLabel = task.getTaskLabel();
+		if(taskLabel.equals(TaskLabel.getDefaultLabel())){
+			String taskLabelToString = formatToTaskLabel(taskLabel);
+			lineString = lineString + taskLabelToString;
+		}
 		return lineString;
 	}
 	
@@ -108,9 +115,20 @@ public class StorageSave implements StorageSaveInterface{
 		return !(task.getToTimeString().length()==0);
 	}
 	
-	//Minor formatting of string such that each "field" is enclosed with a "/"
+	//Minor formatting of string such that each "field" is enclosed with a "[/s/]"
 	private String formatToSaveString(String string){
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
+	}
+	
+	private String formatToTaskLabel(TaskLabel taskLabel){
+		String labelName = formatLabelFields(taskLabel.getLabelName());
+		String labelColourIdString = formatLabelFields(String.valueOf(taskLabel.getColourId()));
+		String formattedString = TAGS_LABEL + labelName + labelColourIdString;
+		return formattedString;
+	}
+	
+	private String formatLabelFields(String string){
+		return TAGS_LABEL_FIELD_SEPARATOR + string + TAGS_LABEL_FIELD_SEPARATOR;
 	}
 	
 	public void saveProperties(Properties property){
@@ -126,8 +144,8 @@ public class StorageSave implements StorageSaveInterface{
 	/*
 	 * ALL TEST METHODS ARE HERE
 	 */
-	public boolean isSavedTest(ArrayList<ArrayList<Task>> allTaskLists){
-		return isSavedSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
+	public boolean isSavedTasksTest(ArrayList<ArrayList<Task>> allTaskLists){
+		return isSavedTasksSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
 	}
 	
 	public void testWriteTasks(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {

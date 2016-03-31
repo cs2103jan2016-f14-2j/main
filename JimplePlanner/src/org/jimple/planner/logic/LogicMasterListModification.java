@@ -30,7 +30,7 @@ public interface LogicMasterListModification {
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
 		assignTaskIds(allTasksArray);
-		store.isSaved(allTasksArray);
+		store.isSavedTasks(allTasksArray);
 	}
 
 	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {

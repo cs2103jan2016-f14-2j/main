@@ -3,13 +3,14 @@ package org.jimple.planner.storage;
 import static org.jimple.planner.Constants.EMPTY_STRING;
 import static org.jimple.planner.Constants.FILEPATH_CONFIG;
 import static org.jimple.planner.Constants.FILEPATH_TEST;
-import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_KEY_NAME;
-import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME;
+import static org.jimple.planner.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
+import static org.jimple.planner.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
 import static org.jimple.planner.Constants.TAGS_LABEL;
 import static org.jimple.planner.Constants.TAGS_DESCRIPTION;
 import static org.jimple.planner.Constants.TAGS_FROM_TIME;
 import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
+import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
 import static org.jimple.planner.Constants.TAGS_TITLE;
 import static org.jimple.planner.Constants.TAGS_TO_TIME;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 
 public class StorageLoad implements StorageLoadInterface{
 	private BufferedReader createFileReader(String fileName){
@@ -92,10 +94,12 @@ public class StorageLoad implements StorageLoadInterface{
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
 			task.setTitle(titleString);
-		} /*else if(isLabel(field)){
-			int labelValue = getRemovedLabelTagValue(field);
-			task.setLabel(labelValue); //TODO label field
-		}*/ else if(isDescription(field)){
+		} else if(isLabel(field)){
+			//TODO label field
+			String[] labelStringArray = getRemovedLabelTagStringArray(field);
+			TaskLabel taskLabel = TaskLabel.getDummyLabel(labelStringArray[0], Integer.parseInt(labelStringArray[1]));
+			task.setTaskLabel(taskLabel);
+		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
 			task.setDescription(descField);
 		} else if(isFromTime(field)){
@@ -132,16 +136,10 @@ public class StorageLoad implements StorageLoadInterface{
 		return removedTag;
 	}
 	
-	private int getRemovedLabelTagValue(String field){
+	private String[] getRemovedLabelTagStringArray(String field){
 		String removedTag = field.replace(TAGS_LABEL, EMPTY_STRING);
-		int labelValue = 0;
-		try {
-			labelValue = Integer.parseInt(removedTag);
-		} catch (NumberFormatException e) {
-			System.out.println("Label value is not valid, label value is: "+removedTag);
-			e.printStackTrace();
-		}
-		return labelValue;
+		String[] splitLabelFields = removedTag.split(TAGS_LABEL_FIELD_SEPARATOR);
+		return splitLabelFields;
 	}
 	
 	private String getRemovedDescriptionTagString(String field){
@@ -177,7 +175,7 @@ public class StorageLoad implements StorageLoadInterface{
 	public Properties loadProperties(){
 		String configPath = FILEPATH_CONFIG;
 		BufferedReader configFileReader = createFileReader(configPath);
-		Properties property = new Properties();;
+		Properties property = new Properties();
 		try {
 			property.load(configFileReader);
 				if(property.isEmpty()){
@@ -191,11 +189,13 @@ public class StorageLoad implements StorageLoadInterface{
 	}
 	
 	private void propertyKeysInitialise(Properties property){
-		if(property.getProperty(PROPERTIES_SAVEPATH_KEY_NAME) == null){
-			property.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, PROPERTIES_SAVEPATH_TO_CWD);
-		}
-		if(property.getProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME) == null){
-			property.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, PROPERTIES_SAVEPATH_TO_CWD);
+		setKeys(property, PROPERTIES_KEY_CURRENT_SAVEPATH, PROPERTIES_SAVEPATH_TO_CWD);
+		setKeys(property, PROPERTIES_KEY_PREV_SAVEPATH, PROPERTIES_SAVEPATH_TO_CWD);
+	}
+	
+	private void setKeys(Properties property, String key, String value){
+		if(property.getProperty(key) == null){
+			property.setProperty(key, value);
 		}
 	}
 	
