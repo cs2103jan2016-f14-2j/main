@@ -116,6 +116,7 @@ public class TimeParser {
 
 	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
+		System.out.println(isFieldSet("hour") + " " +  isFieldSet("minute") + isFieldSet("day") + isFieldSet("month") + isFieldSet("year"));
 		initSecondaryAndPresetFields(extendedCommand);
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
@@ -131,7 +132,7 @@ public class TimeParser {
 		return false;
 	}
 		
-	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException{
+	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException {
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
 			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
@@ -386,9 +387,11 @@ public class TimeParser {
 	}
 	
 	private boolean parseFloatingNumberAMPM(String input, String inputAMPM) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
+		System.out.println(input);
 		if (isANumber(input) && isValidAMPMHour(input)) {
+			System.out.println("A");
 			int inputTime = Integer.parseInt(input);
-			switch (input) {
+			switch (inputAMPM) {
 				case "am" :
 					setField("hour", inputTime % 12);
 					setField("minute", 0);
