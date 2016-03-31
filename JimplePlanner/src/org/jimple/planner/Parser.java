@@ -1,5 +1,5 @@
 /* ------------------|
-ch * Author: A0135775W |
+ * Author: A0135775W |
  * Name: Lee Lu Ke   |
  * ----------------- */
 
@@ -348,12 +348,9 @@ public class Parser {
 			Date from = timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0]).getTime();
 			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0])));
 			Calendar to = timeParser.parseTime(EXTENDED_COMMAND_TO, splitFromTo[1]);
-			System.out.println("A");
 			while (!isAfterFromDate(from, to)) {
 				to.add(Calendar.DATE, 1);
-				System.out.println(to.get(Calendar.DAY_OF_MONTH) + " " + to.get(Calendar.MONTH));
 			}
-			
 			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(to));
 		}
 	}
@@ -378,6 +375,7 @@ public class Parser {
 	
 	private boolean isAfterFromDate(Date inputFrom, Calendar inputTo) {
 		boolean case1 = inputFrom.getMonth() < inputTo.get(Calendar.MONTH);
+		System.out.println(inputFrom.getMonth() + " " + inputTo.get(Calendar.MONTH));
 		boolean case2 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() < inputTo.get(Calendar.DAY_OF_MONTH);
 		boolean case3 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() == inputTo.get(Calendar.DAY_OF_MONTH);
 		if (case3) {

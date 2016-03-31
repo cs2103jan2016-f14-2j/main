@@ -9,19 +9,12 @@ import org.junit.Test;
 public class ParserTest {
 	
 	private static Parser testParser;
-
-	private Date d = Calendar.getInstance().getTime();
-	private int year = d.getYear() + 1900;
-	private String date = String.format("%02d", d.getDate());
-	private String month = String.format("%02d", d.getMonth()+1);
-	private String hours = String.format("%02d", d.getHours());
-	private String minutes = String.format("%02d", d.getMinutes());
 	
 	@Test
 	public void test() {
 		testParser = new Parser();
 		test0();
-		test1(); // Command: command:ADD/name/FROM-TO/category
+		/*test1(); // Command: command:ADD/name/FROM-TO/category
 		test2(); // Command: command:ADD/name:symbols/FROM-TO/description
 		test3(); // Command: command:ADD/ - exception
 		test4(); // Command: command:delete/index
@@ -30,17 +23,19 @@ public class ParserTest {
 		test7(); // Command: command:ADD/name/on
 		test8(); // Command: command:invalid - exception
 		test9(); // Command: command:ADD/name/at
-		test10(); // Command: command:ADD/name/BY
+		test10(); // Command: command:ADD/name/BY*/
 	}
 	
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD task FROM 12 may 1100 TO 1400");
+			testStruct = testParser.parseInput("ADD task FROM 1pm TO 4pm");
 			String[] test = testStruct.getVariableArray();
+			System.out.println("A");
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
 			}
+			System.out.println("B");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
