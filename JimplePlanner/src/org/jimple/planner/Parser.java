@@ -342,11 +342,19 @@ public class Parser {
 	
 	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
 		if (!userInput.contains(" TO ")) {
-			throw new MissingDateTimeFieldException("\"from\" must be accompanied by \"to\".");
+			throw new MissingDateTimeFieldException("\"FROM\" must be accompanied by \"TO\".");
 		} else {
 			String[] splitFromTo = userInput.split(" TO ");
+			Date from = timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0]).getTime();
 			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0])));
-			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_TO, splitFromTo[1])));
+			Calendar to = timeParser.parseTime(EXTENDED_COMMAND_TO, splitFromTo[1]);
+			System.out.println("A");
+			while (!isAfterFromDate(from, to)) {
+				to.add(Calendar.DATE, 1);
+				System.out.println(to.get(Calendar.DAY_OF_MONTH) + " " + to.get(Calendar.MONTH));
+			}
+			
+			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(to));
 		}
 	}
 	
@@ -366,6 +374,18 @@ public class Parser {
 		String minutes = String.format("%02d", parsedDate.getMinutes());
 		String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
 		return outputDate;
+	}
+	
+	private boolean isAfterFromDate(Date inputFrom, Calendar inputTo) {
+		boolean case1 = inputFrom.getMonth() < inputTo.get(Calendar.MONTH);
+		boolean case2 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() < inputTo.get(Calendar.DAY_OF_MONTH);
+		boolean case3 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() == inputTo.get(Calendar.DAY_OF_MONTH);
+		if (case3) {
+			boolean case4 = inputFrom.getHours() < inputTo.get(Calendar.HOUR_OF_DAY);
+			boolean case5 = inputFrom.getMinutes() < inputTo.get(Calendar.MINUTE);
+			return case4 || case5;
+		}
+		return case1 || case2;
 	}
 	
 	private boolean isExtendedCommand(String input, String[] extendedCommands) {

@@ -62,8 +62,6 @@ public class TimeParser {
 	private int hour = FIELD_NOT_SET_VALUE;
 	private int minute = FIELD_NOT_SET_VALUE;
 	
-	private boolean fromSetToNextDay = false;
-	
 	private Calendar c = null;
 	
 	//private static Logger LOGGER = Logger.getLogger("TimeParser");
@@ -132,18 +130,17 @@ public class TimeParser {
 	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException{
 		if (isFieldSet("hour") && isFieldSet("minute") && !isFieldSet("day") && !isFieldSet("month") && !isFieldSet("year")) {
 			c.setTimeInMillis(System.currentTimeMillis());
-			if (!isAfterCurrentTime(getField("hour"), getField("minute")) || fromSetToNextDay) {
+			if (!isAfterCurrentTime(getField("hour"), getField("minute"))) {
 				c.add(Calendar.DATE, 1);
-				if (extendedCommand == "from") {
+				/*if (extendedCommand == "FROM") {
 					fromSetToNextDay = true;
-				}
+				}*/
 			}
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
 			setField("month", c.get(Calendar.MONTH));
 			setField("year", c.get(Calendar.YEAR));
 		}
 		if (!isFieldSet("hour") && !isFieldSet("minute")) {
-			System.out.println("A");
 			switch (extendedCommand) {
 				case "ON" :
 				case "AT" :
@@ -171,9 +168,9 @@ public class TimeParser {
 		}
 		// Seconds preset to 0 (default).
 		c.set(Calendar.SECOND, 0);
-		if (extendedCommand == "to") {
+		/*if (extendedCommand == "TO") {
 			fromSetToNextDay = false;
-		}
+		}*/
 		return true;
 	}
 	
