@@ -53,6 +53,7 @@ public class Logic {
 		undoTasks = new LinkedList<LogicPreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
+		taskLabels = new ArrayList<TaskLabel>();
 		parser = new Parser();
 		store = new StorageComponent();
 		adder = new LogicAdd();
@@ -75,7 +76,6 @@ public class Logic {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
 			events = new ArrayList<Task>();
-			taskLabels = new ArrayList<TaskLabel>();
 		}
 	}
 
