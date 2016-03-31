@@ -381,7 +381,6 @@ public class Parser {
 		boolean case2 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() < inputTo.get(Calendar.DAY_OF_MONTH);
 		boolean case3 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() == inputTo.get(Calendar.DAY_OF_MONTH);
 		if (case3) {
-			System.out.println("AAAAAA");
 			boolean case4 = inputFrom.getHours() < inputTo.get(Calendar.HOUR_OF_DAY);
 			boolean case5 = inputFrom.getHours() == inputTo.get(Calendar.HOUR_OF_DAY) && inputFrom.getMinutes() < inputTo.get(Calendar.MINUTE);
 			return case4 || case5;
