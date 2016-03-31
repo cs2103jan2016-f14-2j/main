@@ -37,32 +37,6 @@ public class UiFormatter {
 		formatType(listType);
 	}
 
-	// Agenda formatter
-	public void fomatList(ArrayList<Task> deadlinesList, ArrayList<Task> eventsList) {
-		int counter = 0;
-		formattedList.clear();
-
-		for (Task task : deadlinesList) {
-			formattedList.add(task);
-			if (++counter >= 3)
-				break;
-		}
-
-		while (formattedList.size() < 3)
-			formattedList.add(new Task(""));
-
-		counter = 0;
-
-		for (Task task : eventsList) {
-			formattedList.add(task);
-			if (++counter >= 3)
-				break;
-		}
-
-		while (formattedList.size() < 6)
-			formattedList.add(new Task(""));
-	}
-
 	public void formatType(String listType) {
 		switch (listType) {
 		case Constants.TYPE_TODAY:
@@ -131,12 +105,12 @@ public class UiFormatter {
 
 	private void addTodayTasksToFormattedDateList() {
 		for (Task task : arrList) {
-			if(task.getType().equals(Constants.TYPE_EVENT) && LocalDateTime.now().getDayOfYear() == task.getToTime().getDayOfYear()
-					&& timeDifference(task.getToTime()) >= 0){
+			if(task.getType().equals(Constants.TYPE_EVENT) && timeDifference(task.getFromTime()) < 0
+					&& !task.getIsOverDue()){
 				formattedList.add(task);
 			}
 			else if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()
-					&& timeDifference(task.getFromTime()) >= 0) {
+					&& !task.getIsOverDue()) {
 				formattedList.add(task);
 			}
 		}
@@ -148,9 +122,12 @@ public class UiFormatter {
 
 	private void addNowTasksToFormattedDateList() {
 		for (Task task : arrList) {
-			if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()) {
-				if (task.getType().equals(Constants.TYPE_EVENT) && timeDifference(task.getFromTime()) < 0
-						&& !task.getIsOverDue())
+			if(timeDifference(task.getFromTime()) < 0
+					&& timeDifference(task.getToTime()) > 0){
+				formattedList.add(task);
+			}
+			else if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()) {
+				if (timeDifference(task.getFromTime()) < 0 && !task.getIsOverDue())
 					formattedList.add(task);
 			}
 		}
