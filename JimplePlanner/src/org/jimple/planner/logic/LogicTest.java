@@ -72,8 +72,19 @@ public class LogicTest {
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
 	
+	
+	
 	/**
-	 * EP: 2 test cases
+	 * EP: 2 cases
+	 * 1. label is deleted from tasklabels array list and from all current tasks
+	 * 2. label cannot be deleted 
+	 */
+	@Test
+	public void ShouldRetunDeletedLabel() {
+	}
+	
+	/**
+	 * EP: 3 test cases
 	 * 1. change label color
 	 * 2. change label name
 	 * 3. no label to change

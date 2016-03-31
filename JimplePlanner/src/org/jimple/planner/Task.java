@@ -7,7 +7,7 @@ import static org.jimple.planner.Constants.TYPE_DEADLINE;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Task{
+public class Task {
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
 	private String title;
@@ -18,7 +18,7 @@ public class Task{
 	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
 	private static TaskSorter taskSorter = new TaskSorter();
-	
+
 	// Default Constructor
 	public Task(String aTitle) {
 		this.title = aTitle;
@@ -30,9 +30,9 @@ public class Task{
 		this.taskId = 1000;
 		this.taskLabel = TaskLabel.getDefaultLabel();
 	}
-	
-	//Constructor for creating a duplicate
-	public Task (Task taskToBeDuplicated)	{
+
+	// Constructor for creating a duplicate
+	public Task(Task taskToBeDuplicated) {
 		this.title = taskToBeDuplicated.getTitle();
 		this.description = taskToBeDuplicated.getDescription();
 		this.fromDateTime = taskToBeDuplicated.getFromTime();
@@ -41,26 +41,26 @@ public class Task{
 		this.isOverDue = taskToBeDuplicated.getIsOverDue();
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 	}
-	
-	public String getPrettyFromDate()	{
+
+	public String getPrettyFromDate() {
 		String prettyFromDate = new String("");
 		prettyFromDate = formatter.formatPrettyDate(fromDateTime);
 		return prettyFromDate;
 	}
-	
-	public String getPrettyToDate()	{
+
+	public String getPrettyToDate() {
 		String prettyToDate = new String("");
 		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
 	}
-	
-	public String getPrettyFromTime()	{
+
+	public String getPrettyFromTime() {
 		String prettyFromTime = new String("");
 		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
 		return prettyFromTime;
 	}
-	
-	public String getPrettyToTime()	{
+
+	public String getPrettyToTime() {
 		String prettyToTime = new String("");
 		prettyToTime = formatter.formatPrettyTime(toDateTime);
 		return prettyToTime;
@@ -73,10 +73,10 @@ public class Task{
 		return fromDateTime.toString();
 	}
 
-	public LocalDateTime getFromTime(){
+	public LocalDateTime getFromTime() {
 		return fromDateTime;
 	}
-	
+
 	public void setFromDate(String dateTime) {
 		if (dateTime != null) {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
@@ -91,60 +91,60 @@ public class Task{
 		return toDateTime.toString();
 	}
 
-	public LocalDateTime getToTime(){
+	public LocalDateTime getToTime() {
 		return toDateTime;
 	}
-	
+
 	public void setToDate(String dateTime) {
 		if (dateTime != null) {
 			this.toDateTime = LocalDateTime.parse(dateTime);
 		}
 		checkAndSetType();
 	}
-	
+
 	public String getType() {
 		return type;
 	}
-	
-	//THIS METHOD IS USED ONLY FOR TEST PURPOSES
-	public void setType(String type){
+
+	// THIS METHOD IS USED ONLY FOR TEST PURPOSES
+	public void setType(String type) {
 		this.type = type;
 	}
-	
-	private void checkAndSetType(){
-		if(isTodo()){
+
+	private void checkAndSetType() {
+		if (isTodo()) {
 			this.type = TYPE_TODO;
-		} else if(isDeadline()){
+		} else if (isDeadline()) {
 			this.type = TYPE_DEADLINE;
-		} else if (isEvent()){
+		} else if (isEvent()) {
 			this.type = TYPE_EVENT;
 		}
 	}
-	
-	private boolean isTodo(){
+
+	private boolean isTodo() {
 		return (getToTime() == null && getFromTime() == null);
 	}
-	
-	private boolean isDeadline(){
+
+	private boolean isDeadline() {
 		return (getFromTime() != null && getToTime() == null);
 	}
-	
-	private boolean isEvent(){
+
+	private boolean isEvent() {
 		return (getFromTime() != null && getToTime() != null);
 	}
-	
-	public boolean isValidType(){
-		if(isTodo()){
+
+	public boolean isValidType() {
+		if (isTodo()) {
 			return true;
-		} else if (isDeadline()){
+		} else if (isDeadline()) {
 			return true;
-		} else if (isEvent()){
+		} else if (isEvent()) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -167,49 +167,43 @@ public class Task{
 	public TaskLabel getTaskLabel() {
 		return taskLabel;
 	}
-	
-	public void setIsOverDue(boolean overDueStatus)	{
+
+	public void setIsOverDue(boolean overDueStatus) {
 		isOverDue = overDueStatus;
 	}
-	
-	public boolean getIsOverDue()	{
+
+	public boolean getIsOverDue() {
 		return isOverDue;
 	}
-	
+
 	/**
-	 * labels:
-	 * 0 - default
-	 * 1 - blue
-	 * 2 - green
-	 * 3 - yellow
-	 * 4 - orange
-	 * 5 - red
-	 * 6 - dark red
+	 * labels: 0 - default 1 - blue 2 - green 3 - yellow 4 - orange 5 - red 6 -
+	 * dark red
 	 */
 	public void setTaskLabel(TaskLabel label) {
 		this.taskLabel = label;
 	}
-	
-	public void setTaskId(int taskId){
+
+	public void setTaskId(int taskId) {
 		this.taskId = taskId;
 	}
-	
-	public int getTaskId(){
+
+	public int getTaskId() {
 		return taskId;
 	}
-	
-	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
+
+	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {
 		taskSorter.sortTasks(allTaskLists);
 	}
-	
-	public static void sortTasksForAgenda(ArrayList<Task> agenda){
+
+	public static void sortTasksForAgenda(ArrayList<Task> agenda) {
 		taskSorter.sortTasksForAgenda(agenda);
 	}
-	
+
 	/*
-	 * the following methods are to be used only for non hashing purposes, if a hashset is to be used,
-	 * DO NOT EDIT any of the tasks inside this hashset for it will cause a memory leak
-	 * AUTO-GENEERATED by Eclipse
+	 * the following methods are to be used only for non hashing purposes, if a
+	 * hashset is to be used, DO NOT EDIT any of the tasks inside this hashset
+	 * for it will cause a memory leak AUTO-GENEERATED by Eclipse
 	 */
 	@Override
 	public int hashCode() {

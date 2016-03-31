@@ -10,7 +10,8 @@ import java.util.LinkedList;
 
 public interface LogicTaskModification {
 
-	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels) throws LabelExceedTotalException {
+	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels)
+			throws LabelExceedTotalException {
 		Task editedTask = new Task(aTask);
 		for (int i = 1; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
@@ -39,12 +40,15 @@ public interface LogicTaskModification {
 		return editedTask;
 	}
 
-	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels) throws LabelExceedTotalException	{
-		for (TaskLabel aLabel : taskLabels)	{
-			if (aLabel.getLabelName().equals(name))	{
-				return TaskLabel.duplicateTaskLabel(aLabel);
-			} else if (name == null)	{
-				return TaskLabel.getDefaultLabel();
+	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels)
+			throws LabelExceedTotalException {
+		if (!taskLabels.isEmpty()) {
+			for (TaskLabel aLabel : taskLabels) {
+				if (aLabel.getLabelName().equals(name)) {
+					return TaskLabel.duplicateTaskLabel(aLabel);
+				} else if (name == null) {
+					return TaskLabel.getDefaultLabel();
+				}
 			}
 		}
 		TaskLabel newLabel = TaskLabel.getNewLabel(name);
