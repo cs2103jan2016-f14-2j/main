@@ -89,18 +89,22 @@ public class LogicLabel {
 	}
 
 	private boolean isContainColour(String[] variableArray, ArrayList<TaskLabel> taskLabels) {
-		for (int i = 0; i < taskLabels.size(); i++) {
-			if (colourToIDMap.get(variableArray[1]).equals(taskLabels.get(i).getColourId())) {
-				return true;
+		if (!taskLabels.isEmpty()) {
+			for (int i = 0; i < taskLabels.size(); i++) {
+				if (colourToIDMap.get(variableArray[1]).equals(taskLabels.get(i).getColourId())) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	private boolean isContainName(String[] variableArray, ArrayList<TaskLabel> taskLabels) {
-		for (TaskLabel aLabel : taskLabels) {
-			if (variableArray[0].equals(aLabel.getLabelName())) {
-				return true;
+		if (!taskLabels.isEmpty()) {
+			for (TaskLabel aLabel : taskLabels) {
+				if (variableArray[0].equals(aLabel.getLabelName())) {
+					return true;
+				}
 			}
 		}
 		return false;
