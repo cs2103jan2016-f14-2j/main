@@ -36,7 +36,7 @@ public class StorageTestSaveLoadMechanics {
 	
 	public void testIsSaved() throws IOException {
 		ArrayList<ArrayList<Task>> tasks = ExampleTasks.getExampleTasks();
-		boolean saveState = saveUnit.isSavedTest(tasks);
+		boolean saveState = saveUnit.isSavedTasksTest(tasks);
 		assertTrue("this should return true if saved", saveState);
 	}
 	
@@ -51,12 +51,10 @@ public class StorageTestSaveLoadMechanics {
 		String[] floating3Check = {"Learn to play the harmonica"};
 		String[] floating4Check = {"go through my anime backlog"};
 		String floating1Title = floating.get(0).getTitle();
-		String floating1Category = floating.get(0).getCategory();
 		String floating2Title = floating.get(1).getTitle();
 		String floating3Title = floating.get(2).getTitle();
 		String floating4Title = floating.get(3).getTitle();
 		assertEquals("true if same", floating1Check[0], floating1Title);
-		assertEquals("true if same", floating1Check[1], floating1Category);
 		assertEquals("true if same", floating2Check[0], floating2Title);
 		assertEquals("true if same", floating3Check[0], floating3Title);
 		assertEquals("true if same", floating4Check[0], floating4Title);
@@ -72,14 +70,11 @@ public class StorageTestSaveLoadMechanics {
 		String deadline2ToTime = deadline.get(1).getFromTimeString();
 		String deadline3Title = deadline.get(2).getTitle();
 		String deadline3ToTime = deadline.get(2).getFromTimeString();
-		String deadline3Category = deadline.get(2).getCategory();
 		String deadline4Title = deadline.get(3).getTitle();
 		String deadline4ToTime = deadline.get(3).getFromTimeString();
-		String deadline4Category = deadline.get(3).getCategory();
 		String deadline4Description = deadline.get(3).getDescription();
 		String deadline5Title = deadline.get(4).getTitle();
 		String deadline5ToTime = deadline.get(4).getFromTimeString();
-		String deadline5Category = deadline.get(4).getCategory();
 		String deadline5Description = deadline.get(4).getDescription();
 
 		assertEquals("true if same", deadline3Check[0], deadline1Title);
@@ -88,21 +83,18 @@ public class StorageTestSaveLoadMechanics {
 		assertEquals("true if same", deadline4Check[1], deadline2ToTime);
 		assertEquals("true if same", deadline2Check[0], deadline3Title);
 		assertEquals("true if same", deadline2Check[2], deadline3ToTime);
-		assertEquals("true if same", deadline2Check[1], deadline3Category);
 		assertEquals("true if same", deadline5Check[0], deadline4Title);
 		assertEquals("true if same", deadline5Check[3], deadline4ToTime);
-		assertEquals("true if same", deadline5Check[2], deadline4Category);
 		assertEquals("true if same", deadline5Check[1], deadline4Description);
 		assertEquals("true if same", deadline1Check[0], deadline5Title);
 		assertEquals("true if same", deadline1Check[3], deadline5ToTime);
-		assertEquals("true if same", deadline1Check[2], deadline5Category);
 		assertEquals("true if same", deadline1Check[1], deadline5Description);
 		
-		String[] event2Check = {"eat with the bros", "the same place", "", "2016-01-10T15:00", "2016-01-10T17:00"};
-		String[] event5Check = {"prepare for chap goh mei dinner", "", "family time", "2016-02-16T12:00", "2016-02-16T15:00"};
-		String[] event1Check = {"Makan here for chap goh mei", "at cousin's place", "family time", "2016-02-16T19:00", "2016-02-16T22:00"};
-		String[] event4Check = {"business workshop", "", "", "2016-06-16T12:00", "2016-06-16T14:00"};
-		String[] event3Check = {"Attend seminar", "at SOC", "", "2016-08-11T11:00", "2016-08-11T17:00"};
+		String[] event2Check = {"eat with the bros", "the same place", "default 0", "2016-01-10T15:00", "2016-01-10T17:00"};
+		String[] event5Check = {"prepare for chap goh mei dinner", "", "default 0", "2016-02-16T12:00", "2016-02-16T15:00"};
+		String[] event1Check = {"Makan here for chap goh mei", "at cousin's place", "default 0", "2016-02-16T19:00", "2016-02-16T22:00"};
+		String[] event4Check = {"business workshop", "", "default 0", "2016-06-16T12:00", "2016-06-16T14:00"};
+		String[] event3Check = {"Attend seminar", "at SOC", "default 0", "2016-08-11T11:00", "2016-08-11T17:00"};
 		
 		String[] event1Actual = loadUnit.testExtractTasksToStringArray(event.get(0));
 		String[] event2Actual = loadUnit.testExtractTasksToStringArray(event.get(1));

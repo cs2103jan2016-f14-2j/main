@@ -11,8 +11,6 @@ import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
 
 public class TaskLabel {
 	//Colour counter determines the colour of the label next, must be in range [1, 6]
-	private static int colourCounter = 1;
-	
 	private String labelName;
 	private int colourId;
 	private int labelId;
@@ -28,8 +26,8 @@ public class TaskLabel {
 	}
 	
 	public static TaskLabel getNewLabel(String name){
-		TaskLabel newLabel = getNewLabel(name, colourCounter);
-		updateColourCounter();
+		int colourId = getNextLabelColourId();
+		TaskLabel newLabel = getNewLabel(name, colourId);
 		return newLabel;
 	}
 	
@@ -52,19 +50,23 @@ public class TaskLabel {
 	}
 
 	private static int getNextLabelId() {
-		SecureRandom randomGen = new SecureRandom();
-		int id = randomGen.nextInt(Integer.MAX_VALUE);
-		while(id==0){
-			id = randomGen.nextInt(Integer.MAX_VALUE);
-		}
+		int id = generateRandomIntegers(Integer.MAX_VALUE);
 		return id;
 	}
 	
-	private static void updateColourCounter(){
-		TaskLabel.colourCounter++;
-		if(TaskLabel.colourCounter>6){
-			TaskLabel.colourCounter = 1;
+	private static int getNextLabelColourId(){
+		int colourId = generateRandomIntegers(7);
+		return colourId;
+	}
+	
+	//generates a number from [1, bound), bound exclusive
+	private static int generateRandomIntegers(int bound){
+		SecureRandom randomGen = new SecureRandom();
+		int id = randomGen.nextInt(bound);
+		while(id==0){
+			id = randomGen.nextInt(bound);
 		}
+		return id;
 	}
 
 	public String getLabelName() {

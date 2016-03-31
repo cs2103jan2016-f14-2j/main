@@ -3,11 +3,12 @@ package org.jimple.planner.storage.test;
 import java.util.ArrayList;
 
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 
 public class ExampleTasks {
 	public static ArrayList<Task> getExampleTodos(){
 		Task floating1 = new Task("Go exercise, you fatty");
-		floating1.setCategory("Keep fit");
+		floating1.setDescription("Keep fit");
 		Task floating2 = new Task("Read Lord of The Rings");
 		Task floating3 = new Task("Learn to play the harmonica");
 		Task floating4 = new Task("go through my anime backlog");
@@ -23,10 +24,9 @@ public class ExampleTasks {
 	public static ArrayList<Task> getExampleDeadline(){
 		Task deadline1 = new Task("Do 2100 assignment");
 		deadline1.setDescription("due very soon");
-		deadline1.setCategory("Homework");
 		deadline1.setFromDate("2016-07-29T23:59");
 		Task deadline2 = new Task("Hand in cs2103 progress report");
-		deadline2.setCategory("Homework");
+		deadline2.setDescription("Homework");
 		deadline2.setFromDate("2016-03-09T23:59");
 		Task deadline3 = new Task("submit report before countdown party");
 		deadline3.setFromDate("2015-12-31T23:59");
@@ -34,7 +34,6 @@ public class ExampleTasks {
 		deadline4.setFromDate("2016-03-06T23:59");
 		Task deadline5 = new Task("register for Orbital");
 		deadline5.setDescription("keep my summer occupied");
-		deadline5.setCategory("Self-learning");
 		deadline5.setFromDate("2016-05-15T16:00");
 		
 		ArrayList<Task> deadline = new ArrayList<Task>();
@@ -49,7 +48,6 @@ public class ExampleTasks {
 	public static ArrayList<Task> getExampleEvents(){
 		Task event1 = new Task("Makan here for chap goh mei");
 		event1.setDescription("at cousin's place");
-		event1.setCategory("family time");
 		event1.setFromDate("2016-02-16T19:00");
 		event1.setToDate("2016-02-16T22:00");
 		Task event2 = new Task("eat with the bros");
@@ -64,7 +62,6 @@ public class ExampleTasks {
 		event4.setFromDate("2016-06-16T12:00");
 		event4.setToDate("2016-06-16T14:00");
 		Task event5 = new Task("prepare for chap goh mei dinner");
-		event5.setCategory("family time");
 		event5.setFromDate("2016-02-16T12:00");
 		event5.setToDate("2016-02-16T15:00");
 

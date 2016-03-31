@@ -225,7 +225,8 @@ public class StorageLoad implements StorageLoadInterface{
 		String[] result = new String[6];
 		result[0] = task.getTitle();
 		result[1] = task.getDescription();
-		//result[2] = String.valueOf(task.getLabel()); //TODO label field
+		TaskLabel taskLabel = task.getTaskLabel();
+		result[2] = taskLabel.getLabelName() + " " + String.valueOf(taskLabel.getColourId());
 		result[3] = task.getFromTimeString();
 		result[4] = task.getToTimeString();
 		result[5] = task.getType();
