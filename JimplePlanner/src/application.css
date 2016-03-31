@@ -48,6 +48,15 @@
 	-fx-font-size: 12px;
 }
 
+/* TEMP */
+.popup{
+	-fx-background-radius: 10px;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-radius: 10px;
+}
+
+
 #static {
     -fx-background-color: transparent, -fx-background;
     -fx-background-color: transparent;
@@ -62,6 +71,7 @@
 
 #event{
 	/* -fx-text-fill: red; */
+	-fx-padding: 20px 10px;
 }
 
 /*

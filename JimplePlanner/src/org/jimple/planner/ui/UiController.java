@@ -307,7 +307,7 @@ public class UiController extends myObserver implements Initializable {
 		ft.play();
 	}
 	
-	public void fitToAnchorPane(Node node) {
+	public static void fitToAnchorPane(Node node) {
 		AnchorPane.setTopAnchor(node, 0.0);
 		AnchorPane.setLeftAnchor(node, 0.0);
 		AnchorPane.setRightAnchor(node, 0.0);
