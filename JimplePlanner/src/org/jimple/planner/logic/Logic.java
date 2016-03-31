@@ -101,7 +101,7 @@ public class Logic {
 			case Constants.STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
 						tempHistory, taskLabels, undoTasks);
-				feedback[1] = "";
+				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_SEARCH:
 				searchResults = searcher.searchWord(parsedInput.getVariableArray()[0], todo, deadlines, events);
