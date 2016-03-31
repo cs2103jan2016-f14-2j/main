@@ -29,7 +29,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD task FROM 1pm TO 4pm");
+			testStruct = testParser.parseInput("ADD task ON 12/13/2015");
 			String[] test = testStruct.getVariableArray();
 			System.out.println("A");
 			for (int i = 0; i < test.length; i++) {
