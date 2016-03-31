@@ -370,7 +370,8 @@ public class TimeParser {
 		return false;
 	}
 
-	private boolean parseIfIsColonTimeFormat(String input) throws InvalidDateTimeFieldException {
+	// Parses time in hh:mm format. E.g 00:00, 12:34, 23:59.
+	private boolean parseIfIsColonTimeFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
 		if (input.contains(":")) {
 			String[] splitTime = input.split(":");
 			if (splitTime.length == 2) {
@@ -379,12 +380,12 @@ public class TimeParser {
 				if (!isANumber(inputHour) || !isValidHour(inputHour)) {
 					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid time for hour.");
 				} else {
-					hour = Integer.parseInt(inputHour);
+					setField("hour", Integer.parseInt(inputHour));
 				}
 				if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
 					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
 				} else {
-					minute = Integer.parseInt(inputMinute);
+					setField("minute", Integer.parseInt(inputMinute));
 				}
 				return true;
 			} else {
@@ -394,7 +395,8 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean parseIfIsForwardSlashDateFormat(String input) throws InvalidDateTimeFieldException {
+	// Parses dates in dd/mm, dd/mm/yy, dd/mm/yyy, dd/mm/yyyy format. E.g 12/5/16, 12/05/2016, 12/05.
+	private boolean parseIfIsForwardSlashDateFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
 		if (input.contains("/")) {
 			String[] splitDate = input.split("/");
 			if (splitDate.length == 2) {
@@ -408,24 +410,24 @@ public class TimeParser {
 		return false;
 	}
 	
-	private boolean parseDayAndMonth(String input) throws InvalidDateTimeFieldException {
+	private boolean parseDayAndMonth(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
 		String[] splitDate = input.split("/");
 		String inputDay = splitDate[0];
 		String inputMonth = splitDate[1];
 		if (!isANumber(inputDay)) {
 			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\" Please input a valid time for day.");
 		} else {
-			day = Integer.parseInt(inputDay);
+			setField("day", Integer.parseInt(inputDay));
 		}
 		if (!isANumber(inputMonth) || !isValidMonth(inputMonth)) {
 			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\" Please input a valid time for month.");
 		} else {
-			month = Integer.parseInt(inputMonth);
+			setField("month", Integer.parseInt(inputMonth));
 		}
 		return true;
 	}
 	
-	private boolean parseDayMonthAndYear(String input) throws InvalidDateTimeFieldException {
+	private boolean parseDayMonthAndYear(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
 		String[] splitDate = input.split("/");
 		String inputDay = splitDate[0];
 		String inputMonth = splitDate[1];
@@ -433,22 +435,22 @@ public class TimeParser {
 		if (!isANumber(inputDay)) {
 			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\" Please input a valid time for day.");
 		} else {
-			day = Integer.parseInt(inputDay);
+			setField("day", Integer.parseInt(inputDay));
 		}
 		if (!isANumber(inputMonth) || !isValidMonth(inputMonth)) {
 			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\" Please input a valid time for month.");
 		} else {
-			month = Integer.parseInt(inputMonth);
+			setField("month", Integer.parseInt(inputMonth));
 		}
 		if (!isANumber(inputYear)) {
 			throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\" Please input a valid time for year.");
 		} else {
 			int intYear = Integer.parseInt(inputYear);
 			if (isAfterCurrentYear(intYear)) {
-				year = intYear;
+				setField("year", intYear);
 			} else {
 				if (year > 999) {
-					year = 2000 + intYear;
+					setField("year", 2000 + intYear);
 				} else {
 					throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\" is before the current year.");
 				}
