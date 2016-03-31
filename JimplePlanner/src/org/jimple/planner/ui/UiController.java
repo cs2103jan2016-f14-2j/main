@@ -43,6 +43,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -66,6 +67,9 @@ public class UiController extends myObserver implements Initializable {
 
 	@FXML
 	Label messagePrompt;
+	
+	@FXML
+	VBox todayEmpty, ongoingEmpty, upcomingEmpty;
 
 	@FXML
 	AnchorPane mainController;
@@ -119,6 +123,9 @@ public class UiController extends myObserver implements Initializable {
 
 	@FXML
 	AnchorPane popupLayer;
+	
+	@FXML
+	AnchorPane searchBox, searchContent;
 
 	@FXML
 	VBox overlay;
@@ -127,7 +134,7 @@ public class UiController extends myObserver implements Initializable {
 	Label clock;
 	
 	@FXML
-	ImageView closeButton;
+	ImageView closeButton, searchCloseButton;
 
 
 
@@ -154,7 +161,7 @@ public class UiController extends myObserver implements Initializable {
                 commandBox,
                 Constants.STRING_ADD, Constants.STRING_EDIT,
                 Constants.STRING_DELETE, Constants.STRING_SEARCH,
-                Constants.STRING_UNDO, Constants.STRING_HELP,
+                Constants.STRING_UNDOTASK, Constants.STRING_HELP,
                 Constants.STRING_CHANGEDIR, Constants.STRING_CHECKDIR);
 		
 		Platform.runLater(new Runnable() {
@@ -237,10 +244,7 @@ public class UiController extends myObserver implements Initializable {
 			todayPane.getChildren().add(list);
 		}
 		else {
-			Label label = new Label("you have no events today!");
-			label.setLayoutX(192);
-			label.setLayoutY(196);
-			todayPane.getChildren().add(label);
+			todayPane.getChildren().add(todayEmpty);
 		}
 		
 		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_NOW);
@@ -251,10 +255,7 @@ public class UiController extends myObserver implements Initializable {
 			nowPane.getChildren().add(list);
 		}
 		else {
-			Label label = new Label("nothing going on now!");
-			label.setLayoutX(62);
-			label.setLayoutY(81);
-			nowPane.getChildren().add(label);
+			nowPane.getChildren().add(ongoingEmpty);
 		}
 		
 		listFormatter.formatList(logic.getDeadlinesList(),Constants.TYPE_UPCOMING);
@@ -265,10 +266,7 @@ public class UiController extends myObserver implements Initializable {
 			upcomingPane.getChildren().add(list);
 		}
 		else {
-			Label label = new Label("no more deadlines!");
-			label.setLayoutX(71);
-			label.setLayoutY(81);
-			upcomingPane.getChildren().add(label);
+			upcomingPane.getChildren().add(upcomingEmpty);
 		}
 	}
 	
@@ -301,7 +299,7 @@ public class UiController extends myObserver implements Initializable {
 	 * FXML LAYOUT RELATED:
 	 * 
 	========================================*/
-	private void fadeOut(float sec, Node item) {
+	private void fadeOut(float sec, Node item){
 		FadeTransition ft = new FadeTransition(Duration.millis(sec*1000), item);
 		ft.setFromValue(1.0);
 		ft.setToValue(0);
@@ -450,6 +448,14 @@ public class UiController extends myObserver implements Initializable {
 	    // do what you have to do
 	    stage.close();
 	}
+
+	
+	@FXML
+	private void searchCloseButtonAction(){
+		popupLayer.getChildren().clear();
+		overlay.setVisible(false);
+	}	
+
 	
 	private static final class DragContext {
         public double mouseAnchorX;

@@ -94,11 +94,11 @@ public class LogicTest {
 	public void ShouldReturnChangedLabel() throws LabelExceedTotalException, IOException	{
 		taskLabels.add(TaskLabel.getNewLabel("food"));
 		taskLabels.add(TaskLabel.getNewLabel("work"));
-		String[] variableArray1 = {"food", "orange"};
-		String[] variableArray2 = {"exercise", "green"};
-		String[] variableArray3 = {"stuff", "yellow"};
-		assertEquals("food name changed to orange", testLabeler.changeLabel(testStore, variableArray1, taskLabels, floating, deadlines, events));
-		assertEquals("green colour changed to exercise", testLabeler.changeLabel(testStore, variableArray2, taskLabels, floating, deadlines, events));
+		String[] variableArray1 = {"food", null, "red"};
+		String[] variableArray2 = {"work", "exercise", "null"};
+		String[] variableArray3 = {"stuff", "wrong", "wrong"};
+		assertEquals("food label changed", testLabeler.changeLabel(testStore, variableArray1, taskLabels, floating, deadlines, events));
+		assertEquals("work label changed", testLabeler.changeLabel(testStore, variableArray2, taskLabels, floating, deadlines, events));
 		assertEquals("label could not be changed", testLabeler.changeLabel(testStore, variableArray3, taskLabels, floating, deadlines, events));
 		
 		taskLabels.clear();

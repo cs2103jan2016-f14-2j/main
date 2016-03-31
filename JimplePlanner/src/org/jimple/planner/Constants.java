@@ -80,7 +80,7 @@ public final class Constants {
 	public static final String STRING_DELETE = "DELETE";
 	public static final String STRING_EDIT = "EDIT";
 	public static final String STRING_CHANGEDIR = "CHANGEDIR";
-	public static final String STRING_UNDO = "UNDO";
+	public static final String STRING_UNDOTASK = "UNDOTASK";
 	public static final String STRING_HELP = "HELP";
 	public static final String STRING_CHECKDIR = "CHECKDIR";
 	public static final String STRING_EDITLABEL = "EDITLABEL";
@@ -91,22 +91,26 @@ public final class Constants {
 	public static final String EDIT_HELP_HEADER = "Edit a current task:\n";
 	public static final String SEARCH_HELP_HEADER = "Search tasks:\n";
 	public static final String DELETE_HELP_HEADER = "Delete a task:\n";
-	public static final String UNDO_HELP_HEADER = "Undo a task:\n";
+	public static final String UNDOTASK_HELP_HEADER = "Undo a task:\n";
 	public static final String CHANGEDIR_HELP_HEADER = "Change Jimple File Directory:\n";
 	public static final String CHECKDIR_HELP_HEADER = "Check Jimple File Directory:\n";
+	public static final String EDITLABEL_HELP_HEADER = "Edit a label:\n";
+	public static final String DELETELABEL_HELP_HEADER = "Delete a label:\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
-	public static final String ADD_COMMAND_BY = "type \"add\" <your event name> by <time>\n";
-	public static final String ADD_COMMAND_AT = "type \"add\" <your event name> at <time>\n";
-	public static final String ADD_COMMAND_ON = "type \"add\" <your event name> on <time>\n";
-	public static final String ADD_COMMAND_FROMTO = "type \"add\" <your event> from <time> to <time>\n\n";
-	public static final String EDIT_COMMAND_ONE_TIMING = "type \"edit\" <taskID> \"name\" <your event title> \"time\" by <date/time>\n";
-	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"edit\" <taskID> \"name\" <your event title> \"time\" from <date/time> to <date/time>\n\n";
-	public static final String DELETE_COMMAND = "type \"delete\" <taskID>\n\n";
-	public static final String SEARCH_COMMAND = "type \"search\" <task name>\n\n";
-	public static final String UNDO_COMMAND = "type \"undo\"\n\n";
-	public static final String CHANGEDIR_COMMAND = "type \"changedir\" <full path directory>\n\n";
-	public static final String CHECKDIR_COMMAND = "type \"checkdir\"\n";
+	public static final String ADD_COMMAND_BY = "type \"ADD\" <your event name> BY <time>\n";
+	public static final String ADD_COMMAND_AT = "type \"ADD\" <your event name> AT <time>\n";
+	public static final String ADD_COMMAND_ON = "type \"ADD\" <your event name> ON <time>\n";
+	public static final String ADD_COMMAND_FROMTO = "type \"ADD\" <your event> FROM <time> TO <time>\n\n";
+	public static final String EDIT_COMMAND_ONE_TIMING = "type \"EDIT\" <taskID> \"NAME\" <your event title> \"TIME\" BY <date/time>\n";
+	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"EDIT\" <taskID> \"NAME\" <your event title> \"TIME\" FROM <date/time> TO <date/time>\n\n";
+	public static final String DELETE_COMMAND = "type \"DELETE\" <taskID>\n\n";
+	public static final String SEARCH_COMMAND = "type \"SEARCH\" <task name>\n\n";
+	public static final String UNDOTASK_COMMAND = "type \"UNDOTASK\"\n\n";
+	public static final String CHANGEDIR_COMMAND = "type \"CHANGEDIR\" <full path directory>\n\n";
+	public static final String CHECKDIR_COMMAND = "type \"CHECKDIR\"\n\n";
+	public static final String EDITLABEL_COMMAND = "type \"EDITLABEL\" <old label name/colour> NAME <new label name> COLOUR <new label colour>\n\n";
+	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n";
 	
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
@@ -127,8 +131,7 @@ public final class Constants {
 	public static final String DELETED_FEEDBACK = " deleted";
 	public static final String ERROR_DELETED_FEEDBACK = " could not be found";
 	
-	public static final String LABEL_COLOR_FEEDBACK = " colour changed to ";
-	public static final String LABEL_NAME_FEEDBACK = " name changed to ";
+	public static final String LABEL_FEEDBACK = " label changed";
 	public static final String ERROR_LABEL_FEEDBACK = "label could not be changed";
 	
 	public static final String LABEL_DELETED_FEEDBACK = "label is deleted";

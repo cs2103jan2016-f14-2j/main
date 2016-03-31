@@ -19,23 +19,18 @@ public class UiListCellEvent extends ListCell<Task>{
 	@FXML
 	Label title, date, id, label;
 	@FXML
-	HBox hBox;					
-	@FXML
-	VBox vbox;					
-	@FXML
-	Region spacer;
-	@FXML
 	AnchorPane anchorpane;
 
 	FXMLLoader fxmlLoader;	
 	@Override
 	protected void updateItem(Task item, boolean bln) {
 		super.updateItem(item, bln);
+		this.getStyleClass().add("listcell");
 		if (item != null) {
 			// STATIC
 			if (item.getType().equals(Constants.TYPE_STATIC)) {
-				this.getStyleClass().clear();
-				this.getStyleClass().add(Constants.TYPE_STATIC);
+//				this.getStyleClass().clear();
+				this.setId(Constants.TYPE_STATIC);
 
 				fxmlLoader = new FXMLLoader(getClass().getResource("staticCellLayout.fxml"));
 				fxmlLoader.setController(this);
@@ -49,8 +44,8 @@ public class UiListCellEvent extends ListCell<Task>{
 
 			// EVENT
 			else {
-				this.getStyleClass().clear();
-				this.getStyleClass().add(Constants.TYPE_EVENT);
+//				this.getStyleClass().clear();
+				this.setId(Constants.TYPE_EVENT);
 				fxmlLoader = new FXMLLoader(getClass().getResource("eventCellLayout.fxml"));
 				fxmlLoader.setController(this);
 				try {
@@ -60,15 +55,18 @@ public class UiListCellEvent extends ListCell<Task>{
 				}
 				if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT))
 					label.setVisible(false);
+				label.setText(item.getTaskLabel().getLabelName());
+				label.setId("color" + item.getTaskLabel().getColourId());
 				title.setText(item.getTitle());
 				id.setText(String.format("%d", item.getTaskId()));
-				label.setText(item.getTaskLabel().getLabelName());
-				label.getStyleClass().add("color" + item.getTaskLabel().getColourId());
 				date.setText(String.format("%s %s to %s %s",
 						item.getPrettyFromDate(),
 						item.getPrettyFromTime(),
 						item.getPrettyToDate(),
 						item.getPrettyToTime()));
+				title.setId("event");
+				id.setId("event");
+				date.setId("event");
 			}
 			setGraphic(anchorpane);
 		}
