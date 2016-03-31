@@ -29,7 +29,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD magic FROM 31 mar TO 1 april 16:00");
+			testStruct = testParser.parseInput("ADD taaaaa BY 5 apr");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
