@@ -95,7 +95,7 @@ public class UiPrompt extends UiController{
 
 	
 	protected void searchPrompt() {
-		controller.listFormatter.formatList(logic.getSearchList(),Constants.TYPE_SEARCH);
+		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
 		ListView<Task> listView = controller.listFormatter.getFormattedList();
 		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
 		//		fitToAnchorPane(listView);
