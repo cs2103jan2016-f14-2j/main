@@ -64,6 +64,60 @@
 	/* -fx-text-fill: red; */
 }
 
+/*
+*	DEADLINE COLORS
+*/
+
+
+#green{
+	-fx-background-color: #D8C39E;
+	
+}
+
+#green:selected{
+	-fx-background-color: #C19F64;
+	
+}
+
+#yellow{
+	-fx-background-color: #F9DA61;
+	
+}
+
+#yellow:selected{
+	-fx-background-color: #DABF24;
+	
+}
+
+#orange{
+	-fx-background-color: #F9A01B;
+	
+}
+
+#orange:selected{
+	-fx-background-color: #F5670B;
+	
+}
+
+#red{
+	-fx-background-color: #CF3423;
+	
+}
+
+#red:selected{
+	-fx-background-color: #B2150E;
+	
+}
+
+#darkred{
+	-fx-background-color: #9F2214;
+	
+}
+
+#darkred:selected{
+	-fx-background-color: #650E08;
+	
+}
 
 
 
