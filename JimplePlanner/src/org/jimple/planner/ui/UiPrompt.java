@@ -1,21 +1,31 @@
 package org.jimple.planner.ui;
 
+import java.io.IOException;
+
 import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class UiPrompt extends UiController{
+	@FXML
+	AnchorPane searchBox, searchContent;	
+	FXMLLoader fxmlLoader;
+	
 	protected UiController controller;
 	
 	
@@ -92,37 +102,47 @@ public class UiPrompt extends UiController{
 //		closebtn.requestFocus();		
 	}
 	
-
-	
 	protected void searchPrompt() {
 		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
 		ListView<Task> listView = controller.listFormatter.getFormattedList();
 		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
-		//		fitToAnchorPane(listView);
 		
-		Pane popup = new Pane();
-		VBox dialogVbox = new VBox(10);
-		HBox dialogHbox = new HBox(10);
-		Button closebtn = new Button("x");
-		Region spacer = new Region();
-		VBox.setVgrow(spacer, Priority.ALWAYS);
-		HBox.setHgrow(spacer, Priority.ALWAYS);
-		closebtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				controller.popupLayer.getChildren().clear();
-				controller.overlay.setVisible(false);
-			}
-		});
-		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
-		dialogVbox.getChildren().add(closeBar);
-		dialogVbox.getChildren().add(listView);
-		dialogVbox.getChildren().add(dialogHbox);
-		dialogVbox.setPadding(new Insets(10));
-		popup.getChildren().add(dialogVbox);
-		popup.getStyleClass().add(Constants.TYPE_POPUP);
+//		
+//		Pane popup = new Pane();
+//		VBox dialogVbox = new VBox(10);
+//		HBox dialogHbox = new HBox(10);
+//		Button closebtn = new Button("x");
+//		Region spacer = new Region();
+//		VBox.setVgrow(spacer, Priority.ALWAYS);
+//		HBox.setHgrow(spacer, Priority.ALWAYS);
+//		controller.searchCloseButton.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				controller.popupLayer.getChildren().clear();
+//				controller.overlay.setVisible(false);
+//			}
+//		});
+//		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
+//		dialogVbox.getChildren().add(closeBar);
+//		dialogVbox.getChildren().add(listView);
+//		dialogVbox.getChildren().add(dialogHbox);
+//		dialogVbox.setPadding(new Insets(10));
+//		popup.getChildren().add(dialogVbox);
+//		popup.getStyleClass().add(Constants.TYPE_POPUP);
+////
+//
+//		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
+//		ListView<Task> listView = controller.listFormatter.getFormattedList();
+//		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
+//		
+//		searchContent.getChildren().add(listView);
+		
+
+		controller.searchContent.getChildren().clear();
+		controller.searchContent.getChildren().add(listView);
 		controller.popupLayer.getChildren().clear();
-		controller.popupLayer.getChildren().add(makeDraggable(popup));
+		controller.popupLayer.getChildren().add(makeDraggable(controller.searchBox));
+//		controller.popupLayer.getChildren().add(makeDraggable(searchBox));
 //		overlay.setVisible(true);
 //		closebtn.requestFocus();
 	}	

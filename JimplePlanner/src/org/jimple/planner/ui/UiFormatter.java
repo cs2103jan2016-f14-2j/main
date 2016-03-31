@@ -30,10 +30,10 @@ public class UiFormatter {
 		this.arrList = newList;
 		formattedList.clear();
 
-		if (arrList.isEmpty()) {
-			formatEmptyList();
-			return;
-		}
+//		if (arrList.isEmpty()) {
+//			formatEmptyList();
+//			return;
+//		}
 		formatType(listType);
 	}
 
@@ -67,7 +67,7 @@ public class UiFormatter {
 		switch (listType) {
 		case Constants.TYPE_TODAY:
 			addTodayTasksToFormattedDateList();
-			todayCellFormat();
+			agendaCellFormat();
 			break;
 		case Constants.TYPE_NOW:
 			addNowTasksToFormattedDateList();
@@ -83,19 +83,19 @@ public class UiFormatter {
 			break;
 		case Constants.TYPE_DEADLINE:
 			addTasksToFormattedDateList();
-			deadlinesCellFormat();
+			agendaCellFormat();
 			break;
 		case Constants.TYPE_EVENT:
 			addTasksToFormattedDateList();
-			eventsCellFormat();
+			agendaCellFormat();
 			break;
 		case Constants.TYPE_TODO:
 			addTasksToFormattedList();
-			todoCellFormat();
+			agendaCellFormat();
 			break;
 		case Constants.TYPE_SEARCH:
 			addTasksToFormattedList();
-			searchCellFormat();
+			agendaCellFormat();
 			break;
 		default:
 			formatEmptyList();
@@ -131,7 +131,11 @@ public class UiFormatter {
 
 	private void addTodayTasksToFormattedDateList() {
 		for (Task task : arrList) {
-			if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()
+			if(task.getType().equals(Constants.TYPE_EVENT) && LocalDateTime.now().getDayOfYear() == task.getToTime().getDayOfYear()
+					&& timeDifference(task.getToTime()) >= 0){
+				formattedList.add(task);
+			}
+			else if (LocalDateTime.now().getDayOfYear() == task.getFromTime().getDayOfYear()
 					&& timeDifference(task.getFromTime()) >= 0) {
 				formattedList.add(task);
 			}

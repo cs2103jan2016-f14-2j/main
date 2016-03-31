@@ -11,9 +11,10 @@ public class UiListCellSearch extends ListCell<Task> {
 	@Override
 	protected void updateItem(Task item, boolean bln) {
 		super.updateItem(item, bln);
+		this.getStyleClass().add("listcell");
 		if (item != null) {
 			Text title = new Text(item.getTitle());
-			title.getStyleClass().add("fancytext");
+			title.setId("fancytext");
 			VBox vBox = new VBox(title);
 			HBox hBox = new HBox(new Text(String.format("#%d", item.getTaskId())), vBox);
 			hBox.setSpacing(10);

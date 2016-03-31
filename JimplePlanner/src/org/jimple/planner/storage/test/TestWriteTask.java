@@ -18,20 +18,21 @@ public class TestWriteTask {
 	@Test
 	public void writeTasksTest1() {
 		String[] linesToCheck = {
-				"/:title:Go exercise, you fatty//:cat:Keep fit/",
-				"/:title:Read Lord of The Rings/",
-				"/:title:Learn to play the harmonica/",
-				"/:title:go through my anime backlog/",
-				"/:title:submit report before countdown party//:from:2015-12-31T23:59/",
-				"/:title:deadline for GER1000 quiz//:from:2016-03-06T23:59/",
-				"/:title:Hand in cs2103 progress report//:cat:Homework//:from:2016-03-09T23:59/",
-				"/:title:register for Orbital//:desc:keep my summer occupied//:cat:Self-learning//:from:2016-05-15T16:00/",
-				"/:title:Do 2100 assignment//:desc:due very soon//:cat:Homework//:from:2016-07-29T23:59/",
-				"/:title:eat with the bros//:desc:the same place//:from:2016-01-10T15:00//:to:2016-01-10T17:00/",
-				"/:title:prepare for chap goh mei dinner//:cat:family time//:from:2016-02-16T12:00//:to:2016-02-16T15:00/",
-				"/:title:Makan here for chap goh mei//:desc:at cousin's place//:cat:family time//:from:2016-02-16T19:00//:to:2016-02-16T22:00/",
-				"/:title:business workshop//:from:2016-06-16T12:00//:to:2016-06-16T14:00/",
-				"/:title:Attend seminar//:desc:at SOC//:from:2016-08-11T11:00//:to:2016-08-11T17:00/"
+				"/s/:title:Go exercise, you fatty/s//s/:desc:Keep fit/s/",
+				"/s/:title:Read Lord of The Rings/s/",
+				"/s/:title:Learn to play the harmonica/s/",
+				"/s/:title:go through my anime backlog/s/",
+				"/s/:title:submit report before countdown party/s//s/:from:2015-12-31T23:59/s/",
+				"/s/:title:deadline for GER1000 quiz/s//s/:from:2016-03-06T23:59/s/",
+				"/s/:title:Hand in cs2103 progress report/s//s/:desc:Homework/s//s/:from:2016-03-09T23:59/s/",
+				"/s/:title:register for Orbital/s//s/:desc:keep my summer occupied/s//s/:from:2016-05-15T16:00/s/",
+				"/s/:title:Do 2100 assignment/s//s/:desc:due very soon/s//s/:from:2016-07-29T23:59/s/",
+				"/s/:title:eat with the bros/s//s/:desc:the same place/s//s/:from:2016-01-10T15:00/s//s/:to:2016-01-10T17:00/s/",
+				"/s/:title:prepare for chap goh mei dinner/s//s/:from:2016-02-16T12:00/s//s/:to:2016-02-16T15:00/s/",
+				"/s/:title:Makan here for chap goh mei/s//s/:desc:at cousin's place/s//s/:from:2016-02-16T19:00/s//s/:to:2016-02-16T22:00/s/",
+				"/s/:title:business workshop/s//s/:from:2016-06-16T12:00/s//s/:to:2016-06-16T14:00/s/",
+				"/s/:title:Attend seminar/s//s/:desc:at SOC/s//s/:from:2016-08-11T11:00/s//s/:to:2016-08-11T17:00/s/"
+
 		};
 		StringWriter sw = new StringWriter();
 		BufferedWriter output = new BufferedWriter(sw);
