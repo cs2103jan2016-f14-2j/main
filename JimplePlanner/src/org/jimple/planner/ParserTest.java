@@ -14,7 +14,7 @@ public class ParserTest {
 	public void test() {
 		testParser = new Parser();
 		test0();
-		/*test1(); // Command: command:ADD/name/FROM-TO/category
+		test1(); // Command: command:ADD/name/FROM-TO/category
 		test2(); // Command: command:ADD/name:symbols/FROM-TO/description
 		test3(); // Command: command:ADD/ - exception
 		test4(); // Command: command:delete/index
@@ -23,19 +23,17 @@ public class ParserTest {
 		test7(); // Command: command:ADD/name/on
 		test8(); // Command: command:invalid - exception
 		test9(); // Command: command:ADD/name/at
-		test10(); // Command: command:ADD/name/BY*/
+		test10(); // Command: command:ADD/name/BY
 	}
 	
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD task BY 23:55");
+			testStruct = testParser.parseInput("ADD asdf ON 12.30AM");
 			String[] test = testStruct.getVariableArray();
-			System.out.println("A");
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
 			}
-			System.out.println("B");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
