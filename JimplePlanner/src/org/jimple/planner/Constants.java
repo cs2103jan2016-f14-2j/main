@@ -84,6 +84,7 @@ public final class Constants {
 	public static final String STRING_HELP = "HELP";
 	public static final String STRING_CHECKDIR = "CHECKDIR";
 	public static final String STRING_EDITLABEL = "EDITLABEL";
+	public static final String STRING_DELETELABEL = "DELETELABEL";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
