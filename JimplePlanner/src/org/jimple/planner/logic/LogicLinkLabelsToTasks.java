@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 
-class LogicMasterListCouple {
+class LogicLinkLabelsToTasks {
 	public static void linkTasksToLabels(ArrayList<ArrayList<Task>> allTasks, ArrayList<TaskLabel> labelList){
 		for(ArrayList<Task> taskList: allTasks){
 			for(Task task: taskList){

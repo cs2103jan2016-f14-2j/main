@@ -222,7 +222,7 @@ public class StorageProperties implements StorageTools{
 		} 
 		return currentPath;
 	}
-	
+	//TODO remove all other properties or just create a new property and get prevsavepath and savepath
 	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
 		Properties storageProperties = storageLoad.loadProperties();
 		for(TaskLabel taskLabel: labelLists){
