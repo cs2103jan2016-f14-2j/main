@@ -137,7 +137,7 @@ public class TimeParser {
 				c.add(Calendar.DATE, 1);
 			}
 			setField("day", c.get(Calendar.DAY_OF_MONTH));
-			setField("month", c.get(Calendar.MONTH));
+			setField("month", c.get(Calendar.MONTH) + 1);
 			setField("year", c.get(Calendar.YEAR));
 		}
 		if (!isFieldSet("hour") && !isFieldSet("minute")) {
@@ -377,12 +377,12 @@ public class TimeParser {
 				String inputHour = splitTime[0];
 				String inputMinute = splitTime[1];
 				if (!isANumber(inputHour) || !isValidHour(inputHour)) {
-					throw new InvalidDateTimeFieldException("Invalid input: " + inputHour + " of " + input + ". Please input a valid time for hour.");
+					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid time for hour.");
 				} else {
 					hour = Integer.parseInt(inputHour);
 				}
 				if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
-					throw new InvalidDateTimeFieldException("Invalid input: " + inputMinute + " of " + input + " Please input a valid time for minute.");
+					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
 				} else {
 					minute = Integer.parseInt(inputMinute);
 				}
@@ -413,12 +413,12 @@ public class TimeParser {
 		String inputDay = splitDate[0];
 		String inputMonth = splitDate[1];
 		if (!isANumber(inputDay)) {
-			throw new InvalidDateTimeFieldException("Invalid input: " + inputDay + " of " + input + ". Please input a valid time for day.");
+			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\" Please input a valid time for day.");
 		} else {
 			day = Integer.parseInt(inputDay);
 		}
 		if (!isANumber(inputMonth) || !isValidMonth(inputMonth)) {
-			throw new InvalidDateTimeFieldException("Invalid input: " + inputMonth + " of " + input + " Please input a valid time for month.");
+			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\" Please input a valid time for month.");
 		} else {
 			month = Integer.parseInt(inputMonth);
 		}
