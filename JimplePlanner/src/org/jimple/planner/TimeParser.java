@@ -122,7 +122,6 @@ public class TimeParser {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
 					if (setCalendarField("month", getField("month"))) {
-						System.out.println("A" + c.getTime().getMonth());
 						if (setCalendarField("day", getField("day"))) {
 							return true;
 						}
@@ -474,7 +473,6 @@ public class TimeParser {
 	private boolean parseIfIsDotTimeFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
 		if (input.contains("\\.")) {
 			String[] splitTime = input.split("\\.");
-			System.out.println(splitTime.length);
 			if (splitTime.length == 2) {
 				String inputHour = splitTime[0];
 				String inputMinute = splitTime[1];

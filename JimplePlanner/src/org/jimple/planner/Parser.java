@@ -378,7 +378,6 @@ public class Parser {
 	
 	private boolean isAfterFromDate(Date inputFrom, Calendar inputTo) {
 		boolean case1 = inputFrom.getMonth() < inputTo.get(Calendar.MONTH);
-		System.out.println(inputFrom.getMonth() + " " + inputTo.get(Calendar.MONTH));
 		boolean case2 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() < inputTo.get(Calendar.DAY_OF_MONTH);
 		boolean case3 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() == inputTo.get(Calendar.DAY_OF_MONTH);
 		if (case3) {
