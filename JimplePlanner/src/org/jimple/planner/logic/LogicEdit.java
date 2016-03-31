@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
-import org.jimple.planner.exceptions.InvalidFromAndToTime;
+import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
 import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 public class LogicEdit implements LogicTaskModification, LogicMasterListModification {
@@ -17,7 +17,7 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 	protected String editTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks)
-					throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+					throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		boolean isToDoEditted = false;
 		boolean isWholeDayEditted = false;
 		boolean isEventsEditted = false;
@@ -41,14 +41,14 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
 			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks)
-					throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+					throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
 				Task taskToBeEdited = list.remove(i);
 				Task editedTask = doEdit(variableArray, taskToBeEdited, taskLabels);
 				if (!isFromAndToTimeCorrect(editedTask)) {
 					list.add(taskToBeEdited);
-					throw new InvalidFromAndToTime(Constants.ERROR_WRONG_TIME_FEEDBACK);
+					throw new InvalidFromAndToTimeException(Constants.ERROR_WRONG_TIME_FEEDBACK);
 				}
 				tempHistory.add(taskToBeEdited);
 				undoTasks.add(setNewPreviousTask(Constants.STRING_EDIT, editedTask));
@@ -62,13 +62,13 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
 			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks)
-					throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+					throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, taskLabels, undoTasks);
 	}
 
 	public String testEditTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
-			LinkedList<LogicPreviousTask> undoTasks) throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+			LinkedList<LogicPreviousTask> undoTasks) throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		return editTask(store, variableArray, todo, deadlines, events, tempHistory, taskLabels, undoTasks);
 	}
 

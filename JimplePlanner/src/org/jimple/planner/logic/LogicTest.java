@@ -11,7 +11,7 @@ import org.jimple.planner.Constants;
 import org.jimple.planner.Formatter;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
-import org.jimple.planner.exceptions.InvalidFromAndToTime;
+import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
 import org.jimple.planner.exceptions.LabelExceedTotalException;
 import org.junit.Test;
 import org.jimple.planner.storage.*;
@@ -72,8 +72,6 @@ public class LogicTest {
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
 	
-	
-	
 	/**
 	 * EP: 2 cases
 	 * 1. label is deleted from tasklabels array list and from all current tasks
@@ -90,17 +88,18 @@ public class LogicTest {
 	 * 3. no label to change
 	 * 
 	 * @throws LabelExceedTotalException 
+	 * @throws IOException 
 	 */
 	@Test
-	public void ShouldReturnChangedLabel() throws LabelExceedTotalException	{
+	public void ShouldReturnChangedLabel() throws LabelExceedTotalException, IOException	{
 		taskLabels.add(TaskLabel.getNewLabel("food"));
 		taskLabels.add(TaskLabel.getNewLabel("work"));
 		String[] variableArray1 = {"food", "orange"};
 		String[] variableArray2 = {"exercise", "green"};
 		String[] variableArray3 = {"stuff", "yellow"};
-		assertEquals("food name changed to orange", testLabeler.changeLabel(variableArray1, taskLabels));
-		assertEquals("green colour changed to exercise", testLabeler.changeLabel(variableArray2, taskLabels));
-		assertEquals("label could not be changed", testLabeler.changeLabel(variableArray3, taskLabels));
+		assertEquals("food name changed to orange", testLabeler.changeLabel(testStore, variableArray1, taskLabels, floating, deadlines, events));
+		assertEquals("green colour changed to exercise", testLabeler.changeLabel(testStore, variableArray2, taskLabels, floating, deadlines, events));
+		assertEquals("label could not be changed", testLabeler.changeLabel(testStore, variableArray3, taskLabels, floating, deadlines, events));
 		
 		taskLabels.clear();
 	}
@@ -129,11 +128,11 @@ public class LogicTest {
 	 * undo is for a "delete" command 4. when undo is for a "edit" command 5.
 	 * when delete cache is >20
 	 * 
-	 * @throws InvalidFromAndToTime
+	 * @throws InvalidFromAndToTimeException
 	 * @throws LabelExceedTotalException 
 	 */
 	@Test
-	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		String[] variableArray1 = { "1" };
 		String[] variableArray2 = { "todo", "task to be undone", null, null, null, null };
 		String[] variableArray3 = { "1", "edit task to be undone", null, null, null, null };
@@ -182,7 +181,7 @@ public class LogicTest {
 	 * edit
 	 */
 	@Test
-	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		String[] variableArray = { "1", "task one", null, "2016-03-12T14:00", null, null };
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
@@ -197,7 +196,7 @@ public class LogicTest {
 	 * unable to find task and no edit
 	 */
 	@Test
-	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTime, LabelExceedTotalException {
+	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
 		String[] variableArray = { "1", "task one", null, "2016-03-30T05:00", null, null };
 		initializeThreeArrays();
 		assertEquals("return same string", "task 1 edited in planner",
