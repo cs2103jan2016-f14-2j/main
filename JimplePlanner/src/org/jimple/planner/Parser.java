@@ -107,9 +107,12 @@ public class Parser {
 		try {
 			switch (mainCommand) {
 				case COMMAND_ADD :
-					InputStruct addStruct = getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
-					addStruct.checkAndSetTaskType();
-					return addStruct;
+					if (!isCommandOnly(splitUserInput)) {
+						InputStruct addStruct = getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
+						addStruct.checkAndSetTaskType();
+						return addStruct;
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a Task Name. \"");
 				case COMMAND_EDIT :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
@@ -121,13 +124,25 @@ public class Parser {
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
 				case COMMAND_SEARCH :
-					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					if (!isCommandOnly(splitUserInput)) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a search string.");
 				case COMMAND_EDITLABEL :
-					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
+					if (!isCommandOnly(splitUserInput)) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
 				case COMMAND_DELETELABEL :
-					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					if (!isCommandOnly(splitUserInput)) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
 				case COMMAND_CHANGEDIR :
-					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					if (!isCommandOnly(splitUserInput)) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a directory path.");
 				case COMMAND_CHECKDIR :
 					if (isCommandOnly(splitUserInput)) {
 						return new InputStruct(COMMAND_CHECKDIR);

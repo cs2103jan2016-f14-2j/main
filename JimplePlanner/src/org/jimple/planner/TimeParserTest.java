@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class TimeParserTest {
 	
 	public static void main(String[] args) throws Exception {
-		Scanner sc = new Scanner(System.in);
+		/*Scanner sc = new Scanner(System.in);
 		while (true) {
 			System.out.print("Input a time: ");
 			String testInput = sc.nextLine();
@@ -22,7 +22,7 @@ public class TimeParserTest {
 				System.out.println("Time parsed to:");
 				System.out.println(t.getTime());
 			}
-		}
+		}*/
 	}
 	
 }
