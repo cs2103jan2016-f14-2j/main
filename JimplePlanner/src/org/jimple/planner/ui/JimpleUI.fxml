@@ -17,19 +17,6 @@
 
 <StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.UiController">
    <children>
-      <VBox fx:id="overlay">
-         <children>
-            <Region VBox.vgrow="ALWAYS" />
-            <HBox>
-               <children>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <AnchorPane fx:id="popupLayer" />
-                  <Region HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <Region VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
       <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 15;">
          <children>
             <VBox prefHeight="600.0" prefWidth="800.0" style="-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -180,5 +167,18 @@
             </VBox>
          </children>
       </AnchorPane>
+      <VBox fx:id="overlay">
+         <children>
+            <Region VBox.vgrow="ALWAYS" />
+            <HBox>
+               <children>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <AnchorPane fx:id="popupLayer" />
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Region VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
    </children>
 </StackPane>
