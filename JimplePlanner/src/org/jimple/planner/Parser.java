@@ -366,7 +366,7 @@ public class Parser {
 	private String calendarToStringFormat(Calendar parsedCalendar) {
 		Date parsedDate = parsedCalendar.getTime();
 		String date = String.format("%02d", parsedDate.getDate());
-		String month = String.format("%02d", parsedDate.getMonth()+	OFFSET_CALENDAR_MONTH);
+		String month = String.format("%02d", parsedDate.getMonth());
 		String hours = String.format("%02d", parsedDate.getHours());
 		String minutes = String.format("%02d", parsedDate.getMinutes());
 		String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
