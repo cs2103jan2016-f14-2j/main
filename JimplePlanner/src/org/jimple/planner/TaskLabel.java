@@ -6,7 +6,7 @@ import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 import static org.jimple.planner.Constants.TASK_LABEL_NAME_DEFAULT;
 import static org.jimple.planner.Constants.ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT;
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
 
 public class TaskLabel {
 	//These are to check if the given IDs have been taken
@@ -27,17 +27,22 @@ public class TaskLabel {
 	
 	public static TaskLabel getDefaultLabel(){
 		TaskLabel.idBoolArray[0] = true;
-		return new TaskLabel(TASK_LABEL_NAME_DEFAULT, TASK_LABEL_COLOUR_DEFAULT, 0);
+		return new TaskLabel(TASK_LABEL_NAME_DEFAULT, TASK_LABEL_COLOUR_DEFAULT_0, 0);
 	}
 	
 	public static TaskLabel getNewLabel(String name) throws LabelExceedTotalException{
+		TaskLabel newLabel = getNewLabel(name, colourCounter);
+		updateColourCounter();
+		return newLabel;
+	}
+	
+	public static TaskLabel getNewLabel(String name, int colourId) throws LabelExceedTotalException{
 		int id = getNextLabelId();
 		if(isValidId(id)){
 			throw new LabelExceedTotalException(ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS);
 		}
 		TaskLabel.idBoolArray[id] = true;
-		TaskLabel newLabel = new TaskLabel(name, colourCounter, id);
-		updateColourCounter();
+		TaskLabel newLabel = new TaskLabel(name, colourId, id);
 		return newLabel;
 	}
 
@@ -51,6 +56,10 @@ public class TaskLabel {
 		int alabelId = taskLabel.getLabelId();
 		TaskLabel duplicatedTaskLabel = new TaskLabel(aName, aColourId, alabelId);
 		return duplicatedTaskLabel;
+	}
+	
+	public static TaskLabel getDummyLabel(String name, int colourId){
+		return new TaskLabel(name, colourId, 0);
 	}
 	
 	public void removeLabelId(TaskLabel taskLabel){

@@ -21,13 +21,13 @@ public final class Constants {
 	 */
 	public static final String STRING_LABELNAME = "LABEL";
 	public static final String STRING_LABELCOLOUR = "COLOUR";
-	public static final int TASK_LABEL_COLOUR_DEFAULT = 0;
-	public static final int TASK_LABEL_COLOUR_BLUE= 1;
-	public static final int TASK_LABEL_COLOUR_GREEN = 2;
-	public static final int TASK_LABEL_COLOUR_YELLOW = 3;
-	public static final int TASK_LABEL_COLOUR_ORANGE = 4;
-	public static final int TASK_LABEL_COLOUR_RED = 5;
-	public static final int TASK_LABEL_COLOUR_DARK_RED = 6;
+	public static final int TASK_LABEL_COLOUR_DEFAULT_0 = 0;
+	public static final int TASK_LABEL_COLOUR_BLUE_1 = 1;
+	public static final int TASK_LABEL_COLOUR_GREEN_2 = 2;
+	public static final int TASK_LABEL_COLOUR_YELLOW_3 = 3;
+	public static final int TASK_LABEL_COLOUR_ORANGE_4 = 4;
+	public static final int TASK_LABEL_COLOUR_RED_5 = 5;
+	public static final int TASK_LABEL_COLOUR_PURPLE_6 = 6;
 	public static final String TASK_LABEL_NAME_DEFAULT = "default";
 	public static final String ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS = "total number of labels exceeded";
 	
@@ -50,12 +50,13 @@ public final class Constants {
 	
 	public static final String PROPERTIES_KEY_CURRENT_SAVEPATH = "savepath";
 	public static final String PROPERTIES_KEY_PREV_SAVEPATH = "prevsavepath";
-	public static final String PROPERTIES_KEY_COLOUR_BLUE_1 = "blue";
-	public static final String PROPERTIES_KEY_COLOUR_GREEN_2 = "green";
-	public static final String PROPERTIES_KEY_COLOUR_YELLOW_3 = "yellow";
-	public static final String PROPERTIES_KEY_COLOUR_ORANGE_4 = "orange";
-	public static final String PROPERTIES_KEY_COLOUR_RED_5 = "red";
-	public static final String PROPERTIES_KEY_COLOUR_DARKRED_6 = "darkred";
+	
+	public static final String PROPERTIES_VALUE_COLOUR_BLUE_1 = "blue";
+	public static final String PROPERTIES_VALUE_COLOUR_GREEN_2 = "green";
+	public static final String PROPERTIES_VALUE_COLOUR_YELLOW_3 = "yellow";
+	public static final String PROPERTIES_VALUE_COLOUR_ORANGE_4 = "orange";
+	public static final String PROPERTIES_VALUE_COLOUR_RED_5 = "red";
+	public static final String PROPERTIES_VALUE_COLOUR_PURPLE_6 = "purple";
 	
 	public static final String FILEPATH_DEFAULT = DEFAULT_FILE_DIRECTORY + DEFAULT_FILE_NAME;
 	public static final String FILEPATH_DEFAULT_TEMP = DEFAULT_FILE_DIRECTORY + DEFAULT_TEMP_FILE_NAME;

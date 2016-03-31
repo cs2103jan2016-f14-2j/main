@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
+import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 public class StorageComponent implements Storage{
 	private static StorageSave storageSave = null;
@@ -17,16 +18,33 @@ public class StorageComponent implements Storage{
 	}
 	
 	@Override
-	public boolean isSaved(ArrayList<ArrayList<Task>> allTaskLists) {
+	public boolean isSavedTasks(ArrayList<ArrayList<Task>> allTaskLists) {
 		String fileName = storageProperties.getCurrentFilePath();
 		String tempFileName = storageProperties.getCurrentTempFilePath();
-		return storageSave.isSavedSelect(allTaskLists, fileName, tempFileName);
+		return storageSave.isSavedTasksSelect(allTaskLists, fileName, tempFileName);
 	}
-
+	
+	@Override
+	public boolean isSavedLabels(ArrayList<TaskLabel> labelList) {
+		return storageProperties.isSavedLabels(labelList);
+	}
+	
 	@Override
 	public ArrayList<ArrayList<Task>> getTasks(){
 		String fileName = storageProperties.getCurrentFilePath();
 		return storageLoad.getTaskSelect(fileName);
+	}
+	
+	@Override
+	public ArrayList<TaskLabel> getLabels() {
+		ArrayList<TaskLabel> labelList = null;
+		try {
+			labelList = storageProperties.getLabels();
+		} catch (LabelExceedTotalException e) {
+			System.out.println("Previous save should have never reached this point");
+			e.printStackTrace();
+		}
+		return labelList;
 	}
 
 	@Override
@@ -38,5 +56,4 @@ public class StorageComponent implements Storage{
 	public String checkPath(){
 		return storageProperties.checkPath();
 	}
-
 }

@@ -4,28 +4,57 @@ import static org.jimple.planner.Constants.ALL_ARRAY_SIZE;
 import static org.jimple.planner.Constants.EMPTY_STRING;
 import static org.jimple.planner.Constants.FILEPATH_DEFAULT;
 import static org.jimple.planner.Constants.FILEPATH_DEFAULT_TEMP;
-import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_KEY_NAME;
-import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME;
+import static org.jimple.planner.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
+import static org.jimple.planner.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
+import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_BLUE_1;
+import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_GREEN_2;
+import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_YELLOW_3;
+import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_ORANGE_4;
+import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_RED_5;
+import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_PURPLE_6;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
 import static org.jimple.planner.Constants.DEFAULT_FILE_DIRECTORY;
+
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_BLUE_1;
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_GREEN_2;
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_YELLOW_3;
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_ORANGE_4;
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_RED_5;
+import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_PURPLE_6;
 
 import java.io.File;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
+
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
+import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 public class StorageProperties implements StorageTools{
 	private static StorageSave storageSave = null;
 	private static StorageLoad storageLoad = null;
 	private Properties storageProperties = null;
+	private static HashMap<String, Integer> colourToId = new HashMap<String, Integer>();
 	
 	public StorageProperties(){
 		storageSave = new StorageSave();
 		storageLoad = new StorageLoad();
 		storageProperties = storageLoad.loadProperties();
+		initialiseHashMap();
+	}
+	
+	private void initialiseHashMap(){
+		colourToId.put(PROPERTIES_VALUE_COLOUR_BLUE_1, TASK_LABEL_COLOUR_BLUE_1);
+		colourToId.put(PROPERTIES_VALUE_COLOUR_GREEN_2, TASK_LABEL_COLOUR_GREEN_2);
+		colourToId.put(PROPERTIES_VALUE_COLOUR_YELLOW_3, TASK_LABEL_COLOUR_YELLOW_3);
+		colourToId.put(PROPERTIES_VALUE_COLOUR_ORANGE_4, TASK_LABEL_COLOUR_ORANGE_4);
+		colourToId.put(PROPERTIES_VALUE_COLOUR_RED_5, TASK_LABEL_COLOUR_RED_5);
+		colourToId.put(PROPERTIES_VALUE_COLOUR_PURPLE_6, TASK_LABEL_COLOUR_PURPLE_6);
 	}
 	
 	public boolean setPath(String pathName){
@@ -57,26 +86,26 @@ public class StorageProperties implements StorageTools{
 	
 	//TODO Refactor this method
 	private boolean isKeyChanged(String pathName){
-		String previousPath = this.storageProperties.getProperty(PROPERTIES_SAVEPATH_KEY_NAME);
+		String previousPath = this.storageProperties.getProperty(PROPERTIES_KEY_CURRENT_SAVEPATH);
 		if(previousPath.equals(pathName)){
 			return false;
 		} else if (isValueSame(pathName, previousPath)){ 
 			setIfOrigin(pathName, previousPath);
 			return false;
 		} else{
-			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
-			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
+			this.storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, previousPath);
+			this.storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, pathName);
 			return true;
 		}
 	}
 
 	private void setIfOrigin(String pathName, String previousPath) {
 		if(pathName.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, pathName);
-			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, pathName);
+			this.storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, pathName);
+			this.storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, pathName);
 		} else if(previousPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
-			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_KEY_NAME, previousPath);
-			this.storageProperties.setProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME, previousPath);
+			this.storageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, previousPath);
+			this.storageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, previousPath);
 		}
 	}
 
@@ -94,7 +123,7 @@ public class StorageProperties implements StorageTools{
 		String oldPath = getFilePath(oldDir);
 		
 		ArrayList<ArrayList<Task>> consolidatedTasks = getConsolidatedTasks(newPath, oldPath);
-		boolean saveStatus = storageSave.isSavedSelect(consolidatedTasks, newPath, oldPath);
+		boolean saveStatus = storageSave.isSavedTasksSelect(consolidatedTasks, newPath, oldPath);
 		return saveStatus;
 	}
 
@@ -122,7 +151,7 @@ public class StorageProperties implements StorageTools{
 	}
 	
 	private void deleteResidualDirectory(){
-		String oldFileDirPath = this.storageProperties.getProperty(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME);
+		String oldFileDirPath = this.storageProperties.getProperty(PROPERTIES_KEY_PREV_SAVEPATH);
 		oldFileDirPath = getFullFilePath(oldFileDirPath, DEFAULT_FILE_DIRECTORY);
 		if(!oldFileDirPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
 			File oldFileDir = new File(oldFileDirPath);
@@ -146,11 +175,11 @@ public class StorageProperties implements StorageTools{
 	}
 	
 	private String getCurrentFileDirectory(){
-		return getFileDirectoryFromProperties(PROPERTIES_SAVEPATH_KEY_NAME);
+		return getFileDirectoryFromProperties(PROPERTIES_KEY_CURRENT_SAVEPATH);
 	}
 	
 	private String getOldFileDirectory(){
-		return getFileDirectoryFromProperties(PROPERTIES_SAVEPATH_PREVIOUS_KEY_NAME);
+		return getFileDirectoryFromProperties(PROPERTIES_KEY_PREV_SAVEPATH);
 	}
 	
 	private String getFullFilePath(String fileSaveDir, String fileName) {
@@ -188,6 +217,67 @@ public class StorageProperties implements StorageTools{
 			currentPath = currentPathFile.getAbsolutePath();
 		} 
 		return currentPath;
+	}
+	
+	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
+		for(TaskLabel taskLabel: labelLists){
+			if(taskLabel.equals(TaskLabel.getDefaultLabel())){
+				continue;
+			}
+			String labelName = taskLabel.getLabelName();
+			int labelColourId = taskLabel.getColourId();
+			String labelColourString = null;
+			switch(labelColourId){
+			case TASK_LABEL_COLOUR_BLUE_1:
+				labelColourString = PROPERTIES_VALUE_COLOUR_BLUE_1;
+				break;
+				
+			case TASK_LABEL_COLOUR_GREEN_2:
+				labelColourString = PROPERTIES_VALUE_COLOUR_GREEN_2;
+				break;
+				
+			case TASK_LABEL_COLOUR_YELLOW_3:
+				labelColourString = PROPERTIES_VALUE_COLOUR_YELLOW_3;
+				break;
+			
+			case TASK_LABEL_COLOUR_ORANGE_4:
+				labelColourString = PROPERTIES_VALUE_COLOUR_ORANGE_4;
+				break;
+			
+			case TASK_LABEL_COLOUR_RED_5:
+				labelColourString = PROPERTIES_VALUE_COLOUR_RED_5;
+				break;
+			
+			case TASK_LABEL_COLOUR_PURPLE_6:
+				labelColourString = PROPERTIES_VALUE_COLOUR_PURPLE_6;
+				break;
+			default:
+				System.out.println("Error, no label should be null here");
+				return false;
+			}
+			this.storageProperties.setProperty(labelName, labelColourString);
+		}
+		storageSave.saveProperties(storageProperties);
+		return true;
+	}
+	
+	public ArrayList<TaskLabel> getLabels() throws LabelExceedTotalException{
+		ArrayList<TaskLabel> labelList = new ArrayList<TaskLabel>();
+		labelList.add(TaskLabel.getDefaultLabel()); //1st element of labelList is always default label
+		
+		Set<Object> propertiesKeys = storageProperties.keySet();
+		boolean removed_savepath_key = propertiesKeys.remove((Object)PROPERTIES_KEY_CURRENT_SAVEPATH);
+		boolean removed_prev_savepath_key = propertiesKeys.remove((Object)PROPERTIES_KEY_PREV_SAVEPATH);
+		assert removed_prev_savepath_key;
+		assert removed_savepath_key;
+		for(Object labelNames: propertiesKeys){
+			String labelNamesString = (String) labelNames;
+			String labelColourString = storageProperties.getProperty(labelNamesString);
+			int labelColourId = colourToId.get(labelColourString);
+			TaskLabel taskLabel = TaskLabel.getNewLabel(labelNamesString, labelColourId);
+			labelList.add(taskLabel);
+		}
+		return labelList;
 	}
 	
 	/*
