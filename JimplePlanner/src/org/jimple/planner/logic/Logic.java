@@ -154,9 +154,6 @@ public class Logic {
 		} catch (MissingDateTimeFieldException mfe) {
 			feedback[0] = mfe.getMessage();
 			feedback[1] = "";
-		} catch (LabelExceedTotalException let) {
-			feedback[0] = let.getMessage();
-			feedback[1] = "";
 		} catch (Exception e) {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";

@@ -29,7 +29,6 @@ public final class Constants {
 	public static final int TASK_LABEL_COLOUR_RED_5 = 5;
 	public static final int TASK_LABEL_COLOUR_PURPLE_6 = 6;
 	public static final String TASK_LABEL_NAME_DEFAULT = "default";
-	public static final String ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS = "total number of labels exceeded";
 	
 	public static final String ERROR_INVALID_TASK = "Task is invalid";
 	

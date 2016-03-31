@@ -2,7 +2,6 @@ package org.jimple.planner.logic;
 
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
-import org.jimple.planner.exceptions.LabelExceedTotalException;
 import org.jimple.planner.Constants;
 
 import java.util.ArrayList;
@@ -10,8 +9,7 @@ import java.util.LinkedList;
 
 public interface LogicTaskModification {
 
-	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels)
-			throws LabelExceedTotalException {
+	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels){
 		Task editedTask = new Task(aTask);
 		for (int i = 1; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
@@ -40,8 +38,7 @@ public interface LogicTaskModification {
 		return editedTask;
 	}
 
-	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels)
-			throws LabelExceedTotalException {
+	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels){
 		if (!taskLabels.isEmpty()) {
 			for (TaskLabel aLabel : taskLabels) {
 				if (aLabel.getLabelName().equals(name)) {

@@ -1,12 +1,8 @@
 package org.jimple.planner;
 
 import java.security.SecureRandom;
-import java.util.stream.IntStream;
-
-import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 import static org.jimple.planner.Constants.TASK_LABEL_NAME_DEFAULT;
-import static org.jimple.planner.Constants.ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS;
 import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
 
 public class TaskLabel {
