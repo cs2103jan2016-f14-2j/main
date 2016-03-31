@@ -29,13 +29,11 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD asdf ON today");
+			testStruct = testParser.parseInput("ADD asdf ON 12.30AM");
 			String[] test = testStruct.getVariableArray();
-			System.out.println("A");
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
 			}
-			System.out.println("B");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -100,6 +100,7 @@ public class TimeParser {
 			} else if (parseIfIsAMPMFormat(i)) {
 			} else if (parseIfIsTodayOrTomorrow(i)) {
 			} else if (parseIfIsColonTimeFormat(i)) {
+			} else if (parseIfIsDotTimeFormat(i)) {
 			} else if (parseIfIsForwardSlashDateFormat(i)) {
 			} else if (parseIfIs4DigitFloatingNumber(i)) {
 			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
@@ -116,7 +117,6 @@ public class TimeParser {
 	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
 		initSecondaryAndPresetFields(extendedCommand);
-		System.out.println(day + " " + month + " " + year + " " + hour + " " + minute);
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
@@ -313,34 +313,102 @@ public class TimeParser {
 		return false;
 	}
 	
-	// Parses am and pm. E.g 12am, 5pm, 11pm.
-	private boolean parseIfIsAMPMFormat(String input) throws DuplicateDateTimeFieldException{
-		if (input.length() > 2) {
-			String last2Characters = input.substring(input.length()-2, input.length()).toLowerCase();
+	// Parses am and pm. E.g 12am, 5.30pm, 6:25pm.
+	private boolean parseIfIsAMPMFormat(String input) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
+		String last2Characters = input.substring(input.length()-2, input.length()).toLowerCase();
+		if (last2Characters.equals("am") || last2Characters.equals("pm")) {
 			String beforeLast2Characters = input.substring(0, input.length()-2);
-			if (isANumber(beforeLast2Characters)) {
-				int inputTime = Integer.parseInt(beforeLast2Characters);
-				if (isValidAMPMNumberInput(inputTime)) {
-					switch (last2Characters) {
-						case "am" :
-							setField("hour", inputTime % 12);
-							setField("minute", 0);
-							return true;
-						case "pm" :
-							setField("hour", 12 + (inputTime % 12));
-							setField("minute", 0);
-							return true;
-						default:
-							break;
-					}
-				}
+			if (beforeLast2Characters.contains(".")) {
+				return parseDotAMPM(beforeLast2Characters, last2Characters);
+			} else if (beforeLast2Characters.contains(":")) {
+				return parseColonAMPM(beforeLast2Characters, last2Characters);
+			} else if (isANumber(beforeLast2Characters)){
+				return parseFloatingNumberAMPM(beforeLast2Characters, last2Characters);
+			} else {
+				throw new InvalidDateTimeFieldException("Invalid time AM/PM format: \"" + input + "\". Type \"help\" to see the accepted formats.");
 			}
 		}
 		return false;
 	}
 	
-	private boolean isValidAMPMNumberInput(int inputNo) {
-		return inputNo > 0 && inputNo <= 12;
+	private boolean parseDotAMPM(String input, String inputAMPM) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+		String[] splitTime = input.split("\\.");
+		if (splitTime.length == 2) {
+			String inputHour = splitTime[0];
+			String inputMinute = splitTime[1];
+			if (!isANumber(inputHour) || !isValidAMPMHour(inputHour)) {
+				throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid AM/PM time for hour.");
+			} else {
+				switch (inputAMPM) {
+					case "am" :
+						setField("hour", Integer.parseInt(inputHour) % 12);
+						break;
+					case "pm" :
+						setField("hour", (Integer.parseInt(inputHour) % 12) + 12);
+						break;
+				}
+			}
+			if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
+				throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+			} else {
+				setField("minute", Integer.parseInt(inputMinute));
+			}
+			return true;
+		}
+		throw new InvalidDateTimeFieldException("Invalid input: \"" + input + "\". Time should be formated to hh.mm before am/pm.");
+	}
+	
+	private boolean parseColonAMPM(String input, String inputAMPM) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+		String[] splitTime = input.split(":");
+		if (splitTime.length == 2) {
+			String inputHour = splitTime[0];
+			String inputMinute = splitTime[1];
+			if (!isANumber(inputHour) || !isValidAMPMHour(inputHour)) {
+				throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid AM/PM time for hour.");
+			} else {
+				switch (inputAMPM) {
+					case "am" :
+						setField("hour", Integer.parseInt(inputHour) % 12);
+						break;
+					case "pm" :
+						setField("hour", (Integer.parseInt(inputHour) % 12) + 12);
+						break;
+				}
+			}
+			if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
+				throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+			} else {
+				setField("minute", Integer.parseInt(inputMinute));
+			}
+			return true;
+		}
+		throw new InvalidDateTimeFieldException("Invalid input: \"" + input + "\". Time should be formated to hh.mm before am/pm.");
+	}
+	
+	private boolean parseFloatingNumberAMPM(String input, String inputAMPM) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
+		if (isANumber(input) && isValidAMPMHour(input)) {
+			int inputTime = Integer.parseInt(input);
+			switch (input) {
+				case "am" :
+					setField("hour", inputTime % 12);
+					setField("minute", 0);
+					return true;
+				case "pm" :
+					setField("hour", 12 + (inputTime % 12));
+					setField("minute", 0);
+					return true;
+				default:
+					break;
+			}
+			return true;
+		} else {
+			throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + input + "\" of \"" + input + inputAMPM + "\" Please input a valid time for AM/PM.");
+		}
+	}
+	
+	private boolean isValidAMPMHour(String input) {
+		int inputHour = Integer.parseInt(input);
+		return inputHour > 0 && inputHour <= 12;
 	}
 	
 	// Parses the words "today" and "tomorrow".
@@ -393,6 +461,31 @@ public class TimeParser {
 				return true;
 			} else {
 				throw new InvalidDateTimeFieldException("Invalid input: " + input + ".Time should be written in \"hh:mm\" format.");
+			}
+		}
+		return false;
+	}
+	
+	private boolean parseIfIsDotTimeFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+		if (input.contains("\\.")) {
+			String[] splitTime = input.split("\\.");
+			System.out.println(splitTime.length);
+			if (splitTime.length == 2) {
+				String inputHour = splitTime[0];
+				String inputMinute = splitTime[1];
+				if (!isANumber(inputHour) || !isValidHour(inputHour)) {
+					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid time for hour.");
+				} else {
+					setField("hour", Integer.parseInt(inputHour));
+				}
+				if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
+					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+				} else {
+					setField("minute", Integer.parseInt(inputMinute));
+				}
+				return true;
+			} else {
+				throw new InvalidDateTimeFieldException("Invalid input: " + input + ". Time should be written in \"hh:mm\" format.");
 			}
 		}
 		return false;
