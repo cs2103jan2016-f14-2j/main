@@ -299,9 +299,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-30T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-03-31T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-30T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-03-31T23:00", testformatter.testFormatTime("11pm"));
 	}
 
 	@Test
