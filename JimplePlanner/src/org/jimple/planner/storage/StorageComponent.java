@@ -7,9 +7,9 @@ import org.jimple.planner.TaskLabel;
 import org.jimple.planner.exceptions.LabelExceedTotalException;
 
 public class StorageComponent implements Storage{
-	private static StorageSave storageSave = null;
-	private static StorageLoad storageLoad = null;
-	private StorageProperties storageProperties = null;
+	private StorageSave storageSave;
+	private StorageLoad storageLoad;
+	private StorageProperties storageProperties;
 	
 	public StorageComponent() {
 		storageSave = new StorageSave();
