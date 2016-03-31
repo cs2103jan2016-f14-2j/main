@@ -127,7 +127,7 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			case Constants.STRING_EDITLABEL:
-				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels);
+				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
 				feedback[1] = "";
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;

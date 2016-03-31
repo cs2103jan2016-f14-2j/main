@@ -98,9 +98,9 @@ public class LogicTest {
 		String[] variableArray1 = {"food", "orange"};
 		String[] variableArray2 = {"exercise", "green"};
 		String[] variableArray3 = {"stuff", "yellow"};
-		assertEquals("food name changed to orange", testLabeler.changeLabel(variableArray1, taskLabels));
-		assertEquals("green colour changed to exercise", testLabeler.changeLabel(variableArray2, taskLabels));
-		assertEquals("label could not be changed", testLabeler.changeLabel(variableArray3, taskLabels));
+		assertEquals("food name changed to orange", testLabeler.changeLabel(variableArray1, taskLabels, floating, deadlines, events));
+		assertEquals("green colour changed to exercise", testLabeler.changeLabel(variableArray2, taskLabels, floating, deadlines, events));
+		assertEquals("label could not be changed", testLabeler.changeLabel(variableArray3, taskLabels, floating, deadlines, events));
 		
 		taskLabels.clear();
 	}
