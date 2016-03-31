@@ -53,7 +53,7 @@ public class UiController extends myObserver implements Initializable {
 	private LinkedList<String> cmdHistory;
 	private int cmdHistoryPointer;
 	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
-	Logic logic = new Logic();
+	Logic logic;
 	UiFormatter listFormatter = new UiFormatter();
 	private final BooleanProperty dragModeActiveProperty =
             new SimpleBooleanProperty(this, "dragModeActive", true);
@@ -133,6 +133,7 @@ public class UiController extends myObserver implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		logic = new Logic();
 		//asserts that FXML files initialises objects
 		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
 		loadClock();
