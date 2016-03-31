@@ -131,8 +131,7 @@ public final class Constants {
 	public static final String DELETED_FEEDBACK = " deleted";
 	public static final String ERROR_DELETED_FEEDBACK = " could not be found";
 	
-	public static final String LABEL_COLOR_FEEDBACK = " colour changed to ";
-	public static final String LABEL_NAME_FEEDBACK = " name changed to ";
+	public static final String LABEL_FEEDBACK = " label changed";
 	public static final String ERROR_LABEL_FEEDBACK = "label could not be changed";
 	
 	public static final String LABEL_DELETED_FEEDBACK = "label is deleted";

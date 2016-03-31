@@ -175,7 +175,15 @@ public class Logic {
 
 	public ArrayList<Task> getEventsList() {
 		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
-		
+		/*ArrayList<Task> dividedTasks = new ArrayList<Task>();
+		for (Task anEvent : events)	{
+			Task duplicateEvent = new Task(anEvent);
+			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate()))	{
+				Task aNewTask = LogicTaskModification.divideMultipleDays(duplicateEvent);
+				dividedTasks.add(aNewTask);
+			}
+			dividedTasks.add(duplicateEvent);
+		}*/
 		return events;
 	}
 
@@ -193,6 +201,10 @@ public class Logic {
 		return agenda;
 	}
 
+	public ArrayList<TaskLabel> getTaskLabels()	{
+		return taskLabels;
+	}
+	
 	public String getPastInputs(int cmdHistoryPointer) {
 		if (!pastUserInputs.isEmpty()) {
 			return pastUserInputs.get(cmdHistoryPointer);
