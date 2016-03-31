@@ -247,7 +247,7 @@ public class UiController extends myObserver implements Initializable {
 			todayPane.getChildren().add(todayEmpty);
 		}
 		
-		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_NOW);
+		listFormatter.formatList(logic.getEventsList(),Constants.TYPE_NOW);
 		list = listFormatter.getFormattedList();
 		nowPane.getChildren().clear();
 		if(list != null){
