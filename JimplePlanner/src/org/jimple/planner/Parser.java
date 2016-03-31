@@ -124,6 +124,8 @@ public class Parser {
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_EDITLABEL :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
+				case COMMAND_DELETELABEL :
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_CHANGEDIR :
 					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 				case COMMAND_CHECKDIR :

@@ -29,7 +29,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD asdf BY 5PM");
+			testStruct = testParser.parseInput("DELETELABEL OHAYO");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
