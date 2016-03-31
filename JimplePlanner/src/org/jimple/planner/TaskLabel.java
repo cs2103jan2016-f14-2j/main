@@ -1,5 +1,6 @@
 package org.jimple.planner;
 
+import java.security.SecureRandom;
 import java.util.stream.IntStream;
 
 import org.jimple.planner.exceptions.LabelExceedTotalException;
@@ -9,9 +10,6 @@ import static org.jimple.planner.Constants.ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS;
 import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
 
 public class TaskLabel {
-	//These are to check if the given IDs have been taken
-	private static final int[] idArray = IntStream.range(1, 6).toArray();
-	private static boolean[] idBoolArray = new boolean[7];
 	//Colour counter determines the colour of the label next, must be in range [1, 6]
 	private static int colourCounter = 1;
 	
@@ -26,28 +24,19 @@ public class TaskLabel {
 	}
 	
 	public static TaskLabel getDefaultLabel(){
-		TaskLabel.idBoolArray[0] = true;
 		return new TaskLabel(TASK_LABEL_NAME_DEFAULT, TASK_LABEL_COLOUR_DEFAULT_0, 0);
 	}
 	
-	public static TaskLabel getNewLabel(String name) throws LabelExceedTotalException{
+	public static TaskLabel getNewLabel(String name){
 		TaskLabel newLabel = getNewLabel(name, colourCounter);
 		updateColourCounter();
 		return newLabel;
 	}
 	
-	public static TaskLabel getNewLabel(String name, int colourId) throws LabelExceedTotalException{
+	public static TaskLabel getNewLabel(String name, int colourId){
 		int id = getNextLabelId();
-		if(isValidId(id)){
-			throw new LabelExceedTotalException(ERROR_EXCEEDED_TOTAL_NUM_OF_LABELS);
-		}
-		TaskLabel.idBoolArray[id] = true;
 		TaskLabel newLabel = new TaskLabel(name, colourId, id);
 		return newLabel;
-	}
-
-	private static boolean isValidId(int id) {
-		return id<0;
 	}
 	
 	public static TaskLabel duplicateTaskLabel(TaskLabel taskLabel){
@@ -61,20 +50,12 @@ public class TaskLabel {
 	public static TaskLabel getDummyLabel(String name, int colourId){
 		return new TaskLabel(name, colourId, 0);
 	}
-	
-	public void removeLabelId(TaskLabel taskLabel){
-		int aLabelId = taskLabel.getLabelId();
-		assert TaskLabel.idBoolArray[aLabelId] == true;
-		TaskLabel.idBoolArray[aLabelId] = false;
-	}
-	
+
 	private static int getNextLabelId() {
-		int id = -1;
-		for(int i: idArray){
-			if(!idBoolArray[i]){
-				id = i;
-				break;
-			}
+		SecureRandom randomGen = new SecureRandom();
+		int id = randomGen.nextInt(Integer.MAX_VALUE);
+		while(id==0){
+			id = randomGen.nextInt(Integer.MAX_VALUE);
 		}
 		return id;
 	}
@@ -106,6 +87,7 @@ public class TaskLabel {
 		return labelId;
 	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 101;
@@ -122,7 +104,7 @@ public class TaskLabel {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof TaskLabel))
+		if (getClass() != obj.getClass())
 			return false;
 		TaskLabel other = (TaskLabel) obj;
 		if (colourId != other.colourId)
