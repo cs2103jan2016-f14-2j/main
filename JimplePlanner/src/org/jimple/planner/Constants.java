@@ -97,26 +97,17 @@ public final class Constants {
 	public static final String DELETELABEL_HELP_HEADER = "Delete a label:\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
-	
 	public static final String ADD_COMMAND_BY = "type \"ADD\" <your event name> BY <time>\n";
 	public static final String ADD_COMMAND_AT = "type \"ADD\" <your event name> AT <time>\n";
 	public static final String ADD_COMMAND_ON = "type \"ADD\" <your event name> ON <time>\n";
 	public static final String ADD_COMMAND_FROMTO = "type \"ADD\" <your event> FROM <time> TO <time>\n\n";
-	
-	public static final String EDIT_COMMAND_NAME = "type \"EDIT\" <taskID> \"NAME\" <your event title>\n";
-	public static final String EDIT_COMMAND_BY_TIME = "type \"EDIT\" <taskID> \"TIME\" BY <date/time>\n";
-	public static final String EDIT_COMMAND_FROMTO_TIME = "type \"EDIT\" <taskID> \"TIME\" FROM <date/time> TO <date/time>\n";
-	public static final String EDIT_COMMAND_LABEL = "type \"EDIT\" <taskID> \"LABEL\" <new name/\"default\" to remove label>\n\n";
-	
+	public static final String EDIT_COMMAND_ONE_TIMING = "type \"EDIT\" <taskID> \"NAME\" <your event title> \"TIME\" BY <date/time>\n";
+	public static final String EDIT_COMMAND_TWO_TIMINGS = "type \"EDIT\" <taskID> \"NAME\" <your event title> \"TIME\" FROM <date/time> TO <date/time>\n\n";
 	public static final String DELETE_COMMAND = "type \"DELETE\" <taskID>\n\n";
-	
 	public static final String SEARCH_COMMAND = "type \"SEARCH\" <task name>\n\n";
-	
 	public static final String UNDOTASK_COMMAND = "type \"UNDOTASK\"\n\n";
-	
 	public static final String CHANGEDIR_COMMAND = "type \"CHANGEDIR\" <full path directory>\n\n";
 	public static final String CHECKDIR_COMMAND = "type \"CHECKDIR\"\n\n";
-	
 	public static final String EDITLABEL_COMMAND = "type \"EDITLABEL\" <old label name/colour> NAME <new label name> COLOUR <new label colour>\n\n";
 	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n";
 	

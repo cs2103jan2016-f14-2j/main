@@ -43,7 +43,7 @@ public interface LogicTaskModification {
 			for (TaskLabel aLabel : taskLabels) {
 				if (aLabel.getLabelName().equals(name)) {
 					return TaskLabel.duplicateTaskLabel(aLabel);
-				} else if (name.equals("DEFAULT")) {
+				} else if (name == null) {
 					return TaskLabel.getDefaultLabel();
 				}
 			}

@@ -329,7 +329,7 @@ public class TimeParser {
 			} else if (isANumber(beforeLast2Characters)){
 				return parseFloatingNumberAMPM(beforeLast2Characters, last2Characters);
 			} else {
-				throw new InvalidDateTimeFieldException("Invalid time AM/PM format: \"" + input + "\". Type \"help\" to see the accepted formats.");
+				throw new InvalidDateTimeFieldException("Invalid time AM/PM format: \"" + input + "\".");
 			}
 		}
 		return false;
@@ -341,7 +341,7 @@ public class TimeParser {
 			String inputHour = splitTime[0];
 			String inputMinute = splitTime[1];
 			if (!isANumber(inputHour) || !isValidAMPMHour(inputHour)) {
-				throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid AM/PM time for hour.");
+				throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\". Please input a valid AM/PM time for hour.");
 			} else {
 				switch (inputAMPM) {
 					case "am" :
@@ -353,7 +353,7 @@ public class TimeParser {
 				}
 			}
 			if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
-				throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+				throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\". Please input a valid time for minute.");
 			} else {
 				setField("minute", Integer.parseInt(inputMinute));
 			}
@@ -368,7 +368,7 @@ public class TimeParser {
 			String inputHour = splitTime[0];
 			String inputMinute = splitTime[1];
 			if (!isANumber(inputHour) || !isValidAMPMHour(inputHour)) {
-				throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid AM/PM time for hour.");
+				throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\". Please input a valid AM/PM time for hour.");
 			} else {
 				switch (inputAMPM) {
 					case "am" :
@@ -380,7 +380,7 @@ public class TimeParser {
 				}
 			}
 			if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
-				throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+				throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\". Please input a valid time for minute.");
 			} else {
 				setField("minute", Integer.parseInt(inputMinute));
 			}
@@ -406,7 +406,7 @@ public class TimeParser {
 			}
 			return true;
 		} else {
-			throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + input + "\" of \"" + input + inputAMPM + "\" Please input a valid time for AM/PM.");
+			throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + input + "\" of \"" + input + inputAMPM + "\". Please input a valid time for AM/PM.");
 		}
 	}
 	
@@ -453,18 +453,18 @@ public class TimeParser {
 				String inputHour = splitTime[0];
 				String inputMinute = splitTime[1];
 				if (!isANumber(inputHour) || !isValidHour(inputHour)) {
-					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid time for hour.");
+					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\". Please input a valid time for hour.");
 				} else {
 					setField("hour", Integer.parseInt(inputHour));
 				}
 				if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
-					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\". Please input a valid time for minute.");
 				} else {
 					setField("minute", Integer.parseInt(inputMinute));
 				}
 				return true;
 			} else {
-				throw new InvalidDateTimeFieldException("Invalid input: " + input + ".Time should be written in \"hh:mm\" format.");
+				throw new InvalidDateTimeFieldException("Invalid input: \"" + input + "\". Time should be written in \"hh:mm\" format.");
 			}
 		}
 		return false;
@@ -477,12 +477,12 @@ public class TimeParser {
 				String inputHour = splitTime[0];
 				String inputMinute = splitTime[1];
 				if (!isANumber(inputHour) || !isValidHour(inputHour)) {
-					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\" Please input a valid time for hour.");
+					throw new InvalidDateTimeFieldException("Invalid input: Hour \"" + inputHour + "\" of \"" + input + "\". Please input a valid time for hour.");
 				} else {
 					setField("hour", Integer.parseInt(inputHour));
 				}
 				if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
-					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\" Please input a valid time for minute.");
+					throw new InvalidDateTimeFieldException("Invalid input: Minute \"" + inputMinute + "\" of \"" + input + "\". Please input a valid time for minute.");
 				} else {
 					setField("minute", Integer.parseInt(inputMinute));
 				}
@@ -503,7 +503,7 @@ public class TimeParser {
 			} else if (splitDate.length == 3) {
 				return parseDayMonthAndYear(input);
 			} else {
-				throw new InvalidDateTimeFieldException("Invalid input: " + input + ".Time should be written in \"dd/mm\" or \"dd/mm/yyyy\" format.");
+				throw new InvalidDateTimeFieldException("Invalid input: \"" + input + "\". Time should be written in \"dd/mm\" or \"dd/mm/yyyy\" format.");
 			}
 		}
 		return false;
@@ -514,12 +514,12 @@ public class TimeParser {
 		String inputDay = splitDate[0];
 		String inputMonth = splitDate[1];
 		if (!isANumber(inputDay)) {
-			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\" Please input a valid time for day.");
+			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\". Please input a valid time for day.");
 		} else {
 			setField("day", Integer.parseInt(inputDay));
 		}
 		if (!isANumber(inputMonth) || !isValidMonth(inputMonth)) {
-			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\" Please input a valid time for month.");
+			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\". Please input a valid time for month.");
 		} else {
 			setField("month", Integer.parseInt(inputMonth));
 		}
@@ -532,17 +532,17 @@ public class TimeParser {
 		String inputMonth = splitDate[1];
 		String inputYear = splitDate[2];
 		if (!isANumber(inputDay)) {
-			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\" Please input a valid time for day.");
+			throw new InvalidDateTimeFieldException("Invalid input: Day \"" + inputDay + "\" of \"" + input + "\". Please input a valid time for day.");
 		} else {
 			setField("day", Integer.parseInt(inputDay));
 		}
 		if (!isANumber(inputMonth) || !isValidMonth(inputMonth)) {
-			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\" Please input a valid time for month.");
+			throw new InvalidDateTimeFieldException("Invalid input: Month \"" + inputMonth + "\" of \"" + input + "\". Please input a valid time for month.");
 		} else {
 			setField("month", Integer.parseInt(inputMonth));
 		}
 		if (!isANumber(inputYear)) {
-			throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\" Please input a valid time for year.");
+			throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\". Please input a valid time for year.");
 		} else {
 			int intYear = Integer.parseInt(inputYear);
 			if (isAfterCurrentYear(intYear)) {
