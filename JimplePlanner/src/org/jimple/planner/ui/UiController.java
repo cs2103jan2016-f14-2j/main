@@ -154,7 +154,7 @@ public class UiController extends myObserver implements Initializable {
                 commandBox,
                 Constants.STRING_ADD, Constants.STRING_EDIT,
                 Constants.STRING_DELETE, Constants.STRING_SEARCH,
-                Constants.STRING_UNDO, Constants.STRING_HELP,
+                Constants.STRING_UNDOTASK, Constants.STRING_HELP,
                 Constants.STRING_CHANGEDIR, Constants.STRING_CHECKDIR);
 		
 		Platform.runLater(new Runnable() {

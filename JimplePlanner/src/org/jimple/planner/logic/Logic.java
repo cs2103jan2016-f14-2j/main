@@ -114,7 +114,7 @@ public class Logic {
 						events);
 				feedback[1] = "";
 				break;
-			case Constants.STRING_UNDO:
+			case Constants.STRING_UNDOTASK:
 				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory, taskLabels);
 				feedback[1] = "";
 				break;
@@ -175,6 +175,7 @@ public class Logic {
 
 	public ArrayList<Task> getEventsList() {
 		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+		
 		return events;
 	}
 
@@ -260,14 +261,20 @@ public class Logic {
 		listOfCommands += Constants.SEARCH_HELP_HEADER;
 		listOfCommands += Constants.SEARCH_COMMAND;
 
-		listOfCommands += Constants.UNDO_HELP_HEADER;
-		listOfCommands += Constants.UNDO_COMMAND;
+		listOfCommands += Constants.UNDOTASK_HELP_HEADER;
+		listOfCommands += Constants.UNDOTASK_COMMAND;
 
 		listOfCommands += Constants.CHANGEDIR_HELP_HEADER;
 		listOfCommands += Constants.CHANGEDIR_COMMAND;
 
 		listOfCommands += Constants.CHECKDIR_HELP_HEADER;
 		listOfCommands += Constants.CHECKDIR_COMMAND;
+		
+		listOfCommands += Constants.EDITLABEL_HELP_HEADER;
+		listOfCommands += Constants.EDITLABEL_COMMAND;
+		
+		listOfCommands += Constants.DELETELABEL_HELP_HEADER;
+		listOfCommands += Constants.EDITLABEL_COMMAND;
 		return listOfCommands;
 	}
 

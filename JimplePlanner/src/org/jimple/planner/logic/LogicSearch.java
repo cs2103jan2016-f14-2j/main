@@ -55,7 +55,8 @@ public class LogicSearch {
 	private boolean isContainKeyword(Task event, String keyword) {
 		boolean isTitleSearched = isContainSubstring(event.getTitle(), keyword);
 		boolean isDescSearched = isContainSubstring(event.getDescription(), keyword);
-		return (isTitleSearched || isDescSearched);
+		boolean isLabelSearched = isContainSubstring(event.getTaskLabel().getLabelName(), keyword);
+		return (isTitleSearched || isDescSearched || isLabelSearched);
 	}
 
 	public boolean testIsContainKeyword(Task event, String keyword) {
