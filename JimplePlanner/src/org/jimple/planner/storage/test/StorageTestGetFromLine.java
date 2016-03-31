@@ -13,13 +13,17 @@ import org.junit.Test;
 
 public class StorageTestGetFromLine {
 	private StorageLoad loadUnit = new StorageLoad();
+	/*
+	 * These tests are for testing the parsing of each String as written as a line inside the file itself and making sure
+	 * it returns the correct Task instance that goes along with this
+	 */
 	
 	@Test
 	//random sample of tasks in a normal situation
 	public void testGetTaskFromLine1(){
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		
-		String line1 = "/s/:title:Go exercise, you fatty/s//s/:desc:Keep fit/s/";
+		String line1 = "/s/:title:Go exercise, you fatty/s//s/:desc:Keep fit/s//s/:label:/tl/Exercise Time/tl//tl/3/tl//s/";
 		String line2 = "/s/:title:register for Orbital/s//s/:desc:keep my summer occupied/s//s/:from:2016-05-15T16:00/s/";
 		String line3 = "/s/:title:Attend seminar/s//s/:desc:at SOC/s//s/:from:2016-08-11T11:00/s//s/:to:2016-08-11T17:00/s/";
 		String line4 = "/s/:title:banana king/s//s/:desc:tomahawk/s//s/:from:2016-08-11T11:00/s/";
@@ -36,11 +40,15 @@ public class StorageTestGetFromLine {
 		String from1 = tasks.get(0).getFromTimeString();
 		String to1 = tasks.get(0).getToTimeString();
 		String type1 = tasks.get(0).getType();
+		String labelName1 = tasks.get(0).getTaskLabel().getLabelName();
+		int labelColourId1 = tasks.get(0).getTaskLabel().getColourId();
 		assertEquals("title", "Go exercise, you fatty", title1);
 		assertEquals("desc", "Keep fit", desc1);
 		assertEquals("from", "", from1);
 		assertEquals("to", "", to1);
 		assertEquals("type", "floating", type1);
+		assertEquals("labelName", "Exercise Time", labelName1);
+		assertEquals("labelColourId", 3, labelColourId1);
 		
 		String title2 = tasks.get(1).getTitle();
 		String desc2 = tasks.get(1).getDescription();
