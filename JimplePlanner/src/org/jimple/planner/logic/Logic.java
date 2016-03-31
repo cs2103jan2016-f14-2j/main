@@ -130,6 +130,10 @@ public class Logic {
 				feedback[0] = labeler.changeLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
 				feedback[1] = "";
 				break;
+			case Constants.STRING_DELETELABEL:
+				feedback[0] = labeler.deleteLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
+				feedback[1]	= "";
+				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";

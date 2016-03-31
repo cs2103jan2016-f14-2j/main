@@ -47,13 +47,13 @@ public class LogicLabel implements LogicMasterListModification{
 	}
 
 	protected String deleteLabel(Storage store, String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events) {
+			ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		for (int i = 0; i < taskLabels.size(); i++) {
-			if (variableArray[0].equals(taskLabels.get(i).getLabelName())
-					|| colourToIDMap.get(variableArray[1]).equals(taskLabels.get(i).getColourId())) {
+			if (variableArray[0].equals(taskLabels.get(i).getLabelName())) {
 				taskLabels.get(i).removeLabelId(taskLabels.get(i));
 				TaskLabel removedTask = taskLabels.remove(i);
 				removeLabelsFromMasterList(todo, deadlines, events, removedTask);
+				packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 				return Constants.LABEL_DELETED_FEEDBACK;
 			}
 		}
