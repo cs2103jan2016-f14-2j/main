@@ -1,14 +1,15 @@
 package org.jimple.planner.logic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jimple.planner.Constants;
 import org.jimple.planner.TaskLabel;
-
+import org.jimple.planner.storage.Storage;
 import org.jimple.planner.Task;
 
-public class LogicLabel {
+public class LogicLabel implements LogicMasterListModification{
 	HashMap<String, Integer> colourToIDMap = new HashMap<String, Integer>();
 	HashMap<Integer, String> iDToColourMap = new HashMap<Integer, String>();
 
@@ -27,17 +28,17 @@ public class LogicLabel {
 		iDToColourMap.put(6, "purple");
 	}
 
-	protected String changeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events) {
-		if (isColour(variableArray[0], taskLabels)) {
-			int labelPosition = getLabelPosition(variableArray, taskLabels, "colour");
-			boolean isLabelChanged = isChangeLabel(variableArray, taskLabels, labelPosition, todo, deadlines, events);
+	protected String changeLabel(Storage store, String[] variableArray, ArrayList<TaskLabel> taskLabels,
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+		if (isName(variableArray[0], taskLabels)) {
+			int labelPosition = getLabelPosition(variableArray, taskLabels, "name");
+			boolean isLabelChanged = isChangeLabel(store, variableArray, taskLabels, labelPosition, todo, deadlines, events);
 			if (isLabelChanged) {
 				return Constants.LABEL_COLOR_FEEDBACK;
 			}
-		} else if (isName(variableArray[0], taskLabels)) {
-			int labelPosition = getLabelPosition(variableArray, taskLabels, "name");
-			boolean isLabelChanged = isChangeLabel(variableArray, taskLabels, labelPosition, todo, deadlines, events);
+		} else if (isColour(variableArray[0], taskLabels)) {
+			int labelPosition = getLabelPosition(variableArray, taskLabels, "colour");
+			boolean isLabelChanged = isChangeLabel(store, variableArray, taskLabels, labelPosition, todo, deadlines, events);
 			if (isLabelChanged) {
 				return Constants.LABEL_NAME_FEEDBACK;
 			}
@@ -45,7 +46,7 @@ public class LogicLabel {
 		return Constants.ERROR_LABEL_FEEDBACK;
 	}
 
-	protected String deleteLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
+	protected String deleteLabel(Storage store, String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (int i = 0; i < taskLabels.size(); i++) {
 			if (variableArray[0].equals(taskLabels.get(i).getLabelName())
@@ -95,9 +96,11 @@ public class LogicLabel {
 
 	private boolean isColour(String firstString, ArrayList<TaskLabel> taskLabels) {
 		if (!taskLabels.isEmpty()) {
-			for (int i = 0; i < taskLabels.size(); i++) {
-				if (colourToIDMap.get(firstString).equals(taskLabels.get(i).getColourId())) {
-					return true;
+			if (colourToIDMap.containsKey(firstString)) {
+				for (int i = 0; i < taskLabels.size(); i++) {
+					if (colourToIDMap.get(firstString).equals(taskLabels.get(i).getColourId())) {
+						return true;
+					}
 				}
 			}
 		}
@@ -115,18 +118,18 @@ public class LogicLabel {
 		return false;
 	}
 
-	private boolean isChangeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, int labelPosition,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
+	private boolean isChangeLabel(Storage store, String[] variableArray, ArrayList<TaskLabel> taskLabels, int labelPosition,
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		boolean isLabelChanged = false;
 		for (int i = 1; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
 				switch (i) {
 				case 1:
-					isLabelChanged = changeLabelName(variableArray[i], taskLabels, labelPosition, todo, deadlines,
+					isLabelChanged = changeLabelName(store, variableArray[i], taskLabels, labelPosition, todo, deadlines,
 							events);
 					break;
 				case 2:
-					isLabelChanged = changeLabelColour(variableArray[i], taskLabels, labelPosition, todo, deadlines,
+					isLabelChanged = changeLabelColour(store, variableArray[i], taskLabels, labelPosition, todo, deadlines,
 							events);
 					break;
 				}
@@ -135,22 +138,22 @@ public class LogicLabel {
 		return isLabelChanged;
 	}
 
-	private boolean changeLabelName(String newName, ArrayList<TaskLabel> taskLabels, int labelPosition,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
-		taskLabels.get(labelPosition - 1).setLabelName(newName);
-		changeMasterListLabels(newName, labelPosition, todo, deadlines, events, "name");
+	private boolean changeLabelName(Storage store, String newName, ArrayList<TaskLabel> taskLabels, int labelPosition,
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+		taskLabels.get(labelPosition).setLabelName(newName);
+		changeMasterListLabels(store, newName, labelPosition, todo, deadlines, events, taskLabels, "name");
 		return true;
 	}
 
-	private boolean changeLabelColour(String newColour, ArrayList<TaskLabel> taskLabels, int labelPosition,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
-		taskLabels.get(labelPosition - 1).setColourId(colourToIDMap.get(newColour));
-		changeMasterListLabels(newColour, labelPosition, todo, deadlines, events, "colour");
+	private boolean changeLabelColour(Storage store, String newColour, ArrayList<TaskLabel> taskLabels, int labelPosition,
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+		taskLabels.get(labelPosition).setColourId(colourToIDMap.get(newColour));
+		changeMasterListLabels(store, newColour, labelPosition, todo, deadlines, events, taskLabels, "colour");
 		return true;
 	}
 
-	private void changeMasterListLabels(String newString, int labelPosition, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events, String type) {
+	private void changeMasterListLabels(Storage store, String newString, int labelPosition, ArrayList<Task> todo,
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels, String type) throws IOException {
 		for (int i = 0; i < todo.size(); i++) {
 			if (todo.get(i).getTaskLabel().getLabelId() == labelPosition) {
 				if (type.equals("name")) {
@@ -178,5 +181,6 @@ public class LogicLabel {
 				}
 			}
 		}
+		packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 	}
 }

@@ -127,8 +127,9 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			case Constants.STRING_EDITLABEL:
-				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
+				feedback[0] = labeler.changeLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
 				feedback[1] = "";
+				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
@@ -143,7 +144,7 @@ public class Logic {
 		} catch (InvalidDateTimeFieldException ife) {
 			feedback[0] = ife.getMessage();
 			feedback[1] = "";
-		} catch (InvalidFromAndToTime ift) {
+		} catch (InvalidFromAndToTimeException ift) {
 			feedback[0] =  ift.getMessage();
 			feedback[1] = "";
 		} catch (MissingDateTimeFieldException mfe) {
