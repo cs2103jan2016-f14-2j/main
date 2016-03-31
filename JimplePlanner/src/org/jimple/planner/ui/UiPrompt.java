@@ -28,6 +28,8 @@ public class UiPrompt extends UiController{
 	
 	protected UiController controller;
 	
+	public boolean isSearch = false;
+	
 	
 	public UiPrompt(UiController controller){
 		this.controller = controller;
@@ -103,6 +105,7 @@ public class UiPrompt extends UiController{
 	}
 	
 	protected void searchPrompt() {
+		isSearch = true;
 		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
 		ListView<Task> listView = controller.listFormatter.getFormattedList();
 		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);

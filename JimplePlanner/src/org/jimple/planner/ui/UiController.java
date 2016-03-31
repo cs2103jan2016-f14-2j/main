@@ -151,11 +151,6 @@ public class UiController extends myObserver implements Initializable {
 		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
-//		logic.refreshLists();
-		
-		todayPane.getStyleClass().add("today-pane");
-		nowPane.getStyleClass().add("today-pane");
-		upcomingPane.getStyleClass().add("today-pane");
 		
 		TextFields.bindAutoCompletion(
                 commandBox,
@@ -226,7 +221,8 @@ public class UiController extends myObserver implements Initializable {
 		loadDeadlinesList();
 		loadTodoList();
 		prompt = new UiPrompt(this);
-		prompt.searchPrompt();
+		if(prompt.isSearch)
+			prompt.searchPrompt();
 		listViewControl.selectIndex(i);
 		listViewControl.getActiveListView().scrollTo(i);
 		if(cmb){
@@ -328,8 +324,10 @@ public class UiController extends myObserver implements Initializable {
 			    case ESCAPE:
 					tabPanes.requestFocus();
 					listViewControl.getActiveListView().requestFocus();
-					if(overlay.isVisible())
+					if(overlay.isVisible()){
 						overlay.setVisible(false);
+						prompt.isSearch = false;
+					}
 					break;
 			    case UP:
 					if(cmdHistoryPointer < cmdHistory.size() - 1)
@@ -453,6 +451,7 @@ public class UiController extends myObserver implements Initializable {
 	@FXML
 	private void searchCloseButtonAction(){
 		popupLayer.getChildren().clear();
+		prompt.isSearch = false;
 		overlay.setVisible(false);
 	}	
 
