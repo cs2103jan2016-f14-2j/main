@@ -1,248 +1,108 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+/* setting window to be transparent================================ */
 .root {
 	-fx-background-color: transparent;
-}
+}/*============================================++================== */
 
-.today-pane {
-	-fx-background-radius: 10px;
-    -fx-background-color: white;
-    -fx-border-color: grey;
-    -fx-border-radius: 10px;
-}
-
-.list-view {
-    -fx-padding: 3px ;
-    -fx-background-color: transparent;
-}
-
- .list-cell {
-    -fx-padding: 10px ;
-    -fx-background-color: transparent, -fx-background ;
-}
-
-
-.list-cell:empty {
-    -fx-padding: 10px;
-    -fx-background-color: transparent ;
-    -fx-background-insets: 0 ;
-}
-
-/* making scroll bar invisible */
+/* making scroll bar invisible ==================================== */
 .list-view .scroll-bar:vertical .increment-arrow,
 .list-view .scroll-bar:vertical .decrement-arrow,
 .list-view .scroll-bar:vertical .increment-button,
 .list-view .scroll-bar:vertical .decrement-button {
     -fx-padding: 0;
+}/*================================================================ */
+
+.label {	
+    -fx-font-size: 18px;
+	-fx-font-color: grey;
 }
 
-
-.fancytext {
-    -fx-font: 16px Tahoma ;
-    /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
-}
-
-.floating {	
-    -fx-font: 20px Trebuchet ;
-    -fx-padding: 15;
-    -fx-background-radius: 15px;
-    -fx-background-color:  lightgrey; /* .FF9900;*/
-    /*-fx-background-insets: 0px, 2px ;*/
-}
-
-.floating:selected {	
-    -fx-font: 20px Trebuchet ;
-    -fx-padding: 15;
-    -fx-background-radius: 15px;
-    -fx-background-color:  ivory; /* .FF9900;*/
-    /*-fx-background-insets: 0px, 2px ;*/
-}
-
-.date {
-    -fx-font: 8px Tahoma ;
-    /*-fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);*/
-}
-
-.deadline {	
-    -fx-font: 16px Trebuchet ;
-    -fx-padding: 6 8;
-    -fx-background-radius: 50px;
-    -fx-background-color: #D8D3C7;
-    /*-fx-background-insets: 0px, 2px ;*/
-    -fx-fill: white;
-	-fx-background-insets: 3px;
-}
-
-
-.deadline:selected {
-	-fx-background-color: #C1B9A5;
-}
-.event {	
-    -fx-font: 16px Trebuchet ;
-    -fx-fill: white;    
-    -fx-padding: 10px ;
-    -fx-background-color: #D8D3C7;
-    -fx-background-radius: 10px;
-}
-
-.event:selected{
-    -fx-background-color: #C1B9A5;
-}
-
-.cellTitle {
-	-fx-font: 20px "Trebuchet MS";
-}
-
-.date {
-	-fx-font: 20px "Trebuchet MS";
-}
-.event{
-	-fx-fill: red;
-}
-
-.hbox {
+.list-view {
+    -fx-padding: 0;
     -fx-background-color: transparent;
 }
 
-.hboxDeadline {
-    -fx-background-color: grey;
-    -fx-background-radius: 50px;
-    -fx-padding: 20px;
-}
-
-.mainVbox {
-    -fx-background-color: white;
-}
-
-.vboxEvent {
-    -fx-background-color: lightgrey;
-    -fx-background-radius: 10px;
-}
-
-.popup{
-	-fx-background-radius: 10px;
-    -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-border-radius: 10px;
-}
-
-
-.static {	
-    -fx-font: 12px "Trebuchet MS";
-	
-    -fx-padding: 10px ;
+.listcell {
+    -fx-padding: 10px;
     -fx-background-color: transparent, -fx-background ;
-    -fx-background-color: transparent;
-    -fx-background-insets: 3px;
-}
-
-.static:selected {
-    -fx-background-color: lightgrey;
-    -fx-background-insets: 16 75;
-}
-
-.overdue{
-	-fx-border-radius: 10px;
-	-fx-border-color:#AFABA0;
-	-fx-border-width: 1px;
-	-fx-background-color: transparent;
+	-fx-background-color: #D8D3C7;
 	-fx-background-radius: 10px;
-    -fx-fill: #AFABA0;
-	-fx-background-insets: 3px;
+    -fx-background-insets: 5px;
 }
 
-.overdue:selected{
-	-fx-border-color: #7F7967;
-	-fx-background-color: transparent;
-	-fx-fill: #7F7967;
-	-fx-background-insets: 3px;
+.listcell:selected{
+    -fx-padding: 10px;
+    -fx-background-color: transparent, -fx-background ;
+	-fx-background-color: #C1B9A5;
+    -fx-background-insets: 5px;
 }
 
-.green{
-	-fx-background-color: #D8C39E;
-	
+.listcell:empty {
+    -fx-padding: 10px;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
 }
 
-.green:selected{
-	-fx-background-color: #C19F64;
-	
+.labelText{
+	-fx-font-size: 12px;
 }
 
-.yellow{
-	-fx-background-color: #F9DA61;
-	
+#static {
+    -fx-background-color: transparent, -fx-background;
+    -fx-background-color: transparent;
+	-fx-font-size: 16px;
+	-fx-text-fill: grey;
 }
 
-.yellow:selected{
-	-fx-background-color: #DABF24;
-	
+#static:selected {
+    -fx-background-color: lightgrey;
+    -fx-background-insets: 22 10 22 90;
 }
 
-.orange{
-	-fx-background-color: #F9A01B;
-	
+#event{
+	/* -fx-text-fill: red; */
 }
 
-.orange:selected{
-	-fx-background-color: #F5670B;
-	
-}
 
-.red{
-	-fx-background-color: #CF3423;
-	
-}
 
-.red:selected{
-	-fx-background-color: #B2150E;
-	
-}
-
-.darkred{
-	-fx-background-color: #9F2214;
-	
-}
-
-.darkred:selected{
-	-fx-background-color: #650E08;
-	
-}
 
 /*
 *	LABEL COLORS
 */
 
 /* default */
-.color0{
+#color0{
 	-fx-background-color: #FFFFFF;
-	-fx-fill: #000000;
+	-fx-text-fill: #000000;
 }
 /* blue */
-.color1{
+#color1{
 	-fx-background-color: #72CFFF;	
-	-fx-fill: #0068FF;
+	-fx-text-fill: #0068FF;
 }
 /* green */
-.color2{
+#color2{
 	-fx-background-color: #44FF7D;	
-	-fx-fill: #258E13;
+	-fx-text-fill: #258E13;
 }
 /* yellow */
-.color3{
+#color3{
 	-fx-background-color: #CEFF7D;	
-	-fx-fill: #809916;
+	-fx-text-fill: #809916;
 }
 /* orange */
-.color4{
+#color4{
 	-fx-background-color: #FFDE87;	
-	-fx-fill: #FF5500;
+	-fx-text-fill: #FF5500;
 }
 /* red */
-.color5{
+#color5{
 	-fx-background-color: #FF957D;	
-	-fx-fill: #FF2612;
+	-fx-text-fill: #FF2612;
 }
 /* purple */
-.color6{
+#color6{
 	-fx-background-color: #9F86FF;	
-	-fx-fill: #6700C1;
+	-fx-text-fill: #6700C1;
 }
