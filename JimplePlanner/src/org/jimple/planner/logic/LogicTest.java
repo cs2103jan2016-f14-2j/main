@@ -12,7 +12,6 @@ import org.jimple.planner.Formatter;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
-import org.jimple.planner.exceptions.LabelExceedTotalException;
 import org.junit.Test;
 import org.jimple.planner.storage.*;
 
@@ -87,11 +86,10 @@ public class LogicTest {
 	 * 2. change label name
 	 * 3. no label to change
 	 * 
-	 * @throws LabelExceedTotalException 
 	 * @throws IOException 
 	 */
 	@Test
-	public void ShouldReturnChangedLabel() throws LabelExceedTotalException, IOException	{
+	public void ShouldReturnChangedLabel() throws IOException	{
 		taskLabels.add(TaskLabel.getNewLabel("food"));
 		taskLabels.add(TaskLabel.getNewLabel("work"));
 		String[] variableArray1 = {"food", null, "red"};
@@ -129,10 +127,9 @@ public class LogicTest {
 	 * when delete cache is >20
 	 * 
 	 * @throws InvalidFromAndToTimeException
-	 * @throws LabelExceedTotalException 
 	 */
 	@Test
-	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
+	public void ShouldReturnUndoCommand() throws IOException, InvalidFromAndToTimeException  {
 		String[] variableArray1 = { "1" };
 		String[] variableArray2 = { "todo", "task to be undone", null, null, null, null };
 		String[] variableArray3 = { "1", "edit task to be undone", null, null, null, null };
@@ -181,7 +178,7 @@ public class LogicTest {
 	 * edit
 	 */
 	@Test
-	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
+	public void ShouldReturnTrueAfterEditting() throws IOException, InvalidFromAndToTimeException{
 		String[] variableArray = { "1", "task one", null, "2016-03-12T14:00", null, null };
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
@@ -196,7 +193,7 @@ public class LogicTest {
 	 * unable to find task and no edit
 	 */
 	@Test
-	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTimeException, LabelExceedTotalException {
+	public void ShouldReturnFeedbackAfterCheckThreeArrayToEdit() throws IOException, InvalidFromAndToTimeException{
 		String[] variableArray = { "1", "task one", null, "2016-03-30T05:00", null, null };
 		initializeThreeArrays();
 		assertEquals("return same string", "task 1 edited in planner",
@@ -214,10 +211,9 @@ public class LogicTest {
 	 * 4. add a label when does not exist
 	 * 5. add a label when exist
 	 * 6. add a label with "default" if null
-	 * @throws LabelExceedTotalException 
 	 */
 	@Test
-	public void ShouldReturnFeedbackAfterAdding() throws IOException, LabelExceedTotalException {
+	public void ShouldReturnFeedbackAfterAdding() throws IOException {
 		String[] parsedInput1 = { "deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null };
 		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder
 				.addToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, taskLabels, undoTasks));

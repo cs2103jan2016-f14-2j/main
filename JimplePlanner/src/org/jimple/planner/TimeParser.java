@@ -37,8 +37,8 @@ public class TimeParser {
 			1, 1,
 			2, 2,
 			3, 3,
-			4,
-			5, 5,
+			4, 4,
+			5,
 			6, 6,
 			7, 7,
 			8, 8,
@@ -116,12 +116,13 @@ public class TimeParser {
 
 	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
-		System.out.println(isFieldSet("hour") + " " +  isFieldSet("minute") + isFieldSet("day") + isFieldSet("month") + isFieldSet("year"));
+		//System.out.println(isFieldSet("hour") + " " +  isFieldSet("minute") + isFieldSet("day") + isFieldSet("month") + isFieldSet("year"));
 		initSecondaryAndPresetFields(extendedCommand);
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
 					if (setCalendarField("month", getField("month"))) {
+						System.out.println("A" + c.getTime().getMonth());
 						if (setCalendarField("day", getField("day"))) {
 							return true;
 						}
