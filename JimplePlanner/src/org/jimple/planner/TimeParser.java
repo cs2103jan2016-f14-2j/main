@@ -116,6 +116,7 @@ public class TimeParser {
 	private boolean formatCalendarIfValid(String extendedCommand) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException {
 		c = Calendar.getInstance();
 		initSecondaryAndPresetFields(extendedCommand);
+		System.out.println(day + " " + month + " " + year + " " + hour + " " + minute);
 		if (setCalendarField("hour", getField("hour"))) {
 			if (setCalendarField("minute", getField("minute"))) {
 				if (setCalendarField("year", getField("year"))) {
@@ -207,7 +208,7 @@ public class TimeParser {
 					c.set(Calendar.DAY_OF_MONTH, inputValue);
 					return true;
 				case "month" :
-					c.set(Calendar.MONTH, inputValue);
+					c.set(Calendar.MONTH, inputValue-1);
 					return true;
 				case "year" :
 					c.set(Calendar.YEAR, inputValue);
@@ -306,7 +307,7 @@ public class TimeParser {
 				c.add(Calendar.DATE, 1);
 			}
 			setField("day", c.get(Calendar.DATE));
-			setField("month", c.get(Calendar.MONTH));
+			setField("month", c.get(Calendar.MONTH) + 1);
 			return true;
 		}
 		return false;
@@ -348,12 +349,14 @@ public class TimeParser {
 		switch (input.toLowerCase()) {
 		case "today" :
 			setField("day", c.get(Calendar.DATE));
-			setField("month", c.get(Calendar.MONTH));
+			setField("month", c.get(Calendar.MONTH) + 1);
+			setField("hour", c.get(Calendar.HOUR_OF_DAY));
+			setField("minute", c.get(Calendar.MINUTE));
 			return true;
 		case "tomorrow" :
 			c.add(Calendar.DATE, 1);
 			setField("day", c.get(Calendar.DATE));
-			setField("month", c.get(Calendar.MONTH));
+			setField("month", c.get(Calendar.MONTH) + 1);
 			return true;
 		default :
 			break;
