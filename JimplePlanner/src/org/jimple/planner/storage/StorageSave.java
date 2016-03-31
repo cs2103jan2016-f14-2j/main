@@ -96,7 +96,7 @@ public class StorageSave implements StorageSaveInterface{
 		}
 		//TODO label field implemented but need to test
 		TaskLabel taskLabel = task.getTaskLabel();
-		if(taskLabel.equals(TaskLabel.getDefaultLabel())){
+		if(!taskLabel.equals(TaskLabel.getDefaultLabel())){
 			String taskLabelToString = formatToTaskLabel(taskLabel);
 			lineString = lineString + taskLabelToString;
 		}

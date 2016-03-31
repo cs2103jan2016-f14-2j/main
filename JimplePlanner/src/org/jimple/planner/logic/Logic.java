@@ -64,8 +64,9 @@ public class Logic {
 		labeler = new LogicLabel();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
-			//taskLabels = store.getLabels();
+			taskLabels = store.getLabels();
 			LogicMasterListModification.assignTaskIds(allTasks);
+			LogicMasterListCouple.linkTasksToLabels(allTasks, taskLabels);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);
