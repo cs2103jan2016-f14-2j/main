@@ -32,7 +32,7 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 					undoTasks);
 		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
-			packageForSavingInFile(store, todo, deadlines, events);
+			packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 			return "task " + variableArray[0] + Constants.EDITED_FEEDBACK;
 		}
 		return "task " + variableArray[0] + Constants.ERROR_EDIT_FEEDBACK;

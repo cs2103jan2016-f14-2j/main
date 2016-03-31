@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 import org.jimple.planner.storage.Storage;
 
 public interface LogicMasterListModification {
@@ -24,12 +25,13 @@ public interface LogicMasterListModification {
 	}
 
 	public default void packageForSavingInFile(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events) throws IOException {
+			ArrayList<Task> events, ArrayList<TaskLabel> taskLabels) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
 		assignTaskIds(allTasksArray);
+		store.isSavedLabels(taskLabels);
 		store.isSavedTasks(allTasksArray);
 	}
 

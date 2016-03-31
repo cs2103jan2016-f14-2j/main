@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
+import org.jimple.planner.TaskLabel;
 
 public class LogicDelete implements LogicTaskModification, LogicMasterListModification {
 	
 	protected String deleteTask(Storage store, String[] variableArray, 
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
-			LinkedList<LogicPreviousTask> undoTasks)
+			LinkedList<LogicPreviousTask> undoTasks, ArrayList<TaskLabel> taskLabels)
 			throws IOException {
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
@@ -25,7 +26,7 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 			isEventsDeleted = findTaskToDelete(variableArray, events, undoTasks);
 		}
 		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
-			packageForSavingInFile(store, todo, deadlines, events);
+			packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 			return "task " + variableArray[0] + Constants.DELETED_FEEDBACK;
 		}
 		return "task " + variableArray[0] + Constants.ERROR_DELETED_FEEDBACK;
@@ -46,8 +47,8 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 	}
 
 	public String testDeleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks) throws IOException {
-		return deleteTask(store, variableArray, todo, deadlines, events, undoTasks);
+			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
+		return deleteTask(store, variableArray, todo, deadlines, events, undoTasks, taskLabels);
 	}
 	
 	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list, LinkedList<LogicPreviousTask> undoTasks) throws IOException	{

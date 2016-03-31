@@ -91,7 +91,7 @@ public class Logic {
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						undoTasks);
+						undoTasks, taskLabels);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
@@ -115,7 +115,7 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDO:
-				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory);
+				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory, taskLabels);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:

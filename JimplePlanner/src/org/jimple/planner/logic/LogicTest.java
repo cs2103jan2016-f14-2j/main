@@ -140,20 +140,20 @@ public class LogicTest {
 
 		// test for empty
 		assertEquals(Constants.UNDO_FEEDBACK_ERROR,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		initializeThreeArrays();
 
-		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks);
+		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks, taskLabels);
 		assertEquals("task \"" + "a test only one" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		// test for add
 		testAdder.addToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
 		assertEquals("task \"" + "task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		// test for edit
 		testEditer.editTask(testStore, variableArray3, floating, deadlines, events, tempHistory, taskLabels, undoTasks);
 		assertEquals("task \"" + "edit task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 
 		// test for overshot
 		for (int i = 0; i < 22; i++) {
@@ -161,7 +161,7 @@ public class LogicTest {
 			undoTasks.add(testTask);
 		}
 		assertEquals("task \"" + "21" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 	}
 
 	/*
