@@ -387,9 +387,7 @@ public class TimeParser {
 	}
 	
 	private boolean parseFloatingNumberAMPM(String input, String inputAMPM) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
-		System.out.println(input);
 		if (isANumber(input) && isValidAMPMHour(input)) {
-			System.out.println("A");
 			int inputTime = Integer.parseInt(input);
 			switch (inputAMPM) {
 				case "am" :
