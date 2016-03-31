@@ -106,37 +106,6 @@ public class UiPrompt extends UiController{
 		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
 		ListView<Task> listView = controller.listFormatter.getFormattedList();
 		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
-		
-//		
-//		Pane popup = new Pane();
-//		VBox dialogVbox = new VBox(10);
-//		HBox dialogHbox = new HBox(10);
-//		Button closebtn = new Button("x");
-//		Region spacer = new Region();
-//		VBox.setVgrow(spacer, Priority.ALWAYS);
-//		HBox.setHgrow(spacer, Priority.ALWAYS);
-//		controller.searchCloseButton.setOnAction(new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent event) {
-//				controller.popupLayer.getChildren().clear();
-//				controller.overlay.setVisible(false);
-//			}
-//		});
-//		HBox closeBar = new HBox(new Text("Search Results"),spacer,closebtn);
-//		dialogVbox.getChildren().add(closeBar);
-//		dialogVbox.getChildren().add(listView);
-//		dialogVbox.getChildren().add(dialogHbox);
-//		dialogVbox.setPadding(new Insets(10));
-//		popup.getChildren().add(dialogVbox);
-//		popup.getStyleClass().add(Constants.TYPE_POPUP);
-////
-//
-//		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
-//		ListView<Task> listView = controller.listFormatter.getFormattedList();
-//		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
-//		
-//		searchContent.getChildren().add(listView);
-		
 
 		controller.searchContent.getChildren().clear();
 		controller.searchContent.getChildren().add(listView);
