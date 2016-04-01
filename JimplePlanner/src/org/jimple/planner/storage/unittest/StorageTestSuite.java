@@ -10,6 +10,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	StorageTestSaveLoadMechanics.class,
 	TestWriteTask.class })
 
-public class AllTests {
+public class StorageTestSuite {
 
 }
