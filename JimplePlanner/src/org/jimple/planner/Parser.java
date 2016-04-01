@@ -312,7 +312,7 @@ public class Parser {
 		if (isValidColour(userInput)) {
 			inputStruct.setAtIndex(INDEX_EDITLABEL_COLOUR, userInput);
 		} else {
-			throw new InvalidCommandException("Label Colour: \"" + userInput + "\" invalid. Type \"help\" to see the list of valid label colours.");
+			throw new InvalidCommandException("Label Colour: \"" + userInput + "\" invalid.");
 		}
 	}
 	
