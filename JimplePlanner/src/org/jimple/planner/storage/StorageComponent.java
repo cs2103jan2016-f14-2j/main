@@ -18,8 +18,8 @@ public class StorageComponent implements Storage{
 	
 	@Override
 	public boolean isSavedTasks(ArrayList<ArrayList<Task>> allTaskLists) {
-		String fileName = storageProperties.getCurrentFilePath();
-		String tempFileName = storageProperties.getCurrentTempFilePath();
+		String fileName = storageProperties.getCurrentSaveFilePath();
+		String tempFileName = storageProperties.getCurrentTempSaveFilePath();
 		return storageSave.isSavedTasksSelect(allTaskLists, fileName, tempFileName);
 	}
 	
@@ -30,7 +30,7 @@ public class StorageComponent implements Storage{
 	
 	@Override
 	public ArrayList<ArrayList<Task>> getTasks(){
-		String fileName = storageProperties.getCurrentFilePath();
+		String fileName = storageProperties.getCurrentSaveFilePath();
 		return storageLoad.getTaskSelect(fileName);
 	}
 	
