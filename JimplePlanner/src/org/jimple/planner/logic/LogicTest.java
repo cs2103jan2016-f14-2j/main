@@ -139,7 +139,7 @@ public class LogicTest {
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		initializeThreeArrays();
 
-		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks, taskLabels);
+		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks);
 		assertEquals("task \"" + "a test only one" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		// test for add

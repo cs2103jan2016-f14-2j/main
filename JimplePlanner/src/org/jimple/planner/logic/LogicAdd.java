@@ -22,7 +22,8 @@ public class LogicAdd implements LogicTaskModification, LogicMasterListModificat
 			return Constants.ERROR_WRONG_TIME_FEEDBACK;
 		}
 		allocateCorrectTimeArray(newTask, todo, deadlines, events);
-		packageForSavingInFile(store, todo, deadlines, events, taskLabels);
+		packageForSavingMasterLists(store, todo, deadlines, events);
+		packageForSavingLabelLists(store, taskLabels);
 		tempHistory.add(newTask);
 		undoTasks.add(setNewPreviousTask(Constants.STRING_ADD, newTask));
 		return "\"" + parsedInput[1] + "\"" + Constants.ADDED_FEEDBACK;

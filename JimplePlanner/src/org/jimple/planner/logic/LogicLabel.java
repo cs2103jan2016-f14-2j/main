@@ -54,7 +54,8 @@ public class LogicLabel implements LogicMasterListModification {
 			if (variableArray[0].equals(taskLabels.get(i).getLabelName())) {
 				TaskLabel removedTask = taskLabels.remove(i);
 				removeLabelsFromMasterList(todo, deadlines, events, removedTask);
-				packageForSavingInFile(store, todo, deadlines, events, taskLabels);
+				packageForSavingMasterLists(store, todo, deadlines, events);
+				packageForSavingLabelLists(store, taskLabels);
 				return Constants.LABEL_DELETED_FEEDBACK;
 			}
 		}
@@ -194,6 +195,6 @@ public class LogicLabel implements LogicMasterListModification {
 				}
 			}
 		}
-		packageForSavingInFile(store, todo, deadlines, events, taskLabels);
+		packageForSavingMasterLists(store, todo, deadlines, events);
 	}
 }

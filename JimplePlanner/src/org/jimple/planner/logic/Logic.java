@@ -32,6 +32,7 @@ public class Logic implements LogicMasterListModification{
 	private ArrayList<Task> agenda;
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
+	private ArrayList<Task>	archivedTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	private LinkedList<LogicPreviousTask> undoTasks;
@@ -45,11 +46,13 @@ public class Logic implements LogicMasterListModification{
 	private LogicDirectory directer;
 	private LogicUndo undoer;
 	private LogicLabel labeler;
+	private LogicArchive archiver;
 
 	public Logic() {
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
+		archivedTasks = new ArrayList<Task>();
 		undoTasks = new LinkedList<LogicPreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
@@ -63,10 +66,12 @@ public class Logic implements LogicMasterListModification{
 		directer = new LogicDirectory();
 		undoer = new LogicUndo();
 		labeler = new LogicLabel();
+		archiver = new LogicArchive();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			taskLabels = store.getLabels();
-			assignTaskIds(allTasks);
+			archivedTasks = store.getArchivedTasks();
+			LogicMasterListModification.assignTaskIds(allTasks);
 			LogicLinkLabelsToTasks.linkTasksToLabels(allTasks, taskLabels);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
@@ -91,7 +96,7 @@ public class Logic implements LogicMasterListModification{
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						undoTasks, taskLabels);
+						undoTasks);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
@@ -134,6 +139,10 @@ public class Logic implements LogicMasterListModification{
 			case Constants.STRING_DELETELABEL:
 				feedback[0] = labeler.deleteLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
 				feedback[1]	= "";
+				break;
+			case Constants.STRING_DONE:
+				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, todo, deadlines, events, archivedTasks, taskLabels);
+				feedback[1] = "";
 				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
@@ -198,6 +207,10 @@ public class Logic implements LogicMasterListModification{
 		return agenda;
 	}
 
+	public ArrayList<Task> getArchivedList()	{
+		return archivedTasks;
+	}
+	
 	public ArrayList<TaskLabel> getTaskLabels()	{
 		return taskLabels;
 	}

@@ -24,18 +24,25 @@ public interface LogicMasterListModification {
 		}
 	}
 
-	public default void packageForSavingInFile(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, ArrayList<TaskLabel> taskLabels) throws IOException {
+	public default void packageForSavingMasterLists(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
+			ArrayList<Task> events) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
 		assignTaskIds(allTasksArray);
-		store.isSavedLabels(taskLabels);
 		store.isSavedTasks(allTasksArray);
 	}
+	
+	public default void packageForSavingLabelLists(Storage store, ArrayList<TaskLabel> taskLabels)	{
+		store.isSavedLabels(taskLabels);
+	}
+	
+	public default void packageForSavingArchiveLists(Storage store, ArrayList<Task> archiveTasks)	{
+		store.isSavedArchivedTasks(archiveTasks);
+	}
 
-	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
 			for (Task task : taskList) {

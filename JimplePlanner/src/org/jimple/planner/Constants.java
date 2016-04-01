@@ -88,6 +88,7 @@ public final class Constants {
 	public static final String STRING_CHECKDIR = "CHECKDIR";
 	public static final String STRING_EDITLABEL = "EDITLABEL";
 	public static final String STRING_DELETELABEL = "DELETELABEL";
+	public static final String STRING_DONE = "DONE";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
@@ -148,6 +149,9 @@ public final class Constants {
 	
 	public static final String LABEL_DELETED_FEEDBACK = "label is deleted";
 	public static final String ERROR_LABEL_DELETED_FEEDBACK = "label could not be deleted";
+	
+	public static final String DONE_FEEDBACK = " is now archived";
+	public static final String ERROR_DONE_FEEDBACK = " could not be archived";
 	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
