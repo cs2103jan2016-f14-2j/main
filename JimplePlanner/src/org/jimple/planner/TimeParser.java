@@ -576,7 +576,7 @@ public class TimeParser {
 	
 	private boolean isAfterCurrentYear(int inputYear) {
 		Calendar c = Calendar.getInstance();
-		return inputYear > c.get(Calendar.YEAR);
+		return inputYear >= c.get(Calendar.YEAR);
 	}
 	
 	// Parses numbers with 2 or less digits. E.g "12" may, "7" april.
