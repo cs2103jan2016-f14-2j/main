@@ -223,7 +223,7 @@ public class StorageProperties implements StorageTools{
 	}
 	//TODO remove all other properties or just create a new property and get prevsavepath and savepath
 	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
-		Properties storageProperties = storageLoad.loadProperties();
+		Properties newStorageProperties = getPathProperties();
 		for(TaskLabel taskLabel: labelLists){
 			if(taskLabel.equals(TaskLabel.getDefaultLabel())){
 				continue;
@@ -259,10 +259,20 @@ public class StorageProperties implements StorageTools{
 				System.out.println("Error, no label should be null here");
 				return false;
 			}
-			storageProperties.setProperty(labelName, labelColourString);
+			newStorageProperties.setProperty(labelName, labelColourString);
 		}
-		storageSave.saveProperties(storageProperties);
+		storageSave.saveProperties(newStorageProperties);
 		return true;
+	}
+
+	private Properties getPathProperties() {
+		Properties storageProperties = storageLoad.loadProperties();
+		Properties newStorageProperties = new Properties();
+		String currentPath = storageProperties.getProperty(PROPERTIES_KEY_CURRENT_SAVEPATH);
+		String prevPath = storageProperties.getProperty(PROPERTIES_KEY_PREV_SAVEPATH);
+		newStorageProperties.setProperty(PROPERTIES_KEY_CURRENT_SAVEPATH, currentPath);
+		newStorageProperties.setProperty(PROPERTIES_KEY_PREV_SAVEPATH, prevPath);
+		return newStorageProperties;
 	}
 	
 	public ArrayList<TaskLabel> getLabels(){
