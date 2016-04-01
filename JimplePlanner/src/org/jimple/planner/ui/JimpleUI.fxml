@@ -229,7 +229,7 @@
                                           </ImageView>
                                        </children>
                                     </HBox>
-                                    <ScrollPane hbarPolicy="NEVER" pannable="true">
+                                    <ScrollPane hbarPolicy="NEVER">
                                        <content>
                                           <AnchorPane prefHeight="310.0" prefWidth="584.0">
                                              <children>
