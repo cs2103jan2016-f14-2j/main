@@ -13,7 +13,7 @@ public class ParserTest {
 	@Test
 	public void test() {
 		testParser = new Parser();
-		test0();
+		//test0();
 		test1();
 		test2();
 		test3();
@@ -25,6 +25,9 @@ public class ParserTest {
 		test9();
 		test10();
 		test11();
+		test12();
+		test13();
+		test14();
 	}
 	
 	// Miscellaneous test - for my usage.
@@ -74,7 +77,7 @@ public class ParserTest {
 		try {
 			testStruct = testParser.parseInput("ADD");
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Command Invalid. Type \"help\" TO see the list of commands.");
+			assertEquals(e.getMessage(), "Command: \"ADD\" requires a Task Name. \"");
 		}
 	}
 	
@@ -175,17 +178,53 @@ public class ParserTest {
 		} catch (Exception e) {}
 	}
 	
+	/* Command: EDITLABEL
+	 * Input: Name, NameToChange, Colour
+	 * Expected: {Name, NameToChange,Colour}
+	 */
+	private void test12() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("EDITLABEL asdf NAME qwerty COLOUR red");
+			assertEquals(assertArray(testStruct, "asdf", "qwerty", "red"), true);
+		} catch (Exception e) {}
+	}
+	
+	/* Command: EDITLABEL
+	 * Input: Name, Colour
+	 * Expected: {Name, null, Colour}
+	 */
+	private void test13() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("EDITLABEL asdf NAME qwerty COLOUR orange");
+			assertEquals(assertArray(testStruct, "asdf", "qwerty", "orange"), true);
+		} catch (Exception e) {}
+	}
+	
+	/* Command: EDITLABEL
+	 * Input: Name, NameToChange, Colour (Invalid)
+	 * Expected: Exception
+	 */
+	private void test14() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("EDITLABEL asdf NAME qwerty COLOUR notacolour");
+		} catch (Exception e) {
+			assertEquals(e.getMessage(), "Label Colour: \"notacolour\" invalid.");
+			
+		}
+	}
+	
 	private boolean assertArray(InputStruct inputStruct, String... args) {
 		if (inputStruct == null && args[0] == "exception") {
 			return true;
 		}
 		String[] variableArray = inputStruct.getVariableArray();
-		System.out.println("A" + variableArray.length + " " + args.length);
 		if (variableArray.length != args.length) {
 			return false;
 		}
 		for (int i = 0; i < variableArray.length; i++) {
-			System.out.println("AA" + variableArray[i] + " " + args[i]);
 			if (variableArray[i] == null && args[i] == null) {
 				continue;
 			} else if (!variableArray[i].equals(args[i])) {

@@ -422,8 +422,6 @@ public class TimeParser {
 		case "today" :
 			setField("day", c.get(Calendar.DATE));
 			setField("month", c.get(Calendar.MONTH) + 1);
-			setField("hour", c.get(Calendar.HOUR_OF_DAY));
-			setField("minute", c.get(Calendar.MINUTE));
 			return true;
 		case "tomorrow" :
 			c.add(Calendar.DATE, 1);
