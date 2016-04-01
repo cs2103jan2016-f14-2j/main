@@ -14,6 +14,7 @@ public class Task {
 	private String description;
 	private String type;
 	private boolean isOverDue;
+	private boolean isDone;
 	private int taskId;
 	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
@@ -27,6 +28,7 @@ public class Task {
 		this.toDateTime = null;
 		this.type = TYPE_TODO;
 		this.isOverDue = false;
+		this.isDone = false;
 		this.taskId = 1000;
 		this.taskLabel = TaskLabel.getDefaultLabel();
 	}
@@ -39,6 +41,7 @@ public class Task {
 		this.toDateTime = taskToBeDuplicated.getToTime();
 		this.type = taskToBeDuplicated.getType();
 		this.isOverDue = taskToBeDuplicated.getIsOverDue();
+		this.isDone = taskToBeDuplicated.getIsDone();
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 	}
 
@@ -192,6 +195,14 @@ public class Task {
 
 	public int getTaskId() {
 		return taskId;
+	}
+	
+	public boolean getIsDone(){
+		return isDone;
+	}
+	
+	public void setIsDone(boolean isDone){
+		this.isDone = isDone;
 	}
 
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {

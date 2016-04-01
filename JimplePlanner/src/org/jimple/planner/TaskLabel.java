@@ -6,7 +6,6 @@ import static org.jimple.planner.Constants.TASK_LABEL_NAME_DEFAULT;
 import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
 
 public class TaskLabel {
-	//Colour counter determines the colour of the label next, must be in range [1, 6]
 	private String labelName;
 	private int colourId;
 	private int labelId;
