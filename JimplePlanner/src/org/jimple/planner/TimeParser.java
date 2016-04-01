@@ -545,16 +545,14 @@ public class TimeParser {
 			throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\". Please input a valid time for year.");
 		} else {
 			int intYear = Integer.parseInt(inputYear);
+			if (intYear < 1000) {
+				intYear += 2000;
+			}
 			if (isAfterCurrentYear(intYear)) {
 				setField("year", intYear);
 			} else {
-				if (year > 999) {
-					setField("year", 2000 + intYear);
-				} else {
-					throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\" is before the current year.");
-				}
+				throw new InvalidDateTimeFieldException("Invalid input: Year \"" + inputYear + "\" of \"" + input + "\" is before the current year.");
 			}
-			month = Integer.parseInt(inputMonth);
 		}
 		return true;
 	}
