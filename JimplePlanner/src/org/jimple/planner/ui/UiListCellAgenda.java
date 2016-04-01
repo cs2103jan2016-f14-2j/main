@@ -88,8 +88,9 @@ public class UiListCellAgenda extends ListCell<Task> {
 				break;
 			}
 			HBox hbox = new HBox(new Text("hello world"));
-//			setGraphic(hbox);
-			setGraphic(anchorpane);
+//			hbox.setPrefHeight(30);
+//			setGraphic(new Text("hello world"));
+			setGraphic(anchorpane);	
 		}
 	}
 

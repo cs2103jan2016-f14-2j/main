@@ -52,7 +52,8 @@ public class UiController extends myObserver implements Initializable {
 	protected UiPrompt prompt;
 	protected UiListViewControl listViewControl;
 	private LinkedList<String> cmdHistory;
-	private int cmdHistoryPointer;
+	private int cmdHistoryPointer;	
+	public static boolean isSearch = false;
 	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
 	Logic logic;
 	UiFormatter listFormatter = new UiFormatter();
@@ -210,8 +211,10 @@ public class UiController extends myObserver implements Initializable {
 		loadDeadlinesList();
 		loadTodoList();
 		prompt = new UiPrompt(this);
-		if(prompt.isSearch)
+		if(isSearch){
+			System.out.println("search prompt updated");
 			prompt.searchPrompt();
+		}
 		listViewControl.selectIndex(i);
 		listViewControl.getActiveListView().scrollTo(i);
 		if(cmb){
@@ -315,7 +318,7 @@ public class UiController extends myObserver implements Initializable {
 					listViewControl.getActiveListView().requestFocus();
 					if(overlay.isVisible()){
 						overlay.setVisible(false);
-						prompt.isSearch = false;
+						isSearch = false;
 					}
 					break;
 			    case UP:
@@ -440,7 +443,7 @@ public class UiController extends myObserver implements Initializable {
 	@FXML
 	private void searchCloseButtonAction(){
 		popupLayer.getChildren().clear();
-		prompt.isSearch = false;
+		isSearch = false;
 		overlay.setVisible(false);
 	}
 
