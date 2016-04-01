@@ -211,12 +211,15 @@ public class UiFormatter {
 	}
 
 	private void ongoingCellFormat() {
+		if (listView != null) {
+		
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> arg0) {
 				return new UiListCellOngoing();
 			}
 		});
+		}
 	}
 
 	private void todoCellFormat() {
