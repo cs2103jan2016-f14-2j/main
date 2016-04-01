@@ -14,7 +14,10 @@ public class TestWriteTask {
 	private StorageSave storageSave = new StorageSave();
 	private ExampleTasks exampleTasksGenerator = new ExampleTasks();
 	
-	//This is a normal use case for writing to file
+	/*
+	 * The purpose of this test is to see how tasks are written in an environment that does not save to a file directly
+	 * each String in linesToCheck represent 1 task from the example of tasks given from getExampleTasks
+	 */
 	@Test
 	public void writeTasksTest1() {
 		String[] linesToCheck = {
