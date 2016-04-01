@@ -89,6 +89,7 @@ public final class Constants {
 	public static final String STRING_EDITLABEL = "EDITLABEL";
 	public static final String STRING_DELETELABEL = "DELETELABEL";
 	public static final String STRING_DONE = "DONE";
+	public static final String STRING_RETURN = "RETURN";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
@@ -153,6 +154,9 @@ public final class Constants {
 	public static final String DONE_FEEDBACK = " is now archived";
 	public static final String ERROR_DONE_FEEDBACK = " could not be archived";
 	
+	public static final String UNDONE_FEEDBACK = " has returned to your list";
+	public static final String ERROR_UNDONE_FEEDBACK = " could not be returned to your list";
+
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
 	private Constants(){

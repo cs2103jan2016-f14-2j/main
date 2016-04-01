@@ -144,6 +144,10 @@ public class Logic implements LogicMasterListModification{
 				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, todo, deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
+			case Constants.STRING_RETURN:
+				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, todo, deadlines, events, archivedTasks, taskLabels);
+				feedback[1] = "";
+				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
