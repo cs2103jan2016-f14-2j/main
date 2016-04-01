@@ -288,11 +288,22 @@ public class UiController extends myObserver implements Initializable {
 	 * 
 	========================================*/
 	private void fadeOut(float sec, Node item){
-		FadeTransition ft = new FadeTransition(Duration.millis(sec*1000), item);
+		FadeTransition ft = new FadeTransition(Duration.millis(sec*500), item);
+		FadeTransition ft2 = new FadeTransition(Duration.millis(sec*1000), item);
 		ft.setFromValue(1.0);
-		ft.setToValue(0);
+		ft.setToValue(1.0);
+		ft2.setFromValue(1.0);
+		ft2.setToValue(0.0);
 		ft.setCycleCount(1);
 		ft.play();
+		
+		ft.setOnFinished(new EventHandler<ActionEvent>() {
+
+		    @Override
+		    public void handle(ActionEvent event) {
+		        ft2.play();
+		    }
+		});
 	}
 	
 	public static void fitToAnchorPane(Node node) {
