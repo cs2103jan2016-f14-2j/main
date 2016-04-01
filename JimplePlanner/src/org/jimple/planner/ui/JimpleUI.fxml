@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -14,6 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.UiController">
    <children>
@@ -211,9 +214,37 @@
                   <Region HBox.hgrow="ALWAYS" />
                   <AnchorPane fx:id="popupLayer">
                      <children>
-                        <AnchorPane fx:id="searchBox" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
+                        <AnchorPane fx:id="helpBox" layoutX="10.0" layoutY="10.0" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
                            <children>
-                              <VBox layoutX="10.0" layoutY="15.0">
+                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <Label text="Help Sheet" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <ImageView fx:id="helpCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../closeBtn.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                    <ScrollPane hbarPolicy="NEVER" pannable="true">
+                                       <content>
+                                          <AnchorPane prefHeight="310.0" prefWidth="584.0">
+                                             <children>
+                                                <Text fx:id="helpContent" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="searchBox" prefHeight="312.0" prefWidth="511.0" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
+                           <children>
+                              <VBox layoutX="10.0" layoutY="15.0" prefHeight="312.0" prefWidth="511.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <HBox>
                                        <children>
@@ -227,6 +258,7 @@
                                        </children>
                                     </HBox>
                                     <AnchorPane fx:id="searchContent" />
+                                    <ListView fx:id="searchList" editable="true" prefHeight="238.0" prefWidth="425.0" />
                                  </children>
                               </VBox>
                            </children>

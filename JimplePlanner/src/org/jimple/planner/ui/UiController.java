@@ -75,30 +75,13 @@ public class UiController extends myObserver implements Initializable {
 	AnchorPane mainController;
 
 	@FXML
-	Tab mainTab;
-	@FXML
-	Tab agendaTab;
-	@FXML
-	Tab eventsTab;
-	@FXML
-	Tab todoTab;
-	@FXML
-	Tab deadlinesTab;
+	Tab mainTab, agendaTab, eventsTab, todoTab, deadlinesTab;
 
 	@FXML
 	TabPane tabPanes;
 
 	@FXML
-	AnchorPane mainContent;
-	
-	@FXML
-	AnchorPane todayPane;
-	
-	@FXML
-	AnchorPane nowPane;
-	
-	@FXML
-	AnchorPane upcomingPane;
+	AnchorPane mainContent, todayPane, nowPane, upcomingPane;
 	
 	@FXML
 	AnchorPane mainContainer;
@@ -125,7 +108,13 @@ public class UiController extends myObserver implements Initializable {
 	AnchorPane popupLayer;
 	
 	@FXML
-	AnchorPane searchBox, searchContent;
+	AnchorPane searchBox, searchContent, helpBox;
+	
+	@FXML
+	ListView<Task> searchList;
+	
+	@FXML
+	Text helpContent;
 
 	@FXML
 	VBox overlay;
@@ -134,7 +123,7 @@ public class UiController extends myObserver implements Initializable {
 	Label clock;
 	
 	@FXML
-	ImageView closeButton, searchCloseButton;
+	ImageView closeButton, searchCloseButton, helpCloseButton;
 
 
 
@@ -453,7 +442,7 @@ public class UiController extends myObserver implements Initializable {
 		popupLayer.getChildren().clear();
 		prompt.isSearch = false;
 		overlay.setVisible(false);
-	}	
+	}
 
 	
 	private static final class DragContext {
@@ -537,7 +526,6 @@ public class UiController extends myObserver implements Initializable {
 			break;
 		case Constants.TYPE_SEARCH:
 			prompt.searchPrompt();
-			overlay.setVisible(true);
 			break;
 		case Constants.TYPE_HELP:
 			prompt.helpPrompt(feedback[0]);
