@@ -59,9 +59,9 @@ public class StorageProperties implements StorageTools{
 		Properties storageProperties = storageLoad.loadProperties();
 		boolean setStatus = false;
 		if(isFilePathValid(pathName)){
-			if(isKeyChanged(pathName)){
-				setStatus = copyToNewLocation();
-				deleteResidualDirectory();
+			if(isKeyChanged(pathName, storageProperties)){
+				setStatus = copyToNewLocation(storageProperties);
+				deleteResidualDirectory(storageProperties);
 			}
 		}
 		storageSave.saveProperties(storageProperties);
@@ -84,8 +84,7 @@ public class StorageProperties implements StorageTools{
     }
 	
 	//TODO Refactor this method
-	private boolean isKeyChanged(String pathName){
-		Properties storageProperties = storageLoad.loadProperties();
+	private boolean isKeyChanged(String pathName, Properties storageProperties){
 		String previousPath = storageProperties.getProperty(PROPERTIES_KEY_CURRENT_SAVEPATH);
 		if(previousPath.equals(pathName)){
 			return false;
@@ -116,9 +115,9 @@ public class StorageProperties implements StorageTools{
 		return (previousFileDir.equals(currentFileDir));
 	}
 	
-	private boolean copyToNewLocation(){
-		String newDir = getCurrentFileDirectory();
-		String oldDir = getOldFileDirectory();
+	private boolean copyToNewLocation(Properties storageProperties){
+		String newDir = getCurrentFileDirectory(storageProperties);
+		String oldDir = getOldFileDirectory(storageProperties);
 		
 		String newPath = getFilePath(newDir);
 		String oldPath = getFilePath(oldDir);
@@ -151,8 +150,7 @@ public class StorageProperties implements StorageTools{
 		return consolidatedTasks;
 	}
 	
-	private void deleteResidualDirectory(){
-		Properties storageProperties = storageLoad.loadProperties();
+	private void deleteResidualDirectory(Properties storageProperties){
 		String oldFileDirPath = storageProperties.getProperty(PROPERTIES_KEY_PREV_SAVEPATH);
 		oldFileDirPath = getFullFilePath(oldFileDirPath, DEFAULT_FILE_DIRECTORY);
 		if(!oldFileDirPath.equals(PROPERTIES_SAVEPATH_TO_CWD)){
@@ -163,8 +161,7 @@ public class StorageProperties implements StorageTools{
 		}
 	}
 	
-	private String getFileDirectoryFromProperties(String key){
-		Properties storageProperties = storageLoad.loadProperties();
+	private String getFileDirectoryFromProperties(Properties storageProperties, String key){
 		String fileDir = storageProperties.getProperty(key);
 		fileDir = getFileDirectory(fileDir);
 		return fileDir;
@@ -177,12 +174,12 @@ public class StorageProperties implements StorageTools{
 		return fileDir;
 	}
 	
-	private String getCurrentFileDirectory(){
-		return getFileDirectoryFromProperties(PROPERTIES_KEY_CURRENT_SAVEPATH);
+	private String getCurrentFileDirectory(Properties storageProperties){
+		return getFileDirectoryFromProperties(storageProperties, PROPERTIES_KEY_CURRENT_SAVEPATH);
 	}
 	
-	private String getOldFileDirectory(){
-		return getFileDirectoryFromProperties(PROPERTIES_KEY_PREV_SAVEPATH);
+	private String getOldFileDirectory(Properties storageProperties){
+		return getFileDirectoryFromProperties(storageProperties, PROPERTIES_KEY_PREV_SAVEPATH);
 	}
 	
 	private String getFullFilePath(String fileSaveDir, String fileName) {
@@ -203,18 +200,29 @@ public class StorageProperties implements StorageTools{
 		return getFullFilePath(fileSaveDir, FILEPATH_DEFAULT_TEMP);
 	}
 	
-	public String getCurrentFilePath(){
-		String currentFileDir = getCurrentFileDirectory();
+	private String getCurrentFilePath(Properties storageProperties){
+		String currentFileDir = getCurrentFileDirectory(storageProperties);
 		return getFilePath(currentFileDir);
 	}
 	
-	public String getCurrentTempFilePath(){
-		String currentFileDir = getCurrentFileDirectory();
+	private String getCurrentTempFilePath(Properties storageProperties){
+		String currentFileDir = getCurrentFileDirectory(storageProperties);
 		return getTempFilePath(currentFileDir);
 	}
 	
+	public String getCurrentSaveFilePath(){
+		Properties storageProperties = storageLoad.loadProperties();
+		return getCurrentFilePath(storageProperties);
+	}
+	
+	public String getCurrentTempSaveFilePath(){
+		Properties storageProperties = storageLoad.loadProperties();
+		return getCurrentTempFilePath(storageProperties);
+	}
+	
 	public String checkPath(){
-		String currentPath = getCurrentFileDirectory();
+		Properties storageProperties = storageLoad.loadProperties();
+		String currentPath = getCurrentFileDirectory(storageProperties);
 		if(currentPath.equals(EMPTY_STRING)){
 			File currentPathFile = new File(currentPath);
 			currentPath = currentPathFile.getAbsolutePath();
