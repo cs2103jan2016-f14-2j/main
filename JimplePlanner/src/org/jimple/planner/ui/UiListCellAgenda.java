@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 
 public class UiListCellAgenda extends ListCell<Task> {
 	
@@ -79,11 +81,14 @@ public class UiListCellAgenda extends ListCell<Task> {
 				setLabel(item);
 				
 				title.setText(item.getTitle());
+				title.setWrapText(true);
 				id.setText(String.format("%d", item.getTaskId()));
 				label.setText(item.getTaskLabel().getLabelName());
 				label.setId("color" + item.getTaskLabel().getColourId());
 				break;
 			}
+			HBox hbox = new HBox(new Text("hello world"));
+//			setGraphic(hbox);
 			setGraphic(anchorpane);
 		}
 	}

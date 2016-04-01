@@ -242,9 +242,9 @@
                               </VBox>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="searchBox" prefHeight="312.0" prefWidth="511.0" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
+                        <AnchorPane fx:id="searchBox" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
                            <children>
-                              <VBox layoutX="10.0" layoutY="15.0" prefHeight="312.0" prefWidth="511.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
                                  <children>
                                     <HBox>
                                        <children>
@@ -257,8 +257,7 @@
                                           </ImageView>
                                        </children>
                                     </HBox>
-                                    <AnchorPane fx:id="searchContent" />
-                                    <ListView fx:id="searchList" editable="true" prefHeight="238.0" prefWidth="425.0" />
+                                    <ListView fx:id="searchList" editable="true" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </children>
