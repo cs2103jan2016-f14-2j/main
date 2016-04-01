@@ -98,6 +98,8 @@ public class Task {
 	public void setToDate(String dateTime) {
 		if (dateTime != null) {
 			this.toDateTime = LocalDateTime.parse(dateTime);
+		} else	{
+			this.toDateTime = null;
 		}
 		checkAndSetType();
 	}

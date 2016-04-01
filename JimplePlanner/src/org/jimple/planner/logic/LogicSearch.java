@@ -9,6 +9,7 @@ public class LogicSearch {
 	
 	protected ArrayList<Task> searchWord(String wordToBeSearched,  ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
+		searchWordResults.clear();
 		mostRecentlySearchedWord = wordToBeSearched;
 		
 		if (todo.isEmpty() && deadlines.isEmpty() && events.isEmpty()) {

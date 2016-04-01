@@ -9,36 +9,47 @@ import java.util.LinkedList;
 
 public interface LogicTaskModification {
 
-	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels){
+	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels) {
 		Task editedTask = new Task(aTask);
 		for (int i = 1; i < variableArray.length; i++) {
-			if (variableArray[i] != null) {
-				switch (i) {
-				case 1:
+			switch (i) {
+			case 1:
+				if (variableArray[i] != null) {
 					editedTask.setTitle(variableArray[i]);
-					break;
-				case 2:
+				}
+				break;
+			case 2:
+				if (variableArray[i] != null) {
 					editedTask.setDescription(variableArray[i]);
-					break;
-				case 3:
+				}
+				break;
+			case 3:
+				if (variableArray[i] != null) {
 					editedTask.setFromDate(variableArray[i]);
-					break;
-				case 4:
-					editedTask.setToDate(variableArray[i]);
-					break;
-				case 5:
+				}
+				break;
+			case 4:
+				editedTask.setToDate(variableArray[i]);
+				if (variableArray[i] == null)	{
+					System.out.println(variableArray[i]);
+					editedTask.setToDate(null);
+				}
+//				System.out.println(editedTask.getToTimeString());
+				break;
+			case 5:
+				if (variableArray[i] != null) {
 					TaskLabel label = checkNewTaskLabel(variableArray[i], taskLabels);
 					editedTask.setTaskLabel(label);
-					break;
-				default:
-					break;
 				}
+				break;
+			default:
+				break;
 			}
 		}
 		return editedTask;
 	}
 
-	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels){
+	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels) {
 		if (!taskLabels.isEmpty()) {
 			for (TaskLabel aLabel : taskLabels) {
 				if (aLabel.getLabelName().equals(name)) {

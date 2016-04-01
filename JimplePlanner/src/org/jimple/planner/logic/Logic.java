@@ -105,6 +105,7 @@ public class Logic {
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_SEARCH:
+				searchResults.clear();
 				searchResults = searcher.searchWord(parsedInput.getVariableArray()[0], todo, deadlines, events);
 				feedback[0] = "";
 				feedback[1] = Constants.TYPE_SEARCH;
@@ -185,7 +186,11 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getSearchList() {
+		searchResults.clear();
 		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events);
+		for (int i=0;i<searchResults.size();i++)	{
+			System.out.println(searchResults.get(i).getTitle());
+		}
 		return searchResults;
 	}
 

@@ -25,20 +25,21 @@ public class LogicAddIntegrationTest {
 		assertEquals("2016-03-12T14:00", testLogic.getEventsList().get(0).getToTimeString());
 		
 		assertEquals("task 3", testLogic.getEventsList().get(1).getTitle());
-		assertEquals(String.valueOf(LocalDateTime.now()).substring(0, 16), testLogic.getEventsList().get(1).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T00:00", testLogic.getEventsList().get(1).getFromTimeString());
 		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T23:59", testLogic.getEventsList().get(1).getToTimeString());
 		
-		assertEquals("task 5", testLogic.getEventsList().get(2).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T11:00", testLogic.getEventsList().get(2).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T18:00", testLogic.getEventsList().get(2).getToTimeString());
+		assertEquals("task 5", testLogic.getEventsList().get(3).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T11:00", testLogic.getEventsList().get(3).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T18:00", testLogic.getEventsList().get(3).getToTimeString());
 		
-		assertEquals("task 1", testLogic.getEventsList().get(3).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T13:00", testLogic.getEventsList().get(3).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T15:00", testLogic.getEventsList().get(3).getToTimeString());
+		assertEquals("task 1", testLogic.getEventsList().get(4).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T13:00", testLogic.getEventsList().get(4).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T15:00", testLogic.getEventsList().get(4).getToTimeString());
 		
-		assertEquals("task 4", testLogic.getEventsList().get(4).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T00:00", testLogic.getEventsList().get(4).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T19:00", testLogic.getEventsList().get(4).getToTimeString());
+		assertEquals("task 4", testLogic.getEventsList().get(2).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T00:00", testLogic.getEventsList().get(2).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T19:00", testLogic.getEventsList().get(2).getToTimeString());
+	
 	}
 	
 	@Test
@@ -50,7 +51,7 @@ public class LogicAddIntegrationTest {
 		testLogic.execute("ADD task 11 BY tomorrow");
 		
 		assertEquals("task 10", testLogic.getDeadlinesList().get(0).getTitle());
-		assertEquals(String.valueOf(LocalDateTime.now()).substring(0, 16), testLogic.getDeadlinesList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T23:59", testLogic.getDeadlinesList().get(0).getFromTimeString());
 		
 		assertEquals("task 11", testLogic.getDeadlinesList().get(1).getTitle());
 		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T23:59", testLogic.getDeadlinesList().get(1).getFromTimeString());
