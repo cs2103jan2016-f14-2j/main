@@ -151,11 +151,6 @@ public class UiController extends myObserver implements Initializable {
 		cmdHistoryPointer = 0;
 		System.out.println("initializing Jimple UI");
 		logic.attach(this);
-//		logic.refreshLists();
-		
-		todayPane.getStyleClass().add("today-pane");
-		nowPane.getStyleClass().add("today-pane");
-		upcomingPane.getStyleClass().add("today-pane");
 		
 		TextFields.bindAutoCompletion(
                 commandBox,
@@ -226,7 +221,8 @@ public class UiController extends myObserver implements Initializable {
 		loadDeadlinesList();
 		loadTodoList();
 		prompt = new UiPrompt(this);
-		prompt.searchPrompt();
+		if(prompt.isSearch)
+			prompt.searchPrompt();
 		listViewControl.selectIndex(i);
 		listViewControl.getActiveListView().scrollTo(i);
 		if(cmb){
@@ -247,7 +243,7 @@ public class UiController extends myObserver implements Initializable {
 			todayPane.getChildren().add(todayEmpty);
 		}
 		
-		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_NOW);
+		listFormatter.formatList(logic.getEventsList(),Constants.TYPE_NOW);
 		list = listFormatter.getFormattedList();
 		nowPane.getChildren().clear();
 		if(list != null){
@@ -307,7 +303,7 @@ public class UiController extends myObserver implements Initializable {
 		ft.play();
 	}
 	
-	public void fitToAnchorPane(Node node) {
+	public static void fitToAnchorPane(Node node) {
 		AnchorPane.setTopAnchor(node, 0.0);
 		AnchorPane.setLeftAnchor(node, 0.0);
 		AnchorPane.setRightAnchor(node, 0.0);
@@ -328,8 +324,10 @@ public class UiController extends myObserver implements Initializable {
 			    case ESCAPE:
 					tabPanes.requestFocus();
 					listViewControl.getActiveListView().requestFocus();
-					if(overlay.isVisible())
+					if(overlay.isVisible()){
 						overlay.setVisible(false);
+						prompt.isSearch = false;
+					}
 					break;
 			    case UP:
 					if(cmdHistoryPointer < cmdHistory.size() - 1)
@@ -453,6 +451,7 @@ public class UiController extends myObserver implements Initializable {
 	@FXML
 	private void searchCloseButtonAction(){
 		popupLayer.getChildren().clear();
+		prompt.isSearch = false;
 		overlay.setVisible(false);
 	}	
 

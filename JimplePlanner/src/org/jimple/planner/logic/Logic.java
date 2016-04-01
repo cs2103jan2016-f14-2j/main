@@ -261,8 +261,10 @@ public class Logic {
 		listOfCommands += Constants.ADD_COMMAND_FROMTO;
 
 		listOfCommands += Constants.EDIT_HELP_HEADER;
-		listOfCommands += Constants.EDIT_COMMAND_ONE_TIMING;
-		listOfCommands += Constants.EDIT_COMMAND_TWO_TIMINGS;
+		listOfCommands += Constants.EDIT_COMMAND_NAME;
+		listOfCommands += Constants.EDIT_COMMAND_BY_TIME;
+		listOfCommands += Constants.EDIT_COMMAND_FROMTO_TIME;
+		listOfCommands += Constants.EDIT_COMMAND_LABEL;
 
 		listOfCommands += Constants.DELETE_HELP_HEADER;
 		listOfCommands += Constants.DELETE_COMMAND;
@@ -283,7 +285,7 @@ public class Logic {
 		listOfCommands += Constants.EDITLABEL_COMMAND;
 		
 		listOfCommands += Constants.DELETELABEL_HELP_HEADER;
-		listOfCommands += Constants.EDITLABEL_COMMAND;
+		listOfCommands += Constants.DELETELABEL_COMMAND;
 		return listOfCommands;
 	}
 

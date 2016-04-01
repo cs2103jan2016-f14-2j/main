@@ -47,9 +47,9 @@ public class UiListCellAgenda extends ListCell<Task> {
 				title.setText(item.getTitle());
 				id.setText(String.format("  %d", item.getTaskId()));
 				date.setText(String.format("%s", item.getPrettyFromTime()));
-				title.setId(Constants.TYPE_DEADLINE);
-				id.setId(Constants.TYPE_DEADLINE);
-				date.setId(Constants.TYPE_DEADLINE);
+				title.setId(Constants.TYPE_DEADLINE+"Text");
+				id.setId(Constants.TYPE_DEADLINE+"Text");
+				date.setId(Constants.TYPE_DEADLINE+"Text");
 				break;
 			
 			//EVENT
@@ -66,9 +66,9 @@ public class UiListCellAgenda extends ListCell<Task> {
 						item.getPrettyFromTime(),
 						item.getPrettyToDate(),
 						item.getPrettyToTime()));
-				title.setId(Constants.TYPE_EVENT);
-				id.setId(Constants.TYPE_EVENT);
-				date.setId(Constants.TYPE_EVENT);
+				title.setId(Constants.TYPE_EVENT+"Text");
+				id.setId(Constants.TYPE_EVENT+"Text");
+				date.setId(Constants.TYPE_EVENT+"Text");
 				break;
 			
 			//TO-DO
@@ -82,7 +82,6 @@ public class UiListCellAgenda extends ListCell<Task> {
 				id.setText(String.format("%d", item.getTaskId()));
 				label.setText(item.getTaskLabel().getLabelName());
 				label.setId("color" + item.getTaskLabel().getColourId());
-				setGraphic(anchorpane);
 				break;
 			}
 			setGraphic(anchorpane);

@@ -14,22 +14,24 @@ public class ParserTest {
 	public void test() {
 		testParser = new Parser();
 		test0();
-		test1(); // Command: command:ADD/name/FROM-TO/category
-		test2(); // Command: command:ADD/name:symbols/FROM-TO/description
-		test3(); // Command: command:ADD/ - exception
-		test4(); // Command: command:delete/index
-		test5(); // Command: command:search/string
-		test6(); // Command: command:ADD/command:ADD - exception
-		test7(); // Command: command:ADD/name/on
-		test8(); // Command: command:invalid - exception
-		test9(); // Command: command:ADD/name/at
-		test10(); // Command: command:ADD/name/BY
+		test1();
+		test2();
+		test3();
+		test4();
+		test5();
+		test6();
+		test7();
+		test8();
+		test9();
+		test10();
+		test11();
 	}
 	
+	// Miscellaneous test - for my usage.
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD magic FROM 31 mar TO 1 april 16:00");
+			testStruct = testParser.parseInput("ADD asdf123654 FROM 12/5 8am TO 06:30");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
@@ -39,14 +41,22 @@ public class ParserTest {
 		}
 	}
 	
+	/* Command: Add
+	 * Input: Name, From (DMT), To (DMT), Label
+	 * Expected: {event, Name, null, FromTime, ToTime, Label}
+	 */
 	private void test1() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD Learn Double Dream Hands FROM 12 may 8am TO 13 may 12AM category DOWNDOG");
+			testStruct = testParser.parseInput("ADD Learn Double Dream Hands FROM 12 may 8am TO 13 may 12AM LABEL DOWNDOG");
 			assertEquals(assertArray(testStruct, "event", "Learn Double Dream Hands", null, "2016-05-12T08:00", "2016-05-13T00:00", "DOWNDOG"), true);
 		} catch (Exception e) {}
 	}
 	
+	/* Command: ADD
+	 * Input: Name (Symbols), From (DMT), To (DMT), Description
+	 * Expected: {event, Name, Description, FromTime, ToTime, null}
+	 */
 	private void test2() {
 		InputStruct testStruct = null;
 		try {
@@ -55,6 +65,10 @@ public class ParserTest {
 		} catch (Exception e) {}
 	}
 	
+	/* Command: ADD
+	 * Input: nil
+	 * Expected: Exception
+	 */
 	private void test3() {
 		InputStruct testStruct = null;
 		try {
@@ -64,22 +78,34 @@ public class ParserTest {
 		}
 	}
 	
+	/* Command: DELETE
+	 * Input: Index
+	 * Expected: {Index}
+	 */
 	private void test4() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("delete 2");
+			testStruct = testParser.parseInput("DELETE 2");
 			assertEquals(assertArray(testStruct, "2"), true);
 		} catch (Exception e) {}
 	}
 	
+	/* Command: SEARCH
+	 * Input: StringToSearch
+	 * Expected: {StringToSearch}
+	 */
 	private void test5() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("search submit");
+			testStruct = testParser.parseInput("SEARCH submit");
 			assertEquals(assertArray(testStruct, "submit"), true);
 		} catch (Exception e) {}
 	}
 	
+	/* Command: ADD
+	 * Input: Name ("ADD")
+	 * Expected: {todo, "ADD", null, null, null, null}
+	 */
 	private void test6() {
 		InputStruct testStruct;
 		try {
@@ -88,6 +114,10 @@ public class ParserTest {
 		} catch (Exception e) {}
 	}
 	
+	/* Command: ADD
+	 * Input: Name, On (DM)
+	 * Expected: {event, Name, null, OnDate (00:00), OnDate (23:59), null}
+	 */
 	private void test7() {
 		InputStruct testStruct;
 		try {
@@ -96,6 +126,10 @@ public class ParserTest {
 		} catch (Exception e) {}
 	}
 	
+	/* Command: Invalid Command (asdf1234)
+	 * Input: nil
+	 * Expected: Exception
+	 */
 	private void test8() {
 		InputStruct testStruct = null;
 		try {
@@ -105,6 +139,10 @@ public class ParserTest {
 		}
 	}
 	
+	/* Command: ADD
+	 * Input: Name, At (DM)
+	 * Expected: {event, Name, null, AtDate (00:00), AtDate (00:00 + 1hr), null}
+	 */
 	private void test9() {
 		InputStruct testStruct = null;
 		try {
@@ -113,11 +151,27 @@ public class ParserTest {
 		} catch (Exception e) {}
 	}
 	
+	/* Command: ADD
+	 * Input: Name, At (D/M) T(hh:mm)
+	 * Expected: {event, Name, null, AtDate&Time, AtDate&Time + 1hr, null}
+	 */
 	private void test10() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD test10 BY 12 may");
-			assertEquals(assertArray(testStruct, "deadline", "test10", null, "2016-05-12T00:00", null, null), true);
+			testStruct = testParser.parseInput("ADD test10 AT 12/5 06:00");
+			assertEquals(assertArray(testStruct, "event", "test10", null, "2016-05-12T06:00", "2016-05-12T07:00", null), true);
+		} catch (Exception e) {}
+	}
+	
+	/* Command: ADD
+	 * Input: Name, By (D/M/Y)
+	 * Expected: {event, Name, null, ByDateAndTime, null, null}
+	 */
+	private void test11() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("ADD test11 BY 12/5/17");
+			assertEquals(assertArray(testStruct, "deadline", "test11", null, "2017-05-12T23:59", null, null), true);
 		} catch (Exception e) {}
 	}
 	
@@ -126,11 +180,15 @@ public class ParserTest {
 			return true;
 		}
 		String[] variableArray = inputStruct.getVariableArray();
+		System.out.println("A" + variableArray.length + " " + args.length);
 		if (variableArray.length != args.length) {
 			return false;
 		}
 		for (int i = 0; i < variableArray.length; i++) {
-			if (!variableArray[i].equals(args[i])) {
+			System.out.println("AA" + variableArray[i] + " " + args[i]);
+			if (variableArray[i] == null && args[i] == null) {
+				continue;
+			} else if (!variableArray[i].equals(args[i])) {
 				System.out.println(variableArray[i] + " " + args[i]);
 				return false;
 			}

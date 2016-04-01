@@ -39,8 +39,8 @@ public class UiComponent extends Application {
 			primaryStage.getIcons().add(new Image("Jimple-Icon.png"));
             primaryStage.setTitle("Jimple Planner");
 			primaryStage.setScene(scene);
-			primaryStage.initStyle(StageStyle.UNDECORATED);
-			primaryStage.initStyle(StageStyle.TRANSPARENT);
+//			primaryStage.initStyle(StageStyle.UNDECORATED);
+//			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
