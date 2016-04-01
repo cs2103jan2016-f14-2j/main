@@ -42,6 +42,7 @@ public class Task {
 		this.type = taskToBeDuplicated.getType();
 		this.isOverDue = taskToBeDuplicated.getIsOverDue();
 		this.isDone = taskToBeDuplicated.getIsDone();
+		this.taskId = taskToBeDuplicated.getTaskId();
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 	}
 

@@ -24,7 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 
-public class Logic {
+public class Logic implements LogicMasterListModification{
 
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
@@ -66,12 +66,12 @@ public class Logic {
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			taskLabels = store.getLabels();
-			LogicMasterListModification.assignTaskIds(allTasks);
+			assignTaskIds(allTasks);
 			LogicLinkLabelsToTasks.linkTasksToLabels(allTasks, taskLabels);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);
-			LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+			checkOverCurrentTime(deadlines, events);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -167,22 +167,14 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getDeadlinesList() {
-		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+		checkOverCurrentTime(deadlines, events);
 		return deadlines;
 	}
 
 	public ArrayList<Task> getEventsList() {
-		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
-		/*ArrayList<Task> dividedTasks = new ArrayList<Task>();
-		for (Task anEvent : events)	{
-			Task duplicateEvent = new Task(anEvent);
-			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate()))	{
-				Task aNewTask = LogicTaskModification.divideMultipleDays(duplicateEvent);
-				dividedTasks.add(aNewTask);
-			}
-			dividedTasks.add(duplicateEvent);
-		}*/
-		return events;
+		checkOverCurrentTime(deadlines, events);
+		ArrayList<Task> dividedTasks = getDividedTasks(events);
+		return dividedTasks;
 	}
 
 	public ArrayList<Task> getSearchList() {
@@ -196,9 +188,12 @@ public class Logic {
 
 	public ArrayList<Task> getAgendaList() {
 		agenda.clear();
-		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+		checkOverCurrentTime(deadlines, events);
+		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		agenda.addAll(deadlines);
-		agenda.addAll(events);
+		agenda.addAll(dividedTasks);
+//		System.out.println(agenda.get(0).getTaskId());
+//		System.out.println(events.get(0).getTaskId());
 		Task.sortTasksForAgenda(agenda);
 		return agenda;
 	}
