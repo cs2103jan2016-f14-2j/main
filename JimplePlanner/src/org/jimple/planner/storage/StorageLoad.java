@@ -3,6 +3,7 @@ package org.jimple.planner.storage;
 import static org.jimple.planner.Constants.EMPTY_STRING;
 import static org.jimple.planner.Constants.FILEPATH_CONFIG;
 import static org.jimple.planner.Constants.FILEPATH_TEST;
+import static org.jimple.planner.Constants.FILEPATH_ARCHIVE;
 import static org.jimple.planner.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
 import static org.jimple.planner.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
 import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
@@ -50,6 +51,26 @@ public class StorageLoad implements StorageLoadInterface{
 		return getTaskByReader(defaultFileReader);
 	}
 
+	public ArrayList<Task> getArchivedTask(){
+		String archivePath = FILEPATH_ARCHIVE;
+		BufferedReader defaultFileReader = createFileReader(archivePath);
+		ArrayList<Task> archivedTasks = new ArrayList<Task>();
+
+		String fileLineContent;
+		try {
+			while ((fileLineContent = defaultFileReader.readLine()) != null) {
+				if(!fileLineContent.equals(EMPTY_STRING)){
+					Task task = getTaskFromLine(fileLineContent);
+					checkTaskValidity(task);
+					archivedTasks.add(task);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return archivedTasks;
+	}
+	
 	private ArrayList<ArrayList<Task>> getTaskByReader(BufferedReader defaultFileReader) {
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;

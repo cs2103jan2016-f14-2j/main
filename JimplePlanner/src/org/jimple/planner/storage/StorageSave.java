@@ -11,6 +11,8 @@ import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
 import static org.jimple.planner.Constants.TAGS_TITLE;
 import static org.jimple.planner.Constants.TAGS_TO_TIME;
 import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
+import static org.jimple.planner.Constants.FILEPATH_ARCHIVE;
+import static org.jimple.planner.Constants.FILEPATH_ARCHIVE_TEMP;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -47,6 +49,15 @@ public class StorageSave implements StorageSaveInterface{
 		return saveStatus;
 	}
 	
+	public boolean isSavedArchiveTasks(ArrayList<Task> archiveTasks){
+		String archivePath = FILEPATH_ARCHIVE;
+		String tempArchivePath = FILEPATH_ARCHIVE_TEMP;
+		BufferedWriter tempWriter = createFileWriter(tempArchivePath);
+		writeArrayOfTasksUsingWriters(archiveTasks, tempWriter);
+		boolean saveStatus = isSaveToFile(archivePath, tempArchivePath);
+		return saveStatus;
+	}
+	
 	private void writeTasksToFile(ArrayList<ArrayList<Task>> allTaskLists, String tempFilePath){
 		BufferedWriter tempWriter = createFileWriter(tempFilePath);
 		writeTasksUsingWriter(allTaskLists, tempWriter);
@@ -55,17 +66,25 @@ public class StorageSave implements StorageSaveInterface{
 	private void writeTasksUsingWriter(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
 		try {
 			for(ArrayList<Task> taskList: allTaskLists){
-				for(Task task: taskList){
-					checkTaskValidity(task);
-					String lineString = extractTaskToString(task);
-					tempWriter.write(lineString);
-					tempWriter.newLine();
-				}
+				writeArrayOfTasksUsingWriters(taskList, tempWriter);
 			}
 			tempWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e){
+			e.printStackTrace();
+		}
+	}
+
+	private void writeArrayOfTasksUsingWriters(ArrayList<Task> taskList, BufferedWriter tempWriter){
+		try {
+			for(Task task: taskList){
+				checkTaskValidity(task);
+				String lineString = extractTaskToString(task);
+				tempWriter.write(lineString);
+				tempWriter.newLine();
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

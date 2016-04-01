@@ -29,6 +29,11 @@ public class StorageComponent implements Storage{
 	}
 	
 	@Override
+	public boolean isSavedArchivedTasks(ArrayList<Task> archiveTasks){
+		return storageSave.isSavedArchiveTasks(archiveTasks);
+	}
+	
+	@Override
 	public ArrayList<ArrayList<Task>> getTasks(){
 		String fileName = storageProperties.getCurrentSaveFilePath();
 		return storageLoad.getTaskSelect(fileName);
@@ -49,5 +54,10 @@ public class StorageComponent implements Storage{
 	@Override
 	public String checkPath(){
 		return storageProperties.checkPath();
+	}
+
+	@Override
+	public ArrayList<Task> getArchivedTasks() {
+		return storageLoad.getArchivedTask();
 	}
 }

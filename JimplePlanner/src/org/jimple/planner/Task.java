@@ -218,12 +218,15 @@ public class Task {
 	 * hashset is to be used, DO NOT EDIT any of the tasks inside this hashset
 	 * for it will cause a memory leak AUTO-GENEERATED by Eclipse
 	 */
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 97;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((fromDateTime == null) ? 0 : fromDateTime.hashCode());
+		result = prime * result + (isDone ? 1231 : 1237);
 		result = prime * result + taskId;
 		result = prime * result + ((taskLabel == null) ? 0 : taskLabel.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
@@ -250,6 +253,8 @@ public class Task {
 			if (other.fromDateTime != null)
 				return false;
 		} else if (!fromDateTime.equals(other.fromDateTime))
+			return false;
+		if (isDone != other.isDone)
 			return false;
 		if (taskId != other.taskId)
 			return false;
