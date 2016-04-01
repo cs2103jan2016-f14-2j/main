@@ -45,11 +45,11 @@ public class UiFormatter {
 			break;
 		case Constants.TYPE_NOW:
 			addNowTasksToFormattedDateList();
-			agendaCellFormat();
+			ongoingCellFormat();
 			break;
 		case Constants.TYPE_UPCOMING:
 			addUpcomingTasksToFormattedDateList();
-			agendaCellFormat();
+			upcomingCellFormat();
 			break;
 		case Constants.TYPE_AGENDA:
 			addTasksToFormattedDateList();
@@ -197,23 +197,25 @@ public class UiFormatter {
 		}
 	}
 
-	private void eventsCellFormat() {
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new UiListCellEvent();
-			}
-		});
+	private void upcomingCellFormat() {
+		if (listView != null) {
+			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+	
+				@Override
+				public ListCell<Task> call(ListView<Task> arg0) {
+					return new UiListCellUpcoming();
+				}
+	
+			});
+		}
 	}
 
-	private void deadlinesCellFormat() {
+	private void ongoingCellFormat() {
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
 			@Override
 			public ListCell<Task> call(ListView<Task> arg0) {
-				return new UiListCellDeadline();
+				return new UiListCellOngoing();
 			}
-
 		});
 	}
 

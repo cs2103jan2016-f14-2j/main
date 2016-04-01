@@ -8,9 +8,9 @@
 
 <AnchorPane prefHeight="27.0" prefWidth="397.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="anchorpane">
+      <AnchorPane fx:id="anchorpane" prefHeight="27.0" prefWidth="151.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="246.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox fx:id="hBox" alignment="CENTER" prefHeight="34.0" prefWidth="397.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox fx:id="hBox" alignment="CENTER" prefHeight="34.0" prefWidth="155.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label fx:id="title" text="buy groceries" />
                   <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
