@@ -10,6 +10,7 @@ import org.jimple.planner.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
@@ -86,6 +87,8 @@ public class UiFormatter {
 		if (listView == null)
 			return null;
 		fitToAnchorPane(listView);
+//		listView.setPrefWidth(100);
+//		listView.setPrefSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
 		return listView;
 	}
 
@@ -154,8 +157,8 @@ public class UiFormatter {
 		String dateCounter = "";
 
 		for (Task task : arrList) {
-			if (!dateCounter.equals(task.getPrettyFromDate())) {
-				dateCounter = task.getPrettyFromDate();
+			if (!dateCounter.equals(task.getPrettierFromDate())) {
+				dateCounter = task.getPrettierFromDate();
 				formattedList.add(staticTask(dateCounter));
 			}
 

@@ -7,10 +7,15 @@ import org.jimple.planner.Task;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class UiListCellAgenda extends ListCell<Task> {
@@ -19,6 +24,8 @@ public class UiListCellAgenda extends ListCell<Task> {
 	Label title, date, id, label;
 	@FXML
 	AnchorPane anchorpane;
+	@FXML
+	VBox labelContainer;
 
 	FXMLLoader fxmlLoader;	
 
@@ -26,6 +33,8 @@ public class UiListCellAgenda extends ListCell<Task> {
 	protected void updateItem(Task item, boolean bln) {
 		super.updateItem(item, bln);
 		this.getStyleClass().add("listcell");
+		this.setPrefWidth(0);
+		
 		if (item != null) {
 			switch(item.getType()){
 			
@@ -34,7 +43,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 				this.setId(Constants.TYPE_STATIC);
 				loadFXMLLayout("staticCellLayout.fxml");
 				
-				title.setText(item.getTitle());
+				title.setText(item.getTitle()); 
 				title.setId(Constants.TYPE_STATIC);
 				break;
 			
@@ -80,18 +89,22 @@ public class UiListCellAgenda extends ListCell<Task> {
 				
 				setLabel(item);
 				
+				label.setText(item.getTaskLabel().getLabelName());
+				label.getStyleClass().add("labelText");
+				label.setId("color" + item.getTaskLabel().getColourId());
+				
 				title.setText(item.getTitle());
-				title.setWrapText(true);
 				id.setText(String.format("%d", item.getTaskId()));
 				label.setText(item.getTaskLabel().getLabelName());
 				label.setId("color" + item.getTaskLabel().getColourId());
 				break;
 			}
-			HBox hbox = new HBox(new Text("hello world"));
-//			hbox.setPrefHeight(30);
-//			setGraphic(new Text("hello world"));
 			setGraphic(anchorpane);	
 		}
+	}
+
+	private void remove(Node node) {
+		((Pane) node.getParent()).getChildren().remove(node);
 	}
 
 	private void setDeadlineColors(Task item) {
@@ -123,8 +136,9 @@ public class UiListCellAgenda extends ListCell<Task> {
 	}
 
 	private void setLabel(Task item) {
-		if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT))
-			label.setVisible(false);
+		if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT)){
+			remove(label);
+		}
 		label.setText(item.getTaskLabel().getLabelName());
 		label.getStyleClass().add("labelText");
 		label.setId("color" + item.getTaskLabel().getColourId());
