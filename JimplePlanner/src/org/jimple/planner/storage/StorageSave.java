@@ -10,9 +10,8 @@ import static org.jimple.planner.Constants.TAGS_FROM_TIME;
 import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
 import static org.jimple.planner.Constants.TAGS_TITLE;
 import static org.jimple.planner.Constants.TAGS_TO_TIME;
+import static org.jimple.planner.Constants.TAGS_ISDONE;
 import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
-import static org.jimple.planner.Constants.FILEPATH_ARCHIVE;
-import static org.jimple.planner.Constants.FILEPATH_ARCHIVE_TEMP;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,6 +27,7 @@ import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 
 public class StorageSave implements StorageSaveInterface{
+
 	private BufferedWriter createFileWriter(String fileName){
 		BufferedWriter writer = null;
 		try {
@@ -42,19 +42,10 @@ public class StorageSave implements StorageSaveInterface{
 	}
 	
 	public boolean isSavedTasksSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
-		assert allTaskLists.size() == 3;
+		assert allTaskLists.size() == 4;
 		Task.sortTasks(allTaskLists);
 		writeTasksToFile(allTaskLists, tempFilePath);
 		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
-		return saveStatus;
-	}
-	
-	public boolean isSavedArchiveTasks(ArrayList<Task> archiveTasks){
-		String archivePath = FILEPATH_ARCHIVE;
-		String tempArchivePath = FILEPATH_ARCHIVE_TEMP;
-		BufferedWriter tempWriter = createFileWriter(tempArchivePath);
-		writeArrayOfTasksUsingWriters(archiveTasks, tempWriter);
-		boolean saveStatus = isSaveToFile(archivePath, tempArchivePath);
 		return saveStatus;
 	}
 	
@@ -100,7 +91,10 @@ public class StorageSave implements StorageSaveInterface{
 	}
 	
 	private String extractTaskToString(Task task){
-		String lineString = formatToSaveString(TAGS_TITLE + task.getTitle());
+		System.out.println(task.getIsDone());
+		String lineString = formatToSaveString(TAGS_ISDONE + Boolean.toString(task.getIsDone()));
+		String titleString = formatToSaveString(TAGS_TITLE + task.getTitle());
+		lineString = lineString + titleString;
 		if(isDescriptionExist(task)){
 			String descriptionString = formatToSaveString(TAGS_DESCRIPTION + task.getDescription());
 			lineString = lineString + descriptionString;

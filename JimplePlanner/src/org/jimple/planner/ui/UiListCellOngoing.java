@@ -26,6 +26,7 @@ public class UiListCellOngoing extends ListCell<Task>{
 	protected void updateItem(Task item, boolean bln) {
 		super.updateItem(item, bln);
 		this.getStyleClass().add("listcell");
+		this.setPrefWidth(0);
 		if (item != null) {
 			this.setId("ongoing");
 			fxmlLoader = new FXMLLoader(getClass().getResource("ongoingCellLayout.fxml"));

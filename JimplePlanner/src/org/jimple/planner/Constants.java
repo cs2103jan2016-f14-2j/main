@@ -42,8 +42,6 @@ public final class Constants {
 	public static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
 	public static final String TEST_FILE_NAME = "testplanner.jim";
 	public static final String TEST_TEMP_FILE_NAME = "testtempplanner.jim";
-	public static final String DEFAULT_ARCHIVE_FILE_NAME = "archive.jim";
-	public static final String DEFAULT_TEMP_ARCHIVE_FILE_NAME = "archive.jim";
 	
 	public static final String PROPERTIES_CONFIG_FILE_NAME = "jimpleConfig.properties";
 	public static final String PROPERTIES_COMMENT_HEADER = "PATH SETTINGS";
@@ -64,14 +62,13 @@ public final class Constants {
 	public static final String FILEPATH_TEST = DEFAULT_FILE_DIRECTORY + TEST_FILE_NAME;
 	public static final String FILEPATH_TEST_TEMP = DEFAULT_FILE_DIRECTORY + TEST_TEMP_FILE_NAME;
 	public static final String FILEPATH_CONFIG = DEFAULT_FILE_DIRECTORY+PROPERTIES_CONFIG_FILE_NAME;
-	public static final String FILEPATH_ARCHIVE = DEFAULT_FILE_DIRECTORY+DEFAULT_ARCHIVE_FILE_NAME;
-	public static final String FILEPATH_ARCHIVE_TEMP = DEFAULT_FILE_DIRECTORY+DEFAULT_TEMP_ARCHIVE_FILE_NAME;
 	
 	public static final String TAGS_LABEL = ":label:";
 	public static final String TAGS_DESCRIPTION = ":desc:";
 	public static final String TAGS_FROM_TIME = ":from:";
 	public static final String TAGS_TO_TIME = ":to:";
 	public static final String TAGS_TITLE = ":title:";
+	public static final String TAGS_ISDONE = ":isDone:";
 	public static final String TAGS_LINE_FIELD_SEPARATOR = "/s/";
 	public static final String TAGS_LABEL_FIELD_SEPARATOR = "/tl/";
 	

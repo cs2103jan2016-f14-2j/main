@@ -46,6 +46,15 @@ public class Task {
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 	}
 
+	public String getPrettierFromDate(){
+		String prettierFromDate = new String("");
+		if(fromDateTime.getDayOfYear() == LocalDateTime.now().getDayOfYear()){
+			prettierFromDate += "TODAY, ";
+		}
+		prettierFromDate += fromDateTime.getDayOfMonth() + " " + fromDateTime.getMonth() + " " + fromDateTime.getYear();
+		return prettierFromDate;
+	}
+
 	public String getPrettyFromDate() {
 		String prettyFromDate = new String("");
 		prettyFromDate = formatter.formatPrettyDate(fromDateTime);
