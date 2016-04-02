@@ -30,6 +30,7 @@ public class UiListCellUpcoming extends ListCell<Task> {
 	protected void updateItem(Task item, boolean bln) {
 		super.updateItem(item, bln);
 		this.getStyleClass().add("listcell");
+		this.setPrefWidth(0);
 		if (item != null) {
 			this.setId(Constants.TYPE_DEADLINE);
 			loadFXMLLayout("upcomingCellLayout.fxml");
