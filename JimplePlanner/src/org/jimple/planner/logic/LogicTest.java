@@ -30,6 +30,7 @@ public class LogicTest {
 	ArrayList<Task> deadlines = new ArrayList<Task>();
 	ArrayList<Task> events = new ArrayList<Task>();
 	ArrayList<Task> tempHistory = new ArrayList<Task>();
+	ArrayList<Task>	archivedTasks = new ArrayList<Task>();
 	ArrayList<TaskLabel> taskLabels = new ArrayList<TaskLabel>();
 	LinkedList<LogicPreviousTask> undoTasks = new LinkedList<LogicPreviousTask>();
 

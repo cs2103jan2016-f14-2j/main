@@ -49,12 +49,13 @@ public class LogicLabel implements LogicMasterListModification {
 	}
 
 	protected String deleteLabel(Storage store, String[] variableArray, ArrayList<TaskLabel> taskLabels,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks)
+					throws IOException {
 		for (int i = 0; i < taskLabels.size(); i++) {
 			if (variableArray[0].equals(taskLabels.get(i).getLabelName())) {
 				TaskLabel removedTask = taskLabels.remove(i);
 				removeLabelsFromMasterList(todo, deadlines, events, removedTask);
-				packageForSavingMasterLists(store, todo, deadlines, events);
+				packageForSavingMasterLists(store, todo, deadlines, events, archivedTasks);
 				packageForSavingLabelLists(store, taskLabels);
 				return Constants.LABEL_DELETED_FEEDBACK;
 			}
@@ -141,9 +142,8 @@ public class LogicLabel implements LogicMasterListModification {
 		return isLabelChanged;
 	}
 
-	private boolean changeLabelName(Storage store, String newName, ArrayList<TaskLabel> taskLabels,
-			int labelPosition, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events)
-					throws IOException {
+	private boolean changeLabelName(Storage store, String newName, ArrayList<TaskLabel> taskLabels, int labelPosition,
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		for (int i = 0; i < taskLabels.size(); i++) {
 			if (taskLabels.get(i).getLabelId() == labelPosition) {
 				taskLabels.get(i).setLabelName(newName);
@@ -195,6 +195,5 @@ public class LogicLabel implements LogicMasterListModification {
 				}
 			}
 		}
-		packageForSavingMasterLists(store, todo, deadlines, events);
 	}
 }
