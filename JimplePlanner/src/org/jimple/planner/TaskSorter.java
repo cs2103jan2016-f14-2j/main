@@ -57,7 +57,7 @@ public class TaskSorter {
 	}
 	
 	public void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
-		assert allTaskLists.size() == 3;
+		assert allTaskLists.size() == 4;
 		sortById(allTaskLists);
 		sortDeadlines(allTaskLists.get(1));
 		sortEvents(allTaskLists.get(2));
