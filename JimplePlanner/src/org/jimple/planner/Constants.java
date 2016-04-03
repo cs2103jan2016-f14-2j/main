@@ -98,6 +98,8 @@ public final class Constants {
 	public static final String CHECKDIR_HELP_HEADER = "Check Jimple File Directory:\n";
 	public static final String EDITLABEL_HELP_HEADER = "Edit a label:\n";
 	public static final String DELETELABEL_HELP_HEADER = "Delete a label:\n";
+	public static final String ARCHIVE_HELP_HEADER = "Archive completed tasks\n";
+	public static final String UNARCHIVE_HELP_HEADER = "Return completed tasks\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
 	
@@ -122,6 +124,9 @@ public final class Constants {
 	
 	public static final String EDITLABEL_COMMAND = "type \"EDITLABEL\" <old label name/colour> NAME <new label name> COLOUR <new label colour>\n\n";
 	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n";
+	
+	public static final String ARCHIVE_COMMAND = "type \"DONE\" <taskID>\n\n";
+	public static final String UNARCHIVE_COMMAND = "type \"RETURN\" <taskID>\n";
 	
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
@@ -149,7 +154,7 @@ public final class Constants {
 	public static final String ERROR_LABEL_DELETED_FEEDBACK = "label could not be deleted";
 	
 	public static final String DONE_FEEDBACK = " is now archived";
-	public static final String ERROR_DONE_FEEDBACK = " could not be archived";
+	public static final String ERROR_DONE_FEEDBACK = " does not exist and could not be archived";
 	
 	public static final String UNDONE_FEEDBACK = " has returned to your list";
 	public static final String ERROR_UNDONE_FEEDBACK = " could not be returned to your list";

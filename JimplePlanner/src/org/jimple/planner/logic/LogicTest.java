@@ -26,6 +26,7 @@ public class LogicTest {
 	LogicDirectory testDirecter = new LogicDirectory();
 	LogicUndo testUndoer = new LogicUndo();
 	LogicLabel testLabeler = new LogicLabel();
+	LogicArchive testArchiver = new LogicArchive();
 	ArrayList<Task> floating = new ArrayList<Task>();
 	ArrayList<Task> deadlines = new ArrayList<Task>();
 	ArrayList<Task> events = new ArrayList<Task>();
@@ -74,6 +75,38 @@ public class LogicTest {
 	
 	/**
 	 * EP: 2 cases
+	 * 1. task is found and returned to list
+	 * 2. task is not found and not returned to list
+	 */
+	@Test
+	public void ShouldReturnUnArchivedTasks() throws IOException	{
+		initializeThreeArrays();
+		String[] parsedInput = {"1"};
+		testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels);
+		assertEquals("task 1 has returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("a test only one", floating.get(0).getTitle());
+		parsedInput[0] = "5";
+		assertEquals("task 5 could not be returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+	}
+	
+	/**
+	 * EP: 2 cases
+	 * 1. if task is found and archived 
+	 * 2  task does not exist
+	 */
+	@Test
+	public void ShouldReturnArchivedTasks() throws IOException	{
+		initializeThreeArrays();
+		String[] parsedInput = {"1"};
+		assertEquals("task 1 is now archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertTrue(floating.isEmpty());
+		assertEquals("a test only one", archivedTasks.get(0).getTitle());
+		parsedInput[0] = "5";
+		assertEquals("task 5 does not exist and could not be archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+	}
+	
+	/**
+	 * EP: 2 cases
 	 * 1. label is deleted from tasklabels array list and from all current tasks
 	 * 2. label cannot be deleted 
 	 */
@@ -94,7 +127,7 @@ public class LogicTest {
 		taskLabels.add(TaskLabel.getNewLabel("food"));
 		taskLabels.add(TaskLabel.getNewLabel("work"));
 		String[] variableArray1 = {"food", null, "red"};
-		String[] variableArray2 = {"work", "exercise", "null"};
+		String[] variableArray2 = {"work", "exercise", null};
 		String[] variableArray3 = {"stuff", "wrong", "wrong"};
 		assertEquals("food label changed", testLabeler.changeLabel(testStore, variableArray1, taskLabels, floating, deadlines, events));
 		assertEquals("work label changed", testLabeler.changeLabel(testStore, variableArray2, taskLabels, floating, deadlines, events));
@@ -295,9 +328,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-03-31T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", "2016-04-03T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-03-31T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", "2016-04-03T23:00", testformatter.testFormatTime("11pm"));
 	}
 
 	@Test
