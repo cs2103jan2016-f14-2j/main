@@ -35,7 +35,6 @@ public final class Constants {
 	/*
 	 * Storage Component
 	 */
-	public static final int ALL_ARRAY_SIZE = 3;
 	
 	public static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
 	public static final String DEFAULT_FILE_NAME = "planner.jim";
@@ -68,6 +67,7 @@ public final class Constants {
 	public static final String TAGS_FROM_TIME = ":from:";
 	public static final String TAGS_TO_TIME = ":to:";
 	public static final String TAGS_TITLE = ":title:";
+	public static final String TAGS_ISDONE = ":isDone:";
 	public static final String TAGS_LINE_FIELD_SEPARATOR = "/s/";
 	public static final String TAGS_LABEL_FIELD_SEPARATOR = "/tl/";
 	
@@ -84,6 +84,8 @@ public final class Constants {
 	public static final String STRING_CHECKDIR = "CHECKDIR";
 	public static final String STRING_EDITLABEL = "EDITLABEL";
 	public static final String STRING_DELETELABEL = "DELETELABEL";
+	public static final String STRING_DONE = "DONE";
+	public static final String STRING_RETURN = "RETURN";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
@@ -95,6 +97,8 @@ public final class Constants {
 	public static final String CHECKDIR_HELP_HEADER = "Check Jimple File Directory:\n";
 	public static final String EDITLABEL_HELP_HEADER = "Edit a label:\n";
 	public static final String DELETELABEL_HELP_HEADER = "Delete a label:\n";
+	public static final String ARCHIVE_HELP_HEADER = "Archive completed tasks\n";
+	public static final String UNARCHIVE_HELP_HEADER = "Return completed tasks\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
 	
@@ -119,6 +123,9 @@ public final class Constants {
 	
 	public static final String EDITLABEL_COMMAND = "type \"EDITLABEL\" <old label name/colour> NAME <new label name> COLOUR <new label colour>\n\n";
 	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n";
+	
+	public static final String ARCHIVE_COMMAND = "type \"DONE\" <taskID>\n\n";
+	public static final String UNARCHIVE_COMMAND = "type \"RETURN\" <taskID>\n";
 	
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";
@@ -145,6 +152,12 @@ public final class Constants {
 	public static final String LABEL_DELETED_FEEDBACK = "label is deleted";
 	public static final String ERROR_LABEL_DELETED_FEEDBACK = "label could not be deleted";
 	
+	public static final String DONE_FEEDBACK = " is now archived";
+	public static final String ERROR_DONE_FEEDBACK = " does not exist and could not be archived";
+	
+	public static final String UNDONE_FEEDBACK = " has returned to your list";
+	public static final String ERROR_UNDONE_FEEDBACK = " could not be returned to your list";
+
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
 	private Constants(){

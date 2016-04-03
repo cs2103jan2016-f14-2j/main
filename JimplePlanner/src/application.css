@@ -13,39 +13,45 @@
     -fx-padding: 0;
 }/*================================================================ */
 
+
 .label {	
     -fx-font-size: 18px;
+	-fx-font-family: "Calibri";
 	-fx-font-color: grey;
+	/* -fx-border-color: blue; */
 }
 
 .list-view {
-    -fx-padding: 0;
+    -fx-padding: 0px;
     -fx-background-color: transparent;
 }
 
+/*GOTTA USE INSETS COUPLED WITH PADDING TO CREATE GAP BETWEEN CELLS  */
 .listcell {
-    -fx-padding: 10px;
     -fx-background-color: transparent, -fx-background ;
 	-fx-background-color: #D8D3C7;
 	-fx-background-radius: 10px;
-    -fx-background-insets: 5px;
+	-fx-background-insets: 5px;
+	-fx-padding: 5px;
+	/* -fx-border-color: yellow; */
 }
 
 .listcell:selected{
-    -fx-padding: 10px;
+    -fx-padding: 0px;
     -fx-background-color: transparent, -fx-background ;
 	-fx-background-color: #C1B9A5;
-    -fx-background-insets: 5px;
+	-fx-background-insets: 5px;
+	-fx-padding: 5px;
 }
 
 .listcell:empty {
-    -fx-padding: 10px;
+    -fx-padding: 0px;
     -fx-background-color: transparent;
     -fx-background-insets: 0;
 }
 
 .labelText{
-	-fx-font-size: 12px;
+	-fx-font-size: 16px;
 }
 
 /* TEMP */
@@ -63,14 +69,35 @@
 	-fx-text-fill: grey;
 }
 
-#static:selected {
+.staticMarker{	
+    -fx-background-color: transparent;
+}
+
+.list-cell:selected .staticMarker{	
     -fx-background-color: lightgrey;
-    -fx-background-insets: 22 10 22 90;
+}
+
+#description {
+	-fx-font-size: 16px;
+}
+
+.list-cell:selected #description {
 }
 
 #event{
 	/* -fx-text-fill: red; */
-	-fx-padding: 20px 10px;
+/* 	-fx-padding: 20px 10px; */
+}
+
+.title{
+	-fx-font-size: 24;
+	/* -fx-font-weight: bold; */
+}
+
+.staticDate{
+	-fx-font-size: 18;
+	-fx-font-weight: bold;
+	-fx-text-fill: grey;
 }
 
 #ongoing{
@@ -140,7 +167,7 @@
 
 /* default */
 #color0{
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: transparent;
 	-fx-text-fill: #000000;
 }
 /* blue */
@@ -171,5 +198,41 @@
 /* purple */
 #color6{
 	-fx-background-color: #9F86FF;	
+	-fx-text-fill: #6700C1;
+}
+
+
+/*
+*	LABEL COLORS SELECTED
+*/
+
+/* blue */
+.list-cell:selected #color1{
+	-fx-background-color: #2CB7FF;	
+	-fx-text-fill: #0068FF;
+}
+/* green */
+.list-cell:selected #color2{
+	-fx-background-color: #00FF14;	
+	-fx-text-fill: #258E13;
+}
+/* yellow */
+.list-cell:selected #color3{
+	-fx-background-color: #B6FF14;	
+	-fx-text-fill: #809916;
+}
+/* orange */
+.list-cell:selected #color4{
+	-fx-background-color: #FFCE26;	
+	-fx-text-fill: #FF5500;
+}
+/* red */
+.list-cell:selected #color5{
+	-fx-background-color: #FF6014;	
+	-fx-text-fill: #FF2612;
+}
+/* purple */
+.list-cell:selected #color6{
+	-fx-background-color: #6F49FF;	
 	-fx-text-fill: #6700C1;
 }

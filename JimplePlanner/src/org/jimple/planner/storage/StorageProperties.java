@@ -1,6 +1,5 @@
 package org.jimple.planner.storage;
 
-import static org.jimple.planner.Constants.ALL_ARRAY_SIZE;
 import static org.jimple.planner.Constants.EMPTY_STRING;
 import static org.jimple.planner.Constants.FILEPATH_DEFAULT;
 import static org.jimple.planner.Constants.FILEPATH_DEFAULT_TEMP;
@@ -138,7 +137,7 @@ public class StorageProperties implements StorageTools{
 	private ArrayList<ArrayList<Task>> removeDuplicateTasks(ArrayList<ArrayList<Task>> oldPathTasks,
 			ArrayList<ArrayList<Task>> newPathTasks) {
 		ArrayList<ArrayList<Task>> consolidatedTasks = new ArrayList<ArrayList<Task>>();
-		for(int i = 0; i < ALL_ARRAY_SIZE; i++){
+		for(int i = 0; i < 4; i++){
 			ArrayList<Task> newTasksByType = newPathTasks.get(i);
 			ArrayList<Task> oldTasksByType = oldPathTasks.get(i);
 			oldTasksByType.addAll(newTasksByType);

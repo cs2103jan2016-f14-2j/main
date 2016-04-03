@@ -7,18 +7,30 @@ import org.jimple.planner.Task;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class UiListCellAgenda extends ListCell<Task> {
 	
 	@FXML
-	Label title, date, id, label;
+	Label title, fromdate, todate, id, label, desc;
 	@FXML
-	AnchorPane anchorpane;
+	CheckBox checkbox;
+	@FXML
+	AnchorPane anchorpane, marker, idcolor;
+	@FXML
+	VBox vBox, date;
+	@FXML
+	HBox hBox;
 
 	FXMLLoader fxmlLoader;	
 
@@ -26,6 +38,8 @@ public class UiListCellAgenda extends ListCell<Task> {
 	protected void updateItem(Task item, boolean bln) {
 		super.updateItem(item, bln);
 		this.getStyleClass().add("listcell");
+		this.setPrefWidth(0);
+		
 		if (item != null) {
 			switch(item.getType()){
 			
@@ -35,42 +49,45 @@ public class UiListCellAgenda extends ListCell<Task> {
 				loadFXMLLayout("staticCellLayout.fxml");
 				
 				title.setText(item.getTitle());
-				title.setId(Constants.TYPE_STATIC);
+				title.getStyleClass().add("staticDate");
+				marker.getStyleClass().add(Constants.TYPE_STATIC + "Marker");
 				break;
 			
 			//DEADLINE
 			case Constants.TYPE_DEADLINE:
 				this.setId(Constants.TYPE_DEADLINE);
-				loadFXMLLayout("deadlineCellLayout.fxml");
+				loadFXMLLayout("todoCellLayout.fxml");
 				
 				setDeadlineColors(item);	
 				setLabel(item);
+				setDesc(item);
+				if(hBox.getChildren().contains(checkbox))
+					hBox.getChildren().remove(checkbox);
+				if(date.getChildren().contains(todate))
+					date.getChildren().remove(todate);
 
 				title.setText(item.getTitle());
-				id.setText(String.format("  %d", item.getTaskId()));
-				date.setText(String.format("%s", item.getPrettyFromTime()));
-				title.setId(Constants.TYPE_DEADLINE+"Text");
-				id.setId(Constants.TYPE_DEADLINE+"Text");
-				date.setId(Constants.TYPE_DEADLINE+"Text");
+				id.setText(""+item.getTaskId());
+				fromdate.setText(item.getPrettyFromTime());
+//				title.setId(Constants.TYPE_DEADLINE+"Text");
+//				id.setId(Constants.TYPE_DEADLINE+"Text");
+//				date.setId(Constants.TYPE_DEADLINE+"Text");
 				break;
 			
 			//EVENT
 			case Constants.TYPE_EVENT:
 				this.setId(Constants.TYPE_EVENT);
-				loadFXMLLayout("eventCellLayout.fxml");
+				loadFXMLLayout("todoCellLayout.fxml");
 				
 				setLabel(item);
+				setDesc(item);
+				if(hBox.getChildren().contains(checkbox))
+					hBox.getChildren().remove(checkbox);
 				
 				title.setText(item.getTitle());
-				id.setText(String.format("%d", item.getTaskId()));
-				date.setText(String.format("%s %s to %s %s",
-						item.getPrettyFromDate(),
-						item.getPrettyFromTime(),
-						item.getPrettyToDate(),
-						item.getPrettyToTime()));
-				title.setId(Constants.TYPE_EVENT+"Text");
-				id.setId(Constants.TYPE_EVENT+"Text");
-				date.setId(Constants.TYPE_EVENT+"Text");
+				id.setText(""+item.getTaskId());
+				fromdate.setText(item.getPrettyFromTime());
+				todate.setText(item.getPrettyToTime());
 				break;
 			
 			//TO-DO
@@ -79,19 +96,20 @@ public class UiListCellAgenda extends ListCell<Task> {
 				loadFXMLLayout("todoCellLayout.fxml");
 				
 				setLabel(item);
-				
+				setDesc(item);
+				if(hBox.getChildren().contains(date))
+					hBox.getChildren().remove(date);
+
 				title.setText(item.getTitle());
-				title.setWrapText(true);
-				id.setText(String.format("%d", item.getTaskId()));
-				label.setText(item.getTaskLabel().getLabelName());
-				label.setId("color" + item.getTaskLabel().getColourId());
+				id.setText(""+item.getTaskId());
 				break;
 			}
-			HBox hbox = new HBox(new Text("hello world"));
-//			hbox.setPrefHeight(30);
-//			setGraphic(new Text("hello world"));
 			setGraphic(anchorpane);	
 		}
+	}
+
+	private void remove(Node node) throws NullPointerException{
+		((Pane) node.getParent()).getChildren().remove(node);
 	}
 
 	private void setDeadlineColors(Task item) {
@@ -120,14 +138,28 @@ public class UiListCellAgenda extends ListCell<Task> {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		title.getStyleClass().add("title");
 	}
 
 	private void setLabel(Task item) {
-		if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT))
-			label.setVisible(false);
 		label.setText(item.getTaskLabel().getLabelName());
 		label.getStyleClass().add("labelText");
 		label.setId("color" + item.getTaskLabel().getColourId());
+		if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT)){
+			if(vBox.getChildren().contains(label))
+				vBox.getChildren().remove(label);
+		}
+	}
+
+	private void setDesc(Task item) {
+		desc.setText(item.getDescription());
+		desc.setId("description");
+		if(item.getDescription().equals("")){
+			if(vBox.getChildren().contains(desc))
+				vBox.getChildren().remove(desc);
+		}
+		idcolor.setId("color" + item.getTaskLabel().getColourId());
+		id.setId("color" + item.getTaskLabel().getColourId());
 	}
 
 }

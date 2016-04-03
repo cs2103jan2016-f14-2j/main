@@ -13,6 +13,7 @@ import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
 import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
 import static org.jimple.planner.Constants.TAGS_TITLE;
 import static org.jimple.planner.Constants.TAGS_TO_TIME;
+import static org.jimple.planner.Constants.TAGS_ISDONE;
 import static org.jimple.planner.Constants.TYPE_DEADLINE;
 import static org.jimple.planner.Constants.TYPE_EVENT;
 import static org.jimple.planner.Constants.TYPE_TODO;
@@ -49,7 +50,7 @@ public class StorageLoad implements StorageLoadInterface{
 		BufferedReader defaultFileReader = createFileReader(filePath);
 		return getTaskByReader(defaultFileReader);
 	}
-
+	
 	private ArrayList<ArrayList<Task>> getTaskByReader(BufferedReader defaultFileReader) {
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
@@ -57,6 +58,7 @@ public class StorageLoad implements StorageLoadInterface{
 			while ((fileLineContent = defaultFileReader.readLine()) != null) {
 				if(!fileLineContent.equals(EMPTY_STRING)){
 					Task task = getTaskFromLine(fileLineContent);
+					//TODO add in a check for whether the tasks are done or not
 					checkTaskValidity(task);
 					allocateTaskToArrayList(task, allTasksLists);
 				}
@@ -71,6 +73,7 @@ public class StorageLoad implements StorageLoadInterface{
 	
 	private ArrayList<ArrayList<Task>> populateArrayList(){
 		ArrayList<ArrayList<Task>> allTasksLists = new ArrayList<ArrayList<Task>>();
+		allTasksLists.add(new ArrayList<Task>());
 		allTasksLists.add(new ArrayList<Task>());
 		allTasksLists.add(new ArrayList<Task>());
 		allTasksLists.add(new ArrayList<Task>());
@@ -111,6 +114,10 @@ public class StorageLoad implements StorageLoadInterface{
 		} else if (isToTime(field)){
 			String toField = getRemovedToTagString(field);
 			task.setToDate(toField);
+		} else if (isIsDone(field)){
+			String isDoneString = getRemovedIsDoneTagString(field);
+			boolean isDoneField = Boolean.parseBoolean(isDoneString);
+			task.setIsDone(isDoneField);
 		}
 	}
 	
@@ -134,6 +141,14 @@ public class StorageLoad implements StorageLoadInterface{
 		return field.contains(TAGS_TO_TIME);
 	}
 	
+	private boolean isIsDone(String field){
+		return field.contains(TAGS_ISDONE);
+	}
+	
+	private String getRemovedIsDoneTagString(String field){
+		String removedTag = field.replace(TAGS_ISDONE, field);
+		return removedTag;
+	}
 	private String getRemovedTitleTagString(String field){
 		String removedTag = field.replace(TAGS_TITLE, EMPTY_STRING);
 		return removedTag;
@@ -169,17 +184,22 @@ public class StorageLoad implements StorageLoadInterface{
 	}
 	
 	private void allocateTaskToArrayList(Task task, ArrayList<ArrayList<Task>> allTasksLists){
-		String taskType = task.getType();
-		switch(taskType){
-		case TYPE_TODO:
-			allTasksLists.get(0).add(task);
-			break;
-		case TYPE_DEADLINE:
-			allTasksLists.get(1).add(task);
-			break;
-		case TYPE_EVENT:
-			allTasksLists.get(2).add(task);
-			break;
+		assert allTasksLists.size() == 4;
+		if(task.getIsDone()){
+			allTasksLists.get(3).add(task);
+		} else{
+			String taskType = task.getType();
+			switch(taskType){
+			case TYPE_TODO:
+				allTasksLists.get(0).add(task);
+				break;
+			case TYPE_DEADLINE:
+				allTasksLists.get(1).add(task);
+				break;
+			case TYPE_EVENT:
+				allTasksLists.get(2).add(task);
+				break;
+			}
 		}
 	}
 	

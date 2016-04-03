@@ -6,9 +6,10 @@
 
 <AnchorPane fx:id="anchorpane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox fx:id="hBox">
+      <HBox fx:id="hBox" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="307.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="title" text="Wednesday, 20 May" />
+            <AnchorPane fx:id="marker" maxHeight="2.0" minHeight="2.0" minWidth="0.0" prefHeight="2.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

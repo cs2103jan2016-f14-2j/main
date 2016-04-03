@@ -31,15 +31,9 @@ public interface LogicTaskModification {
 			case 4:
 				if (variableArray[i] != null) {
 					editedTask.setToDate(variableArray[i]);
-				}
-				System.out.println(variableArray[i]);
-				System.out.println(variableArray[i - 1]);
-				if (variableArray[i] == null && variableArray[i - 1] != null) {
-					System.out.println(variableArray[i]);
-					System.out.println(variableArray[i - 1]);
+				} else if (variableArray[i] == null && variableArray[i - 1] != null) {
 					editedTask.setToDate(null);
 				}
-				// System.out.println(editedTask.getToTimeString());
 				break;
 			case 5:
 				if (variableArray[i] != null) {

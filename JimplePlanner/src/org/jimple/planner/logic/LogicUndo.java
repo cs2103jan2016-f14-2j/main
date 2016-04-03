@@ -24,17 +24,14 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 		case Constants.STRING_ADD:
 			variableArray[0] = Integer.toString(aTask.getPreviousTask().getTaskId());
 			deletionForUndo(variableArray, todo, deadlines, events);
-			packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 			break;
 		case Constants.STRING_DELETE:
 			allocateCorrectTimeArray(aTask.getPreviousTask(), todo, deadlines, events);
-			packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 			break;
 		case Constants.STRING_EDIT:
 			variableArray[0] = Integer.toString(aTask.getPreviousTask().getTaskId());
 			deletionForUndo(variableArray, todo, deadlines, events);
 			allocateCorrectTimeArray(tempHistory.remove(tempHistory.size() - 1), todo, deadlines, events);
-			packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 			break;
 		}
 		return "task \"" + aTask.getPreviousTask().getTitle() + "\"" + Constants.UNDO_FEEDBACK;

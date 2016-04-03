@@ -24,16 +24,24 @@ public interface LogicMasterListModification {
 		}
 	}
 
-	public default void packageForSavingInFile(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, ArrayList<TaskLabel> taskLabels) throws IOException {
+	public default void packageForSavingMasterLists(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
+			ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		allTasksArray.add(todo);
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
+		allTasksArray.add(archivedTasks);
 		assignTaskIds(allTasksArray);
-		store.isSavedLabels(taskLabels);
 		store.isSavedTasks(allTasksArray);
 	}
+	
+	public default void packageForSavingLabelLists(Storage store, ArrayList<TaskLabel> taskLabels)	{
+		store.isSavedLabels(taskLabels);
+	}
+	
+	/*public default void packageForSavingArchiveLists(Storage store, ArrayList<Task> archiveTasks)	{
+		store.isSavedArchivedTasks(archiveTasks);
+	}*/
 
 	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
@@ -45,7 +53,7 @@ public interface LogicMasterListModification {
 		}
 	}
 	
-	public static void checkOverCurrentTime(ArrayList<Task> deadlines, ArrayList<Task> events) {
+	public default void checkOverCurrentTime(ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (Task aTask : deadlines) {
 			if (aTask.getFromTime() != null) {
 				if (aTask.getFromTime().compareTo(LocalDateTime.now()) < 0) {
@@ -60,5 +68,20 @@ public interface LogicMasterListModification {
 				}
 			}
 		}
+	}
+
+	public default ArrayList<Task> getDividedTasks(ArrayList<Task> events)	{
+		ArrayList<Task> dividedTasks = new ArrayList<Task>();
+		for (Task anEvent : events)	{
+			System.out.println(anEvent.getTaskId());
+			Task duplicateEvent = new Task(anEvent);
+			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate()))	{
+				Task aNewTask = LogicTaskModification.divideMultipleDays(duplicateEvent);
+				dividedTasks.add(aNewTask);
+			}
+			System.out.println(duplicateEvent.getTaskId());
+			dividedTasks.add(duplicateEvent);
+		}
+		return dividedTasks;
 	}
 }

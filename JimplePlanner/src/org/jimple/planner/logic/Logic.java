@@ -24,7 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 
-public class Logic {
+public class Logic implements LogicMasterListModification {
 
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
@@ -32,6 +32,7 @@ public class Logic {
 	private ArrayList<Task> agenda;
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
+	private ArrayList<Task> archivedTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	private LinkedList<LogicPreviousTask> undoTasks;
@@ -45,11 +46,13 @@ public class Logic {
 	private LogicDirectory directer;
 	private LogicUndo undoer;
 	private LogicLabel labeler;
+	private LogicArchive archiver;
 
 	public Logic() {
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
+		archivedTasks = new ArrayList<Task>();
 		undoTasks = new LinkedList<LogicPreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
@@ -63,6 +66,7 @@ public class Logic {
 		directer = new LogicDirectory();
 		undoer = new LogicUndo();
 		labeler = new LogicLabel();
+		archiver = new LogicArchive();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			taskLabels = store.getLabels();
@@ -71,7 +75,8 @@ public class Logic {
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);
-			LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+			archivedTasks = allTasks.get(3);
+			checkOverCurrentTime(deadlines, events);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -91,7 +96,7 @@ public class Logic {
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						undoTasks, taskLabels);
+						undoTasks);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
@@ -116,7 +121,8 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
-				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory, taskLabels);
+				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory,
+						taskLabels);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:
@@ -128,12 +134,24 @@ public class Logic {
 				feedback[1] = "";
 				break;
 			case Constants.STRING_EDITLABEL:
-				feedback[0] = labeler.changeLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
+				feedback[0] = labeler.changeLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines,
+						events);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DELETELABEL:
-				feedback[0] = labeler.deleteLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
-				feedback[1]	= "";
+				feedback[0] = labeler.deleteLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines,
+						events, archivedTasks);
+				feedback[1] = "";
+				break;
+			case Constants.STRING_DONE:
+				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, todo, deadlines,
+						events, archivedTasks, taskLabels);
+				feedback[1] = "";
+				break;
+			case Constants.STRING_RETURN:
+				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, todo,
+						deadlines, events, archivedTasks, taskLabels);
+				feedback[1] = "";
 				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
@@ -150,7 +168,7 @@ public class Logic {
 			feedback[0] = ife.getMessage();
 			feedback[1] = "";
 		} catch (InvalidFromAndToTimeException ift) {
-			feedback[0] =  ift.getMessage();
+			feedback[0] = ift.getMessage();
 			feedback[1] = "";
 		} catch (MissingDateTimeFieldException mfe) {
 			feedback[0] = mfe.getMessage();
@@ -159,6 +177,8 @@ public class Logic {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
 		}
+		packageForSavingMasterLists(store, todo, deadlines, events, archivedTasks);
+		packageForSavingLabelLists(store, taskLabels);
 		notifyAllObservers(feedback);
 	}
 
@@ -167,28 +187,20 @@ public class Logic {
 	}
 
 	public ArrayList<Task> getDeadlinesList() {
-		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+		checkOverCurrentTime(deadlines, events);
 		return deadlines;
 	}
 
 	public ArrayList<Task> getEventsList() {
-		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
-		/*ArrayList<Task> dividedTasks = new ArrayList<Task>();
-		for (Task anEvent : events)	{
-			Task duplicateEvent = new Task(anEvent);
-			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate()))	{
-				Task aNewTask = LogicTaskModification.divideMultipleDays(duplicateEvent);
-				dividedTasks.add(aNewTask);
-			}
-			dividedTasks.add(duplicateEvent);
-		}*/
-		return events;
+		checkOverCurrentTime(deadlines, events);
+		ArrayList<Task> dividedTasks = getDividedTasks(events);
+		return dividedTasks;
 	}
 
 	public ArrayList<Task> getSearchList() {
 		searchResults.clear();
 		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events);
-		for (int i=0;i<searchResults.size();i++)	{
+		for (int i = 0; i < searchResults.size(); i++) {
 			System.out.println(searchResults.get(i).getTitle());
 		}
 		return searchResults;
@@ -196,17 +208,24 @@ public class Logic {
 
 	public ArrayList<Task> getAgendaList() {
 		agenda.clear();
-		LogicMasterListModification.checkOverCurrentTime(deadlines, events);
+		checkOverCurrentTime(deadlines, events);
+		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		agenda.addAll(deadlines);
-		agenda.addAll(events);
+		agenda.addAll(dividedTasks);
+		// System.out.println(agenda.get(0).getTaskId());
+		// System.out.println(events.get(0).getTaskId());
 		Task.sortTasksForAgenda(agenda);
 		return agenda;
 	}
 
-	public ArrayList<TaskLabel> getTaskLabels()	{
+	public ArrayList<Task> getArchivedList() {
+		return archivedTasks;
+	}
+
+	public ArrayList<TaskLabel> getTaskLabels() {
 		return taskLabels;
 	}
-	
+
 	public String getPastInputs(int cmdHistoryPointer) {
 		if (!pastUserInputs.isEmpty()) {
 			return pastUserInputs.get(cmdHistoryPointer);
@@ -285,10 +304,10 @@ public class Logic {
 
 		listOfCommands += Constants.CHECKDIR_HELP_HEADER;
 		listOfCommands += Constants.CHECKDIR_COMMAND;
-		
+
 		listOfCommands += Constants.EDITLABEL_HELP_HEADER;
 		listOfCommands += Constants.EDITLABEL_COMMAND;
-		
+
 		listOfCommands += Constants.DELETELABEL_HELP_HEADER;
 		listOfCommands += Constants.DELETELABEL_COMMAND;
 		return listOfCommands;

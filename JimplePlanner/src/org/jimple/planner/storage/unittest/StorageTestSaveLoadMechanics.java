@@ -16,6 +16,9 @@ public class StorageTestSaveLoadMechanics {
 	private StorageSave saveUnit = new StorageSave();
 	private StorageLoad loadUnit = new StorageLoad();
 	
+	/*
+	 * This tests the retrieval and saving of tasks
+	 */
 	@Test
 	public void testSavingAndRetrieval() throws IOException{
 		testIsSaved();

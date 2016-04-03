@@ -1,4 +1,5 @@
 package org.jimple.planner.logic;
+
 import org.jimple.planner.storage.*;
 
 import java.io.IOException;
@@ -9,11 +10,10 @@ import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 
 public class LogicDelete implements LogicTaskModification, LogicMasterListModification {
-	
-	protected String deleteTask(Storage store, String[] variableArray, 
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
-			LinkedList<LogicPreviousTask> undoTasks, ArrayList<TaskLabel> taskLabels)
-			throws IOException {
+
+	protected String deleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
+			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks)
+					throws IOException {
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
 		boolean isEventsDeleted = false;
@@ -26,15 +26,13 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 			isEventsDeleted = findTaskToDelete(variableArray, events, undoTasks);
 		}
 		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
-			packageForSavingInFile(store, todo, deadlines, events, taskLabels);
 			return "task " + variableArray[0] + Constants.DELETED_FEEDBACK;
 		}
 		return "task " + variableArray[0] + Constants.ERROR_DELETED_FEEDBACK;
 	}
-	
+
 	private boolean findTaskToDelete(String[] variableArray, ArrayList<Task> list,
-			LinkedList<LogicPreviousTask> undoTasks)
-			throws IOException {
+			LinkedList<LogicPreviousTask> undoTasks) throws IOException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
 				checkOverCacheLimit(undoTasks);
@@ -47,11 +45,12 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 	}
 
 	public String testDeleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
-		return deleteTask(store, variableArray, todo, deadlines, events, undoTasks, taskLabels);
+			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks) throws IOException {
+		return deleteTask(store, variableArray, todo, deadlines, events, undoTasks);
 	}
-	
-	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list, LinkedList<LogicPreviousTask> undoTasks) throws IOException	{
+
+	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list,
+			LinkedList<LogicPreviousTask> undoTasks) throws IOException {
 		return findTaskToDelete(variableArray, list, undoTasks);
 	}
 
