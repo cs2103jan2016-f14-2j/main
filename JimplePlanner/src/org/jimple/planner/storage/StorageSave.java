@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 
+//@@author A0135808B
 public class StorageSave implements StorageSaveInterface{
 
 	private BufferedWriter createFileWriter(String fileName){
@@ -107,7 +108,6 @@ public class StorageSave implements StorageSaveInterface{
 			String fromToString = formatToSaveString(TAGS_TO_TIME + task.getToTime());
 			lineString = lineString + fromToString;
 		}
-		//TODO label field implemented but need to test
 		TaskLabel taskLabel = task.getTaskLabel();
 		if(!taskLabel.equals(TaskLabel.getDefaultLabel())){
 			String taskLabelToString = formatToTaskLabel(taskLabel);
