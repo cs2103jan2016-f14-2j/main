@@ -66,11 +66,11 @@
                                  <children>
                                     <HBox prefHeight="450.0" prefWidth="800.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                                          <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <Label text="Today" textFill="#6f6161">
+                                                <Label style="-fx-font-weight: bold; -fx-font-size: 24;" text="Today" textFill="#6f6161">
                                                    <font>
-                                                      <Font name="Trebuchet MS" size="18.0" />
+                                                      <Font name="Calibri" size="24.0" />
                                                    </font>
                                                 </Label>
                                                 <AnchorPane fx:id="todayPane" prefHeight="400.0" prefWidth="536.0" style="-fx-border-color: grey; -fx-border-radius: 15px;" VBox.vgrow="ALWAYS">
@@ -91,12 +91,15 @@
                                                    </children>
                                                 </AnchorPane>
                                              </children>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
                                           </VBox>
-                                          <VBox prefHeight="430.0" prefWidth="360.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                          <VBox prefHeight="430.0" prefWidth="360.0" spacing="5.0" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <Label text="Ongoing" textFill="#6f6161">
+                                                <Label style="-fx-font-weight: bold; -fx-font-size: 24;" text="Ongoing" textFill="#6f6161">
                                                    <font>
-                                                      <Font name="Trebuchet MS" size="18.0" />
+                                                      <Font name="Calibri" size="24.0" />
                                                    </font>
                                                 </Label>
                                                 <AnchorPane fx:id="nowPane" style="-fx-border-color: grey; -fx-border-radius: 15;" VBox.vgrow="ALWAYS">
@@ -115,9 +118,9 @@
                                                          </children>
                                                       </VBox>
                                                    </children></AnchorPane>
-                                                <Label text="Upcoming" textFill="#6f6161">
+                                                <Label style="-fx-font-weight: bold; -fx-font-size: 24;" text="Upcoming" textFill="#6f6161">
                                                    <font>
-                                                      <Font name="Trebuchet MS" size="18.0" />
+                                                      <Font name="Calibri" size="24.0" />
                                                    </font>
                                                 </Label>
                                                 <AnchorPane fx:id="upcomingPane" style="-fx-border-radius: 15; -fx-border-color: grey;" VBox.vgrow="ALWAYS">
@@ -137,6 +140,9 @@
                                                       </VBox>
                                                    </children></AnchorPane>
                                              </children>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
                                           </VBox>
                                        </children>
                                     </HBox>

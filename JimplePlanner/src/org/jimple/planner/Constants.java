@@ -35,7 +35,6 @@ public final class Constants {
 	/*
 	 * Storage Component
 	 */
-	public static final int ALL_ARRAY_SIZE = 3;
 	
 	public static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
 	public static final String DEFAULT_FILE_NAME = "planner.jim";

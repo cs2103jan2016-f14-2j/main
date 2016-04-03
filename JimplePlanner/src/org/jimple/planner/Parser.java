@@ -56,6 +56,7 @@ public class Parser {
 	private static final String COMMAND_EDIT = "EDIT";
 	private static final String COMMAND_DELETE = "DELETE";
 	private static final String COMMAND_SEARCH = "SEARCH";
+	private static final String COMMAND_DONE = "DONE";
 	private static final String COMMAND_EDITLABEL = "EDITLABEL";
 	private static final String COMMAND_DELETELABEL = "DELETELABEL";
 	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
@@ -128,6 +129,11 @@ public class Parser {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a search string.");
+				case COMMAND_DONE :
+					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
 				case COMMAND_EDITLABEL :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
@@ -171,6 +177,9 @@ public class Parser {
 	}
 	
 	private String getMainCommandUserInputString(String[] splitUserInput) {
+		if (splitUserInput.length < 2) {
+			return null;
+		}
 		return splitUserInput[INDEX_MAIN_COMMAND_USER_INPUT];
 	}
 	
@@ -179,7 +188,7 @@ public class Parser {
 	}
 	
 	private boolean isNumber(String input) {
-		if (input == "") {
+		if (input == "" || input == null) {
 			return false;
 		}
 		boolean isNumber = true;
