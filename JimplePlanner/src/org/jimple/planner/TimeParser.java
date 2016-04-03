@@ -436,8 +436,9 @@ public class TimeParser {
 
 	// Parses months. E.g February, May, December.
 	private boolean parseIfIsMonth(String input) throws DuplicateDateTimeFieldException {
-		if (calendarMonths.containsKey(input)) {
-			setField("month", calendarMonths.get(input));
+		String inputLowerCase = input.toLowerCase();
+		if (calendarMonths.containsKey(inputLowerCase)) {
+			setField("month", calendarMonths.get(inputLowerCase));
 			return true;
 		}
 		return false;
