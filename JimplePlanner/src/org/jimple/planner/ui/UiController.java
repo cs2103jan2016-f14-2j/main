@@ -326,7 +326,7 @@ public class UiController extends myObserver implements Initializable {
 				switch(t.getCode()){
 			    case ESCAPE:
 					tabPanes.requestFocus();
-					listViewControl.getActiveListView().requestFocus();
+//					listViewControl.getActiveListView().requestFocus();
 					if(overlay.isVisible()){
 						overlay.setVisible(false);
 						isSearch = false;
@@ -357,26 +357,29 @@ public class UiController extends myObserver implements Initializable {
 			
 			@Override
 			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.UP) {
+				switch(t.getCode()){
+				case UP: 
 					if (listViewControl.getCurrentTabItemIndex() == 0) {
 						listViewControl.selectIndex(-1);
 						tabPanes.requestFocus();
 						listViewControl.deselectTaskItem();
-					}
+						}
+					break;
+				case LEFT:
+				case RIGHT:
+					break;
+				case ESCAPE:
+					tabPanes.requestFocus();
+					listViewControl.deselectTaskItem();
+					break;
+				default:
+					break;
 				}
 			}
 		});
 	}
 
 	public void tabPanesListener() {
-//		tabPanes.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//
-//			@Override
-//			public void handle(MouseEvent event) {
-//				listViewControl.deselectTaskItem();
-//				tabPanes.getSelectionModel().getSelectedItem().getContent().requestFocus();
-//			}
-//		});
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			
 			@Override
@@ -392,15 +395,13 @@ public class UiController extends myObserver implements Initializable {
 						listViewControl.getActiveListView().getSelectionModel().select(0);
 					break;
 				case UP:
+					listViewControl.getActiveListView().requestFocus();
 					taskSelectionListener();
+					t.consume();
 					break;
 				case LEFT:
-					tabPanes.requestFocus();
-					listViewControl.deselectTaskItem();
-					break;
 				case RIGHT:
-					tabPanes.requestFocus();
-					listViewControl.deselectTaskItem();
+					taskSelectionListener();
 					break;
 				case BACK_SPACE:
 				case DELETE:
