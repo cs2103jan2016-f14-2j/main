@@ -108,7 +108,9 @@ public class UiFormatter {
 
 	private void addTodayTasksToFormattedDateList() {
 		for (Task task : arrList) {
-			if(task.getType().equals(Constants.TYPE_EVENT) && timeDifference(task.getFromTime()) < 0
+			if(task.getType().equals(Constants.TYPE_EVENT)
+					&& timeDifference(task.getFromTime()) < 0
+					&& timeDifference(task.getToTime()) > 0
 					&& !task.getIsOverDue()){
 				formattedList.add(task);
 			}
