@@ -100,6 +100,10 @@
 	-fx-text-fill: grey;
 }
 
+.date{
+	-fx-font-family: "Calibri Light";
+}
+
 #ongoing{
 	-fx-padding: 25px 10px;
 }
