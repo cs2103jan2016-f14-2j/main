@@ -13,7 +13,7 @@ public class ParserTest {
 	@Test
 	public void test() {
 		testParser = new Parser();
-		//test0();
+		test0();
 		test1();
 		test2();
 		test3();
@@ -34,7 +34,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD asdf123654 FROM 2/4/16 04:30 TO 03:20");
+			testStruct = testParser.parseInput("DONE 4");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);

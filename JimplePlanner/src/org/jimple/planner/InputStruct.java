@@ -11,13 +11,14 @@ package org.jimple.planner;
 public class InputStruct {
 
 	// Main commands.
-	private static final String COMMAND_ADD = "ADD";
-	private static final String COMMAND_EDIT = "EDIT";
-	private static final String COMMAND_DELETE = "DELETE";
-	private static final String COMMAND_SEARCH = "SEARCH";
-	private static final String COMMAND_EDITLABEL = "EDITLABEL";
-	private static final String COMMAND_DELETELABEL = "DELETELABEL";
-	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
+	private final String COMMAND_ADD = "ADD";
+	private final String COMMAND_EDIT = "EDIT";
+	private final String COMMAND_DELETE = "DELETE";
+	private final String COMMAND_SEARCH = "SEARCH";
+	private final String COMMAND_DONE = "DONE";
+	private final String COMMAND_EDITLABEL = "EDITLABEL";
+	private final String COMMAND_DELETELABEL = "DELETELABEL";
+	private final String COMMAND_CHANGEDIR = "CHANGEDIR";
 	private static final String COMMAND_CHECKDIR = "CHECKDIR";
 	private static final String COMMAND_UNDO = "UNDO";
 	private static final String COMMAND_HELP = "DELP";
@@ -31,6 +32,7 @@ public class InputStruct {
 	private final int ARRAY_SIZE_EDIT = 6;
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
+	private final int ARRAY_SIZE_DONE = 1;
 	private final int ARRAY_SIZE_EDITLABEL = 3;
 	private final int ARRAY_SIZE_DELETELABEL = 1;
 	private final int ARRAY_SIZE_CHANGEDIR = 1;
@@ -103,6 +105,9 @@ public class InputStruct {
 			break;
 		case COMMAND_SEARCH :
 			setVariableArraySize(ARRAY_SIZE_SEARCH);
+			break;
+		case COMMAND_DONE :
+			setVariableArraySize(ARRAY_SIZE_DONE);
 			break;
 		case COMMAND_EDITLABEL :
 			setVariableArraySize(ARRAY_SIZE_EDITLABEL);
