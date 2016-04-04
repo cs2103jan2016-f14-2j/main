@@ -1,4 +1,4 @@
-package org.jimple.planner;
+package org.jimple.planner.parser;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
@@ -13,7 +13,7 @@ public class ParserTest {
 	@Test
 	public void test() {
 		testParser = new Parser();
-		test0();
+		//test0();
 		test1();
 		test2();
 		test3();
