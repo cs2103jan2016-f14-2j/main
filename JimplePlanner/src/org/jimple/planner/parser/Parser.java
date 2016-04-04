@@ -7,7 +7,6 @@ package org.jimple.planner.parser;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;
 import org.jimple.planner.exceptions.InvalidCommandException;
