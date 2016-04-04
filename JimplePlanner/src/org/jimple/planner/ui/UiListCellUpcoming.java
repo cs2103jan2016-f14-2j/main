@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -18,11 +20,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class UiListCellUpcoming extends ListCell<Task> {
-	
+
 	@FXML
-	Label title, date, id, label, time;
+	Label title, date, id, label, time, desc;
 	@FXML
 	AnchorPane anchorpane;
+	@FXML
+	ImageView icon;
+	@FXML
+	VBox vBox, idcolor;
 
 	FXMLLoader fxmlLoader;	
 
@@ -37,14 +43,13 @@ public class UiListCellUpcoming extends ListCell<Task> {
 			
 			setDeadlineColors(item);	
 			setLabel(item);
-
+			setDesc(item);
+			setStyles();
+			
+			icon.setImage(new Image("deadlineIconGrey.png"));
 			title.setText(item.getTitle());
-			id.setText(String.format("%d", item.getTaskId()));
-			date.setText(String.format("%s", item.getPrettyFromDate()));
-			time.setText(String.format("%s", item.getPrettyFromTime()));
-			title.setId(Constants.TYPE_DEADLINE+"Text");
-			id.setId(Constants.TYPE_DEADLINE+"Text");
-			date.setId(Constants.TYPE_DEADLINE+"Text");
+			id.setText(""+item.getTaskId());
+			date.setText(item.getPrettierFromDate());
 				
 			setGraphic(anchorpane);
 		}
@@ -56,12 +61,12 @@ public class UiListCellUpcoming extends ListCell<Task> {
 		if (UiFormatter.timeDifference(item.getFromTime()) >= 1440)
 			this.setId("green");
 		// less than a day
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 180)
 			this.setId("yellow");
 		// less than an hour
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
 			this.setId("orange");
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 10)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
 			this.setId("red");
 		else if (UiFormatter.timeDifference(item.getFromTime()) >= 0)
 			this.setId("darkred");
@@ -86,6 +91,21 @@ public class UiListCellUpcoming extends ListCell<Task> {
 		label.getStyleClass().add("labelText");
 		label.setId("color" + item.getTaskLabel().getColourId());
 	}
-
-
+	
+	private void setStyles(){
+		title.getStyleClass().add("title");
+		date.getStyleClass().add("date");
+		time.getStyleClass().add("date");
+	}
+	
+	private void setDesc(Task item) {
+		desc.setText(item.getDescription());
+		desc.setId("description");
+		if(item.getDescription().equals("")){
+			if(vBox.getChildren().contains(desc))
+				vBox.getChildren().remove(desc);
+		}
+		idcolor.setId("color" + item.getTaskLabel().getColourId());
+		id.setId("color" + item.getTaskLabel().getColourId());
+	}
 }
