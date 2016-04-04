@@ -163,14 +163,21 @@ public class UiController extends myObserver implements Initializable {
 		update();
 	 }
 
+	private String getCurrentTime(){
+		String currentTime = "";
+		currentTime += LocalDateTime.now().getDayOfWeek() + ", " +
+		LocalDateTime.now().getDayOfMonth() + " " +
+		LocalDateTime.now().getMonth() + " " +
+		LocalDateTime.now().getYear() + " " +
+		LocalDateTime.now().getHour() + ":" +
+		String.format("%02d", LocalDateTime.now().getMinute());
+		return currentTime;
+	}
 	private void loadClock() {
-		final DateFormat format = SimpleDateFormat.getInstance();
 		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
-		          final Calendar cal = Calendar.getInstance();  
-		          clock.setText(format.format(cal.getTime()));
-//		          update();
+		          clock.setText(getCurrentTime());
 		          if(LocalDateTime.now().getSecond() == 0){
 		        	  update();
 		          }

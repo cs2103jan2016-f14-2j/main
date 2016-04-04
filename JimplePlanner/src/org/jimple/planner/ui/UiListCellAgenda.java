@@ -24,13 +24,13 @@ import javafx.scene.text.Text;
 public class UiListCellAgenda extends ListCell<Task> {
 	
 	@FXML
-	Label title, fromdate, todate, id, label, desc;
+	Label title, fromdate, todate, id, label, desc, conflict;
 	@FXML
 	CheckBox checkbox;
 	@FXML
-	AnchorPane anchorpane, marker, idcolor;
+	AnchorPane anchorpane, marker;
 	@FXML
-	VBox vBox, date;
+	VBox vBox, date, idcolor;
 	@FXML
 	ImageView icon;
 	@FXML
@@ -66,6 +66,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 				setLabel(item);
 				setDesc(item);
 				setStyles();
+				setConflict(item);
 				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
@@ -89,6 +90,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 				setLabel(item);
 				setDesc(item);
 				setStyles();
+				setConflict(item);
 				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
@@ -111,6 +113,8 @@ public class UiListCellAgenda extends ListCell<Task> {
 				
 				if(hBox.getChildren().contains(date))
 					hBox.getChildren().remove(date);
+				if(hBox.getChildren().contains(conflict))
+					hBox.getChildren().remove(conflict);
 
 				icon.setImage(new Image("todoIconGrey.png"));
 				title.setText(item.getTitle());
@@ -119,10 +123,6 @@ public class UiListCellAgenda extends ListCell<Task> {
 			}
 			setGraphic(anchorpane);	
 		}
-	}
-
-	private void remove(Node node) throws NullPointerException{
-		((Pane) node.getParent()).getChildren().remove(node);
 	}
 
 	private void setDeadlineColors(Task item) {
@@ -143,6 +143,12 @@ public class UiListCellAgenda extends ListCell<Task> {
 			this.setId("overdue");
 	}
 
+	private void setConflict(Task item){
+		if(!item.getIsConflicted())
+			conflict.setVisible(false);
+		else
+			conflict.setVisible(true);
+	}
 	private void loadFXMLLayout(String file) {
 		fxmlLoader = new FXMLLoader(getClass().getResource(file));
 		fxmlLoader.setController(this);
