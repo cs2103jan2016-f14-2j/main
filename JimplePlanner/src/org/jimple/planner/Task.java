@@ -233,13 +233,6 @@ public class Task {
 	public static void sortTasksForAgenda(ArrayList<Task> agenda) {
 		taskSorter.sortTasksForAgenda(agenda);
 	}
-
-	/*
-	 * the following methods are to be used only for non hashing purposes, if a
-	 * hashset is to be used, DO NOT EDIT any of the tasks inside this hashset
-	 * for it will cause a memory leak AUTO-GENEERATED by Eclipse
-	 */
-	
 	
 	@Override
 	public int hashCode() {
