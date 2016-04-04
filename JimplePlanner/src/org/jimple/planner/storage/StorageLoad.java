@@ -34,6 +34,7 @@ import org.jimple.planner.TaskLabel;
 
 //@@author A0135808B
 public class StorageLoad implements StorageLoadInterface{
+	//@@author A0135808B
 	private BufferedReader createFileReader(String fileName){
 		BufferedReader reader = null;
 		try {
@@ -46,12 +47,12 @@ public class StorageLoad implements StorageLoadInterface{
 		}
 		return reader;
 	}
-	
+	//@@author A0135808B
 	public ArrayList<ArrayList<Task>> getTaskSelect(String filePath){
 		BufferedReader defaultFileReader = createFileReader(filePath);
 		return getTaskByReader(defaultFileReader);
 	}
-	
+	//@@author A0135808B
 	private ArrayList<ArrayList<Task>> getTaskByReader(BufferedReader defaultFileReader) {
 		ArrayList<ArrayList<Task>> allTasksLists = populateArrayList();
 		String fileLineContent;
@@ -70,7 +71,7 @@ public class StorageLoad implements StorageLoadInterface{
 		Task.sortTasks(allTasksLists);
 		return allTasksLists;
 	}
-	
+	//@@author A0135808B
 	private ArrayList<ArrayList<Task>> populateArrayList(){
 		ArrayList<ArrayList<Task>> allTasksLists = new ArrayList<ArrayList<Task>>();
 		allTasksLists.add(new ArrayList<Task>());
@@ -79,14 +80,14 @@ public class StorageLoad implements StorageLoadInterface{
 		allTasksLists.add(new ArrayList<Task>());
 		return allTasksLists;
 	}
-	
+	//@@author A0135808B
 	private ArrayList<String> getSeparateFields(String fileLineContent){
 		Pattern pattern = Pattern.compile(TAGS_LINE_FIELD_SEPARATOR);
 		String[] separatedContentsArray = pattern.split(fileLineContent);
 		ArrayList<String> separatedContents = new ArrayList<String>(Arrays.asList(separatedContentsArray));
 		return separatedContents;
 	}
-	
+	//@@author A0135808B
 	private Task getTaskFromLine(String fileLineContent){
 		ArrayList<String> fileLineContentSeparated = getSeparateFields(fileLineContent);
 		Task task = new Task(EMPTY_STRING);
@@ -95,7 +96,7 @@ public class StorageLoad implements StorageLoadInterface{
 		}
 		return task;
 	}
-	
+	//@@author A0135808B
 	private void setFields(Task task, String field){
 		if(isTitle(field)){
 			String titleString = getRemovedTitleTagString(field);
@@ -119,40 +120,41 @@ public class StorageLoad implements StorageLoadInterface{
 			task.setIsDone(isDoneField);
 		}
 	}
-	
+	//@@author A0135808B
 	private boolean isTitle(String field){
 		return field.contains(TAGS_TITLE);
 	}
-	
+	//@@author A0135808B
 	private boolean isLabel(String field){
 		return field.contains(TAGS_LABEL);
 	}
-	
+	//@@author A0135808B
 	private boolean isDescription(String field){
 		return field.contains(TAGS_DESCRIPTION);
 	}
-	
+	//@@author A0135808B
 	private boolean isFromTime(String field){
 		return field.contains(TAGS_FROM_TIME);
 	}
-	
+	//@@author A0135808B
 	private boolean isToTime(String field){
 		return field.contains(TAGS_TO_TIME);
 	}
-	
+	//@@author A0135808B
 	private boolean isIsDone(String field){
 		return field.contains(TAGS_ISDONE);
 	}
-	
+	//@@author A0135808B
 	private String getRemovedIsDoneTagString(String field){
 		String removedTag = field.replace(TAGS_ISDONE, field);
 		return removedTag;
 	}
+	//@@author A0135808B
 	private String getRemovedTitleTagString(String field){
 		String removedTag = field.replace(TAGS_TITLE, EMPTY_STRING);
 		return removedTag;
 	}
-	
+	//@@author A0135808B
 	private ArrayList<String> getRemovedLabelTagStringArray(String field){
 		String removedTag = field.replace(TAGS_LABEL, EMPTY_STRING);
 		Pattern pattern = Pattern.compile(TAGS_LABEL_FIELD_SEPARATOR);
@@ -166,22 +168,22 @@ public class StorageLoad implements StorageLoadInterface{
 		}
 		return splitLabelFieldsWithNoEmptyString;
 	}
-	
+	//@@author A0135808B
 	private String getRemovedDescriptionTagString(String field){
 		String removedTag = field.replace(TAGS_DESCRIPTION, EMPTY_STRING);
 		return removedTag;
 	}
-	
+	//@@author A0135808B
 	private String getRemovedFromTagString(String field){
 		String removedTag = field.replace(TAGS_FROM_TIME, EMPTY_STRING);
 		return removedTag;
 	}
-	
+	//@@author A0135808B
 	private String getRemovedToTagString(String field){
 		String removedTag = field.replace(TAGS_TO_TIME, EMPTY_STRING);
 		return removedTag;
 	}
-	
+	//@@author A0135808B
 	private void allocateTaskToArrayList(Task task, ArrayList<ArrayList<Task>> allTasksLists){
 		assert allTasksLists.size() == 4;
 		if(task.getIsDone()){
@@ -201,7 +203,7 @@ public class StorageLoad implements StorageLoadInterface{
 			}
 		}
 	}
-	
+	//@@author A0135808B
 	public Properties loadProperties(){
 		String configPath = FILEPATH_CONFIG;
 		BufferedReader configFileReader = createFileReader(configPath);
@@ -217,7 +219,7 @@ public class StorageLoad implements StorageLoadInterface{
 		}
 		return property;
 	}
-	
+	//@@author A0135808B
 	private void propertyKeysInitialise(Properties property){
 		setKeys(property, PROPERTIES_KEY_CURRENT_SAVEPATH, PROPERTIES_SAVEPATH_TO_CWD);
 		setKeys(property, PROPERTIES_KEY_PREV_SAVEPATH, PROPERTIES_SAVEPATH_TO_CWD);
@@ -228,18 +230,18 @@ public class StorageLoad implements StorageLoadInterface{
 			property.setProperty(key, value);
 		}
 	}
-	
 	/*
 	 * ALL TEST METHODS HERE
 	 */
+	//@@author A0135808B
 	public ArrayList<ArrayList<Task>> getTestTasks(){
 		return getTaskSelect(FILEPATH_TEST);
 	}
-	
+	//@@author A0135808B
 	public Task testGetTaskFromLine(String fileLineContent){
 		return getTaskFromLine(fileLineContent);
 	}
-	
+	//@@author A0135808B
 	public String[] testExtractTasksToStringArray(Task task){
 		String[] result = new String[6];
 		result[0] = task.getTitle();
