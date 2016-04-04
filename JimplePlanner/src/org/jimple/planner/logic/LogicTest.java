@@ -73,6 +73,11 @@ public class LogicTest {
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
 	}
 	
+	@Test
+	public void ShouldReturnConflictedTasks()	{
+		
+	}
+	
 	/**
 	 * EP: 2 cases
 	 * 1. task is found and returned to list

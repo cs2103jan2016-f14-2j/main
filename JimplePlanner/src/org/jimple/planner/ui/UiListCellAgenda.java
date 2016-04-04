@@ -130,12 +130,12 @@ public class UiListCellAgenda extends ListCell<Task> {
 		if (UiFormatter.timeDifference(item.getFromTime()) >= 1440)
 			this.setId("green");
 		// less than a day
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 180)
 			this.setId("yellow");
 		// less than an hour
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
 			this.setId("orange");
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 10)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
 			this.setId("red");
 		else if (UiFormatter.timeDifference(item.getFromTime()) >= 0)
 			this.setId("darkred");

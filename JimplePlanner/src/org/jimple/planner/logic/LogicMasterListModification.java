@@ -73,13 +73,11 @@ public interface LogicMasterListModification {
 	public default ArrayList<Task> getDividedTasks(ArrayList<Task> events)	{
 		ArrayList<Task> dividedTasks = new ArrayList<Task>();
 		for (Task anEvent : events)	{
-			System.out.println(anEvent.getTaskId());
 			Task duplicateEvent = new Task(anEvent);
 			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate()))	{
 				Task aNewTask = LogicTaskModification.divideMultipleDays(duplicateEvent);
 				dividedTasks.add(aNewTask);
 			}
-			System.out.println(duplicateEvent.getTaskId());
 			dividedTasks.add(duplicateEvent);
 		}
 		return dividedTasks;
