@@ -50,6 +50,7 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 				}
 				tempHistory.add(taskToBeEdited);
 				undoTasks.add(setNewPreviousTask(Constants.STRING_EDIT, editedTask));
+				checkIsConflictWithCurrentTasks(editedTask, deadlines, events);
 				allocateCorrectTimeArray(editedTask, todo, deadlines, events);
 				return true;
 			}

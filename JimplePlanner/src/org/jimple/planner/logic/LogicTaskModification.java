@@ -96,14 +96,18 @@ public interface LogicTaskModification {
 		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
 	}
 	
-	public default boolean isConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
-		boolean isConflict = false;
+	public default void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		switch (newTask.getType()) {
 		case Constants.TYPE_DEADLINE:
 			if (!deadlines.isEmpty()) {
 				for (int i = 0; i < deadlines.size(); i++) {
 					if (newTask.getFromTime().equals(deadlines.get(i).getFromTime())) {
-						isConflict = true;
+						newTask.setIsConflicted(true);
+						deadlines.get(i).setIsConflicted(true);
+						break;
+					} else	{
+						newTask.setIsConflicted(false);
+						deadlines.get(i).setIsConflicted(false);
 					}
 				}
 			}
@@ -113,13 +117,17 @@ public interface LogicTaskModification {
 				for (int i = 0; i < events.size(); i++) {
 					if (isToTimeExceedTimeRange(newTask, events.get(i))
 							|| isFromTimeExceedTimeRange(newTask, events.get(i))) {
-						isConflict = true;
+						newTask.setIsConflicted(true);
+						events.get(i).setIsConflicted(true);
+						break;
+					} else	{
+						newTask.setIsConflicted(false);
+						events.get(i).setIsConflicted(false);
 					}
 				}
 			}
 			break;
 		}
-		return isConflict;
 	}
 
 	public default boolean isToTimeExceedTimeRange(Task newTask, Task event) {

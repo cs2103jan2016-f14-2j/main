@@ -1,2 +1,3 @@
 /s/:isDone:false/s//s/:title:task 1/s/
+/s/:isDone:false/s//s/:title:orientation camp/s//s/:from:2016-04-04T23:59/s/
 /s/:isDone:false/s//s/:title:task 2/s//s/:from:2016-04-05T13:00/s//s/:to:2016-04-05T14:00/s/
