@@ -12,8 +12,8 @@ import org.jimple.planner.TaskLabel;
 import org.jimple.planner.exceptions.*;
 import org.jimple.planner.observers.myObserver;
 
-import org.jimple.planner.InputStruct;
-import org.jimple.planner.Parser;
+import org.jimple.planner.parser.InputStruct;
+import org.jimple.planner.parser.Parser;
 import org.jimple.planner.storage.Storage;
 import org.jimple.planner.storage.StorageComponent;
 

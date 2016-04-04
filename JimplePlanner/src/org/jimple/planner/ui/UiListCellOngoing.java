@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -17,9 +19,13 @@ import javafx.scene.layout.VBox;
 public class UiListCellOngoing extends ListCell<Task>{
 	
 	@FXML
-	Label title, date, id, label;
+	Label title, fromdate, todate, id, label, time, desc;
 	@FXML
 	AnchorPane anchorpane;
+	@FXML
+	ImageView icon;
+	@FXML
+	VBox vBox, idcolor;
 
 	FXMLLoader fxmlLoader;	
 	@Override
@@ -28,30 +34,76 @@ public class UiListCellOngoing extends ListCell<Task>{
 		this.getStyleClass().add("listcell");
 		this.setPrefWidth(0);
 		if (item != null) {
-			this.setId("ongoing");
-			fxmlLoader = new FXMLLoader(getClass().getResource("ongoingCellLayout.fxml"));
-			fxmlLoader.setController(this);
-			try {
-				fxmlLoader.load();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT))
-				label.setVisible(false);
-			label.setText(item.getTaskLabel().getLabelName());
-			label.setId("color" + item.getTaskLabel().getColourId());
+			this.setId(Constants.TYPE_DEADLINE);
+			loadFXMLLayout("ongoingCellLayout.fxml");
+			
+			setDeadlineColors(item);	
+			setLabel(item);
+			setDesc(item);
+			setStyles();
+			
+			icon.setImage(new Image("eventIconGrey.png"));
 			title.setText(item.getTitle());
-			id.setText(String.format("%d", item.getTaskId()));
-			date.setText(String.format("FROM %s %s\r\nTO %s %s",
-					item.getPrettyFromDate(),
-					item.getPrettyFromTime(),
-					item.getPrettyToDate(),
-					item.getPrettyToTime()));
-			title.setId("ongoingText");
-			id.setId("ongoingText");
-			date.setId("ongoingText");
+			id.setText(""+item.getTaskId());
+			fromdate.setText("from " + item.getPrettyFromDate() + " " +item.getPrettyFromTime());
+			todate.setText("to " + item.getPrettyToDate() + " " +item.getPrettyToTime());
 			setGraphic(anchorpane);
 		}
 	}
+	
+	private void loadFXMLLayout(String file) {
+		fxmlLoader = new FXMLLoader(getClass().getResource(file));
+		fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 
+	private void setLabel(Task item) {
+		label.setText(item.getTaskLabel().getLabelName());
+		label.getStyleClass().add("labelText");
+		label.setId("color" + item.getTaskLabel().getColourId());
+		if(item.getTaskLabel().getLabelName().equals(Constants.TASK_LABEL_NAME_DEFAULT)){
+			if(vBox.getChildren().contains(label))
+				vBox.getChildren().remove(label);
+		}
+	}
+
+	private void setDesc(Task item) {
+		desc.setText(item.getDescription());
+		desc.setId("description");
+		if(item.getDescription().equals("")){
+			if(vBox.getChildren().contains(desc))
+				vBox.getChildren().remove(desc);
+		}
+		idcolor.setId("color" + item.getTaskLabel().getColourId());
+		id.setId("color" + item.getTaskLabel().getColourId());
+	}
+	
+	private void setStyles(){
+		title.getStyleClass().add("title");
+		fromdate.getStyleClass().add("date");
+		todate.getStyleClass().add("date");
+	}
+	
+	private void setDeadlineColors(Task item) {
+		// more than a day away
+		if (UiFormatter.timeDifference(item.getFromTime()) >= 1440)
+			this.setId("green");
+		// less than a day
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 180)
+			this.setId("yellow");
+		// less than an hour
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
+			this.setId("orange");
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
+			this.setId("red");
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 0)
+			this.setId("darkred");
+		else
+			this.setId("overdue");
+	}
 }

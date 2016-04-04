@@ -16,6 +16,7 @@ public class Task {
 	private boolean isOverDue;
 	private boolean isDone;
 	private int taskId;
+	private boolean isConflicted;
 	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
 	private static TaskSorter taskSorter = new TaskSorter();
@@ -31,6 +32,7 @@ public class Task {
 		this.isDone = false;
 		this.taskId = 1000;
 		this.taskLabel = TaskLabel.getDefaultLabel();
+		this.isConflicted = false;
 	}
 
 	// Constructor for creating a duplicate
@@ -44,6 +46,7 @@ public class Task {
 		this.isDone = taskToBeDuplicated.getIsDone();
 		this.taskId = taskToBeDuplicated.getTaskId();
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
+		this.isConflicted = taskToBeDuplicated.getIsConflicted();
 	}
 
 	public String getPrettierFromDate(){
@@ -214,7 +217,15 @@ public class Task {
 	public void setIsDone(boolean isDone){
 		this.isDone = isDone;
 	}
-
+	
+	public boolean getIsConflicted()	{
+		return isConflicted;
+	}
+	
+	public void setIsConflicted(boolean isConflicted)	{
+		this.isConflicted = isConflicted;
+	}
+	
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {
 		taskSorter.sortTasks(allTaskLists);
 	}
@@ -222,13 +233,6 @@ public class Task {
 	public static void sortTasksForAgenda(ArrayList<Task> agenda) {
 		taskSorter.sortTasksForAgenda(agenda);
 	}
-
-	/*
-	 * the following methods are to be used only for non hashing purposes, if a
-	 * hashset is to be used, DO NOT EDIT any of the tasks inside this hashset
-	 * for it will cause a memory leak AUTO-GENEERATED by Eclipse
-	 */
-	
 	
 	@Override
 	public int hashCode() {

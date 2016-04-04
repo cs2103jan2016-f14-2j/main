@@ -75,6 +75,15 @@ public class LogicTest {
 	
 	@Test
 	public void ShouldReturnConflictedTasks()	{
+		initializeThreeArrays();
+		Task newConflictedDeadline = new Task("conflict 1");
+		Task newConflictedEvent1 = new Task("conflict 2");
+		Task newConflictedEvent2 = new Task("conflict 3");
+		newConflictedDeadline.setFromDate("2016-03-25T09:00");
+		newConflictedEvent1.setFromDate("2016-03-26T09:00");
+		newConflictedEvent1.setToDate("2016-03-28T09:00");
+		newConflictedEvent2.setFromDate("2016-03-27T10:00");
+		newConflictedEvent2.setToDate("2016-03-29T010:00");
 		
 	}
 	
