@@ -95,5 +95,47 @@ public interface LogicTaskModification {
 	public static boolean isFromDateEqualToDate(Task aTask) {
 		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
 	}
+	
+	public default boolean isConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
+		boolean isConflict = false;
+		switch (newTask.getType()) {
+		case Constants.TYPE_DEADLINE:
+			if (!deadlines.isEmpty()) {
+				for (int i = 0; i < deadlines.size(); i++) {
+					if (newTask.getFromTime().equals(deadlines.get(i).getFromTime())) {
+						isConflict = true;
+					}
+				}
+			}
+			break;
+		case Constants.TYPE_EVENT:
+			if (!events.isEmpty()) {
+				for (int i = 0; i < events.size(); i++) {
+					if (isToTimeExceedTimeRange(newTask, events.get(i))
+							|| isFromTimeExceedTimeRange(newTask, events.get(i))) {
+						isConflict = true;
+					}
+				}
+			}
+			break;
+		}
+		return isConflict;
+	}
+
+	public default boolean isToTimeExceedTimeRange(Task newTask, Task event) {
+		if (newTask.getToTime().compareTo(event.getFromTime()) > 0
+				&& newTask.getToTime().compareTo(event.getToTime()) < 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public default boolean isFromTimeExceedTimeRange(Task newTask, Task event) {
+		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0
+				&& newTask.getFromTime().compareTo(event.getToTime()) < 0) {
+			return true;
+		}
+		return false;
+	}
 
 }

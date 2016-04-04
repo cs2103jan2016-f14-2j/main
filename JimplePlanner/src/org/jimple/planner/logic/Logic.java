@@ -317,46 +317,6 @@ public class Logic implements LogicMasterListModification {
 	 * 
 	 * unimplemented methods. may be used in the future
 	 */
-	private boolean isConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
-		boolean isConflict = false;
-		switch (newTask.getType()) {
-		case Constants.TYPE_DEADLINE:
-			for (int i = 0; i < deadlines.size(); i++) {
-				if (newTask.getToTime().equals(deadlines.get(i).getToTime())) {
-					isConflict = true;
-				}
-			}
-			break;
-		case Constants.TYPE_EVENT:
-			for (int i = 0; i < events.size(); i++) {
-				if (isToTimeExceedTimeRange(newTask, events.get(i))
-						|| isFromTimeExceedTimeRange(newTask, events.get(i))) {
-					isConflict = true;
-				}
-			}
-			break;
-		}
-		return isConflict;
-	}
-
-	private boolean isToTimeExceedTimeRange(Task newTask, Task event) {
-		if (newTask.getToTime().compareTo(event.getFromTime()) > 0
-				&& newTask.getToTime().compareTo(event.getToTime()) < 0) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isFromTimeExceedTimeRange(Task newTask, Task event) {
-		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0
-				&& newTask.getFromTime().compareTo(event.getToTime()) < 0) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean testConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
-		return isConflictWithCurrentTasks(newTask, deadlines, events);
-	}
+	
 
 }
