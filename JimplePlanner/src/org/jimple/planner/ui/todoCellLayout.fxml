@@ -45,7 +45,7 @@
                   <ImageView fx:id="icon" fitHeight="30.0" fitWidth="30.0" opacity="0.5" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="idcolor" style="-fx-background-radius: 0 11 11 0;">
                      <children>
-                        <Label fx:id="id" minWidth="-Infinity" style="-fx-background-color: transparent;" text="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label fx:id="id" minWidth="40.0" style="-fx-background-color: transparent;" text="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
