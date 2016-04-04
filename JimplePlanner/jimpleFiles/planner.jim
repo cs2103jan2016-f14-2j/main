@@ -1,12 +1,2 @@
-/s/:title:task 10/s//s/:from:2016-04-01T23:59/s/
-/s/:title:task 11/s//s/:from:2016-04-02T23:59/s/
-/s/:title:task 9/s//s/:from:2016-04-04T23:59/s/
-/s/:title:task 2/s//s/:from:2016-03-12T13:00/s//s/:to:2016-03-12T14:00/s/
-/s/:title:task 3/s//s/:from:2016-04-01T00:00/s//s/:to:2016-04-02T23:59/s/
-/s/:title:task 4/s//s/:from:2016-04-02T00:00/s//s/:to:2016-04-02T19:00/s/
-/s/:title:task 5/s//s/:from:2016-04-02T11:00/s//s/:to:2016-04-02T18:00/s/
-/s/:title:task 1/s//s/:from:2016-04-02T13:00/s//s/:to:2016-04-02T15:00/s/
-/s/:title:task 12/s//s/:from:2016-04-02T22:00/s//s/:to:2016-04-02T23:00/s/
-/s/:title:task 6/s//s/:from:2016-12-10T00:00/s//s/:to:2016-12-10T23:59/s/
-/s/:title:task 7/s//s/:from:2016-12-11T15:00/s//s/:to:2016-12-11T23:59/s/
-/s/:title:task 13/s//s/:from:2016-12-13T18:00/s//s/:to:2016-12-13T19:00/s/
+/s/:isDone:false/s//s/:title:task 1/s/
+/s/:isDone:false/s//s/:title:task 2/s//s/:from:2016-04-05T13:00/s//s/:to:2016-04-05T14:00/s/
