@@ -3,7 +3,7 @@
  * Name: Lee Lu Ke   |
  * ----------------- */
 
-package org.jimple.planner;
+package org.jimple.planner.parser;
 
 import java.util.Calendar;
 import java.util.Date;

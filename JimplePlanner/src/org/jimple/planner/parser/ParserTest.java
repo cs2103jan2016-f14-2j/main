@@ -1,4 +1,4 @@
-package org.jimple.planner;
+package org.jimple.planner.parser;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
