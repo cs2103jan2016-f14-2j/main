@@ -33,10 +33,10 @@ import java.util.Set;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 
+//@@author A0135808B
 public class StorageProperties implements StorageTools{
 	private StorageSave storageSave;
 	private StorageLoad storageLoad;
-	//private Properties storageProperties = null;
 	private static HashMap<String, Integer> colourToId = new HashMap<String, Integer>();
 	
 	public StorageProperties(){
@@ -82,12 +82,11 @@ public class StorageProperties implements StorageTools{
         }
     }
 	
-	//TODO Refactor this method
 	private boolean isKeyChanged(String pathName, Properties storageProperties){
 		String previousPath = storageProperties.getProperty(PROPERTIES_KEY_CURRENT_SAVEPATH);
 		if(previousPath.equals(pathName)){
 			return false;
-		} else if (isValueSame(pathName, previousPath)){ 
+		} else if (isValueSame(pathName, previousPath)){ //This is mostly only to check if both prev and current are origin
 			setIfOrigin(pathName, previousPath);
 			return false;
 		} else{
@@ -228,7 +227,7 @@ public class StorageProperties implements StorageTools{
 		} 
 		return currentPath;
 	}
-	//TODO remove all other properties or just create a new property and get prevsavepath and savepath
+	
 	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
 		Properties newStorageProperties = getPathProperties();
 		for(TaskLabel taskLabel: labelLists){

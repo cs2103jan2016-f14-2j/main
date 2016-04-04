@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
 
+//@@author A0135808B
 public class StorageLoad implements StorageLoadInterface{
 	private BufferedReader createFileReader(String fileName){
 		BufferedReader reader = null;
@@ -58,7 +59,6 @@ public class StorageLoad implements StorageLoadInterface{
 			while ((fileLineContent = defaultFileReader.readLine()) != null) {
 				if(!fileLineContent.equals(EMPTY_STRING)){
 					Task task = getTaskFromLine(fileLineContent);
-					//TODO add in a check for whether the tasks are done or not
 					checkTaskValidity(task);
 					allocateTaskToArrayList(task, allTasksLists);
 				}
@@ -101,7 +101,6 @@ public class StorageLoad implements StorageLoadInterface{
 			String titleString = getRemovedTitleTagString(field);
 			task.setTitle(titleString);
 		} else if(isLabel(field)){
-			//TODO label field
 			ArrayList<String> labelStringArray = getRemovedLabelTagStringArray(field);
 			TaskLabel taskLabel = TaskLabel.getDummyLabel(labelStringArray.get(0), Integer.parseInt(labelStringArray.get(1)));
 			task.setTaskLabel(taskLabel);

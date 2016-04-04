@@ -13,6 +13,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -29,6 +31,8 @@ public class UiListCellAgenda extends ListCell<Task> {
 	AnchorPane anchorpane, marker, idcolor;
 	@FXML
 	VBox vBox, date;
+	@FXML
+	ImageView icon;
 	@FXML
 	HBox hBox;
 
@@ -61,11 +65,14 @@ public class UiListCellAgenda extends ListCell<Task> {
 				setDeadlineColors(item);	
 				setLabel(item);
 				setDesc(item);
+				setStyles();
+				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
 				if(date.getChildren().contains(todate))
 					date.getChildren().remove(todate);
 
+				icon.setImage(new Image("deadlineIconGrey.png"));
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
 				fromdate.setText(item.getPrettyFromTime());
@@ -81,9 +88,12 @@ public class UiListCellAgenda extends ListCell<Task> {
 				
 				setLabel(item);
 				setDesc(item);
+				setStyles();
+				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
-				
+
+				icon.setImage(new Image("eventIconGrey.png"));
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
 				fromdate.setText(item.getPrettyFromTime());
@@ -97,9 +107,12 @@ public class UiListCellAgenda extends ListCell<Task> {
 				
 				setLabel(item);
 				setDesc(item);
+				setStyles();
+				
 				if(hBox.getChildren().contains(date))
 					hBox.getChildren().remove(date);
 
+				icon.setImage(new Image("todoIconGrey.png"));
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
 				break;
@@ -138,7 +151,6 @@ public class UiListCellAgenda extends ListCell<Task> {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		title.getStyleClass().add("title");
 	}
 
 	private void setLabel(Task item) {
@@ -160,6 +172,12 @@ public class UiListCellAgenda extends ListCell<Task> {
 		}
 		idcolor.setId("color" + item.getTaskLabel().getColourId());
 		id.setId("color" + item.getTaskLabel().getColourId());
+	}
+	
+	private void setStyles(){
+		title.getStyleClass().add("title");
+		todate.getStyleClass().add("date");
+		fromdate.getStyleClass().add("date");
 	}
 
 }
