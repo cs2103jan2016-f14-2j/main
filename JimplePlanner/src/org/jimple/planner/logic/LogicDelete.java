@@ -37,6 +37,7 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
 				checkOverCacheLimit(undoTasks);
 				Task removedTask = list.remove(i);
+//				checkIfConflictedTaskExistInList(list, removedTask);
 				undoTasks.add(setNewPreviousTask(Constants.STRING_DELETE, removedTask));
 				return true;
 			}

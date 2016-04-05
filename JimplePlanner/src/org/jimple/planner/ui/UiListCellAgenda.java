@@ -144,7 +144,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 	}
 
 	private void setConflict(Task item){
-		if(!item.getIsConflicted())
+		if(item.getConflictedTasks().isEmpty())
 			conflict.setVisible(false);
 		else
 			conflict.setVisible(true);

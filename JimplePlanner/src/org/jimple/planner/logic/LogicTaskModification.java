@@ -48,6 +48,16 @@ public interface LogicTaskModification {
 		return editedTask;
 	}
 
+	public default void checkIfConflictedTaskExistInList(ArrayList<Task> list, Task removedTask) {
+		for (int j=0;j<list.size();j++)	{
+			for (int k=0;k<list.get(j).getConflictedTasks().size();k++)	{
+				if (list.get(j).getConflictedTasks().get(k).getTaskId() == removedTask.getTaskId())	{
+					list.get(j).getConflictedTasks().remove(k);
+				}
+			}
+		}
+	}
+	
 	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels) {
 		if (!taskLabels.isEmpty()) {
 			for (TaskLabel aLabel : taskLabels) {
@@ -95,19 +105,29 @@ public interface LogicTaskModification {
 	public static boolean isFromDateEqualToDate(Task aTask) {
 		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
 	}
-	
-	public default void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
+
+	public default void checkForAllTasksIfConflictWithCurrentTasks(ArrayList<Task> deadlines, ArrayList<Task> events) {
+		for (Task aDeadline : deadlines) {
+			aDeadline.getConflictedTasks().clear();
+			checkIsConflictWithCurrentTasks(aDeadline, deadlines, events);
+		}
+		for (Task anEvent : events) {
+			anEvent.getConflictedTasks().clear();
+			checkIsConflictWithCurrentTasks(anEvent, deadlines, events);
+		}
+	}
+
+	public default void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines,
+			ArrayList<Task> events) {
 		switch (newTask.getType()) {
 		case Constants.TYPE_DEADLINE:
 			if (!deadlines.isEmpty()) {
 				for (int i = 0; i < deadlines.size(); i++) {
-					if (newTask.getFromTime().equals(deadlines.get(i).getFromTime())) {
-						newTask.setIsConflicted(true);
-						deadlines.get(i).setIsConflicted(true);
+					if (newTask.getFromTime().equals(deadlines.get(i).getFromTime())
+							&& newTask.getTaskId() != deadlines.get(i).getTaskId()) {
+						newTask.getConflictedTasks().add(deadlines.get(i));
+						deadlines.get(i).getConflictedTasks().add(newTask);
 						break;
-					} else	{
-						newTask.setIsConflicted(false);
-						deadlines.get(i).setIsConflicted(false);
 					}
 				}
 			}
@@ -115,32 +135,31 @@ public interface LogicTaskModification {
 		case Constants.TYPE_EVENT:
 			if (!events.isEmpty()) {
 				for (int i = 0; i < events.size(); i++) {
-					if (isToTimeExceedTimeRange(newTask, events.get(i))
-							|| isFromTimeExceedTimeRange(newTask, events.get(i))) {
-						newTask.setIsConflicted(true);
-						events.get(i).setIsConflicted(true);
+					if ((isToTimeExceedTimeRange(newTask, events.get(i))
+							|| isFromTimeExceedTimeRange(newTask, events.get(i)))
+							&& newTask.getTaskId() != events.get(i).getTaskId()) {
+						newTask.getConflictedTasks().add(events.get(i));
+						events.get(i).getConflictedTasks().add(newTask);
 						break;
-					} else	{
-						newTask.setIsConflicted(false);
-						events.get(i).setIsConflicted(false);
 					}
 				}
 			}
+			System.out.println("working");
 			break;
 		}
 	}
 
 	public default boolean isToTimeExceedTimeRange(Task newTask, Task event) {
-		if (newTask.getToTime().compareTo(event.getFromTime()) > 0
-				&& newTask.getToTime().compareTo(event.getToTime()) < 0) {
+		if (newTask.getToTime().compareTo(event.getFromTime()) >= 0
+				&& newTask.getToTime().compareTo(event.getToTime()) <= 0) {
 			return true;
 		}
 		return false;
 	}
 
 	public default boolean isFromTimeExceedTimeRange(Task newTask, Task event) {
-		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0
-				&& newTask.getFromTime().compareTo(event.getToTime()) < 0) {
+		if (newTask.getFromTime().compareTo(event.getFromTime()) >= 0
+				&& newTask.getFromTime().compareTo(event.getToTime()) <= 0) {
 			return true;
 		}
 		return false;

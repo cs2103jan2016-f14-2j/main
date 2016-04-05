@@ -21,7 +21,6 @@ public class LogicAdd implements LogicTaskModification, LogicMasterListModificat
 		if (!isFromAndToTimeCorrect(newTask)) {
 			return Constants.ERROR_WRONG_TIME_FEEDBACK;
 		}
-		checkIsConflictWithCurrentTasks(newTask, deadlines, events);
 		allocateCorrectTimeArray(newTask, todo, deadlines, events);
 		tempHistory.add(newTask);
 		undoTasks.add(setNewPreviousTask(Constants.STRING_ADD, newTask));

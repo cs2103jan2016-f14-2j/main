@@ -16,7 +16,7 @@ public class Task {
 	private boolean isOverDue;
 	private boolean isDone;
 	private int taskId;
-	private boolean isConflicted;
+	private ArrayList<Task> conflictedTasks;
 	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
 	private static TaskSorter taskSorter = new TaskSorter();
@@ -32,7 +32,7 @@ public class Task {
 		this.isDone = false;
 		this.taskId = 1000;
 		this.taskLabel = TaskLabel.getDefaultLabel();
-		this.isConflicted = false;
+		this.conflictedTasks = new ArrayList<Task>();
 	}
 
 	// Constructor for creating a duplicate
@@ -46,7 +46,7 @@ public class Task {
 		this.isDone = taskToBeDuplicated.getIsDone();
 		this.taskId = taskToBeDuplicated.getTaskId();
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
-		this.isConflicted = taskToBeDuplicated.getIsConflicted();
+		this.conflictedTasks = taskToBeDuplicated.getConflictedTasks();
 	}
 
 	public String getPrettierFromDate(){
@@ -218,20 +218,16 @@ public class Task {
 		this.isDone = isDone;
 	}
 	
-	public boolean getIsConflicted()	{
-		return isConflicted;
-	}
-	
-	public void setIsConflicted(boolean isConflicted)	{
-		this.isConflicted = isConflicted;
+	public ArrayList<Task> getConflictedTasks()	{
+		return conflictedTasks;
 	}
 	
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {
 		taskSorter.sortTasks(allTaskLists);
 	}
 
-	public static void sortTasksForAgenda(ArrayList<Task> agenda) {
-		taskSorter.sortTasksForAgenda(agenda);
+	public static void sortTasksByTime(ArrayList<Task> list) {
+		taskSorter.sortTasksByTime(list);
 	}
 	
 	@Override

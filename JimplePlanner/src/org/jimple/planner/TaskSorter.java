@@ -63,7 +63,7 @@ public class TaskSorter {
 		sortEvents(allTaskLists.get(2));
 	}
 	
-	public void sortTasksForAgenda(ArrayList<Task> agenda){
-		Collections.sort(agenda, getFromDateComparator());
+	public void sortTasksByTime(ArrayList<Task> list){
+		Collections.sort(list, getFromDateComparator());
 	}
 }

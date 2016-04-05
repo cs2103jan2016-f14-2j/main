@@ -22,10 +22,11 @@ public class LogicArchive implements LogicMasterListModification {
 		isTodoMarked = findTaskToMark(parsedInput, undoTasks, todo, archivedTasks);
 		if (!isTodoMarked) {
 			isDeadlinesMarked = findTaskToMark(parsedInput, undoTasks, deadlines, archivedTasks);
-		} else if (!isTodoMarked && !isDeadlinesMarked) {
+		} 
+		if (!isTodoMarked && !isDeadlinesMarked) {
 			isEventsMarked = findTaskToMark(parsedInput, undoTasks, events, archivedTasks);
 		}
-
+		
 		if (isTodoMarked || isDeadlinesMarked || isEventsMarked) {
 			return "task " + parsedInput[0] + Constants.DONE_FEEDBACK;
 		}
@@ -38,8 +39,8 @@ public class LogicArchive implements LogicMasterListModification {
 		if (!list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getTaskId() == Integer.parseInt(parsedInput[0])) {
-					list.get(i).setIsDone(true);
 					Task anArchivedTask = list.remove(i);
+					anArchivedTask.setIsDone(true);
 					archivedTasks.add(anArchivedTask);
 					return true;
 				}

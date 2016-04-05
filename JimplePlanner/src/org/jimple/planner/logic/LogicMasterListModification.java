@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.jimple.planner.Constants;
 import org.jimple.planner.Task;
 import org.jimple.planner.TaskLabel;
+import org.jimple.planner.TaskSorter;
 import org.jimple.planner.storage.Storage;
 
 public interface LogicMasterListModification {
@@ -43,7 +44,7 @@ public interface LogicMasterListModification {
 		store.isSavedArchivedTasks(archiveTasks);
 	}*/
 
-	public static void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
+	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
 			for (Task task : taskList) {
@@ -80,6 +81,7 @@ public interface LogicMasterListModification {
 			}
 			dividedTasks.add(duplicateEvent);
 		}
+		Task.sortTasksByTime(dividedTasks);
 		return dividedTasks;
 	}
 }

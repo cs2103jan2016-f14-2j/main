@@ -24,7 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 
-public class Logic implements LogicMasterListModification {
+public class Logic implements LogicMasterListModification, LogicTaskModification {
 
 	private ArrayList<Task> deadlines;
 	private ArrayList<Task> todo;
@@ -70,13 +70,14 @@ public class Logic implements LogicMasterListModification {
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			taskLabels = store.getLabels();
-			LogicMasterListModification.assignTaskIds(allTasks);
+			assignTaskIds(allTasks);
 			LogicLinkLabelsToTasks.linkTasksToLabels(allTasks, taskLabels);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
 			events = allTasks.get(2);
 			archivedTasks = allTasks.get(3);
 			checkOverCurrentTime(deadlines, events);
+			checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -117,7 +118,7 @@ public class Logic implements LogicMasterListModification {
 				break;
 			case Constants.STRING_CHANGEDIR:
 				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray(), todo, deadlines,
-						events);
+						events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
@@ -177,6 +178,7 @@ public class Logic implements LogicMasterListModification {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
 		}
+		checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		packageForSavingMasterLists(store, todo, deadlines, events, archivedTasks);
 		packageForSavingLabelLists(store, taskLabels);
 		notifyAllObservers(feedback);
@@ -200,9 +202,6 @@ public class Logic implements LogicMasterListModification {
 	public ArrayList<Task> getSearchList() {
 		searchResults.clear();
 		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events);
-		for (int i = 0; i < searchResults.size(); i++) {
-			System.out.println(searchResults.get(i).getTitle());
-		}
 		return searchResults;
 	}
 
@@ -212,9 +211,7 @@ public class Logic implements LogicMasterListModification {
 		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		agenda.addAll(deadlines);
 		agenda.addAll(dividedTasks);
-		// System.out.println(agenda.get(0).getTaskId());
-		// System.out.println(events.get(0).getTaskId());
-		Task.sortTasksForAgenda(agenda);
+		Task.sortTasksByTime(agenda);
 		return agenda;
 	}
 
@@ -317,6 +314,5 @@ public class Logic implements LogicMasterListModification {
 	 * 
 	 * unimplemented methods. may be used in the future
 	 */
-	
 
 }
