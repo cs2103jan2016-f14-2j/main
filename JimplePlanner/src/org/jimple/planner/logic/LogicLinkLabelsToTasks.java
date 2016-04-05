@@ -25,9 +25,7 @@ class LogicLinkLabelsToTasks {
 
 	private static boolean isSameLabel(TaskLabel currentTaskLabel, TaskLabel masterLabel) {
 		String currentTaskLabelName = currentTaskLabel.getLabelName();
-		int currentTaskLabelColourId = currentTaskLabel.getColourId();
 		boolean labelNameEqual = masterLabel.getLabelName().equals(currentTaskLabelName);
-		boolean labelColourIdEqual = masterLabel.getColourId() == currentTaskLabelColourId;
-		return labelNameEqual && labelColourIdEqual;
+		return labelNameEqual;
 	}
 }
