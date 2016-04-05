@@ -12,7 +12,7 @@ public class LogicAddIntegrationTest {
 
 	@Test
 	public void ShouldTestFromAndToTime() throws IOException	{
-		testLogic.getEventsList().clear();
+		testLogic.getEventsDividedList().clear();
 		
 		testLogic.execute("ADD task 1 FROM 1pm TO 3pm");
 		testLogic.execute("ADD task 2 FROM 12 mar 1300 TO 12 mar 1400");
@@ -20,25 +20,25 @@ public class LogicAddIntegrationTest {
 		testLogic.execute("ADD task 4 FROM 12am TO 7pm");
 		testLogic.execute("ADD task 5 FROM 1100 TO 1800");
 
-		assertEquals("task 2", testLogic.getEventsList().get(0).getTitle());
-		assertEquals("2016-03-12T13:00", testLogic.getEventsList().get(0).getFromTimeString());
-		assertEquals("2016-03-12T14:00", testLogic.getEventsList().get(0).getToTimeString());
+		assertEquals("task 2", testLogic.getEventsDividedList().get(0).getTitle());
+		assertEquals("2016-03-12T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals("2016-03-12T14:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		
-		assertEquals("task 3", testLogic.getEventsList().get(1).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T00:00", testLogic.getEventsList().get(1).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T23:59", testLogic.getEventsList().get(1).getToTimeString());
+		assertEquals("task 3", testLogic.getEventsDividedList().get(1).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T00:00", testLogic.getEventsDividedList().get(1).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T23:59", testLogic.getEventsDividedList().get(1).getToTimeString());
 		
-		assertEquals("task 5", testLogic.getEventsList().get(3).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T11:00", testLogic.getEventsList().get(3).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T18:00", testLogic.getEventsList().get(3).getToTimeString());
+		assertEquals("task 5", testLogic.getEventsDividedList().get(3).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T11:00", testLogic.getEventsDividedList().get(3).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T18:00", testLogic.getEventsDividedList().get(3).getToTimeString());
 		
-		assertEquals("task 1", testLogic.getEventsList().get(4).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T13:00", testLogic.getEventsList().get(4).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T15:00", testLogic.getEventsList().get(4).getToTimeString());
+		assertEquals("task 1", testLogic.getEventsDividedList().get(4).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T13:00", testLogic.getEventsDividedList().get(4).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T15:00", testLogic.getEventsDividedList().get(4).getToTimeString());
 		
-		assertEquals("task 4", testLogic.getEventsList().get(2).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T00:00", testLogic.getEventsList().get(2).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T19:00", testLogic.getEventsList().get(2).getToTimeString());
+		assertEquals("task 4", testLogic.getEventsDividedList().get(2).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T00:00", testLogic.getEventsDividedList().get(2).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T19:00", testLogic.getEventsDividedList().get(2).getToTimeString());
 	
 	}
 	
@@ -62,33 +62,33 @@ public class LogicAddIntegrationTest {
 	
 	@Test
 	public void ShouldTestOnTime() throws IOException	{
-		testLogic.getEventsList().clear();
+		testLogic.getEventsDividedList().clear();
 		
 		testLogic.execute("ADD task 6 ON 10 dec");
 		testLogic.execute("ADD task 7 ON 11 dec 3pm");
 		
-		assertEquals("task 6", testLogic.getEventsList().get(0).getTitle());
-		assertEquals("2016-12-10T00:00", testLogic.getEventsList().get(0).getFromTimeString());
-		assertEquals("2016-12-10T23:59", testLogic.getEventsList().get(0).getToTimeString());
+		assertEquals("task 6", testLogic.getEventsDividedList().get(0).getTitle());
+		assertEquals("2016-12-10T00:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals("2016-12-10T23:59", testLogic.getEventsDividedList().get(0).getToTimeString());
 		
-		assertEquals("task 7", testLogic.getEventsList().get(1).getTitle());
-		assertEquals("2016-12-11T15:00", testLogic.getEventsList().get(1).getFromTimeString());
-		assertEquals("2016-12-11T23:59", testLogic.getEventsList().get(1).getToTimeString());
+		assertEquals("task 7", testLogic.getEventsDividedList().get(1).getTitle());
+		assertEquals("2016-12-11T15:00", testLogic.getEventsDividedList().get(1).getFromTimeString());
+		assertEquals("2016-12-11T23:59", testLogic.getEventsDividedList().get(1).getToTimeString());
 	}
 	
 	@Test
 	public void ShouldTestAtTime() throws IOException	{
-		testLogic.getEventsList().clear();
+		testLogic.getEventsDividedList().clear();
 		
 		testLogic.execute("ADD task 12 AT 10pm");
 		testLogic.execute("ADD task 13 AT 13 dec 6pm");
 		
-		assertEquals("task 12", testLogic.getEventsList().get(0).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T22:00", testLogic.getEventsList().get(0).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate() + "T23:00", testLogic.getEventsList().get(0).getToTimeString());
+		assertEquals("task 12", testLogic.getEventsDividedList().get(0).getTitle());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T22:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T23:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 	
-		assertEquals("task 13", testLogic.getEventsList().get(1).getTitle());
-		assertEquals("2016-12-13T18:00", testLogic.getEventsList().get(1).getFromTimeString());
-		assertEquals("2016-12-13T19:00", testLogic.getEventsList().get(1).getToTimeString());
+		assertEquals("task 13", testLogic.getEventsDividedList().get(1).getTitle());
+		assertEquals("2016-12-13T18:00", testLogic.getEventsDividedList().get(1).getFromTimeString());
+		assertEquals("2016-12-13T19:00", testLogic.getEventsDividedList().get(1).getToTimeString());
 	}
 }

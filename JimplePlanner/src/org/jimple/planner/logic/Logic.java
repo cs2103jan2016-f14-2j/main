@@ -193,10 +193,14 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		return deadlines;
 	}
 
-	public ArrayList<Task> getEventsList() {
+	public ArrayList<Task> getEventsDividedList() {
 		checkOverCurrentTime(deadlines, events);
 		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		return dividedTasks;
+	}
+	
+	public ArrayList<Task> getEventsList()	{
+		return events;
 	}
 
 	public ArrayList<Task> getSearchList() {
