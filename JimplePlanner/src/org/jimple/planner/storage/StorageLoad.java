@@ -146,7 +146,7 @@ public class StorageLoad implements StorageLoadInterface{
 	}
 	//@@author A0135808B
 	private String getRemovedIsDoneTagString(String field){
-		String removedTag = field.replace(TAGS_ISDONE, field);
+		String removedTag = field.replace(TAGS_ISDONE, EMPTY_STRING);
 		return removedTag;
 	}
 	//@@author A0135808B
