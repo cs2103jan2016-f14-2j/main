@@ -285,6 +285,7 @@ public class Parser {
 		switch (extendedCommand) {
 			case EXTENDED_COMMAND_NAME :
 				setName(inputString, inputStruct);
+				break;
 			case EXTENDED_COMMAND_DESCRIPTION :
 				setDescription(inputString, inputStruct);
 				break;
