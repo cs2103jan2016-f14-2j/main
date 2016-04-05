@@ -12,23 +12,23 @@ public class LogicEditIntegrationTest {
 	
 	@Test
 	public void ShouldTestEditFromToTime() throws IOException	{
-		testLogic.getEventsList().clear();
+		testLogic.getEventsDividedList().clear();
 		
 		testLogic.execute("ADD task 1 FROM 1pm TO 3pm");
 		testLogic.execute("EDIT 3 TIME FROM 1pm TO 2pm");
 		
-		assertEquals("task 1", testLogic.getEventsList().get(0).getTitle());
-		assertEquals("2016-04-01T13:00", testLogic.getEventsList().get(0).getFromTimeString());
-		assertEquals("2016-04-01T14:00", testLogic.getEventsList().get(0).getToTimeString());
+		assertEquals("task 1", testLogic.getEventsDividedList().get(0).getTitle());
+		assertEquals("2016-04-01T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals("2016-04-01T14:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		
 		testLogic.execute("ADD task 2 FROM 1pm TO 3pm");
 		testLogic.execute("EDIT 4 TIME FROM 1400 TO 1500");
 		
-		assertEquals("task 2", testLogic.getEventsList().get(1).getTitle());
-		assertEquals("2016-04-01T14:00", testLogic.getEventsList().get(1).getFromTimeString());
-		assertEquals("2016-04-01T15:00", testLogic.getEventsList().get(1).getToTimeString());
+		assertEquals("task 2", testLogic.getEventsDividedList().get(1).getTitle());
+		assertEquals("2016-04-01T14:00", testLogic.getEventsDividedList().get(1).getFromTimeString());
+		assertEquals("2016-04-01T15:00", testLogic.getEventsDividedList().get(1).getToTimeString());
 		
-		testLogic.getEventsList().clear();
+		testLogic.getEventsDividedList().clear();
 	}
 	
 	@Test
