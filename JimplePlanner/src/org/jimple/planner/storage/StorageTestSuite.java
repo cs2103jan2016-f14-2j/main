@@ -1,4 +1,4 @@
-package org.jimple.planner.storage.unittest;
+package org.jimple.planner.storage;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -8,7 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	StorageTestGetFromLine.class,
 	StorageTestSaveLoadMechanics.class,
-	TestWriteTask.class })
+	StorageTestWriteTask.class })
 
 public class StorageTestSuite {
 

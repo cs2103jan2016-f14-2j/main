@@ -1,4 +1,4 @@
-package org.jimple.planner.storage.unittest;
+package org.jimple.planner.storage;
 
 import static org.jimple.planner.constants.Constants.TYPE_DEADLINE;
 import static org.jimple.planner.constants.Constants.TYPE_EVENT;
@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 
 import java.util.LinkedList;
 
-import org.jimple.planner.storage.StorageLoad;
 import org.jimple.planner.task.Task;
 import org.junit.Test;
 

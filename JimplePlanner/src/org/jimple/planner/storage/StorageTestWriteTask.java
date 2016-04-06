@@ -1,4 +1,4 @@
-package org.jimple.planner.storage.unittest;
+package org.jimple.planner.storage;
 
 import static org.junit.Assert.*;
 
@@ -6,13 +6,12 @@ import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import org.jimple.planner.storage.StorageSave;
 import org.jimple.planner.task.Task;
 import org.junit.Test;
 
-public class TestWriteTask {
+public class StorageTestWriteTask {
 	private StorageSave storageSave = new StorageSave();
-	private ExampleTasks exampleTasksGenerator = new ExampleTasks();
+	private StorageGetExampleTasks exampleTasksGenerator = new StorageGetExampleTasks();
 	
 	/*
 	 * The purpose of this test is to see how tasks are written in an environment that does not save to a file directly
@@ -39,7 +38,7 @@ public class TestWriteTask {
 		};
 		StringWriter sw = new StringWriter();
 		BufferedWriter output = new BufferedWriter(sw);
-		ArrayList<ArrayList<Task>> tasks = ExampleTasks.getExampleTasks();
+		ArrayList<ArrayList<Task>> tasks = StorageGetExampleTasks.getExampleTasks();
 		storageSave.testWriteTasks(tasks, output);
 		String totalOutput = sw.toString();
 		String[] totalOutputArray = totalOutput.split(System.getProperty("line.separator"));
