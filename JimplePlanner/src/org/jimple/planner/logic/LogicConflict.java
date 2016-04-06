@@ -8,7 +8,8 @@ import org.jimple.planner.task.Task;
 
 //@@author A0124952E
 public class LogicConflict {
-	
+	public static String[] mostRecentlyCheckedConflict = new String[1];
+
 	protected void checkForAllTasksIfConflictWithCurrentTasks(ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (Task aDeadline : deadlines) {
 			aDeadline.getConflictedTasks().clear();
@@ -20,19 +21,22 @@ public class LogicConflict {
 		}
 	}
 
-	protected ArrayList<Task> getConflictedTasks(int taskID, ArrayList<Task> deadlines, ArrayList<Task> events) throws NoSuchTaskWithConflictException	{
-		for (Task aDeadline : deadlines)	{
-			if (aDeadline.getTaskId() == taskID)	{
-				return aDeadline.getConflictedTasks();
+	protected ArrayList<Task> getConflictedTasks(String[] parsedInput, ArrayList<Task> deadlines,
+			ArrayList<Task> events, ArrayList<Task> conflictedTasks) {
+		if (!deadlines.isEmpty() || !events.isEmpty()) {
+			mostRecentlyCheckedConflict = parsedInput;
+			for (Task aDeadline : deadlines) {
+				if (aDeadline.getTaskId() == Integer.parseInt(parsedInput[0])) {
+					conflictedTasks = aDeadline.getConflictedTasks();
+				}
+			}
+			for (Task anEvent : events) {
+				if (anEvent.getTaskId() == Integer.parseInt(parsedInput[0])) {
+					conflictedTasks = anEvent.getConflictedTasks();
+				}
 			}
 		}
-		for (Task anEvent : events)	{
-			if (anEvent.getTaskId() == taskID)	{
-				return anEvent.getConflictedTasks();
-			}
-		}
-		
-		throw new NoSuchTaskWithConflictException(Constants.ERROR_NO_CONFLICT_FOUND);
+		return conflictedTasks;
 	}
 
 	private void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {

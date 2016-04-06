@@ -34,6 +34,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
 	private ArrayList<Task> archivedTasks;
+	private ArrayList<Task> conflictedTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	private LinkedList<LogicPreviousTask> undoTasks;
@@ -55,6 +56,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
 		archivedTasks = new ArrayList<Task>();
+		conflictedTasks = new ArrayList<Task>();
 		undoTasks = new LinkedList<LogicPreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
@@ -157,6 +159,11 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 						deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
+			case Constants.STRING_CHECK_CONFLICT:
+				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
+				feedback[0] = "";
+				feedback[1] = Constants.STRING_CHECK_CONFLICT;
+				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
@@ -227,6 +234,13 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 
 	public ArrayList<Task> getArchivedList() {
 		return archivedTasks;
+	}
+
+	public ArrayList<Task> getConflictedTasks() {
+		conflictedTasks.clear();
+		conflictChecker.getConflictedTasks(LogicConflict.mostRecentlyCheckedConflict, deadlines, events,
+				conflictedTasks);
+		return conflictedTasks;
 	}
 
 	public ArrayList<TaskLabel> getTaskLabels() {
