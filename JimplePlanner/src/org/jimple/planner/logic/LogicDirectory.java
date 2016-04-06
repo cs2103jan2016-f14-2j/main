@@ -10,7 +10,7 @@ import java.util.ArrayList;
 //@@author A0124952E
 public class LogicDirectory implements LogicMasterListModification, LogicTaskModification{
 
-	protected String changeSaveDirectory(Storage store, String[] variableArray, ArrayList<Task> todo,
+	protected String changeSaveDirectory(Storage store, LogicConflict conflictChecker, String[] variableArray, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) {
 		if (!isValidPath(store, variableArray)) {
 			return Constants.ERROR_DIRECTORY_PATH_FEEDBACK;
@@ -29,7 +29,7 @@ public class LogicDirectory implements LogicMasterListModification, LogicTaskMod
 		archivedTasks.clear();
 		archivedTasks.addAll(allTasks.get(3));
 		checkOverCurrentTime(deadlines, events);
-		checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
+		conflictChecker.checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] + "\"";
 	}
 

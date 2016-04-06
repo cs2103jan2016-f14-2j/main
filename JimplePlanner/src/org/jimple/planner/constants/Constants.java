@@ -123,7 +123,7 @@ public final class Constants {
 	public static final String CHECKDIR_COMMAND = "type \"CHECKDIR\"\n\n";
 	
 	public static final String EDITLABEL_COMMAND = "type \"EDITLABEL\" <old label name/colour> NAME <new label name> COLOUR <new label colour>\n\n";
-	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n";
+	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n\n";
 	
 	public static final String ARCHIVE_COMMAND = "type \"DONE\" <taskID>\n\n";
 	public static final String UNARCHIVE_COMMAND = "type \"RETURN\" <taskID>\n";
