@@ -196,6 +196,8 @@ public final class Constants {
 	
 	public static final String UNDONE_FEEDBACK = " has returned to your list";
 	public static final String ERROR_UNDONE_FEEDBACK = " could not be returned to your list";
+	
+	public static final String ERROR_NO_CONFLICT_FOUND = "no conflicts found";
 
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	

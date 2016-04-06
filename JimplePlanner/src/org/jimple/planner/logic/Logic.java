@@ -120,8 +120,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = Constants.TYPE_SEARCH;
 				break;
 			case Constants.STRING_CHANGEDIR:
-				feedback[0] = directer.changeSaveDirectory(store, conflictChecker, parsedInput.getVariableArray(), todo, deadlines,
-						events, archivedTasks, taskLabels);
+				feedback[0] = directer.changeSaveDirectory(store, conflictChecker, parsedInput.getVariableArray(), todo,
+						deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
@@ -177,6 +177,9 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		} catch (MissingDateTimeFieldException mfe) {
 			feedback[0] = mfe.getMessage();
 			feedback[1] = "";
+		} catch (NoSuchTaskWithConflictException nst) {
+			feedback[0] = nst.getMessage();
+			feedback[1] = "";
 		} catch (Exception e) {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
@@ -201,8 +204,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		return dividedTasks;
 	}
-	
-	public ArrayList<Task> getEventsList()	{
+
+	public ArrayList<Task> getEventsList() {
 		return events;
 	}
 
@@ -314,10 +317,10 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 
 		listOfCommands += Constants.DELETELABEL_HELP_HEADER;
 		listOfCommands += Constants.DELETELABEL_COMMAND;
-		
+
 		listOfCommands += Constants.ARCHIVE_HELP_HEADER;
 		listOfCommands += Constants.ARCHIVE_COMMAND;
-		
+
 		listOfCommands += Constants.UNARCHIVE_HELP_HEADER;
 		listOfCommands += Constants.UNARCHIVE_COMMAND;
 		return listOfCommands;

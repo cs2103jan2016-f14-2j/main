@@ -3,9 +3,12 @@ package org.jimple.planner.logic;
 import java.util.ArrayList;
 
 import org.jimple.planner.constants.Constants;
+import org.jimple.planner.exceptions.NoSuchTaskWithConflictException;
 import org.jimple.planner.task.Task;
 
+//@@author A0124952E
 public class LogicConflict {
+	
 	protected void checkForAllTasksIfConflictWithCurrentTasks(ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (Task aDeadline : deadlines) {
 			aDeadline.getConflictedTasks().clear();
@@ -17,8 +20,22 @@ public class LogicConflict {
 		}
 	}
 
-	private void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines,
-			ArrayList<Task> events) {
+	protected ArrayList<Task> getConflictedTasks(int taskID, ArrayList<Task> deadlines, ArrayList<Task> events) throws NoSuchTaskWithConflictException	{
+		for (Task aDeadline : deadlines)	{
+			if (aDeadline.getTaskId() == taskID)	{
+				return aDeadline.getConflictedTasks();
+			}
+		}
+		for (Task anEvent : events)	{
+			if (anEvent.getTaskId() == taskID)	{
+				return anEvent.getConflictedTasks();
+			}
+		}
+		
+		throw new NoSuchTaskWithConflictException(Constants.ERROR_NO_CONFLICT_FOUND);
+	}
+
+	private void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		switch (newTask.getType()) {
 		case Constants.TYPE_DEADLINE:
 			if (!deadlines.isEmpty()) {
@@ -73,4 +90,5 @@ public class LogicConflict {
 		}
 		return false;
 	}
+
 }

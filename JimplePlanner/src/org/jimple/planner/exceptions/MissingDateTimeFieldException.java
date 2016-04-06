@@ -8,5 +8,4 @@ public class MissingDateTimeFieldException extends Exception{
 	public MissingDateTimeFieldException(String message) {
 		super(message);
 	}
-	
 }
