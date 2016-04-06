@@ -7,6 +7,7 @@ package org.jimple.planner.parser;
 
 import java.util.Calendar;
 import java.util.Date;
+import org.jimple.planner.constants.Constants;
 
 import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;
 import org.jimple.planner.exceptions.InvalidCommandException;
@@ -19,80 +20,48 @@ public class Parser {
 	 * ----------------------------| 
 	 * String[]: Stores the possible extended command strings for each command.
 	 */
-	private final String[] EXTENDED_COMMANDS_ADD = {"DESC", "AT", "FROM", "ON", "BY", "LABEL"};
-	private final String[] EXTENDED_COMMANDS_EDIT = {"NAME", "DESC", "TIME", "LABEL"};
-	private final String[] EXTENDED_COMMANDS_EDITLABEL = {"NAME", "COLOUR"};
+	private final String[] EXTENDED_COMMANDS_ADD = {Constants.STRING_DESC, Constants.STRING_AT, Constants.STRING_FROM, Constants.STRING_ON, Constants.STRING_BY, Constants.STRING_LABEL};
+	private final String[] EXTENDED_COMMANDS_EDIT = {Constants.STRING_NAME, Constants.STRING_DESC, Constants.STRING_TIME, Constants.STRING_LABEL};
+	private final String[] EXTENDED_COMMANDS_EDITLABEL = {Constants.STRING_NAME, Constants.STRING_COLOUR};
 	private final String[] EXTENDED_COMMANDS_NIL = {};
 	
 	/* --------------|
 	 * VALID COLOURS |
 	 * --------------|
+	 * Supported colours for the labels, red to purple.
+	 */ 
+	private final String[] VALID_COLOURS = {Constants.STRING_RED, Constants.STRING_ORANGE, Constants.STRING_YELLOW, Constants.STRING_GREEN, Constants.STRING_BLUE, Constants.STRING_PURPLE};
+	
+	/* ------------------------|
+	 * MISCELLANEOUS CONSTANTS |
+	 * ------------------------|
+	 * Constants which are only used in Parser.
 	 */
 	
-	private final String[] VALID_COLOURS = {"blue", "green", "yellow", "orange", "red", "purple"};
-	
-	private final int INDEX_BASE = 0;
-	
-	// Stores the indexes for task fields. Used by "add" and "edit".
-	private final int INDEX_NAME = 1;
-	private final int INDEX_DESCRIPTION = 2;
-	private final int INDEX_FROM = 3;
-	private final int INDEX_TO = 4;
-	private final int INDEX_LABEL = 5;
-	// Stores the indexes for task fields. Used by "editlabel".
-	private final int INDEX_EDITLABEL_NAME = 1;
-	private final int INDEX_EDITLABEL_COLOUR = 2;
-	
-	
-
-	/* ----------------|
-	 * CONSTANTS |
-	 * ----------------|
-	 */
-
-	// Main commands.
-	private static final String COMMAND_ADD = "ADD";
-	private static final String COMMAND_EDIT = "EDIT";
-	private static final String COMMAND_DELETE = "DELETE";
-	private static final String COMMAND_SEARCH = "SEARCH";
-	private static final String COMMAND_DONE = "DONE";
-	private static final String COMMAND_EDITLABEL = "EDITLABEL";
-	private static final String COMMAND_DELETELABEL = "DELETELABEL";
-	private static final String COMMAND_CHANGEDIR = "CHANGEDIR";
-	private static final String COMMAND_CHECKDIR = "CHECKDIR";
-	private static final String COMMAND_UNDOTASK = "UNDOTASK";
-	private static final String COMMAND_HELP = "HELP";
-	
-	// Extended commands.
-	private static final String EXTENDED_COMMAND_NAME = "NAME";
-	private static final String EXTENDED_COMMAND_DESCRIPTION = "DESC";
-	private static final String EXTENDED_COMMAND_TIME = "TIME";
-	private static final String EXTENDED_COMMAND_AT = "AT";
-	private static final String EXTENDED_COMMAND_ON = "ON";
-	private static final String EXTENDED_COMMAND_FROM = "FROM";
-	private static final String EXTENDED_COMMAND_TO = "TO";
-	private static final String EXTENDED_COMMAND_BY = "BY";
-	private static final String EXTENDED_COMMAND_LABEL = "LABEL";
-	private static final String EXTENDED_COMMAND_COLOUR = "COLOUR";
-	
-	private final int INDEX_COMMAND = 0;
+	// Index of main command.
+	private final int INDEX_MAIN_COMMAND = 0;
+	// Index of user input following the main command
 	private final int INDEX_MAIN_COMMAND_USER_INPUT = 1;
+	private final int LENGTH_OF_COMMAND_WITH_USER_INPUT = 2;
+	private final int LENGTH_OF_COMMAND_ONLY_MAIN_COMMAND = 1;
 	private final int OFFSET_CALENDAR_MONTH = 1;
+	private final int OFFSET_CALENDAR_YEAR = 1900;
 	private final String EMPTY_STRING = "";
-
+	private final String DATE_TIME_STRING_FORMAT = "%02d-%02d-%02dT%02d:%02d"; 
 	/*
-	 * ---------------------|
-	 * DateTimeParser Class |
-	 * ---------------------|
+	 * -----------------|
+	 * TIMEPARSER CLASS |
+	 * -----------------|
 	 * Class that can parse "natural language" inputs for date and time.
 	 */
 	private TimeParser timeParser = new TimeParser();
 	
 	public Parser() {}
 
-	/*
-	 * The main method that other components use. Returns an InputStruct
-	 * containing the variables of the user input.
+	/* ------------|
+	 * MAIN METHOD |
+	 * ------------|
+	 * The main method that other components use. Returns an InputStruct containing the variables of the user input.
 	 */
 	public InputStruct parseInput(String userInput) throws Exception {
 		
@@ -106,61 +75,62 @@ public class Parser {
 		String mainCommand = getCommandString(splitUserInput);
 		try {
 			switch (mainCommand) {
-				case COMMAND_ADD :
+				case Constants.STRING_ADD :
 					if (!isCommandOnly(splitUserInput)) {
 						InputStruct addStruct = getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
+						// Initialises the field in InputStruct which specifies which task type the added task is.
 						addStruct.checkAndSetTaskType();
 						return addStruct;
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a Task Name. \"");
-				case COMMAND_EDIT :
+				case Constants.STRING_EDIT :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
-				case COMMAND_DELETE :
+				case Constants.STRING_DELETE :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
-				case COMMAND_SEARCH :
+				case Constants.STRING_SEARCH :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a search string.");
-				case COMMAND_DONE :
+				case Constants.STRING_DONE :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
-				case COMMAND_EDITLABEL :
+				case Constants.STRING_EDITLABEL :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
-				case COMMAND_DELETELABEL :
+				case Constants.STRING_DELETELABEL :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
-				case COMMAND_CHANGEDIR :
+				case Constants.STRING_CHANGEDIR :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a directory path.");
-				case COMMAND_CHECKDIR :
+				case Constants.STRING_CHECKDIR :
 					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(COMMAND_CHECKDIR);
+						return new InputStruct(Constants.STRING_CHECKDIR);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
-				case COMMAND_UNDOTASK :
+				case Constants.STRING_UNDOTASK :
 					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(COMMAND_UNDOTASK);
+						return new InputStruct(Constants.STRING_UNDOTASK);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
-				case COMMAND_HELP :
+				case Constants.STRING_HELP :
 					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(COMMAND_HELP);
+						return new InputStruct(Constants.STRING_HELP);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
 				default :
@@ -175,19 +145,28 @@ public class Parser {
 		}
 	}
 	
+	/* ---------------------------|
+	 * MAIN METHOD HELPER METHODS |
+	 * ---------------------------|
+	 */
+	
+	private String getCommandString(String[] userInputStringArray) {
+		return userInputStringArray[INDEX_MAIN_COMMAND];
+	}
+	
 	private String getMainCommandUserInputString(String[] splitUserInput) {
-		if (splitUserInput.length < 2) {
+		if (splitUserInput.length < LENGTH_OF_COMMAND_WITH_USER_INPUT) {
 			return null;
 		}
 		return splitUserInput[INDEX_MAIN_COMMAND_USER_INPUT];
 	}
 	
 	private boolean isCommandOnly(String[] splitUserInput) {
-		return splitUserInput.length == 1;
+		return splitUserInput.length == LENGTH_OF_COMMAND_ONLY_MAIN_COMMAND;
 	}
 	
 	private boolean isNumber(String input) {
-		if (input == "" || input == null) {
+		if (input == EMPTY_STRING || input == null) {
 			return false;
 		}
 		boolean isNumber = true;
@@ -200,8 +179,10 @@ public class Parser {
 		return isNumber;
 	}
 
-	/*
-	 * Detects and stores the variables in the user input.
+	/* -----------------|
+	 * GETSTRUCT METHOD |
+	 * -----------------|
+	 * Parses the user input, detects and stores the variables in the user input and puts it in the appropriate InputStruct field.
 	 */
 	private InputStruct getStruct(String[] splitUserInput, String[] extendedCommands) throws Exception {
 		
@@ -216,8 +197,6 @@ public class Parser {
 		String currInputString = EMPTY_STRING;
 
 		for (int i = 1; i < splitUserInput.length; i++) {
-
-			// Updates userInputString if word being read is not an extended command.
 			String currString = splitUserInput[i];
 			if (isExtendedCommand(currString, extendedCommands)) { // Word being read is an extended command.
 				if (currCommand == mainCommand) {
@@ -225,13 +204,13 @@ public class Parser {
 				} else {
 					parseExtendedCommand(mainCommand, currCommand, currInputString.trim(), currInputStruct);
 				}
-				currCommand = currString;
-				// Resets "userInputString".
-				currInputString = EMPTY_STRING;
-			} else {
+				currCommand = currString; // Updates the current command.
+				currInputString = EMPTY_STRING; // Resets "userInputString" as it is already parsed.
+			} else { // Updates the current input string if word being read is not an extended command.
 				currInputString += currString + " ";
 			} 
 		}
+		//Parses the last user input string which is not covered in the while loop above.
 		if (currCommand == mainCommand) {
 			parseMainCommand(currInputStruct, currCommand, currInputString.trim());
 		} else {
@@ -239,41 +218,60 @@ public class Parser {
 		}
 		return currInputStruct;
 	}
-
+	
+	// Checks if input string is an extended command of the main command.
+	private boolean isExtendedCommand(String input, String[] extendedCommands) {
+		for (int i = 0; i < extendedCommands.length; i++) {
+			if (input.equals(extendedCommands[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	/* -------------------------|
+	 * EXTENDED COMMAND PARSERS |
+	 * -------------------------|
+	 */
+	
+	//Used due to the "ADD" command requiring a different way of parsing the first user input.
 	private void parseMainCommand(InputStruct currInputStruct, String currCommand, String currInputString) {
-		if (currCommand.equals(COMMAND_ADD)) {
-			currInputStruct.setAtIndex(INDEX_NAME, currInputString);
+		if (currCommand.equals(Constants.STRING_ADD)) {
+			currInputStruct.setAtIndex(Constants.INDEX_NAME, currInputString);
 		} else {
-			currInputStruct.setAtIndex(INDEX_BASE, currInputString);
+			currInputStruct.setAtIndex(Constants.INDEX_BASE, currInputString);
 		}
 	}
-		
+	
+	// Uses the extended command method which is appropriate to the main command. (Different main commands have different extended commands.) 
 	private void parseExtendedCommand(String mainCommand, String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
 		switch (mainCommand) {
-			case COMMAND_ADD :
+			case Constants.STRING_ADD :
 				parseExtendedCommandAdd(extendedCommand, inputString, inputStruct);
 				break;
-			case COMMAND_EDIT :
+			case Constants.STRING_EDIT :
 				parseExtendedCommandEdit(extendedCommand, inputString, inputStruct);
 				break;
-			case COMMAND_EDITLABEL :
+			case Constants.STRING_EDITLABEL :
 				parseExtendedCommandEditLabel(extendedCommand, inputString, inputStruct);
 				break;
 		}
 	}
 	
+	// Parses extended commands for "ADD".
 	private void parseExtendedCommandAdd(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
 		switch (extendedCommand) {
-			case EXTENDED_COMMAND_DESCRIPTION :
+			case Constants.STRING_DESC :
 				setDescription(inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_AT :
-			case EXTENDED_COMMAND_ON :
-			case EXTENDED_COMMAND_FROM :
-			case EXTENDED_COMMAND_BY :
+			case Constants.STRING_AT :
+			case Constants.STRING_ON :
+			case Constants.STRING_FROM :
+			case Constants.STRING_BY :
 				setTime(extendedCommand, inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_LABEL :
+			case Constants.STRING_LABEL :
 				setCategory(inputString, inputStruct);
 				break;
 			default :
@@ -281,31 +279,120 @@ public class Parser {
 		}
 	}
 	
+	// Parses extended commands for "EDIT".
 	private void parseExtendedCommandEdit(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
 		switch (extendedCommand) {
-			case EXTENDED_COMMAND_NAME :
+			case Constants.STRING_NAME :
 				setName(inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_DESCRIPTION :
+			case Constants.STRING_DESC :
 				setDescription(inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_TIME :
+			case Constants.STRING_TIME :
 				String dateTimeExtendedCommand = getCommandString(inputString.split(" "));
 				setTime(dateTimeExtendedCommand, inputString.substring(dateTimeExtendedCommand.length()+1), inputStruct);
 				break;
-			case EXTENDED_COMMAND_LABEL :
+			case Constants.STRING_LABEL :
 				setCategory(inputString, inputStruct);
 				break;
 			default :
 				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
 		}
 	}
+	
+	private void setName(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(Constants.INDEX_NAME, userInput);
+	}
+	
+	private void setDescription(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(Constants.INDEX_DESCRIPTION, userInput);
+	}
+	
+	// Parses the extended commands for time which each functions differently.
+	private void setTime(String extendedCommand, String userInput, InputStruct inputStruct) throws Exception {
+		switch (extendedCommand) {
+			case Constants.STRING_AT :
+				parseAt(userInput, inputStruct);
+				break;
+			case Constants.STRING_ON :
+				parseOn(userInput, inputStruct);
+				break;
+			case Constants.STRING_FROM :
+				parseFrom(userInput, inputStruct);
+				break;
+			case Constants.STRING_BY :
+				parseBy(userInput, inputStruct);
+				break;
+			default :
+				throw new InvalidCommandException("Date/Time input: \"" + extendedCommand + "\" not recognised.");
+		}
+	}
+	
+	/* AT
+	 * Date and time set: 1hr from specified date and time.
+	 * No time set: 1 hr from start of specified date.
+	 * No date set: 1 hr from next instance of specified time.
+	 */
+	private void parseAt(String userInput, InputStruct inputStruct) throws Exception {
+		Calendar parsedCalendar = timeParser.parseTime(Constants.STRING_AT, userInput);
+		inputStruct.setAtIndex(Constants.INDEX_FROM, calendarToStringFormat(parsedCalendar));
+		parsedCalendar.add(Calendar.HOUR_OF_DAY, 1);
+		inputStruct.setAtIndex(Constants.INDEX_TO, calendarToStringFormat(parsedCalendar));
+	}
+
+	/* ON
+	 * Date and time set: Specified date and time to end of that day.
+	 * No time set: Start of specified date to end of that day.
+	 * No date set: Next instance of specified time to end of that day.
+	 */ 
+	void parseOn(String userInput, InputStruct inputStruct) throws Exception {
+		Calendar parsedCalendar = timeParser.parseTime(Constants.STRING_ON, userInput);
+		inputStruct.setAtIndex(Constants.INDEX_FROM, calendarToStringFormat(parsedCalendar));
+		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
+		parsedCalendar.set(Calendar.MINUTE, 59);
+		inputStruct.setAtIndex(Constants.INDEX_TO, calendarToStringFormat(parsedCalendar));
+	}
+	
+	/* FROM (needs to be followed by TO)
+	 * Date and time set: Specified start date and time to specified end time.
+	 * No time set: Start of day of specified start date to end of day of specified end date.
+	 * No date set: Next instance of specified start time to next instance of specified end time after that.
+	 */
+	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
+		if (!userInput.contains(" TO ")) {
+			throw new MissingDateTimeFieldException("\"FROM\" must be accompanied by \"TO\".");
+		} else {
+			String[] splitFromTo = userInput.split(" TO ");
+			Date from = timeParser.parseTime(Constants.STRING_FROM, splitFromTo[0]).getTime();
+			inputStruct.setAtIndex(Constants.INDEX_FROM, calendarToStringFormat(timeParser.parseTime(Constants.STRING_FROM, splitFromTo[0])));
+			Calendar to = timeParser.parseTime(Constants.STRING_TO, splitFromTo[1]);
+			while (!isAfterFromDate(from, to)) {
+				to.add(Calendar.DATE, 1);
+			}
+			inputStruct.setAtIndex(Constants.INDEX_TO, calendarToStringFormat(to));
+		}
+	}
+	
+	/* BY
+	 * Date and time set: Deadline by specified date and time.
+	 * No time set: Deadline by end of day of specified date.
+	 * No date set: Deadline by next instance of specified time.
+	 */
+	private void parseBy(String userInput, InputStruct inputStruct) throws Exception {
+		inputStruct.setAtIndex(Constants.INDEX_FROM, calendarToStringFormat(timeParser.parseTime(Constants.STRING_BY, userInput)));
+	}
+	
+	private void setCategory(String userInput, InputStruct inputStruct) {
+		inputStruct.setAtIndex(Constants.INDEX_LABEL, userInput);
+	}
+	
+	// Parses extended commands for "EDITLABEL".
 	private void parseExtendedCommandEditLabel(String extendedCommand, String inputString, InputStruct inputStruct) throws Exception {
 		switch (extendedCommand) {
-			case EXTENDED_COMMAND_NAME :
+			case Constants.STRING_NAME :
 				setLabelName(inputString, inputStruct);
 				break;
-			case EXTENDED_COMMAND_COLOUR :
+			case Constants.STRING_COLOUR :
 				setLabelColour(inputString.toLowerCase(), inputStruct);
 				break;
 			default :
@@ -314,111 +401,15 @@ public class Parser {
 	}
 	
 	private void setLabelName(String userInput, InputStruct inputStruct) {
-		inputStruct.setAtIndex(INDEX_EDITLABEL_NAME, userInput);
+		inputStruct.setAtIndex(Constants.INDEX_EDITLABEL_NAME, userInput);
 	}
 	
 	private void setLabelColour(String userInput, InputStruct inputStruct) throws InvalidCommandException {
 		if (isValidColour(userInput)) {
-			inputStruct.setAtIndex(INDEX_EDITLABEL_COLOUR, userInput);
+			inputStruct.setAtIndex(Constants.INDEX_EDITLABEL_COLOUR, userInput);
 		} else {
 			throw new InvalidCommandException("Label Colour: \"" + userInput + "\" invalid.");
 		}
-	}
-	
-	private void setName(String userInput, InputStruct inputStruct) {
-		inputStruct.setAtIndex(INDEX_NAME, userInput);
-	}
-	
-	private void setDescription(String userInput, InputStruct inputStruct) {
-		inputStruct.setAtIndex(INDEX_DESCRIPTION, userInput);
-	}
-	
-	private void setTime(String extendedCommand, String userInput, InputStruct inputStruct) throws Exception {
-		switch (extendedCommand) {
-			case EXTENDED_COMMAND_AT :
-				parseAt(userInput, inputStruct);
-				break;
-			case EXTENDED_COMMAND_ON :
-				parseOn(userInput, inputStruct);
-				break;
-			case EXTENDED_COMMAND_FROM :
-				parseFrom(userInput, inputStruct);
-				break;
-			case EXTENDED_COMMAND_BY :
-				parseBy(userInput, inputStruct);
-				break;
-			default :
-				throw new InvalidCommandException("Date/Time input: \"" + extendedCommand + "\" not recognised.");
-		}
-	}
-	
-	private void parseAt(String userInput, InputStruct inputStruct) throws Exception {
-		Calendar parsedCalendar = timeParser.parseTime(EXTENDED_COMMAND_AT, userInput);
-		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
-		parsedCalendar.add(Calendar.HOUR_OF_DAY, 1);
-		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
-	}
-	
-	private void parseOn(String userInput, InputStruct inputStruct) throws Exception {
-		Calendar parsedCalendar = timeParser.parseTime(EXTENDED_COMMAND_ON, userInput);
-		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(parsedCalendar));
-		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
-		parsedCalendar.set(Calendar.MINUTE, 59);
-		inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(parsedCalendar));
-	}
-	
-	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
-		if (!userInput.contains(" TO ")) {
-			throw new MissingDateTimeFieldException("\"FROM\" must be accompanied by \"TO\".");
-		} else {
-			String[] splitFromTo = userInput.split(" TO ");
-			Date from = timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0]).getTime();
-			inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_FROM, splitFromTo[0])));
-			Calendar to = timeParser.parseTime(EXTENDED_COMMAND_TO, splitFromTo[1]);
-			while (!isAfterFromDate(from, to)) {
-				to.add(Calendar.DATE, 1);
-			}
-			inputStruct.setAtIndex(INDEX_TO, calendarToStringFormat(to));
-		}
-	}
-	
-	private void parseBy(String userInput, InputStruct inputStruct) throws Exception {
-		inputStruct.setAtIndex(INDEX_FROM, calendarToStringFormat(timeParser.parseTime(EXTENDED_COMMAND_BY, userInput)));
-	}
-	
-	private void setCategory(String userInput, InputStruct inputStruct) {
-		inputStruct.setAtIndex(INDEX_LABEL, userInput);
-	}
-	
-	private String calendarToStringFormat(Calendar parsedCalendar) {
-		Date parsedDate = parsedCalendar.getTime();
-		String date = String.format("%02d", parsedDate.getDate());
-		String month = String.format("%02d", parsedDate.getMonth()+1);
-		String hours = String.format("%02d", parsedDate.getHours());
-		String minutes = String.format("%02d", parsedDate.getMinutes());
-		String outputDate = (parsedDate.getYear()+1900) + "-"+  month + "-" + date + "T" + hours + ":" + minutes;
-		return outputDate;
-	}
-	
-	private boolean isAfterFromDate(Date inputFrom, Calendar inputTo) {
-		boolean case1 = inputFrom.getMonth() < inputTo.get(Calendar.MONTH);
-		boolean case2 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() < inputTo.get(Calendar.DAY_OF_MONTH);
-		boolean case3 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() == inputTo.get(Calendar.DAY_OF_MONTH);
-		if (case3) {
-			boolean case4 = inputFrom.getHours() < inputTo.get(Calendar.HOUR_OF_DAY);
-			boolean case5 = inputFrom.getHours() == inputTo.get(Calendar.HOUR_OF_DAY) && inputFrom.getMinutes() < inputTo.get(Calendar.MINUTE);
-			return case4 || case5;
-		}
-		return case1 || case2;
-	}
-	
-	private boolean isExtendedCommand(String input, String[] extendedCommands) {
-		for (int i = 0; i < extendedCommands.length; i++) {
-			if (input.equals(extendedCommands[i])) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	private boolean isValidColour(String input) {
@@ -430,8 +421,28 @@ public class Parser {
 		return false; 
 	}
 	
-	private String getCommandString(String[] userInputStringArray) {
-		return userInputStringArray[INDEX_COMMAND];
+	private String calendarToStringFormat(Calendar parsedCalendar) {
+		Date parsedDate = parsedCalendar.getTime();
+		int year = parsedDate.getYear() + OFFSET_CALENDAR_YEAR;
+		int date = parsedDate.getDate();
+		int month = parsedDate.getMonth() + OFFSET_CALENDAR_MONTH;
+		int hours = parsedDate.getHours();
+		int minutes = parsedDate.getMinutes();
+		String outputDate = String.format(DATE_TIME_STRING_FORMAT, year, month, date, hours, minutes);
+		return outputDate;
+	}
+	
+	// Checks if time of input Date is after time of input Calendar.
+	private boolean isAfterFromDate(Date inputFrom, Calendar inputTo) {
+		boolean case1 = inputFrom.getMonth() < inputTo.get(Calendar.MONTH);
+		boolean case2 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() < inputTo.get(Calendar.DAY_OF_MONTH);
+		boolean case3 = inputFrom.getMonth() == inputTo.get(Calendar.MONTH) && inputFrom.getDate() == inputTo.get(Calendar.DAY_OF_MONTH);
+		if (case3) {
+			boolean case4 = inputFrom.getHours() < inputTo.get(Calendar.HOUR_OF_DAY);
+			boolean case5 = inputFrom.getHours() == inputTo.get(Calendar.HOUR_OF_DAY) && inputFrom.getMinutes() < inputTo.get(Calendar.MINUTE);
+			return case4 || case5;
+		}
+		return case1 || case2;
 	}
 
 }

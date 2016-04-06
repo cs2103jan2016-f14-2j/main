@@ -1,11 +1,11 @@
-package org.jimple.planner.storage.unittest;
+package org.jimple.planner.storage;
 
 import java.util.ArrayList;
 
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
-public class ExampleTasks {
+public class StorageGetExampleTasks {
 	public static ArrayList<Task> getExampleTodos(){
 		Task floating1 = new Task("Go exercise, you fatty");
 		floating1.setDescription("Keep fit");
