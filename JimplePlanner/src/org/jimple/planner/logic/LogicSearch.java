@@ -2,8 +2,9 @@ package org.jimple.planner.logic;
 
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
+import org.jimple.planner.task.Task;
 
+//@@author A0124952E
 public class LogicSearch {
 	protected static String mostRecentlySearchedWord = new String("");
 

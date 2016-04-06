@@ -2,8 +2,8 @@ package org.jimple.planner.storage.unittest;
 
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 public class ExampleTasks {
 	public static ArrayList<Task> getExampleTodos(){

@@ -1,25 +1,24 @@
 package org.jimple.planner.storage;
 
-import static org.jimple.planner.Constants.EMPTY_STRING;
-import static org.jimple.planner.Constants.FILEPATH_DEFAULT;
-import static org.jimple.planner.Constants.FILEPATH_DEFAULT_TEMP;
-import static org.jimple.planner.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
-import static org.jimple.planner.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
-import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_BLUE_1;
-import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_GREEN_2;
-import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_YELLOW_3;
-import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_ORANGE_4;
-import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_RED_5;
-import static org.jimple.planner.Constants.PROPERTIES_VALUE_COLOUR_PURPLE_6;
-import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
-import static org.jimple.planner.Constants.DEFAULT_FILE_DIRECTORY;
-
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_BLUE_1;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_GREEN_2;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_YELLOW_3;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_ORANGE_4;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_RED_5;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_PURPLE_6;
+import static org.jimple.planner.constants.Constants.DEFAULT_FILE_DIRECTORY;
+import static org.jimple.planner.constants.Constants.EMPTY_STRING;
+import static org.jimple.planner.constants.Constants.FILEPATH_DEFAULT;
+import static org.jimple.planner.constants.Constants.FILEPATH_DEFAULT_TEMP;
+import static org.jimple.planner.constants.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
+import static org.jimple.planner.constants.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
+import static org.jimple.planner.constants.Constants.PROPERTIES_SAVEPATH_TO_CWD;
+import static org.jimple.planner.constants.Constants.PROPERTIES_VALUE_COLOUR_BLUE_1;
+import static org.jimple.planner.constants.Constants.PROPERTIES_VALUE_COLOUR_GREEN_2;
+import static org.jimple.planner.constants.Constants.PROPERTIES_VALUE_COLOUR_ORANGE_4;
+import static org.jimple.planner.constants.Constants.PROPERTIES_VALUE_COLOUR_PURPLE_6;
+import static org.jimple.planner.constants.Constants.PROPERTIES_VALUE_COLOUR_RED_5;
+import static org.jimple.planner.constants.Constants.PROPERTIES_VALUE_COLOUR_YELLOW_3;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_BLUE_1;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_GREEN_2;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_ORANGE_4;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_PURPLE_6;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_RED_5;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_YELLOW_3;
 
 import java.io.File;
 import java.nio.file.InvalidPathException;
@@ -30,8 +29,8 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
 public class StorageProperties implements StorageTools{

@@ -6,8 +6,8 @@ import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
 import org.jimple.planner.storage.StorageSave;
+import org.jimple.planner.task.Task;
 import org.junit.Test;
 
 public class TestWriteTask {

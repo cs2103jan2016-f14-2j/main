@@ -1,12 +1,13 @@
 package org.jimple.planner.logic;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
-import org.jimple.planner.Constants;
+import org.jimple.planner.constants.Constants;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+//@@author A0124952E
 public interface LogicTaskModification {
 
 	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels) {

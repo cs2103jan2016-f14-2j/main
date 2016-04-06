@@ -1,22 +1,23 @@
 package org.jimple.planner.storage;
 
-import static org.jimple.planner.Constants.EMPTY_STRING;
-import static org.jimple.planner.Constants.FILEPATH_CONFIG;
-import static org.jimple.planner.Constants.FILEPATH_TEST;
-import static org.jimple.planner.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
-import static org.jimple.planner.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
-import static org.jimple.planner.Constants.PROPERTIES_SAVEPATH_TO_CWD;
-import static org.jimple.planner.Constants.TAGS_LABEL;
-import static org.jimple.planner.Constants.TAGS_DESCRIPTION;
-import static org.jimple.planner.Constants.TAGS_FROM_TIME;
-import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
-import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
-import static org.jimple.planner.Constants.TAGS_TITLE;
-import static org.jimple.planner.Constants.TAGS_TO_TIME;
-import static org.jimple.planner.Constants.TAGS_ISDONE;
-import static org.jimple.planner.Constants.TYPE_DEADLINE;
-import static org.jimple.planner.Constants.TYPE_EVENT;
-import static org.jimple.planner.Constants.TYPE_TODO;
+import static org.jimple.planner.constants.Constants.EMPTY_STRING;
+import static org.jimple.planner.constants.Constants.FILEPATH_CONFIG;
+import static org.jimple.planner.constants.Constants.FILEPATH_TEST;
+import static org.jimple.planner.constants.Constants.PROPERTIES_KEY_CURRENT_SAVEPATH;
+import static org.jimple.planner.constants.Constants.PROPERTIES_KEY_PREV_SAVEPATH;
+import static org.jimple.planner.constants.Constants.PROPERTIES_SAVEPATH_TO_CWD;
+import static org.jimple.planner.constants.Constants.TAGS_DESCRIPTION;
+import static org.jimple.planner.constants.Constants.TAGS_FROM_TIME;
+import static org.jimple.planner.constants.Constants.TAGS_ISDONE;
+import static org.jimple.planner.constants.Constants.TAGS_LABEL;
+import static org.jimple.planner.constants.Constants.TAGS_LABEL_FIELD_SEPARATOR;
+import static org.jimple.planner.constants.Constants.TAGS_LINE_FIELD_SEPARATOR;
+import static org.jimple.planner.constants.Constants.TAGS_TITLE;
+import static org.jimple.planner.constants.Constants.TAGS_TO_TIME;
+import static org.jimple.planner.constants.Constants.TYPE_DEADLINE;
+import static org.jimple.planner.constants.Constants.TYPE_EVENT;
+import static org.jimple.planner.constants.Constants.TYPE_TODO;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +30,8 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
 public class StorageLoad implements StorageLoadInterface{

@@ -1,6 +1,6 @@
 package org.jimple.planner.ui;
 
-import org.jimple.planner.Task;
+import org.jimple.planner.task.Task;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;

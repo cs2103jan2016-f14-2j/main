@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import org.jimple.planner.Constants;
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
-import org.jimple.planner.TaskSorter;
+import org.jimple.planner.constants.Constants;
 import org.jimple.planner.storage.Storage;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
+import org.jimple.planner.task.TaskSorter;
 
+//@@author A0124952E
 public interface LogicMasterListModification {
 	public default void allocateCorrectTimeArray(Task newTask, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events) throws IOException {

@@ -1,7 +1,8 @@
 package org.jimple.planner.logic;
 
-import org.jimple.planner.Task;
+import org.jimple.planner.task.Task;
 
+//@@author A0124952E
 public class LogicPreviousTask {
 	private Task previousTask;
 	private String previousCommand;

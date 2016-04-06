@@ -2,8 +2,8 @@ package org.jimple.planner.storage;
 
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 //@@author A0135808B
 public interface Storage{
 	//@@author A0135808B

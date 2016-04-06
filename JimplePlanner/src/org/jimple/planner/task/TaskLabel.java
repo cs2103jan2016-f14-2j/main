@@ -1,9 +1,9 @@
-package org.jimple.planner;
+package org.jimple.planner.task;
+
+import static org.jimple.planner.constants.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
+import static org.jimple.planner.constants.Constants.TASK_LABEL_NAME_DEFAULT;
 
 import java.security.SecureRandom;
-
-import static org.jimple.planner.Constants.TASK_LABEL_NAME_DEFAULT;
-import static org.jimple.planner.Constants.TASK_LABEL_COLOUR_DEFAULT_0;
 
 public class TaskLabel {
 	private String labelName;

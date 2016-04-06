@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import org.jimple.planner.Constants;
-import org.jimple.planner.Task;
+import org.jimple.planner.constants.Constants;
+import org.jimple.planner.task.Task;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

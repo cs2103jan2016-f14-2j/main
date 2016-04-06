@@ -1,14 +1,14 @@
 package org.jimple.planner.storage.unittest;
 
+import static org.jimple.planner.constants.Constants.TYPE_DEADLINE;
+import static org.jimple.planner.constants.Constants.TYPE_EVENT;
+import static org.jimple.planner.constants.Constants.TYPE_TODO;
 import static org.junit.Assert.*;
 
 import java.util.LinkedList;
 
-import static org.jimple.planner.Constants.TYPE_TODO;
-import static org.jimple.planner.Constants.TYPE_DEADLINE;
-import static org.jimple.planner.Constants.TYPE_EVENT;
-import org.jimple.planner.Task;
 import org.jimple.planner.storage.StorageLoad;
+import org.jimple.planner.task.Task;
 import org.junit.Test;
 
 public class StorageTestGetFromLine {

@@ -3,8 +3,8 @@ package org.jimple.planner.ui;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import org.jimple.planner.Constants;
-import org.jimple.planner.Task;
+import org.jimple.planner.constants.Constants;
+import org.jimple.planner.task.Task;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

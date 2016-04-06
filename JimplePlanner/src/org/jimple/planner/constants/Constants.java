@@ -1,4 +1,4 @@
-package org.jimple.planner;
+package org.jimple.planner.constants;
 
 import java.io.File;
 
@@ -74,6 +74,7 @@ public final class Constants {
 	/**
 	 * Logic component
 	 */
+	//@@author A0124952E
 	public static final String STRING_SEARCH = "SEARCH";
 	public static final String STRING_ADD = "ADD";
 	public static final String STRING_DELETE = "DELETE";

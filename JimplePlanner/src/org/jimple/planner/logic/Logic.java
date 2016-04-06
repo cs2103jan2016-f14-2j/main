@@ -6,9 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.jimple.planner.Constants;
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.constants.Constants;
 import org.jimple.planner.exceptions.*;
 import org.jimple.planner.observers.myObserver;
 
@@ -16,6 +14,8 @@ import org.jimple.planner.parser.InputStruct;
 import org.jimple.planner.parser.Parser;
 import org.jimple.planner.storage.Storage;
 import org.jimple.planner.storage.StorageComponent;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 
+//@@author A0124952E
 public class Logic implements LogicMasterListModification, LogicTaskModification {
 
 	private ArrayList<Task> deadlines;

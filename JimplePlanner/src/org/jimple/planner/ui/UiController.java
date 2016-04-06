@@ -12,10 +12,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
-import org.jimple.planner.Constants;
-import org.jimple.planner.Task;
+import org.jimple.planner.constants.Constants;
 import org.jimple.planner.logic.Logic;
 import org.jimple.planner.observers.myObserver;
+import org.jimple.planner.task.Task;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;

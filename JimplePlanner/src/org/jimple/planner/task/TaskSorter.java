@@ -1,4 +1,4 @@
-package org.jimple.planner;
+package org.jimple.planner.task;
 
 import java.util.ArrayList;
 import java.util.Collections;

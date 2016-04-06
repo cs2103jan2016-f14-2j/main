@@ -1,11 +1,13 @@
-package org.jimple.planner;
+package org.jimple.planner.task;
 
-import static org.jimple.planner.Constants.TYPE_TODO;
-import static org.jimple.planner.Constants.TYPE_EVENT;
-import static org.jimple.planner.Constants.TYPE_DEADLINE;
+import static org.jimple.planner.constants.Constants.TYPE_DEADLINE;
+import static org.jimple.planner.constants.Constants.TYPE_EVENT;
+import static org.jimple.planner.constants.Constants.TYPE_TODO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import org.jimple.planner.depracated.Formatter;
 
 public class Task {
 	private LocalDateTime fromDateTime;

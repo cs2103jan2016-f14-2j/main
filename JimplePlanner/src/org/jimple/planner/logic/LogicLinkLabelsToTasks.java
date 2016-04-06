@@ -2,8 +2,8 @@ package org.jimple.planner.logic;
 
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 class LogicLinkLabelsToTasks {
 	public static void linkTasksToLabels(ArrayList<ArrayList<Task>> allTasks, ArrayList<TaskLabel> labelList){

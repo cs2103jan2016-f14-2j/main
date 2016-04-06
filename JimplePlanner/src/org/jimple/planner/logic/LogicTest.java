@@ -7,14 +7,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import org.jimple.planner.Constants;
-import org.jimple.planner.Formatter;
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.constants.Constants;
+import org.jimple.planner.depracated.Formatter;
 import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
 import org.junit.Test;
 import org.jimple.planner.storage.*;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
+//@@author A0124952E
 public class LogicTest {
 	Formatter testformatter = new Formatter();
 	Logic testLogic = new Logic();
@@ -71,20 +72,6 @@ public class LogicTest {
 		LocalDateTime testDate = null;
 		testDate = LocalDateTime.parse("2016-01-12T15:30");
 		assertEquals("12/1/2016", testformatter.formatPrettyDate(testDate));
-	}
-	
-	@Test
-	public void ShouldReturnConflictedTasks()	{
-		initializeThreeArrays();
-		Task newConflictedDeadline = new Task("conflict 1");
-		Task newConflictedEvent1 = new Task("conflict 2");
-		Task newConflictedEvent2 = new Task("conflict 3");
-		newConflictedDeadline.setFromDate("2016-03-25T09:00");
-		newConflictedEvent1.setFromDate("2016-03-26T09:00");
-		newConflictedEvent1.setToDate("2016-03-28T09:00");
-		newConflictedEvent2.setFromDate("2016-03-27T10:00");
-		newConflictedEvent2.setToDate("2016-03-29T010:00");
-		
 	}
 	
 	/**

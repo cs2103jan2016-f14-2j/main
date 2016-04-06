@@ -3,7 +3,7 @@ package org.jimple.planner.ui;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.jimple.planner.Task;
+import org.jimple.planner.task.Task;
 
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;

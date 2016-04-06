@@ -1,14 +1,14 @@
 package org.jimple.planner.storage;
 
-import static org.jimple.planner.Constants.EMPTY_STRING;
-import static org.jimple.planner.Constants.ERROR_INVALID_TASK;
+import static org.jimple.planner.constants.Constants.EMPTY_STRING;
+import static org.jimple.planner.constants.Constants.ERROR_INVALID_TASK;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jimple.planner.Task;
 import org.jimple.planner.exceptions.InvalidTaskException;
+import org.jimple.planner.task.Task;
 
 //@@author A0135808B
 public interface StorageTools {

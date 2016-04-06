@@ -1,17 +1,17 @@
 package org.jimple.planner.storage;
 
-import static org.jimple.planner.Constants.FILEPATH_CONFIG;
-import static org.jimple.planner.Constants.FILEPATH_TEST;
-import static org.jimple.planner.Constants.FILEPATH_TEST_TEMP;
-import static org.jimple.planner.Constants.PROPERTIES_COMMENT_HEADER;
-import static org.jimple.planner.Constants.TAGS_LABEL;
-import static org.jimple.planner.Constants.TAGS_DESCRIPTION;
-import static org.jimple.planner.Constants.TAGS_FROM_TIME;
-import static org.jimple.planner.Constants.TAGS_LINE_FIELD_SEPARATOR;
-import static org.jimple.planner.Constants.TAGS_TITLE;
-import static org.jimple.planner.Constants.TAGS_TO_TIME;
-import static org.jimple.planner.Constants.TAGS_ISDONE;
-import static org.jimple.planner.Constants.TAGS_LABEL_FIELD_SEPARATOR;
+import static org.jimple.planner.constants.Constants.FILEPATH_CONFIG;
+import static org.jimple.planner.constants.Constants.FILEPATH_TEST;
+import static org.jimple.planner.constants.Constants.FILEPATH_TEST_TEMP;
+import static org.jimple.planner.constants.Constants.PROPERTIES_COMMENT_HEADER;
+import static org.jimple.planner.constants.Constants.TAGS_DESCRIPTION;
+import static org.jimple.planner.constants.Constants.TAGS_FROM_TIME;
+import static org.jimple.planner.constants.Constants.TAGS_ISDONE;
+import static org.jimple.planner.constants.Constants.TAGS_LABEL;
+import static org.jimple.planner.constants.Constants.TAGS_LABEL_FIELD_SEPARATOR;
+import static org.jimple.planner.constants.Constants.TAGS_LINE_FIELD_SEPARATOR;
+import static org.jimple.planner.constants.Constants.TAGS_TITLE;
+import static org.jimple.planner.constants.Constants.TAGS_TO_TIME;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,8 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import org.jimple.planner.Task;
-import org.jimple.planner.TaskLabel;
+import org.jimple.planner.task.Task;
+import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
 public class StorageSave implements StorageSaveInterface{
