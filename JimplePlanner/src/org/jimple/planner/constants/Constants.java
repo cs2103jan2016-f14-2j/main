@@ -72,6 +72,44 @@ public final class Constants {
 	public static final String TAGS_LABEL_FIELD_SEPARATOR = "/tl/";
 	
 	/**
+	 * Parser Component
+	 */
+	//@@author A0135775W
+	// Extended commands for all the main commands.
+	public static final String STRING_NAME = "NAME";
+	public static final String STRING_DESC = "DESC";
+	public static final String STRING_AT = "AT";
+	public static final String STRING_FROM = "FROM";
+	public static final String STRING_TO = "TO";
+	public static final String STRING_ON = "ON";
+	public static final String STRING_BY = "BY";
+	public static final String STRING_LABEL = "LABEL";
+	public static final String STRING_TIME = "TIME";
+	public static final String STRING_COLOUR = "COLOUR";
+	
+	// Supported colours for labels.
+	public static final String STRING_RED = "red";
+	public static final String STRING_ORANGE = "orange";
+	public static final String STRING_YELLOW = "yellow";
+	public static final String STRING_GREEN = "green";
+	public static final String STRING_BLUE = "blue";
+	public static final String STRING_PURPLE = "purple";
+	
+	// Stores the index for the user input after the main command.
+	public static final int INDEX_BASE = 0;
+	
+	// Stores the indexes for task fields. Used by "ADD" and "EDIT".
+	public static final int INDEX_NAME = 1;
+	public static final int INDEX_DESCRIPTION = 2;
+	public static final int INDEX_FROM = 3;
+	public static final int INDEX_TO = 4;
+	public static final int INDEX_LABEL = 5;
+	
+	// Stores the indexes for task fields. Used by "EDITLABEL".
+	public static final int INDEX_EDITLABEL_NAME = 1;
+	public static final int INDEX_EDITLABEL_COLOUR = 2;
+	
+	/**
 	 * Logic component
 	 */
 	//@@author A0124952E
