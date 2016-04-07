@@ -20,20 +20,20 @@ public class StorageTestWriteTask {
 	@Test
 	public void writeTasksTest1() {
 		String[] linesToCheck = {
-				"/s/:title:Go exercise, you fatty/s//s/:desc:Keep fit/s/",
-				"/s/:title:Read Lord of The Rings/s/",
-				"/s/:title:Learn to play the harmonica/s/",
-				"/s/:title:go through my anime backlog/s/",
-				"/s/:title:submit report before countdown party/s//s/:from:2015-12-31T23:59/s/",
-				"/s/:title:deadline for GER1000 quiz/s//s/:from:2016-03-06T23:59/s/",
-				"/s/:title:Hand in cs2103 progress report/s//s/:desc:Homework/s//s/:from:2016-03-09T23:59/s/",
-				"/s/:title:register for Orbital/s//s/:desc:keep my summer occupied/s//s/:from:2016-05-15T16:00/s/",
-				"/s/:title:Do 2100 assignment/s//s/:desc:due very soon/s//s/:from:2016-07-29T23:59/s/",
-				"/s/:title:eat with the bros/s//s/:desc:the same place/s//s/:from:2016-01-10T15:00/s//s/:to:2016-01-10T17:00/s/",
-				"/s/:title:prepare for chap goh mei dinner/s//s/:from:2016-02-16T12:00/s//s/:to:2016-02-16T15:00/s/",
-				"/s/:title:Makan here for chap goh mei/s//s/:desc:at cousin's place/s//s/:from:2016-02-16T19:00/s//s/:to:2016-02-16T22:00/s/",
-				"/s/:title:business workshop/s//s/:from:2016-06-16T12:00/s//s/:to:2016-06-16T14:00/s/",
-				"/s/:title:Attend seminar/s//s/:desc:at SOC/s//s/:from:2016-08-11T11:00/s//s/:to:2016-08-11T17:00/s/"
+				"/s/:isDone:false/s//s/:title:Go exercise, you fatty/s//s/:desc:Keep fit/s/",
+				"/s/:isDone:false/s//s/:title:Read Lord of The Rings/s/",
+				"/s/:isDone:false/s//s/:title:Learn to play the harmonica/s/",
+				"/s/:isDone:false/s//s/:title:go through my anime backlog/s/",
+				"/s/:isDone:false/s//s/:title:submit report before countdown party/s//s/:from:2015-12-31T23:59/s/",
+				"/s/:isDone:false/s//s/:title:deadline for GER1000 quiz/s//s/:from:2016-03-06T23:59/s/",
+				"/s/:isDone:false/s//s/:title:Hand in cs2103 progress report/s//s/:desc:Homework/s//s/:from:2016-03-09T23:59/s/",
+				"/s/:isDone:false/s//s/:title:register for Orbital/s//s/:desc:keep my summer occupied/s//s/:from:2016-05-15T16:00/s/",
+				"/s/:isDone:false/s//s/:title:Do 2100 assignment/s//s/:desc:due very soon/s//s/:from:2016-07-29T23:59/s/",
+				"/s/:isDone:false/s//s/:title:eat with the bros/s//s/:desc:the same place/s//s/:from:2016-01-10T15:00/s//s/:to:2016-01-10T17:00/s/",
+				"/s/:isDone:false/s//s/:title:prepare for chap goh mei dinner/s//s/:from:2016-02-16T12:00/s//s/:to:2016-02-16T15:00/s/",
+				"/s/:isDone:false/s//s/:title:Makan here for chap goh mei/s//s/:desc:at cousin's place/s//s/:from:2016-02-16T19:00/s//s/:to:2016-02-16T22:00/s/",
+				"/s/:isDone:false/s//s/:title:business workshop/s//s/:from:2016-06-16T12:00/s//s/:to:2016-06-16T14:00/s/",
+				"/s/:isDone:false/s//s/:title:Attend seminar/s//s/:desc:at SOC/s//s/:from:2016-08-11T11:00/s//s/:to:2016-08-11T17:00/s/"
 
 		};
 		StringWriter sw = new StringWriter();
@@ -56,6 +56,7 @@ public class StorageTestWriteTask {
 		StringWriter sw = new StringWriter();
 		BufferedWriter output = new BufferedWriter(sw);
 		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
+		tasks.add(new ArrayList<Task>());
 		tasks.add(new ArrayList<Task>());
 		tasks.add(new ArrayList<Task>());
 		tasks.add(new ArrayList<Task>());
