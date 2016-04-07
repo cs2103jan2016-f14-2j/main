@@ -13,19 +13,19 @@ import org.jimple.planner.task.TaskLabel;
 public class LogicArchive implements LogicMasterListModification, LogicTaskModification {
 
 	protected String markTaskAsDone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
+			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels) throws IOException {
 
 		boolean isTodoMarked = false;
 		boolean isDeadlinesMarked = false;
 		boolean isEventsMarked = false;
 
-		isTodoMarked = findTaskToMark(parsedInput, undoTasks, todo, archivedTasks);
+		isTodoMarked = findTaskToMark(parsedInput, undoTasks, todo, archivedTasks, tempHistory);
 		if (!isTodoMarked) {
-			isDeadlinesMarked = findTaskToMark(parsedInput, undoTasks, deadlines, archivedTasks);
+			isDeadlinesMarked = findTaskToMark(parsedInput, undoTasks, deadlines, archivedTasks, tempHistory);
 		} 
 		if (!isTodoMarked && !isDeadlinesMarked) {
-			isEventsMarked = findTaskToMark(parsedInput, undoTasks, events, archivedTasks);
+			isEventsMarked = findTaskToMark(parsedInput, undoTasks, events, archivedTasks, tempHistory);
 		}
 		
 		if (isTodoMarked || isDeadlinesMarked || isEventsMarked) {
@@ -36,7 +36,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 	}
 
 	private boolean findTaskToMark(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> list,
-			ArrayList<Task> archivedTasks) {
+			ArrayList<Task> archivedTasks, ArrayList<Task> tempHistory) {
 		if (!list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getTaskId() == Integer.parseInt(parsedInput[0])) {
@@ -44,6 +44,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 					anArchivedTask.setIsDone(true);
 					archivedTasks.add(anArchivedTask);
 					undoTasks.add(setNewPreviousTask(Constants.STRING_DONE, anArchivedTask));
+					tempHistory.add(anArchivedTask);
 					return true;
 				}
 			}
@@ -52,7 +53,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 	}
 
 	protected String markTaskAsUndone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
+			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels) throws IOException {
 		if (!archivedTasks.isEmpty()) {
 			for (int i = 0; i < archivedTasks.size(); i++) {
@@ -61,6 +62,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 					returnedTask.setIsDone(false);
 					allocateCorrectTimeArray(returnedTask, todo, deadlines, events);
 					undoTasks.add(setNewPreviousTask(Constants.STRING_RETURN, returnedTask));
+					tempHistory.add(returnedTask);
 					return "task " + parsedInput[0] + Constants.UNDONE_FEEDBACK;
 				}
 			}

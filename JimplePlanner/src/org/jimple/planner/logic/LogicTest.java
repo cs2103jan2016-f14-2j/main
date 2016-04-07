@@ -85,11 +85,11 @@ public class LogicTest {
 	public void ShouldReturnUnArchivedTasks() throws IOException	{
 		initializeThreeArrays();
 		String[] parsedInput = {"1"};
-		testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels);
-		assertEquals("task 1 has returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels);
+		assertEquals("task 1 has returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 		assertEquals("a test only one", floating.get(0).getTitle());
 		parsedInput[0] = "5";
-		assertEquals("task 5 could not be returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("task 5 could not be returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 	}
 	
 	/**
@@ -101,11 +101,11 @@ public class LogicTest {
 	public void ShouldReturnArchivedTasks() throws IOException	{
 		initializeThreeArrays();
 		String[] parsedInput = {"1"};
-		assertEquals("task 1 is now archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("task 1 is now archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 		assertTrue(floating.isEmpty());
 		assertEquals("a test only one", archivedTasks.get(0).getTitle());
 		parsedInput[0] = "5";
-		assertEquals("task 5 does not exist and could not be archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("task 5 does not exist and could not be archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 	}
 	
 	/**

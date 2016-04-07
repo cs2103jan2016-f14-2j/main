@@ -154,14 +154,14 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DONE:
-				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, todo, deadlines,
+				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo, deadlines,
 						events, archivedTasks, taskLabels);
-				feedback[1] = "";
+				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_RETURN:
-				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, todo,
+				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo,
 						deadlines, events, archivedTasks, taskLabels);
-				feedback[1] = "";
+				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_CHECKCONFLICT:
 				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
@@ -350,9 +350,5 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		return listOfCommands;
 	}
 
-	/**
-	 * 
-	 * unimplemented methods. may be used in the future
-	 */
 
 }
