@@ -44,6 +44,13 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 			aTask.getPreviousTask().setIsDone(false);
 			allocateCorrectTimeArray(aTask.getPreviousTask(), todo, deadlines, events);
 			break;
+		case Constants.STRING_RETURN:
+			variableArray[0] = Integer.toString(aTask.getPreviousTask().getTaskId());
+			deletionForUndo(variableArray, todo, deadlines, events, archivedTasks, idHash);
+			LogicTaskModification.assignOneTaskId(aTask.getPreviousTask(), idHash);
+			aTask.getPreviousTask().setIsDone(true);
+			archivedTasks.add(aTask.getPreviousTask());
+			break;
 		}
 		return "task \"" + aTask.getPreviousTask().getTitle() + "\"" + Constants.UNDO_FEEDBACK;
 	}

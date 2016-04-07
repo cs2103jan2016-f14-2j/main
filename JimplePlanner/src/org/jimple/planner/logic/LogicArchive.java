@@ -60,6 +60,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 					Task returnedTask = archivedTasks.remove(i);
 					returnedTask.setIsDone(false);
 					allocateCorrectTimeArray(returnedTask, todo, deadlines, events);
+					undoTasks.add(setNewPreviousTask(Constants.STRING_RETURN, returnedTask));
 					return "task " + parsedInput[0] + Constants.UNDONE_FEEDBACK;
 				}
 			}
