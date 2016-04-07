@@ -50,7 +50,6 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 					list.add(taskToBeEdited);
 					throw new InvalidFromAndToTimeException(Constants.ERROR_WRONG_TIME_FEEDBACK);
 				}
-//				LogicTaskModification.assignOneTaskId(editedTask, idHash);
 				tempHistory.add(editedTask);
 				undoTasks.add(setNewPreviousTask(Constants.STRING_EDIT, editedTask));
 				allocateCorrectTimeArray(editedTask, todo, deadlines, events);
