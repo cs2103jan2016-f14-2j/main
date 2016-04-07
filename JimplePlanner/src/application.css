@@ -172,7 +172,10 @@
 
 #red{
 	-fx-background-color: #CF3423;
-	
+}
+
+#red .label{
+	-fx-text-fill: peachpuff;
 }
 
 #red:selected{
@@ -182,7 +185,10 @@
 
 #darkred{
 	-fx-background-color: #9F2214;
-	
+}
+
+#darkred .label{
+	-fx-text-fill: peachpuff;
 }
 
 #darkred:selected{

@@ -58,7 +58,6 @@ public class UiListCellAgenda extends ListCell<Task> {
 				this.setId(Constants.TYPE_DEADLINE);
 				loadFXMLLayout("todoCellLayout.fxml");
 				
-				setDeadlineColors(item);	
 				setLabel(item);
 				setDesc(item);
 				setStyles();
@@ -73,6 +72,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
 				fromdate.setText(item.getPrettyFromTime());
+				setDeadlineColors(item);	
 				break;
 			
 			//EVENT
@@ -85,8 +85,12 @@ public class UiListCellAgenda extends ListCell<Task> {
 				setStyles();
 				setConflict(item);
 				
-				if(item.getIsOverDue())
+				if(item.getIsOverDue()){
 					this.setId("overdue");
+				}
+				else{
+					this.setId("");
+				}
 				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
@@ -131,10 +135,14 @@ public class UiListCellAgenda extends ListCell<Task> {
 		// less than an hour
 		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
 			this.setId("orange");
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30){
 			this.setId("red");
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 0)
+			icon.setImage(new Image("deadlineIconWhite.png"));
+		}
+		else if (UiFormatter.timeDifference(item.getFromTime()) >= 0){
 			this.setId("darkred");
+			icon.setImage(new Image("deadlineIconWhite.png"));
+		}
 		else
 			this.setId("overdue");
 	}
