@@ -249,13 +249,14 @@ public class TimeParser {
 	}
 
 	private boolean isAfterCurrentDateAndTime() throws InvalidDateTimeFieldException {
-		if (!isAfterCurrentDate(getField(FIELD_DAY), getField(FIELD_MONTH))) {
+		if (!isToday(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isAfterCurrentDate(getField(FIELD_DAY), getField(FIELD_MONTH))) {
+			//System.out.println("A");
 			return false;
-		} else if (!isAfterCurrentTime(getField(FIELD_HOUR), getField(FIELD_MINUTE))) {
+		} else if (isToday(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isAfterCurrentTime(getField(FIELD_HOUR), getField(FIELD_MINUTE))) {
+			//System.out.println("B");
 			return false;
-		} else {
-			return true;
 		}
+		return true;
 	}
 	
 	/* -----------------------------------|
@@ -284,7 +285,7 @@ public class TimeParser {
 	// Increments year by 1 if specified date is before current date.
 	private void setYearToNextInstanceOfSpecifiedDateTime() throws DuplicateDateTimeFieldException {
 		c.setTimeInMillis(System.currentTimeMillis());
-		if (!isAfterCurrentDate(day, month)) {
+		if (!isAfterCurrentDate(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isToday(getField(FIELD_DAY), getField(FIELD_MONTH))) {
 			c.add(Calendar.YEAR, INCREMENT_BY_1);
 			setField(FIELD_YEAR, c.get(Calendar.YEAR));
 		} else {
@@ -333,11 +334,16 @@ public class TimeParser {
 		return isFieldSet(FIELD_HOUR) && isFieldSet(FIELD_MINUTE) && !isFieldSet(FIELD_DAY) && !isFieldSet(FIELD_MONTH) && !isFieldSet(FIELD_YEAR);
 	}
 	
+	private boolean isToday(int inputDay, int inputMonth) {
+		c.setTimeInMillis(System.currentTimeMillis());
+		return inputMonth == c.get(Calendar.MONTH) + OFFSET_CALENDAR_MONTH && inputDay == c.get(Calendar.DAY_OF_MONTH);
+	}
+	
 	// Returns true if input date is after current date. Vice versa.
 	private boolean isAfterCurrentDate(int inputDay, int inputMonth) {
 		c.setTimeInMillis(System.currentTimeMillis());
-		boolean case1 = inputMonth > c.get(Calendar.MONTH);
-		boolean case2 = inputMonth == c.get(Calendar.MONTH) && inputDay >= c.get(Calendar.DAY_OF_MONTH);
+		boolean case1 = inputMonth > c.get(Calendar.MONTH) + OFFSET_CALENDAR_MONTH;
+		boolean case2 = inputMonth == c.get(Calendar.MONTH) + OFFSET_CALENDAR_MONTH && inputDay > c.get(Calendar.DAY_OF_MONTH);
 		return case1 || case2;
 	}
 	

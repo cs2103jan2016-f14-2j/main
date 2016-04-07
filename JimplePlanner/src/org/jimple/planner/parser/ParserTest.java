@@ -36,7 +36,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("RETURN ");
+			testStruct = testParser.parseInput("ADD Do CS2103T Pre-Tutorial activities BY 8 apr 2pm");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
