@@ -92,7 +92,7 @@ public class Task {
 	public LocalDateTime getFromTime() {
 		return fromDateTime;
 	}
-
+	//@@author A0135808B
 	public void setFromDate(String dateTime) {
 		if (dateTime != null) {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
@@ -110,7 +110,7 @@ public class Task {
 	public LocalDateTime getToTime() {
 		return toDateTime;
 	}
-
+	//@@author A0135808B
 	public void setToDate(String dateTime) {
 		if (dateTime != null) {
 			this.toDateTime = LocalDateTime.parse(dateTime);
@@ -119,7 +119,7 @@ public class Task {
 		}
 		checkAndSetType();
 	}
-
+	//@@author A0135808B
 	public String getType() {
 		return type;
 	}
@@ -128,7 +128,7 @@ public class Task {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	//@@author A0135808B
 	private void checkAndSetType() {
 		if (isTodo()) {
 			this.type = TYPE_TODO;
@@ -138,19 +138,19 @@ public class Task {
 			this.type = TYPE_EVENT;
 		}
 	}
-
+	//@@author A0135808B
 	private boolean isTodo() {
 		return (getToTime() == null && getFromTime() == null);
 	}
-
+	//@@author A0135808B
 	private boolean isDeadline() {
 		return (getFromTime() != null && getToTime() == null);
 	}
-
+	//@@author A0135808B
 	private boolean isEvent() {
 		return (getFromTime() != null && getToTime() != null);
 	}
-
+	//@@author A0135808B
 	public boolean isValidType() {
 		if (isTodo()) {
 			return true;
@@ -181,7 +181,7 @@ public class Task {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	//@@author A0135808B
 	public TaskLabel getTaskLabel() {
 		return taskLabel;
 	}
@@ -198,22 +198,23 @@ public class Task {
 	 * labels: 0 - default 1 - blue 2 - green 3 - yellow 4 - orange 5 - red 6 -
 	 * dark red
 	 */
+	//@@author A0135808B
 	public void setTaskLabel(TaskLabel label) {
 		this.taskLabel = label;
 	}
-
+	//@@author A0135808B
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
 	}
-
+	//@@author A0135808B
 	public int getTaskId() {
 		return taskId;
 	}
-	
+	//@@author A0135808B
 	public boolean getIsDone(){
 		return isDone;
 	}
-	
+	//@@author A0135808B
 	public void setIsDone(boolean isDone){
 		this.isDone = isDone;
 	}
@@ -221,15 +222,15 @@ public class Task {
 	public ArrayList<Task> getConflictedTasks()	{
 		return conflictedTasks;
 	}
-	
+	//@@author A0135808B
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {
 		taskSorter.sortTasks(allTaskLists);
 	}
-
+	//@@author A0135808B
 	public static void sortTasksByTime(ArrayList<Task> list) {
 		taskSorter.sortTasksByTime(list);
 	}
-	
+	//@@author generated
 	@Override
 	public int hashCode() {
 		final int prime = 97;
@@ -244,7 +245,7 @@ public class Task {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-
+	//@@author generated
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

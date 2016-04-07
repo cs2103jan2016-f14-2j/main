@@ -212,6 +212,8 @@ public final class Constants {
 	
 	public static final String ERROR_NO_CONFLICT_FOUND = "no conflicts found";
 
+	public static final int MAX_ID = 10000;
+	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
 	private Constants(){

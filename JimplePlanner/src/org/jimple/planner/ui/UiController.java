@@ -174,7 +174,7 @@ public class UiController extends myObserver implements Initializable {
 		return currentTime;
 	}
 	private void loadClock() {
-		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {  
+		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
 		          clock.setText(getCurrentTime());
@@ -214,8 +214,6 @@ public class UiController extends myObserver implements Initializable {
 		int pos = commandBox.getCaretPosition();
 		loadMainTab();
 		loadAgendaList();
-		loadEventsList();
-		loadDeadlinesList();
 		loadTodoList();
 		prompt = new UiPrompt(this);
 		if(isSearch){
@@ -242,7 +240,7 @@ public class UiController extends myObserver implements Initializable {
 			todayPane.getChildren().add(todayEmpty);
 		}
 		
-		listFormatter.formatList(logic.getEventsDividedList(),Constants.TYPE_NOW);
+		listFormatter.formatList(logic.getEventsList(),Constants.TYPE_NOW);
 		list = listFormatter.getFormattedList();
 		nowPane.getChildren().clear();
 		if(list != null){
@@ -271,17 +269,6 @@ public class UiController extends myObserver implements Initializable {
 		agendaContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
-	public void loadEventsList() {
-		listFormatter.formatList(logic.getEventsDividedList(),Constants.TYPE_EVENT);
-		eventsContent.getChildren().clear();
-		eventsContent.getChildren().add(listFormatter.getFormattedList());
-	}
-
-	public void loadDeadlinesList() {
-		listFormatter.formatList(logic.getDeadlinesList(),Constants.TYPE_DEADLINE);
-		deadlinesContent.getChildren().clear();
-		deadlinesContent.getChildren().add(listFormatter.getFormattedList());
-	}
 
 	public void loadTodoList()  {
 		listFormatter.formatList(logic.getToDoList(),Constants.TYPE_TODO);
@@ -391,6 +378,9 @@ public class UiController extends myObserver implements Initializable {
 			
 			@Override
 			public void handle(KeyEvent t) {
+				if(agendaTab.isSelected())
+					listViewControl.selectFirstIncompleteTask();
+				
 				if (t.getCode().isArrowKey()){
 					taskSelectionListener();
 				}
@@ -530,18 +520,13 @@ public class UiController extends myObserver implements Initializable {
 		String tab = feedback[1].replaceAll("[0-9]","");
 		switch (tab) {
 		case Constants.TYPE_EVENT:
-			if(listViewControl.getCurrentTabName().equals("Jimple")){
-				listViewControl.addAndReload(mainTab, index);
-				break;
-			}
-			listViewControl.addAndReload(eventsTab,index);
-			break;
 		case Constants.TYPE_DEADLINE:
 			if(listViewControl.getCurrentTabName().equals("Jimple")){
 				listViewControl.addAndReload(mainTab, index);
 				break;
 			}
-			listViewControl.addAndReload(deadlinesTab,index);
+			System.out.println("feedback[1] = " + feedback[1]);
+			listViewControl.addAndReload(agendaTab,index);
 			break;
 		case Constants.TYPE_TODO:
 			listViewControl.addAndReload(todoTab,index);

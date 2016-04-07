@@ -6,19 +6,21 @@ import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //@@author A0124952E
-public class LogicDirectory implements LogicMasterListModification, LogicTaskModification{
+public class LogicDirectory implements LogicMasterListModification, LogicTaskModification {
 
-	protected String changeSaveDirectory(Storage store, LogicConflict conflictChecker, String[] variableArray, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) {
+	protected String changeSaveDirectory(Storage store, LogicConflict conflictChecker, String[] variableArray,
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
+			ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash) {
 		if (!isValidPath(store, variableArray)) {
 			return Constants.ERROR_DIRECTORY_PATH_FEEDBACK;
 		}
 		// store = new StorageComponent();
 		ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 		taskLabels = store.getLabels();
-		assignTaskIds(allTasks);
+		assignTaskIds(allTasks, idHash);
 		LogicLinkLabelsToTasks.linkTasksToLabels(allTasks, taskLabels);
 		todo.clear();
 		todo.addAll(allTasks.get(0));

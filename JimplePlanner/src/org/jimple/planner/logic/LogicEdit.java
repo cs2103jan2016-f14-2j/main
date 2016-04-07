@@ -6,6 +6,7 @@ import org.jimple.planner.task.TaskLabel;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
@@ -16,20 +17,20 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 
 	protected String editTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
-			LinkedList<LogicPreviousTask> undoTasks)
-					throws IOException, InvalidFromAndToTimeException{
+			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
+					throws IOException, InvalidFromAndToTimeException {
 		boolean isToDoEditted = false;
 		boolean isWholeDayEditted = false;
 		boolean isEventsEditted = false;
-		isToDoEditted = findTaskToEdit(variableArray, todo, todo, deadlines, events, tempHistory, taskLabels,
-				undoTasks);
+		isToDoEditted = findTaskToEdit(variableArray, todo, todo, deadlines, events, tempHistory, taskLabels, undoTasks,
+				idHash);
 		if (!isToDoEditted) {
 			isWholeDayEditted = findTaskToEdit(variableArray, deadlines, todo, deadlines, events, tempHistory,
-					taskLabels, undoTasks);
+					taskLabels, undoTasks, idHash);
 		}
 		if (!isWholeDayEditted && !isToDoEditted) {
 			isEventsEditted = findTaskToEdit(variableArray, events, todo, deadlines, events, tempHistory, taskLabels,
-					undoTasks);
+					undoTasks, idHash);
 		}
 		if (isToDoEditted || isWholeDayEditted || isEventsEditted) {
 			return "task " + variableArray[0] + Constants.EDITED_FEEDBACK;
@@ -39,8 +40,8 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 
 	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
-			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks)
-					throws IOException, InvalidFromAndToTimeException{
+			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
+					throws IOException, InvalidFromAndToTimeException {
 		for (int i = 0; i < list.size(); i++) {
 			if (Integer.parseInt(variableArray[0]) == list.get(i).getTaskId()) {
 				Task taskToBeEdited = list.remove(i);
@@ -49,7 +50,8 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 					list.add(taskToBeEdited);
 					throw new InvalidFromAndToTimeException(Constants.ERROR_WRONG_TIME_FEEDBACK);
 				}
-				tempHistory.add(taskToBeEdited);
+//				LogicTaskModification.assignOneTaskId(editedTask, idHash);
+				tempHistory.add(editedTask);
 				undoTasks.add(setNewPreviousTask(Constants.STRING_EDIT, editedTask));
 				allocateCorrectTimeArray(editedTask, todo, deadlines, events);
 				return true;
@@ -60,15 +62,16 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 
 	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
-			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks)
-					throws IOException, InvalidFromAndToTimeException{
-		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, taskLabels, undoTasks);
+			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
+					throws IOException, InvalidFromAndToTimeException {
+		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 	}
 
 	public String testEditTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
-			LinkedList<LogicPreviousTask> undoTasks) throws IOException, InvalidFromAndToTimeException{
-		return editTask(store, variableArray, todo, deadlines, events, tempHistory, taskLabels, undoTasks);
+			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
+					throws IOException, InvalidFromAndToTimeException {
+		return editTask(store, variableArray, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 	}
 
 }

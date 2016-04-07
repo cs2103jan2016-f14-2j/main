@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
@@ -38,6 +39,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	private LinkedList<LogicPreviousTask> undoTasks;
+	private HashMap<Integer, Boolean> idHash;
 	private Parser parser;
 	private Storage store;
 	private ArrayList<TaskLabel> taskLabels;
@@ -61,6 +63,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
 		taskLabels = new ArrayList<TaskLabel>();
+		idHash = new HashMap<Integer, Boolean>();
 		parser = new Parser();
 		store = new StorageComponent();
 		adder = new LogicAdd();
@@ -73,9 +76,10 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		archiver = new LogicArchive();
 		conflictChecker = new LogicConflict();
 		try {
+			initializeIDMap();
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			taskLabels = store.getLabels();
-			assignTaskIds(allTasks);
+			assignTaskIds(allTasks, idHash);
 			LogicLinkLabelsToTasks.linkTasksToLabels(allTasks, taskLabels);
 			todo = allTasks.get(0);
 			deadlines = allTasks.get(1);
@@ -102,17 +106,17 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						undoTasks);
+						undoTasks, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
 				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
-						events, taskLabels, undoTasks);
+						events, taskLabels, undoTasks, idHash);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_EDIT:
 				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						tempHistory, taskLabels, undoTasks);
+						tempHistory, taskLabels, undoTasks, idHash);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_SEARCH:
@@ -123,7 +127,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				break;
 			case Constants.STRING_CHANGEDIR:
 				feedback[0] = directer.changeSaveDirectory(store, conflictChecker, parsedInput.getVariableArray(), todo,
-						deadlines, events, archivedTasks, taskLabels);
+						deadlines, events, archivedTasks, taskLabels, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
@@ -262,7 +266,13 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			return "";
 		}
 	}
-
+	
+	private void initializeIDMap()	{
+		for (int i=0;i<Constants.MAX_ID;i++)	{
+			idHash.put(i+1, false);
+		}
+	}
+	
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -289,7 +299,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 	}
-
+	
 	/**
 	 * gets a list of help commands for user to refer to
 	 *

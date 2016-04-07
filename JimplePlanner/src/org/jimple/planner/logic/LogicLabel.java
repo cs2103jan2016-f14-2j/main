@@ -56,8 +56,6 @@ public class LogicLabel implements LogicMasterListModification {
 			if (variableArray[0].equals(taskLabels.get(i).getLabelName())) {
 				TaskLabel removedTask = taskLabels.remove(i);
 				removeLabelsFromMasterList(todo, deadlines, events, removedTask);
-				packageForSavingMasterLists(store, todo, deadlines, events, archivedTasks);
-				packageForSavingLabelLists(store, taskLabels);
 				return Constants.LABEL_DELETED_FEEDBACK;
 			}
 		}

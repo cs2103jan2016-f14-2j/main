@@ -5,6 +5,7 @@ import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 //@@author A0124952E
@@ -107,5 +108,18 @@ public interface LogicTaskModification {
 		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
 	}
 	
+	public static void assignOneTaskId(Task newTask, HashMap<Integer, Boolean> idHash) {
+		for (int i = 0; i < Constants.MAX_ID; i++) {
+			if (idHash.get(i+1).booleanValue() == false) {
+				newTask.setTaskId(i+1);
+				idHash.put(i+1, true);
+				break;
+			}
+		}
+	}
+	
+	public default void removeTaskId(Task removedTask, HashMap<Integer, Boolean> idHash)	{
+		idHash.put(removedTask.getTaskId(), false);
+	}
 
 }

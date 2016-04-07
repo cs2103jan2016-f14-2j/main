@@ -83,6 +83,7 @@ public class StorageGetExampleTasks {
 		tasks.add(todo);
 		tasks.add(deadline);
 		tasks.add(event);
+		tasks.add(new ArrayList<Task>());
 		return tasks;
 	}
 }

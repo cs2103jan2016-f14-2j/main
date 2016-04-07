@@ -6,6 +6,7 @@ import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 class LogicLinkLabelsToTasks {
+	//@@author A0135808B
 	public static void linkTasksToLabels(ArrayList<ArrayList<Task>> allTasks, ArrayList<TaskLabel> labelList){
 		for(ArrayList<Task> taskList: allTasks){
 			for(Task task: taskList){
@@ -22,7 +23,7 @@ class LogicLinkLabelsToTasks {
 			}
 		}
 	}
-
+	//@@author A0135808B
 	private static boolean isSameLabel(TaskLabel currentTaskLabel, TaskLabel masterLabel) {
 		String currentTaskLabelName = currentTaskLabel.getLabelName();
 		boolean labelNameEqual = masterLabel.getLabelName().equals(currentTaskLabelName);

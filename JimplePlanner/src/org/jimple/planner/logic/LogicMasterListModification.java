@@ -3,6 +3,7 @@ package org.jimple.planner.logic;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jimple.planner.constants.Constants;
 import org.jimple.planner.storage.Storage;
@@ -33,28 +34,21 @@ public interface LogicMasterListModification {
 		allTasksArray.add(deadlines);
 		allTasksArray.add(events);
 		allTasksArray.add(archivedTasks);
-		assignTaskIds(allTasksArray);
 		store.isSavedTasks(allTasksArray);
 	}
-	
-	public default void packageForSavingLabelLists(Storage store, ArrayList<TaskLabel> taskLabels)	{
+
+	public default void packageForSavingLabelLists(Storage store, ArrayList<TaskLabel> taskLabels) {
 		store.isSavedLabels(taskLabels);
 	}
 	
-	/*public default void packageForSavingArchiveLists(Storage store, ArrayList<Task> archiveTasks)	{
-		store.isSavedArchivedTasks(archiveTasks);
-	}*/
-
-	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
-		int taskId = 1;
-		for (ArrayList<Task> taskList : allTasksArray) {
-			for (Task task : taskList) {
-				task.setTaskId(taskId);
-				taskId++;
+	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasks, HashMap<Integer, Boolean> idHash)	{
+		for (int i=0;i<allTasks.size();i++)	{
+			for (Task aTask : allTasks.get(i))	{
+				LogicTaskModification.assignOneTaskId(aTask, idHash);
 			}
 		}
 	}
-	
+
 	public default void checkOverCurrentTime(ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (Task aTask : deadlines) {
 			if (aTask.getFromTime() != null) {
@@ -72,11 +66,11 @@ public interface LogicMasterListModification {
 		}
 	}
 
-	public default ArrayList<Task> getDividedTasks(ArrayList<Task> events)	{
+	public default ArrayList<Task> getDividedTasks(ArrayList<Task> events) {
 		ArrayList<Task> dividedTasks = new ArrayList<Task>();
-		for (Task anEvent : events)	{
+		for (Task anEvent : events) {
 			Task duplicateEvent = new Task(anEvent);
-			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate()))	{
+			while (!duplicateEvent.getFromTime().toLocalDate().equals(duplicateEvent.getToTime().toLocalDate())) {
 				Task aNewTask = LogicTaskModification.divideMultipleDays(duplicateEvent);
 				dividedTasks.add(aNewTask);
 			}
