@@ -22,6 +22,7 @@ public class InputStruct {
 	private final int ARRAY_SIZE_DELETE = 1;
 	private final int ARRAY_SIZE_SEARCH = 1;
 	private final int ARRAY_SIZE_DONE = 1;
+	private final int ARRAY_SIZE_RETURN = 1;
 	private final int ARRAY_SIZE_EDITLABEL = 3;
 	private final int ARRAY_SIZE_DELETELABEL = 1;
 	private final int ARRAY_SIZE_CHECKCONFLICT = 1;
@@ -74,6 +75,9 @@ public class InputStruct {
 			break;
 		case Constants.STRING_DONE :
 			setVariableArraySize(ARRAY_SIZE_DONE);
+			break;
+		case Constants.STRING_RETURN :
+			setVariableArraySize(ARRAY_SIZE_RETURN);
 			break;
 		case Constants.STRING_EDITLABEL :
 			setVariableArraySize(ARRAY_SIZE_EDITLABEL);
@@ -159,6 +163,12 @@ public class InputStruct {
 	/* --------------|
 	 * DONE VARIABLE |
 	 * --------------|
+	 * Index 0: Task ID
+	 */
+	
+	/* ----------------|
+	 * RETURN VARIABLE |
+	 * ----------------|
 	 * Index 0: Task ID
 	 */
 	

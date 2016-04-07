@@ -110,6 +110,11 @@ public class Parser {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
+				case Constants.STRING_RETURN :
+					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
 				case Constants.STRING_EDITLABEL :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
