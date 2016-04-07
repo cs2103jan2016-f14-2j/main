@@ -106,7 +106,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						undoTasks, idHash);
+						archivedTasks, undoTasks, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
@@ -131,8 +131,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
-				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory,
-						taskLabels);
+				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, archivedTasks,
+						tempHistory, taskLabels, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:
@@ -266,13 +266,13 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			return "";
 		}
 	}
-	
-	private void initializeIDMap()	{
-		for (int i=0;i<Constants.MAX_ID;i++)	{
-			idHash.put(i+1, false);
+
+	private void initializeIDMap() {
+		for (int i = 0; i < Constants.MAX_ID; i++) {
+			idHash.put(i + 1, false);
 		}
 	}
-	
+
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -299,7 +299,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 	}
-	
+
 	/**
 	 * gets a list of help commands for user to refer to
 	 *

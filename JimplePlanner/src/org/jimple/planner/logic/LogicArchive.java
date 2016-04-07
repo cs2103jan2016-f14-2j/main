@@ -10,7 +10,7 @@ import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0124952E
-public class LogicArchive implements LogicMasterListModification {
+public class LogicArchive implements LogicMasterListModification, LogicTaskModification {
 
 	protected String markTaskAsDone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
@@ -43,6 +43,7 @@ public class LogicArchive implements LogicMasterListModification {
 					Task anArchivedTask = list.remove(i);
 					anArchivedTask.setIsDone(true);
 					archivedTasks.add(anArchivedTask);
+					undoTasks.add(setNewPreviousTask(Constants.STRING_DONE, anArchivedTask));
 					return true;
 				}
 			}
