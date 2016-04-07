@@ -239,7 +239,7 @@ public class UiController extends myObserver implements Initializable {
 	}
 	
 	public void loadArchiveList() {
-		listFormatter.formatList(logic.getArchivedList(),Constants.TYPE_AGENDA);
+		listFormatter.formatList(logic.getArchivedList(),Constants.TYPE_ARCHIVE);
 		archiveContent.getChildren().clear();
 		archiveContent.getChildren().add(listFormatter.getFormattedList());
 	}
@@ -299,6 +299,8 @@ public class UiController extends myObserver implements Initializable {
 					if(overlay.isVisible()){
 						overlay.setVisible(false);
 						isSearch = false;
+						commandBox.requestFocus();
+						commandBox.positionCaret(commandBox.getLength());
 					}
 					break;
 			    case UP:

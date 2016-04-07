@@ -156,7 +156,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			case Constants.STRING_DONE:
 				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo, deadlines,
 						events, archivedTasks, taskLabels);
-				feedback[1] = getTaskTypeAndTaskID();
+				feedback[1] = getTaskID() + Constants.TYPE_ARCHIVE;
 				break;
 			case Constants.STRING_RETURN:
 				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo,
@@ -262,6 +262,14 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		if (!tempHistory.isEmpty()) {
 			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId())
 					+ tempHistory.get(tempHistory.size() - 1).getType();
+		} else {
+			return "";
+		}
+	}
+	
+	private String getTaskID() {
+		if (!tempHistory.isEmpty()) {
+			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId());
 		} else {
 			return "";
 		}

@@ -51,6 +51,10 @@ public class UiFormatter {
 			addTasksToFormattedDateList();
 			agendaCellFormat();
 			break;
+		case Constants.TYPE_ARCHIVE:
+			addTasksToFormattedList();
+			defaultCellFormat();
+			break;
 		case Constants.TYPE_DEADLINE:
 			addTasksToFormattedDateList();
 			agendaCellFormat();
@@ -82,8 +86,6 @@ public class UiFormatter {
 		if (listView == null)
 			return null;
 		fitToAnchorPane(listView);
-//		listView.setPrefWidth(100);
-//		listView.setPrefSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
 		return listView;
 	}
 
@@ -174,12 +176,12 @@ public class UiFormatter {
 		listView = new ListView<Task>(data);
 	}
 
-	private void todayCellFormat() {
+	private void defaultCellFormat() {
 		if (listView != null) {
 			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 				@Override
 				public ListCell<Task> call(ListView<Task> arg0) {
-					return new UiListCellToday();
+					return new UiListCellDefault();
 				}
 
 			});
@@ -221,27 +223,7 @@ public class UiFormatter {
 		});
 		}
 	}
-
-	private void todoCellFormat() {
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new UiListCellTodo();
-			}
-		});
-	}
-
-	private void searchCellFormat() {
-		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
-			@Override
-			public ListCell<Task> call(ListView<Task> arg0) {
-				return new UiListCellSearch();
-			}
-
-		});
-	}
-
+	
 	protected static double timeDifference(LocalDateTime reference) {
 		double minutes = Duration.between(LocalDateTime.now(), reference).toMillis() / 60000.0;
 		return minutes;
