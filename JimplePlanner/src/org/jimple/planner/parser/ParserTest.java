@@ -34,7 +34,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("CHECKCONFLICT 3");
+			testStruct = testParser.parseInput("ADD abc ON 7/4/2016 5pm");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);
