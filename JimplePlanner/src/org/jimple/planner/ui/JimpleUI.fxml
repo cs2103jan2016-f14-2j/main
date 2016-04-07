@@ -21,69 +21,6 @@
 
 <StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.UiController">
    <children>
-      <VBox fx:id="overlay">
-         <children>
-            <Region VBox.vgrow="ALWAYS" />
-            <HBox>
-               <children>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <AnchorPane fx:id="popupLayer">
-                     <children>
-                        <AnchorPane fx:id="helpBox" layoutX="10.0" layoutY="10.0" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
-                           <children>
-                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
-                                 <children>
-                                    <HBox>
-                                       <children>
-                                          <Label text="Help Sheet" />
-                                          <Region HBox.hgrow="ALWAYS" />
-                                          <ImageView fx:id="helpCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../../closeBtn.png" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                    </HBox>
-                                    <ScrollPane hbarPolicy="NEVER">
-                                       <content>
-                                          <AnchorPane prefHeight="310.0" prefWidth="584.0">
-                                             <children>
-                                                <Text fx:id="helpContent" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </ScrollPane>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="searchBox" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
-                           <children>
-                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
-                                 <children>
-                                    <HBox>
-                                       <children>
-                                          <Label text="Search Results" />
-                                          <Region HBox.hgrow="ALWAYS" />
-                                          <ImageView fx:id="searchCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../../closeBtn.png" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                    </HBox>
-                                    <ListView fx:id="searchList" editable="true" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS" />
-                                 </children>
-                              </VBox>
-                           </children>
-                        </AnchorPane>
-                     </children></AnchorPane>
-                  <Region HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <Region VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
       <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 15;">
          <children>
             <VBox prefHeight="600.0" prefWidth="800.0" style="-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -270,6 +207,69 @@
             <DropShadow blurType="GAUSSIAN" color="#00000080" height="50.0" radius="24.5" width="50.0" />
          </effect>
       </AnchorPane>
+      <VBox fx:id="overlay">
+         <children>
+            <Region VBox.vgrow="ALWAYS" />
+            <HBox>
+               <children>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <AnchorPane fx:id="popupLayer">
+                     <children>
+                        <AnchorPane fx:id="helpBox" layoutX="10.0" layoutY="10.0" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
+                           <children>
+                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <Label text="Help Sheet" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <ImageView fx:id="helpCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../closeBtn.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                    <ScrollPane hbarPolicy="NEVER">
+                                       <content>
+                                          <AnchorPane prefHeight="310.0" prefWidth="584.0">
+                                             <children>
+                                                <Text fx:id="helpContent" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="searchBox" style="-fx-background-color: ivory; -fx-border-color: grey; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10;">
+                           <children>
+                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <Label text="Search Results" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <ImageView fx:id="searchCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../closeBtn.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                    <ListView fx:id="searchList" editable="true" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </children></AnchorPane>
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Region VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
    </children>
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
