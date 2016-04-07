@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.depracated.Formatter;
 import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
 import org.junit.Test;
 import org.jimple.planner.storage.*;
+import org.jimple.planner.task.Formatter;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 

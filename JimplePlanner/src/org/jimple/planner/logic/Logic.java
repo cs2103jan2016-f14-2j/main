@@ -34,6 +34,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private ArrayList<Task> tempHistory;
 	private ArrayList<Task> searchResults;
 	private ArrayList<Task> archivedTasks;
+	private ArrayList<Task> conflictedTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
 	private LinkedList<LogicPreviousTask> undoTasks;
@@ -48,12 +49,14 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private LogicUndo undoer;
 	private LogicLabel labeler;
 	private LogicArchive archiver;
+	private LogicConflict conflictChecker;
 
 	public Logic() {
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
 		searchResults = new ArrayList<Task>();
 		archivedTasks = new ArrayList<Task>();
+		conflictedTasks = new ArrayList<Task>();
 		undoTasks = new LinkedList<LogicPreviousTask>();
 		pastUserInputs = new ArrayList<String>();
 		observers = new ArrayList<myObserver>();
@@ -68,6 +71,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		undoer = new LogicUndo();
 		labeler = new LogicLabel();
 		archiver = new LogicArchive();
+		conflictChecker = new LogicConflict();
 		try {
 			ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 			taskLabels = store.getLabels();
@@ -78,7 +82,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			events = allTasks.get(2);
 			archivedTasks = allTasks.get(3);
 			checkOverCurrentTime(deadlines, events);
-			checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
+			conflictChecker.checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		} catch (IndexOutOfBoundsException e) {
 			todo = new ArrayList<Task>();
 			deadlines = new ArrayList<Task>();
@@ -118,8 +122,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = Constants.TYPE_SEARCH;
 				break;
 			case Constants.STRING_CHANGEDIR:
-				feedback[0] = directer.changeSaveDirectory(store, parsedInput.getVariableArray(), todo, deadlines,
-						events, archivedTasks, taskLabels);
+				feedback[0] = directer.changeSaveDirectory(store, conflictChecker, parsedInput.getVariableArray(), todo,
+						deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
@@ -155,6 +159,11 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 						deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
+			case Constants.STRING_CHECK_CONFLICT:
+				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
+				feedback[0] = "";
+				feedback[1] = Constants.STRING_CHECK_CONFLICT;
+				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
 				feedback[1] = "";
@@ -175,11 +184,14 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		} catch (MissingDateTimeFieldException mfe) {
 			feedback[0] = mfe.getMessage();
 			feedback[1] = "";
+		} catch (NoSuchTaskWithConflictException nst) {
+			feedback[0] = nst.getMessage();
+			feedback[1] = "";
 		} catch (Exception e) {
 			feedback[0] = Constants.ERROR_WRONG_INPUT_FEEDBACK;
 			feedback[1] = "";
 		}
-		checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
+		conflictChecker.checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		packageForSavingMasterLists(store, todo, deadlines, events, archivedTasks);
 		packageForSavingLabelLists(store, taskLabels);
 		notifyAllObservers(feedback);
@@ -199,8 +211,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		return dividedTasks;
 	}
-	
-	public ArrayList<Task> getEventsList()	{
+
+	public ArrayList<Task> getEventsList() {
 		return events;
 	}
 
@@ -222,6 +234,13 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 
 	public ArrayList<Task> getArchivedList() {
 		return archivedTasks;
+	}
+
+	public ArrayList<Task> getConflictedTasks() {
+		conflictedTasks.clear();
+		conflictChecker.getConflictedTasks(LogicConflict.mostRecentlyCheckedConflict, deadlines, events,
+				conflictedTasks);
+		return conflictedTasks;
 	}
 
 	public ArrayList<TaskLabel> getTaskLabels() {
@@ -312,6 +331,12 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 
 		listOfCommands += Constants.DELETELABEL_HELP_HEADER;
 		listOfCommands += Constants.DELETELABEL_COMMAND;
+
+		listOfCommands += Constants.ARCHIVE_HELP_HEADER;
+		listOfCommands += Constants.ARCHIVE_COMMAND;
+
+		listOfCommands += Constants.UNARCHIVE_HELP_HEADER;
+		listOfCommands += Constants.UNARCHIVE_COMMAND;
 		return listOfCommands;
 	}
 

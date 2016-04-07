@@ -137,6 +137,7 @@ public final class Constants {
 	public static final String STRING_DELETELABEL = "DELETELABEL";
 	public static final String STRING_DONE = "DONE";
 	public static final String STRING_RETURN = "RETURN";
+	public static final String STRING_CHECK_CONFLICT = "CHECKCONFLICT";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";
@@ -173,7 +174,7 @@ public final class Constants {
 	public static final String CHECKDIR_COMMAND = "type \"CHECKDIR\"\n\n";
 	
 	public static final String EDITLABEL_COMMAND = "type \"EDITLABEL\" <old label name/colour> NAME <new label name> COLOUR <new label colour>\n\n";
-	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n";
+	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n\n";
 	
 	public static final String ARCHIVE_COMMAND = "type \"DONE\" <taskID>\n\n";
 	public static final String UNARCHIVE_COMMAND = "type \"RETURN\" <taskID>\n";
@@ -208,6 +209,8 @@ public final class Constants {
 	
 	public static final String UNDONE_FEEDBACK = " has returned to your list";
 	public static final String ERROR_UNDONE_FEEDBACK = " could not be returned to your list";
+	
+	public static final String ERROR_NO_CONFLICT_FOUND = "no conflicts found";
 
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	
