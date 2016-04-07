@@ -1,5 +1,7 @@
 package org.jimple.planner.parser;
 
+import org.jimple.planner.constants.Constants;
+
 /* ------------|
  * INPUTSTRUCT |
  * ------------|
@@ -9,24 +11,11 @@ package org.jimple.planner.parser;
  */
 
 public class InputStruct {
-
-	// Main commands.
-	private final String COMMAND_ADD = "ADD";
-	private final String COMMAND_EDIT = "EDIT";
-	private final String COMMAND_DELETE = "DELETE";
-	private final String COMMAND_SEARCH = "SEARCH";
-	private final String COMMAND_DONE = "DONE";
-	private final String COMMAND_EDITLABEL = "EDITLABEL";
-	private final String COMMAND_DELETELABEL = "DELETELABEL";
-	private final String COMMAND_CHANGEDIR = "CHANGEDIR";
-	private static final String COMMAND_CHECKDIR = "CHECKDIR";
-	private static final String COMMAND_UNDO = "UNDO";
-	private static final String COMMAND_HELP = "DELP";
 	
 	/* ---------------|
 	 * SIZE VARIABLES |
 	 * ---------------|
-	 * Variables containing the intended size of the variable array for each command.
+	 * Variables containing the intended size of the variable array for each command, used only in InputStruct.
 	 */
 	private final int ARRAY_SIZE_ADD = 6;
 	private final int ARRAY_SIZE_EDIT = 6;
@@ -36,30 +25,6 @@ public class InputStruct {
 	private final int ARRAY_SIZE_EDITLABEL = 3;
 	private final int ARRAY_SIZE_DELETELABEL = 1;
 	private final int ARRAY_SIZE_CHANGEDIR = 1;
-	
-	/* Stores the index for the user input after the main command.
-	 *  - "add": Index of the task name.
-	 *  - "edit": Index of the task ID.
-	 *  - "delete": Index of the task ID.
-	 *  - "search": Index of the query String.
-	 *  - "changedir": Index of the directory path.
-	 */
-	private final int INDEX_BASE = 0;
-	
-	// Stores the indexes for task fields. Used by "add" and "edit".
-	private final int INDEX_NAME = 1;
-	private final int INDEX_DESCRIPTION = 2;
-	private final int INDEX_FROM = 3;
-	private final int INDEX_TO = 4;
-	private final int INDEX_CATEGORY = 5;
-	
-	//Stores the indexes for task fields. Used by "editlabel".
-	private final int INDEX_EDITLABEL_NAME = 1;
-	private final int INDEX_EDITLABEL_COLOUR = 2;
-	
-	private final String TASK_TYPE_TODO = "todo";
-	private final String TASK_TYPE_DEADLINE = "deadline";
-	private final String TASK_TYPE_EVENT = "event";
 
 	private String commandString;
 
@@ -94,54 +59,59 @@ public class InputStruct {
 		commandString = inputCommandString;
 		// Initializes the size of the variable array according to the commandString.
 		switch (commandString) {
-		case COMMAND_ADD :
+		case Constants.STRING_ADD :
 			setVariableArraySize(ARRAY_SIZE_ADD);
 			break;
-		case COMMAND_EDIT :
+		case Constants.STRING_EDIT :
 			setVariableArraySize(ARRAY_SIZE_EDIT);
 			break;
-		case COMMAND_DELETE :
+		case Constants.STRING_DELETE :
 			setVariableArraySize(ARRAY_SIZE_DELETE);
 			break;
-		case COMMAND_SEARCH :
+		case Constants.STRING_SEARCH :
 			setVariableArraySize(ARRAY_SIZE_SEARCH);
 			break;
-		case COMMAND_DONE :
+		case Constants.STRING_DONE :
 			setVariableArraySize(ARRAY_SIZE_DONE);
 			break;
-		case COMMAND_EDITLABEL :
+		case Constants.STRING_EDITLABEL :
 			setVariableArraySize(ARRAY_SIZE_EDITLABEL);
 			break;
-		case COMMAND_DELETELABEL :
+		case Constants.STRING_DELETELABEL :
 			setVariableArraySize(ARRAY_SIZE_DELETELABEL);
 			break;
-		case COMMAND_CHANGEDIR :
+		case Constants.STRING_CHANGEDIR :
 			setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
 		default:
 			break;
 		}
 	}
 	
+	/* Set the task type based on which date/time fields ("from" and "to") are available.
+	 * EVENT: "from" & "to" set.
+	 * DEADLINE: Only "from" set.
+	 * TODO: None set.
+	 */
 	public void checkAndSetTaskType() {
 		if (isTodo()) {
-			setAtIndex(INDEX_BASE, TASK_TYPE_TODO);
+			setAtIndex(Constants.INDEX_BASE, Constants.TASK_TYPE_TODO);
 		} else if (isDeadline()) {
-			setAtIndex(INDEX_BASE, TASK_TYPE_DEADLINE);
+			setAtIndex(Constants.INDEX_BASE, Constants.TASK_TYPE_DEADLINE);
 		} else if (isEvent()) {
-			setAtIndex(INDEX_BASE, TASK_TYPE_EVENT);
+			setAtIndex(Constants.INDEX_BASE, Constants.TASK_TYPE_EVENT);
 		}
 	}
 	
 	private boolean isTodo() {
-		return variableArray[INDEX_FROM] == null && variableArray[INDEX_TO] == null;
+		return variableArray[Constants.INDEX_FROM] == null && variableArray[Constants.INDEX_TO] == null;
 	}
 	
 	private boolean isDeadline() {
-		return variableArray[INDEX_FROM] != null && variableArray[INDEX_TO] == null;
+		return variableArray[Constants.INDEX_FROM] != null && variableArray[Constants.INDEX_TO] == null;
 	}
 	
 	private boolean isEvent() {
-		return variableArray[INDEX_FROM] != null && variableArray[INDEX_TO] != null;
+		return variableArray[Constants.INDEX_FROM] != null && variableArray[Constants.INDEX_TO] != null;
 	}
 
 	/* --------------|
@@ -151,28 +121,28 @@ public class InputStruct {
 	 *  - "todo": To-do
 	 *  - "deadline": Deadline
 	 *  - "event": Event
-	 * Index 1: Event Name
-	 * Index 2: Event Description
-	 * Index 3: Event Time (From)
-	 * Index 4: Event Time (To)
-	 * Index 5: Event Label
+	 * Index 1: Task Name
+	 * Index 2: Task Description
+	 * Index 3: Task Time (From)
+	 * Index 4: Task Time (To)
+	 * Index 5: Task Label
 	 */
 
 	/* --------------|
 	 * EDIT VARIABLES|
 	 * --------------|
-	 * Index 0: Event Index
-	 * Index 1: Event Name
-	 * Index 2: Event Description
-	 * Index 3: Event Time (From)
-	 * Index 4: Event Time (To)
-	 * Index 5: Event Label
+	 * Index 0: Task Index
+	 * Index 1: Task Name
+	 * Index 2: Task Description
+	 * Index 3: Task Time (From)
+	 * Index 4: Task Time (To)
+	 * Index 5: Label Name
 	 */
 
 	/* ----------------|
 	 * DELETE VARIABLE |
 	 * ----------------|
-	 * Index 0: Event Index
+	 * Index 0: Task Index
 	 */
 
 	/* ----------------|
@@ -181,15 +151,35 @@ public class InputStruct {
 	 * Index 0: String to Search
 	 */
 	
+	/* --------------|
+	 * DONE VARIABLE |
+	 * --------------|
+	 * Index 0: Task Index
+	 */
+	
+	/* --------------------|
+	 * EDITLABEL VARIABLES |
+	 * --------------------|
+	 * Index 0: Label Name
+	 * Index 1: New Label Name
+	 * Index 2: New Label Colour
+	 */
+	
+	/* ---------------------|
+	 * DELETELABEL VARIABLE |
+	 * ---------------------|
+	 * Index 0: Label Name
+	 */
+	
 	/* -------------------|
 	 * CHANGEDIR VARIABLE |
 	 * -------------------|
 	 * Index 0: Directory String
 	 */
 
-	/* ---------------|
-	 * HELP VARIABLES |
-	 * ---------------|
+	/* -----------------------------|
+	 * HELP/CHECKDIR/UNDO VARIABLES |
+	 * -----------------------------|
 	 * N/A
 	 */
 
