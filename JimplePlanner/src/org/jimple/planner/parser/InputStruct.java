@@ -24,6 +24,7 @@ public class InputStruct {
 	private final int ARRAY_SIZE_DONE = 1;
 	private final int ARRAY_SIZE_EDITLABEL = 3;
 	private final int ARRAY_SIZE_DELETELABEL = 1;
+	private final int ARRAY_SIZE_CHECKCONFLICT = 1;
 	private final int ARRAY_SIZE_CHANGEDIR = 1;
 
 	private String commandString;
@@ -80,8 +81,12 @@ public class InputStruct {
 		case Constants.STRING_DELETELABEL :
 			setVariableArraySize(ARRAY_SIZE_DELETELABEL);
 			break;
+		case Constants.STRING_CHECKCONFLICT :
+			setVariableArraySize(ARRAY_SIZE_CHECKCONFLICT);
+			break;
 		case Constants.STRING_CHANGEDIR :
 			setVariableArraySize(ARRAY_SIZE_CHANGEDIR);
+			break;
 		default:
 			break;
 		}
@@ -131,7 +136,7 @@ public class InputStruct {
 	/* --------------|
 	 * EDIT VARIABLES|
 	 * --------------|
-	 * Index 0: Task Index
+	 * Index 0: Task ID
 	 * Index 1: Task Name
 	 * Index 2: Task Description
 	 * Index 3: Task Time (From)
@@ -142,7 +147,7 @@ public class InputStruct {
 	/* ----------------|
 	 * DELETE VARIABLE |
 	 * ----------------|
-	 * Index 0: Task Index
+	 * Index 0: Task ID
 	 */
 
 	/* ----------------|
@@ -154,7 +159,7 @@ public class InputStruct {
 	/* --------------|
 	 * DONE VARIABLE |
 	 * --------------|
-	 * Index 0: Task Index
+	 * Index 0: Task ID
 	 */
 	
 	/* --------------------|
@@ -169,6 +174,12 @@ public class InputStruct {
 	 * DELETELABEL VARIABLE |
 	 * ---------------------|
 	 * Index 0: Label Name
+	 */
+	
+	/* -----------------------|
+	 * CHECKCONFLICT VARIABLE |
+	 * -----------------------|
+	 * Index 0: Task ID
 	 */
 	
 	/* -------------------|

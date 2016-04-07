@@ -13,7 +13,7 @@ public class ParserTest {
 	@Test
 	public void test() {
 		testParser = new Parser();
-		//test0();
+		test0();
 		test1();
 		test2();
 		test3();
@@ -34,7 +34,7 @@ public class ParserTest {
 	private void test0() {
 		InputStruct testStruct = null;
 		try {
-			testStruct = testParser.parseInput("ADD tak BY 5 apRil");
+			testStruct = testParser.parseInput("CHECKCONFLICT 3");
 			String[] test = testStruct.getVariableArray();
 			for (int i = 0; i < test.length; i++) {
 				System.out.println(test[i]);

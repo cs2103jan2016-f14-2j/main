@@ -159,10 +159,10 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 						deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = "";
 				break;
-			case Constants.STRING_CHECK_CONFLICT:
+			case Constants.STRING_CHECKCONFLICT:
 				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
 				feedback[0] = "";
-				feedback[1] = Constants.STRING_CHECK_CONFLICT;
+				feedback[1] = Constants.STRING_CHECKCONFLICT;
 				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;

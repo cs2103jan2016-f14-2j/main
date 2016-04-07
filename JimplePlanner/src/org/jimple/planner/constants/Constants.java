@@ -137,7 +137,7 @@ public final class Constants {
 	public static final String STRING_DELETELABEL = "DELETELABEL";
 	public static final String STRING_DONE = "DONE";
 	public static final String STRING_RETURN = "RETURN";
-	public static final String STRING_CHECK_CONFLICT = "CHECKCONFLICT";
+	public static final String STRING_CHECKCONFLICT = "CHECKCONFLICT";
 	
 	public static final String TIME_FORMAT_HELP_HEADER = "Time Format:\n";
 	public static final String ADD_HELP_HEADER = "Add a new task:\n";

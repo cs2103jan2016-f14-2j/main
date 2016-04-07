@@ -47,7 +47,14 @@ public class Parser {
 	private final int OFFSET_CALENDAR_MONTH = 1;
 	private final int OFFSET_CALENDAR_YEAR = 1900;
 	private final String EMPTY_STRING = "";
-	private final String DATE_TIME_STRING_FORMAT = "%02d-%02d-%02dT%02d:%02d"; 
+	private final String DATE_TIME_STRING_FORMAT = "%02d-%02d-%02dT%02d:%02d";
+	
+	/* -------------------|
+	 * EXCEPTION MESSAGES |
+	 * -------------------|
+	 * Messages which are feedbacked to the user when exceptions are thrown, personalized to the exception it is referencing.
+	 */
+	
 	/*
 	 * -----------------|
 	 * TIMEPARSER CLASS |
@@ -113,6 +120,11 @@ public class Parser {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
 					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
+				case Constants.STRING_CHECKCONFLICT :
+					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+					}
+					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
 				case Constants.STRING_CHANGEDIR :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
