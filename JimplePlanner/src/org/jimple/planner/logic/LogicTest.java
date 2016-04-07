@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
@@ -35,6 +36,7 @@ public class LogicTest {
 	ArrayList<Task>	archivedTasks = new ArrayList<Task>();
 	ArrayList<TaskLabel> taskLabels = new ArrayList<TaskLabel>();
 	LinkedList<LogicPreviousTask> undoTasks = new LinkedList<LogicPreviousTask>();
+	HashMap<Integer, Boolean> idHash = new HashMap<Integer, Boolean>();
 
 	/*
 	 * @Test public void EditShouldReturnFeedback() throws IOException {
@@ -174,15 +176,15 @@ public class LogicTest {
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		initializeThreeArrays();
 
-		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks);
+		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks, idHash);
 		assertEquals("task \"" + "a test only one" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		// test for add
-		testAdder.addToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		testAdder.addToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("task \"" + "task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 		// test for edit
-		testEditer.editTask(testStore, variableArray3, floating, deadlines, events, tempHistory, taskLabels, undoTasks);
+		testEditer.editTask(testStore, variableArray3, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 		assertEquals("task \"" + "edit task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
 
@@ -203,9 +205,9 @@ public class LogicTest {
 	public void ShouldReturnTrueAfterDeleteFromArray() throws IOException {
 		String[] variableArray = { "1" };
 		initializeThreeArrays();
-		assertTrue("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, undoTasks));
+		assertTrue("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, undoTasks, idHash));
 		variableArray[0] = "4";
-		assertFalse("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, undoTasks));
+		assertFalse("delete string", testDeleter.testFindTaskToDelete(variableArray, floating, undoTasks, idHash));
 	}
 
 	/*
@@ -217,10 +219,10 @@ public class LogicTest {
 		String[] variableArray = { "1", "task one", null, "2016-03-12T14:00", null, null };
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
-				deadlines, events, tempHistory, taskLabels, undoTasks));
+				deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
 		variableArray[0] = "6";
 		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
-				deadlines, events, tempHistory, taskLabels, undoTasks));
+				deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
 	}
 
 	/*
@@ -232,10 +234,10 @@ public class LogicTest {
 		String[] variableArray = { "1", "task one", null, "2016-03-30T05:00", null, null };
 		initializeThreeArrays();
 		assertEquals("return same string", "task 1 edited in planner",
-				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks));
+				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
 		variableArray[0] = "10";
 		assertEquals("return same string", "task 10 could not be edited",
-				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks));
+				testEditer.testEditTask(testStore, variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
 	}
 
 	/**
@@ -251,28 +253,28 @@ public class LogicTest {
 	public void ShouldReturnFeedbackAfterAdding() throws IOException {
 		String[] parsedInput1 = { "deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null };
 		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder
-				.addToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, taskLabels, undoTasks));
+				.addToTaskList(testStore, parsedInput1, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash));
 		
 		String[] parsedInput2 = { "events", "finish 2010 homework", null, "2016-03-29T12:00", "2016-03-30T13:00",
 				null };
 		assertEquals("\"finish 2010 homework\" added to planner", testAdder.addToTaskList(testStore, parsedInput2,
-				tempHistory, floating, deadlines, events, taskLabels, undoTasks));
+				tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash));
 		
 		String[] parsedInput3 = { "todo", "finish 3241 homework", null, null, null, null };
 		assertEquals("\"finish 3241 homework\" added to planner", testAdder.addToTaskList(testStore, parsedInput3,
-				tempHistory, floating, deadlines, events, taskLabels, undoTasks));
+				tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash));
 		
 		String[] parsedInput4 = { "todo", "finish 3241 homework", null, null, null, "work" };
-		testAdder.addToTaskList(testStore, parsedInput4, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		testAdder.addToTaskList(testStore, parsedInput4, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("work", taskLabels.get(0).getLabelName());
 		
 		taskLabels.add(TaskLabel.getNewLabel("food"));
 		String[] parsedInput5 = { "todo", "buy hotpot ingredients", null, null, null, "food" };
-		testAdder.addToTaskList(testStore, parsedInput5, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		testAdder.addToTaskList(testStore, parsedInput5, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("food", floating.get(2).getTaskLabel().getLabelName());
 		
 		String[] parsedInput6 = { "todo", "do some running", null, null, null, null };
-		testAdder.addToTaskList(testStore, parsedInput6, tempHistory, floating, deadlines, events, taskLabels, undoTasks);
+		testAdder.addToTaskList(testStore, parsedInput6, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("default", floating.get(3).getTaskLabel().getLabelName());
 	}
 
