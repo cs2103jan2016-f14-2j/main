@@ -45,6 +45,7 @@ public class UiListCellUpcoming extends ListCell<Task> {
 			title.setText(item.getTitle());
 			id.setText(""+item.getTaskId());
 			date.setText(item.getPrettierFromDate());
+			time.setText(item.getPrettyFromTime());
 				
 			setGraphic(anchorpane);
 		}
