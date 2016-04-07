@@ -3,6 +3,7 @@ package org.jimple.planner.depracated;
 import java.util.HashMap;
 
 //@@author A0124952E-unused
+@Deprecated
 public class ListOfMonths {
 	public HashMap<String, String> listOfMonths;
 	public HashMap<Integer, String> listOfNewMonths;

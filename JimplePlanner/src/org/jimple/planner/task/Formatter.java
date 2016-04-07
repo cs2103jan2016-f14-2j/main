@@ -1,4 +1,4 @@
-package org.jimple.planner.depracated;
+package org.jimple.planner.task;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import org.jimple.planner.task.Task;
+import org.jimple.planner.depracated.ListOfMonths;
 
-//@@author A0124952E-unused
+//@@author A0124952E
 public class Formatter {
 	public ListOfMonths listOfMonths;
 
@@ -38,7 +38,8 @@ public class Formatter {
 		prettyTime += dateTime.getMinute();
 		return prettyTime;
 	}
-
+	
+	@Deprecated
 	public String newFormatDateTime(Date date) {
 		String formattedDateTime = new String("");
 		formattedDateTime += (date.getYear() + 1900);
@@ -47,7 +48,8 @@ public class Formatter {
 		formattedDateTime += newFormatTime(date);
 		return formattedDateTime;
 	}
-
+	
+	@Deprecated
 	private String newFormatTime(Date time) {
 		String formattedHoursMinutes = new String("");
 		formattedHoursMinutes += formatTime(time.getHours());
@@ -55,7 +57,8 @@ public class Formatter {
 		formattedHoursMinutes += formatTime(time.getMinutes());
 		return formattedHoursMinutes;
 	}
-
+	
+	@Deprecated
 	private String formatTime(int time) {
 		String formattedTime = new String("");
 		if (isLessThanTen(time)) {
@@ -64,7 +67,8 @@ public class Formatter {
 		formattedTime += time;
 		return formattedTime;
 	}
-
+	
+	@Deprecated
 	private String newFormatDay(int day) {
 		String formattedDay = new String("");
 		if (isLessThanTen(day)) {
@@ -75,7 +79,8 @@ public class Formatter {
 
 		return formattedDay;
 	}
-
+	
+	@Deprecated
 	private String newFormatMonth(int month) {
 		String formattedMonth = new String("");
 		formattedMonth += "-";
@@ -83,7 +88,8 @@ public class Formatter {
 		formattedMonth += "-";
 		return formattedMonth;
 	}
-
+	
+	@Deprecated
 	public String formatTaskForDisplay(ArrayList<Task> list) {
 		String formattedTasks = new String("");
 		for (Task aTask : list) {
@@ -91,7 +97,8 @@ public class Formatter {
 		}
 		return null;
 	}
-
+	
+	@Deprecated
 	public String formatSearchString(ArrayList<String> searchResults) {
 		String formattedResult = new String("");
 		for (String result : searchResults) {
@@ -100,7 +107,8 @@ public class Formatter {
 		}
 		return formattedResult;
 	}
-
+	
+	@Deprecated
 	public String formatDateTime(String unformattedDate) {
 		if (unformattedDate != null) {
 			String[] dividedDates = unformattedDate.split(" ");
@@ -138,14 +146,16 @@ public class Formatter {
 		}
 		return unformattedDate;
 	}
-
+	
+	@Deprecated
 	private String checkYear(String dateTime) {
 		if (isYear(dateTime)) {
 			return dateTime;
 		}
 		return null;
 	}
-
+	
+	@Deprecated
 	private boolean isYear(String dateTime) {
 		try {
 			if (Integer.parseInt(dateTime) - 1000 > 0) {
@@ -156,7 +166,8 @@ public class Formatter {
 		}
 		return false;
 	}
-
+	
+	@Deprecated
 	public String checkMonth(String dateTime) {
 		String formattedMonth = new String("");
 		if (listOfMonths.contain(dateTime)) {
@@ -166,7 +177,8 @@ public class Formatter {
 		}
 		return formattedMonth;
 	}
-
+	
+	@Deprecated
 	private String checkDay(String dateTime) {
 		String formattedDay = new String("");
 		if (isDay(dateTime)) {
@@ -178,14 +190,16 @@ public class Formatter {
 		}
 		return formattedDay;
 	}
-
+	
+	@Deprecated
 	private boolean isLessThanTen(int dateTime) {
 		if (dateTime < 10) {
 			return true;
 		}
 		return false;
 	}
-
+	
+	@Deprecated
 	private boolean isDay(String dateTime) {
 		try {
 			if (Integer.parseInt(dateTime) - 1000 < 0) {
@@ -196,7 +210,8 @@ public class Formatter {
 		}
 		return false;
 	}
-
+	
+	@Deprecated
 	public String checkTime(String dateTime) {
 		String formattedHoursMinutes = new String("");
 		if (dateTime.contains("am")) {
@@ -214,7 +229,8 @@ public class Formatter {
 		}
 		return formattedHoursMinutes;
 	}
-
+	
+	@Deprecated
 	private String formatHourPM(String[] time) {
 		String formattedHour = new String("");
 		if (time[0].equals("12")) {
@@ -224,7 +240,8 @@ public class Formatter {
 		}
 		return formattedHour;
 	}
-
+	
+	@Deprecated
 	private String formatHourAM(String[] time) {
 		String formattedHour = new String("");
 		if (isLessThanTen(Integer.parseInt(time[0]))) {
@@ -237,7 +254,8 @@ public class Formatter {
 		}
 		return formattedHour;
 	}
-
+	
+	@Deprecated
 	private String formatMinutes(String[] time) {
 		String formattedMinutes = new String("");
 		if (time.length > 1) {

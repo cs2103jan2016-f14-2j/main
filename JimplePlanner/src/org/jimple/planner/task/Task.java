@@ -7,8 +7,6 @@ import static org.jimple.planner.constants.Constants.TYPE_TODO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import org.jimple.planner.depracated.Formatter;
-
 public class Task {
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
