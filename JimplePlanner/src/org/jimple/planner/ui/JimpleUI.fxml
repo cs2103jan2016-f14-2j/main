@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -231,6 +232,15 @@
                               </AnchorPane>
                            </content>
                         </Tab>
+                        <Tab fx:id="archiveTab" text="Archive">
+                           <content>
+                              <AnchorPane fx:id="archiveContent" minHeight="0.0" minWidth="0.0" prefHeight="239.0" prefWidth="800.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
                     </tabs>
                   </TabPane>
                   <VBox maxHeight="23.0" VBox.vgrow="ALWAYS">
@@ -256,6 +266,12 @@
                </children>
             </VBox>
          </children>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" color="#00000080" height="50.0" radius="24.5" width="50.0" />
+         </effect>
       </AnchorPane>
    </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
 </StackPane>

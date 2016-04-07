@@ -7,9 +7,6 @@ import org.jimple.planner.task.Task;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -17,10 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
+//@@author A0122498
 public class UiListCellAgenda extends ListCell<Task> {
 	
 	@FXML
@@ -77,9 +73,6 @@ public class UiListCellAgenda extends ListCell<Task> {
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
 				fromdate.setText(item.getPrettyFromTime());
-//				title.setId(Constants.TYPE_DEADLINE+"Text");
-//				id.setId(Constants.TYPE_DEADLINE+"Text");
-//				date.setId(Constants.TYPE_DEADLINE+"Text");
 				break;
 			
 			//EVENT
@@ -91,6 +84,9 @@ public class UiListCellAgenda extends ListCell<Task> {
 				setDesc(item);
 				setStyles();
 				setConflict(item);
+				
+				if(item.getIsOverDue())
+					this.setId("overdue");
 				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
@@ -128,7 +124,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 	private void setDeadlineColors(Task item) {
 		// more than a day away
 		if (UiFormatter.timeDifference(item.getFromTime()) >= 1440)
-			this.setId("green");
+			this.setId("");
 		// less than a day
 		else if (UiFormatter.timeDifference(item.getFromTime()) >= 180)
 			this.setId("yellow");
@@ -144,6 +140,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 	}
 
 	private void setConflict(Task item){
+		conflict.setId("conflict");
 		if(item.getConflictedTasks().isEmpty())
 			conflict.setVisible(false);
 		else

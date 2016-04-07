@@ -1,5 +1,5 @@
 package org.jimple.planner.ui;
-
+//@@author A0122498
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -26,7 +26,8 @@ public class UiListViewControl extends UiController{
 	}
 	public void selectFirstIncompleteTask(){
 		for(Task task : getActiveListView().getItems()){
-			if(!task.getIsOverDue() && !task.getType().equals(Constants.TYPE_STATIC)){
+			if(task.getToTime() != null && UiFormatter.timeDifference(task.getToTime())>0 && task.getType().equals(Constants.TYPE_STATIC)){
+				getActiveListView().requestFocus();
 				getActiveListView().getSelectionModel().select(task);
 				getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
 				return;

@@ -1,11 +1,8 @@
 package org.jimple.planner.ui;
-
+//@@author A0122498
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -36,14 +33,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -64,64 +59,37 @@ public class UiController extends myObserver implements Initializable {
 	TextField commandBox;
 
 	@FXML
-	Text textArea;
+	Text textArea, helpContent;
 
 	@FXML
-	Label messagePrompt;
+	Label messagePrompt, clock;
 	
 	@FXML
 	VBox todayEmpty, ongoingEmpty, upcomingEmpty;
 
 	@FXML
-	AnchorPane mainController;
-
-	@FXML
-	Tab mainTab, agendaTab, eventsTab, todoTab, deadlinesTab;
+	Tab mainTab, agendaTab, todoTab, archiveTab;
 
 	@FXML
 	TabPane tabPanes;
-
-	@FXML
-	AnchorPane mainContent, todayPane, nowPane, upcomingPane;
 	
 	@FXML
-	AnchorPane mainContainer;
-	
-	@FXML
-	AnchorPane agendaContent;
-
-	@FXML
-	AnchorPane eventsContent;
-
-	@FXML
-	AnchorPane deadlinesContent;
-
-	@FXML
-	AnchorPane todoContent;
+	AnchorPane mainController, mainContainer,
+	todayPane, nowPane, upcomingPane,
+	mainContent, agendaContent, todoContent, archiveContent,
+	popupLayer, searchBox, searchContent, helpBox;
 
 	@FXML
 	StackPane stackPane;
 
 	@FXML
 	ListView<String> list;
-
-	@FXML
-	AnchorPane popupLayer;
-	
-	@FXML
-	AnchorPane searchBox, searchContent, helpBox;
 	
 	@FXML
 	ListView<Task> searchList;
-	
-	@FXML
-	Text helpContent;
 
 	@FXML
 	VBox overlay;
-	
-	@FXML
-	Label clock;
 	
 	@FXML
 	ImageView closeButton, searchCloseButton, helpCloseButton;
@@ -215,13 +183,14 @@ public class UiController extends myObserver implements Initializable {
 		loadMainTab();
 		loadAgendaList();
 		loadTodoList();
+		loadArchiveList();
 		prompt = new UiPrompt(this);
 		if(isSearch){
-			System.out.println("search prompt updated");
 			prompt.searchPrompt();
 		}
 		listViewControl.selectIndex(i);
 		listViewControl.getActiveListView().scrollTo(i);
+		taskSelectionListener();
 		if(cmb){
 			commandBox.requestFocus();
 			commandBox.positionCaret(pos);
@@ -267,6 +236,12 @@ public class UiController extends myObserver implements Initializable {
 		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_AGENDA);
 		agendaContent.getChildren().clear();
 		agendaContent.getChildren().add(listFormatter.getFormattedList());
+	}
+	
+	public void loadArchiveList() {
+		listFormatter.formatList(logic.getArchivedList(),Constants.TYPE_AGENDA);
+		archiveContent.getChildren().clear();
+		archiveContent.getChildren().add(listFormatter.getFormattedList());
 	}
 
 
@@ -359,8 +334,12 @@ public class UiController extends myObserver implements Initializable {
 						listViewControl.deselectTaskItem();
 						}
 					break;
-				case LEFT:
-				case RIGHT:
+//				case LEFT:
+//				case RIGHT:
+//					break;
+				case SPACE:
+					if(agendaTab.isSelected())
+						listViewControl.selectFirstIncompleteTask();
 					break;
 				case ESCAPE:
 					tabPanes.requestFocus();
@@ -377,10 +356,7 @@ public class UiController extends myObserver implements Initializable {
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			
 			@Override
-			public void handle(KeyEvent t) {
-				if(agendaTab.isSelected())
-					listViewControl.selectFirstIncompleteTask();
-				
+			public void handle(KeyEvent t) {				
 				if (t.getCode().isArrowKey()){
 					taskSelectionListener();
 				}
@@ -518,6 +494,7 @@ public class UiController extends myObserver implements Initializable {
 		if(feedback[1].matches(".*\\d+.*")) //if string contains digits
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
+		System.out.println("feedback[1] = "+feedback[1]);
 		switch (tab) {
 		case Constants.TYPE_EVENT:
 		case Constants.TYPE_DEADLINE:
@@ -525,11 +502,13 @@ public class UiController extends myObserver implements Initializable {
 				listViewControl.addAndReload(mainTab, index);
 				break;
 			}
-			System.out.println("feedback[1] = " + feedback[1]);
 			listViewControl.addAndReload(agendaTab,index);
 			break;
 		case Constants.TYPE_TODO:
 			listViewControl.addAndReload(todoTab,index);
+			break;
+		case Constants.TYPE_ARCHIVE:
+			listViewControl.addAndReload(archiveTab,index);
 			break;
 		case Constants.TYPE_SEARCH:
 			prompt.searchPrompt();
@@ -538,7 +517,6 @@ public class UiController extends myObserver implements Initializable {
 			prompt.helpPrompt(feedback[0]);
 			break;
 		default:
-			System.out.println("default");
 			loadDisplay();
 			break;
 		}

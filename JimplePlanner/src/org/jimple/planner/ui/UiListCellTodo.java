@@ -1,5 +1,5 @@
 package org.jimple.planner.ui;
-
+//@@author A0122498
 import java.io.IOException;
 
 import org.jimple.planner.constants.Constants;
@@ -10,11 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 public class UiListCellTodo extends ListCell<Task> {
 	

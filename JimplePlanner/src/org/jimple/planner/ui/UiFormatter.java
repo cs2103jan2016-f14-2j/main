@@ -1,5 +1,5 @@
 package org.jimple.planner.ui;
-
+//@@author A0122498
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import org.jimple.planner.task.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
@@ -31,10 +30,6 @@ public class UiFormatter {
 		this.arrList = newList;
 		formattedList.clear();
 
-//		if (arrList.isEmpty()) {
-//			formatEmptyList();
-//			return;
-//		}
 		formatType(listType);
 	}
 
@@ -99,10 +94,11 @@ public class UiFormatter {
 		AnchorPane.setBottomAnchor(node, 0.0);
 	}
 
-	private Task staticTask(String title) {
+	private Task staticTask(String title, LocalDateTime fromtime) {
 		Task task = new Task(title);
 		task.setType(Constants.TYPE_STATIC);
 		task.setIsOverDue(false);
+		task.setToDate(fromtime.toString());
 		return task;
 	}
 
@@ -161,7 +157,7 @@ public class UiFormatter {
 		for (Task task : arrList) {
 			if (!dateCounter.equals(task.getPrettierFromDate())) {
 				dateCounter = task.getPrettierFromDate();
-				formattedList.add(staticTask(dateCounter));
+				formattedList.add(staticTask(dateCounter,task.getFromTime()));
 			}
 
 			formattedList.add(task);

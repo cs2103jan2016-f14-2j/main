@@ -1,7 +1,5 @@
 package org.jimple.planner.ui;
 
-import java.io.IOException;
-
 import org.jimple.planner.constants.Constants;
 import org.jimple.planner.task.Task;
 
@@ -16,13 +14,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-
+//@@author A0122498
 public class UiPrompt extends UiController{
 	@FXML
 	AnchorPane searchBox, searchContent;	
