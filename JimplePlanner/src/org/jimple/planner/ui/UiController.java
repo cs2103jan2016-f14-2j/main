@@ -32,6 +32,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -104,6 +105,16 @@ public class UiController extends myObserver implements Initializable {
 		loadClock();
 		cmdHistory = new LinkedList<String>();
 		cmdHistory.add("");
+		
+		mainTab.setGraphic(new ImageView(new Image("jimpleTabIcon.png")));
+		mainTab.setText("");
+		agendaTab.setGraphic(new ImageView(new Image("agendaTabIcon.png")));
+		agendaTab.setText("");
+		todoTab.setGraphic(new ImageView(new Image("todoTabIcon.png")));
+		todoTab.setText("");
+		archiveTab.setGraphic(new ImageView(new Image("archiveTabIcon.png")));
+		archiveTab.setText("");
+		
 		prompt = new UiPrompt(this);
 		listViewControl = new UiListViewControl(this);
 		cmdHistoryPointer = 0;
@@ -376,7 +387,7 @@ public class UiController extends myObserver implements Initializable {
 					break;
 				case LEFT:
 				case RIGHT:
-					taskSelectionListener();
+					tabPanes.requestFocus();
 					break;
 				case BACK_SPACE:
 				case DELETE:
@@ -500,10 +511,6 @@ public class UiController extends myObserver implements Initializable {
 		switch (tab) {
 		case Constants.TYPE_EVENT:
 		case Constants.TYPE_DEADLINE:
-			if(listViewControl.getCurrentTabName().equals("Jimple")){
-				listViewControl.addAndReload(mainTab, index);
-				break;
-			}
 			listViewControl.addAndReload(agendaTab,index);
 			break;
 		case Constants.TYPE_TODO:

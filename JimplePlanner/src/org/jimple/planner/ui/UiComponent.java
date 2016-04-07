@@ -33,7 +33,7 @@ public class UiComponent extends Application {
 	                primaryStage.setY(event.getScreenY() + yOffset);
 	            }
 	        });
-			Scene scene = new Scene(root,800,600);
+			Scene scene = new Scene(root,1200,800);
 			scene.setFill(Color.TRANSPARENT);
 			scene.getStylesheets().add("application.css");
 			primaryStage.getIcons().add(new Image("Jimple-Icon.png"));
