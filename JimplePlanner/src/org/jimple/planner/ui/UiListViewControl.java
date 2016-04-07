@@ -3,6 +3,7 @@ package org.jimple.planner.ui;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.jimple.planner.constants.Constants;
 import org.jimple.planner.task.Task;
 
 import javafx.scene.control.ListView;
@@ -18,10 +19,20 @@ public class UiListViewControl extends UiController{
 	
 	protected void selectTaskAtIndex(int index){
 		for(int i=0; i<getActiveListView().getItems().size(); i++)
-			if(getActiveListView().getItems().get(i).getTaskId() == index)
+			if(getActiveListView().getItems().get(i).getTaskId() == index){
 				selectIndex(i);
+				return;
+			}
 	}
-
+	public void selectFirstIncompleteTask(){
+		for(Task task : getActiveListView().getItems()){
+			if(!task.getIsOverDue() && !task.getType().equals(Constants.TYPE_STATIC)){
+				getActiveListView().getSelectionModel().select(task);
+				getActiveListView().scrollTo(getActiveListView().getSelectionModel().getSelectedIndex());
+				return;
+			}
+		}
+	}
 	public String getCurrentTabName() {
 		return controller.tabPanes.getSelectionModel().getSelectedItem().getText();
 	}
