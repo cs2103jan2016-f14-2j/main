@@ -95,7 +95,14 @@ public final class Constants {
 	public static final String STRING_BLUE = "blue";
 	public static final String STRING_PURPLE = "purple";
 	
-	// Stores the index for the user input after the main command.
+	/* Stores the index for the user input directly after the main command.
+	 *  - "ADD": Index of the task name.
+	 *  - "EDIT": Index of the task ID.
+	 *  - "DELETE": Index of the task ID.
+	 *  - "SEARCH": Index of the query string.
+	 *  - "CHANGEDIR": Index of the directory path.
+	 *  - "EDITLABEL": Index of the label name.
+	 */
 	public static final int INDEX_BASE = 0;
 	
 	// Stores the indexes for task fields. Used by "ADD" and "EDIT".
@@ -108,6 +115,11 @@ public final class Constants {
 	// Stores the indexes for task fields. Used by "EDITLABEL".
 	public static final int INDEX_EDITLABEL_NAME = 1;
 	public static final int INDEX_EDITLABEL_COLOUR = 2;
+
+	// Stores the task type strings for "ADD".
+	public static final String TASK_TYPE_TODO = "todo";
+	public static final String TASK_TYPE_DEADLINE = "deadline";
+	public static final String TASK_TYPE_EVENT = "event";
 	
 	/**
 	 * Logic component
