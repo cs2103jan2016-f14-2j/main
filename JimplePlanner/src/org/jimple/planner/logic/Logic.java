@@ -106,7 +106,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
 				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
-						undoTasks, idHash);
+						archivedTasks, undoTasks, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
@@ -131,8 +131,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
-				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, tempHistory,
-						taskLabels);
+				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, archivedTasks,
+						tempHistory, taskLabels, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:
@@ -154,14 +154,14 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DONE:
-				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, todo, deadlines,
+				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo, deadlines,
 						events, archivedTasks, taskLabels);
-				feedback[1] = "";
+				feedback[1] = getTaskID() + Constants.TYPE_ARCHIVE;
 				break;
 			case Constants.STRING_RETURN:
-				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, todo,
+				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo,
 						deadlines, events, archivedTasks, taskLabels);
-				feedback[1] = "";
+				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_CHECKCONFLICT:
 				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
@@ -267,12 +267,20 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		}
 	}
 	
-	private void initializeIDMap()	{
-		for (int i=0;i<Constants.MAX_ID;i++)	{
-			idHash.put(i+1, false);
+	private String getTaskID() {
+		if (!tempHistory.isEmpty()) {
+			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId());
+		} else {
+			return "";
 		}
 	}
-	
+
+	private void initializeIDMap() {
+		for (int i = 0; i < Constants.MAX_ID; i++) {
+			idHash.put(i + 1, false);
+		}
+	}
+
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
@@ -299,7 +307,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 	}
-	
+
 	/**
 	 * gets a list of help commands for user to refer to
 	 *
@@ -350,9 +358,5 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		return listOfCommands;
 	}
 
-	/**
-	 * 
-	 * unimplemented methods. may be used in the future
-	 */
 
 }

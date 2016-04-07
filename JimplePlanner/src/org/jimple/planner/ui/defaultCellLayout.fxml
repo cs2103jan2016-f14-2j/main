@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="224.0" prefWidth="246.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane fx:id="anchorpane" prefWidth="148.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="hBox" alignment="CENTER_LEFT" prefWidth="148.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <CheckBox fx:id="checkbox" disable="true" focusTraversable="false" mnemonicParsing="false">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                     </padding>
+                  </CheckBox>
+                  <VBox fx:id="date" alignment="CENTER_LEFT">
+                     <children>
+                        <Label fx:id="fromdate" graphicTextGap="0.0" minWidth="-Infinity" text="10AM" />
+                        <Label fx:id="todate" graphicTextGap="0.0" minWidth="-Infinity" text="11AM" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vBox" alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="title" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" text="buy groceries" wrapText="true" />
+                        <Label fx:id="desc" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" text="a very long description geos ehrpajsdoasd asjdoa" wrapText="true" />
+                        <Label fx:id="label" minWidth="-Infinity" style="-fx-background-radius: 30; -fx-border-width: 1; -fx-border-radius: 30;" text="Label">
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <ImageView fx:id="icon" fitHeight="25.0" fitWidth="25.0" opacity="0.5" pickOnBounds="true" preserveRatio="true" />
+                  <VBox fx:id="idcolor" alignment="CENTER" minWidth="45.0" style="-fx-background-radius: 0 11 11 0; -fx-border-color: transparent;">
+                     <children>
+                        <Label fx:id="id" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="10">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

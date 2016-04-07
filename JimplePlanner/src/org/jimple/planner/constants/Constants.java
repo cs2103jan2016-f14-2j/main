@@ -189,7 +189,6 @@ public final class Constants {
 	
 	public static final String UNDO_FEEDBACK = " undone";
 	public static final String UNDO_FEEDBACK_ERROR = "no task to undo";
-	public static final int DELETE_CACHE_LIMIT = 20;
 	
 	public static final String EDITED_FEEDBACK = " edited in planner";
 	public static final String ERROR_EDIT_FEEDBACK = " could not be edited";
@@ -215,6 +214,7 @@ public final class Constants {
 	public static final String ERROR_NO_CONFLICT_FOUND = "no conflicts found";
 
 	public static final int MAX_ID = 10000;
+	public static final int DELETE_CACHE_LIMIT = 20;
 	
 	public static String WINDOW_CLOSED_FEEDBACK = "search window closed";
 	

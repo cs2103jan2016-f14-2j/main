@@ -85,11 +85,11 @@ public class LogicTest {
 	public void ShouldReturnUnArchivedTasks() throws IOException	{
 		initializeThreeArrays();
 		String[] parsedInput = {"1"};
-		testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels);
-		assertEquals("task 1 has returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels);
+		assertEquals("task 1 has returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 		assertEquals("a test only one", floating.get(0).getTitle());
 		parsedInput[0] = "5";
-		assertEquals("task 5 could not be returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("task 5 could not be returned to your list", testArchiver.markTaskAsUndone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 	}
 	
 	/**
@@ -101,11 +101,11 @@ public class LogicTest {
 	public void ShouldReturnArchivedTasks() throws IOException	{
 		initializeThreeArrays();
 		String[] parsedInput = {"1"};
-		assertEquals("task 1 is now archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("task 1 is now archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 		assertTrue(floating.isEmpty());
 		assertEquals("a test only one", archivedTasks.get(0).getTitle());
 		parsedInput[0] = "5";
-		assertEquals("task 5 does not exist and could not be archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, floating, deadlines, events, archivedTasks, taskLabels));
+		assertEquals("task 5 does not exist and could not be archived", testArchiver.markTaskAsDone(testStore, parsedInput, undoTasks, tempHistory, floating, deadlines, events, archivedTasks, taskLabels));
 	}
 	
 	/**
@@ -173,20 +173,20 @@ public class LogicTest {
 
 		// test for empty
 		assertEquals(Constants.UNDO_FEEDBACK_ERROR,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 		initializeThreeArrays();
 
-		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, undoTasks, idHash);
+		testDeleter.deleteTask(testStore, variableArray1, floating, deadlines, events, archivedTasks, undoTasks, idHash);
 		assertEquals("task \"" + "a test only one" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 		// test for add
 		testAdder.addToTaskList(testStore, variableArray2, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("task \"" + "task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 		// test for edit
 		testEditer.editTask(testStore, variableArray3, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 		assertEquals("task \"" + "edit task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 
 		// test for overshot
 		for (int i = 0; i < 22; i++) {
@@ -194,7 +194,7 @@ public class LogicTest {
 			undoTasks.add(testTask);
 		}
 		assertEquals("task \"" + "21" + "\"" + Constants.UNDO_FEEDBACK,
-				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, tempHistory, taskLabels));
+				testUndoer.undoPreviousChange(testStore, undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 	}
 
 	/*

@@ -55,7 +55,7 @@ public class UiListCellUpcoming extends ListCell<Task> {
 	private void setDeadlineColors(Task item) {
 		// more than a day away
 		if (UiFormatter.timeDifference(item.getFromTime()) >= 1440)
-			this.setId("green");
+			this.setId("");
 		// less than a day
 		else if (UiFormatter.timeDifference(item.getFromTime()) >= 180)
 			this.setId("yellow");

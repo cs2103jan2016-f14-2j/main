@@ -15,7 +15,7 @@
          <children>
             <HBox fx:id="hBox" alignment="CENTER_LEFT" prefWidth="148.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <CheckBox fx:id="checkbox" focusTraversable="false" mnemonicParsing="false">
+                  <CheckBox fx:id="checkbox" alignment="CENTER" disable="true" focusTraversable="false" mnemonicParsing="false">
                      <padding>
                         <Insets bottom="10.0" left="10.0" top="10.0" />
                      </padding>

@@ -17,10 +17,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 //@@author A0122498
-public class UiListCellAgenda extends ListCell<Task> {
+public class UiListCellDefault extends ListCell<Task> {
 	
 	@FXML
-	Label title, fromdate, todate, id, label, desc, conflict;
+	Label title, fromdate, todate, id, label, desc;
 	@FXML
 	CheckBox checkbox;
 	@FXML
@@ -56,12 +56,11 @@ public class UiListCellAgenda extends ListCell<Task> {
 			//DEADLINE
 			case Constants.TYPE_DEADLINE:
 				this.setId(Constants.TYPE_DEADLINE);
-				loadFXMLLayout("agendaCellLayout.fxml");
+				loadFXMLLayout("defaultCellLayout.fxml");
 				
 				setLabel(item);
 				setDesc(item);
 				setStyles();
-				setConflict(item);
 				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
@@ -78,12 +77,11 @@ public class UiListCellAgenda extends ListCell<Task> {
 			//EVENT
 			case Constants.TYPE_EVENT:
 				this.setId(Constants.TYPE_EVENT);
-				loadFXMLLayout("agendaCellLayout.fxml");
+				loadFXMLLayout("defaultCellLayout.fxml");
 				
 				setLabel(item);
 				setDesc(item);
 				setStyles();
-				setConflict(item);
 				
 				if(item.getIsOverDue()){
 					this.setId("overdue");
@@ -98,14 +96,14 @@ public class UiListCellAgenda extends ListCell<Task> {
 				icon.setImage(new Image("eventIconGrey.png"));
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
-				fromdate.setText(item.getPrettyFromTime());
-				todate.setText(item.getPrettyToTime());
+				fromdate.setText(item.getPrettyFromDate() + " " + item.getPrettyFromTime());
+				todate.setText(item.getPrettyToDate() + " " + item.getPrettyToTime());
 				break;
 			
 			//TO-DO
 			case Constants.TYPE_TODO:
 				this.setId(Constants.TYPE_TODO);
-				loadFXMLLayout("agendaCellLayout.fxml");
+				loadFXMLLayout("defaultCellLayout.fxml");
 				
 				setLabel(item);
 				setDesc(item);
@@ -113,8 +111,6 @@ public class UiListCellAgenda extends ListCell<Task> {
 				
 				if(hBox.getChildren().contains(date))
 					hBox.getChildren().remove(date);
-				if(hBox.getChildren().contains(conflict))
-					hBox.getChildren().remove(conflict);
 
 				icon.setImage(new Image("todoIconGrey.png"));
 				title.setText(item.getTitle());
@@ -146,14 +142,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 		else
 			this.setId("overdue");
 	}
-
-	private void setConflict(Task item){
-		conflict.setId("conflict");
-		if(item.getConflictedTasks().isEmpty())
-			conflict.setVisible(false);
-		else
-			conflict.setVisible(true);
-	}
+	
 	private void loadFXMLLayout(String file) {
 		fxmlLoader = new FXMLLoader(getClass().getResource(file));
 		fxmlLoader.setController(this);

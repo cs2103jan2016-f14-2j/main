@@ -14,11 +14,12 @@ import java.util.LinkedList;
 public class LogicDelete implements LogicTaskModification, LogicMasterListModification {
 
 	protected String deleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
+			ArrayList<Task> events, ArrayList<Task> archivedTasks, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException {
 		boolean isFloatDeleted = false;
 		boolean isDeadlineDeleted = false;
 		boolean isEventsDeleted = false;
+		boolean isArchivedDeleted = false;
 
 		isFloatDeleted = findTaskToDelete(variableArray, todo, undoTasks, idHash);
 		if (!isFloatDeleted) {
@@ -27,7 +28,10 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 		if (!isFloatDeleted && !isDeadlineDeleted) {
 			isEventsDeleted = findTaskToDelete(variableArray, events, undoTasks, idHash);
 		}
-		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted) {
+		if (!isFloatDeleted && !isDeadlineDeleted && !isEventsDeleted)	{
+			isArchivedDeleted = findTaskToDelete(variableArray, archivedTasks, undoTasks, idHash);
+		}
+		if (isFloatDeleted || isDeadlineDeleted || isEventsDeleted || isArchivedDeleted) {
 			return "task " + variableArray[0] + Constants.DELETED_FEEDBACK;
 		}
 		return "task " + variableArray[0] + Constants.ERROR_DELETED_FEEDBACK;
@@ -49,8 +53,8 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 	}
 
 	public String testDeleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
-		return deleteTask(store, variableArray, todo, deadlines, events, undoTasks, idHash);
+			ArrayList<Task> events, ArrayList<Task> archivedTasks, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
+		return deleteTask(store, variableArray, todo, deadlines, events, archivedTasks, undoTasks, idHash);
 	}
 
 	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list,
