@@ -1,8 +1,4 @@
-/* --------------------|
- * @@Author: A0135775W |
- * Name: Lee Lu Ke     |
- * --------------------|
- */
+//@@author A0135775W
 
 package org.jimple.planner.parser;
 

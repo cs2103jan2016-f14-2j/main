@@ -72,10 +72,11 @@ public final class Constants {
 	public static final String TAGS_LINE_FIELD_SEPARATOR = "/s/";
 	public static final String TAGS_LABEL_FIELD_SEPARATOR = "/tl/";
 	
-	/**
-	 * Parser Component
-	 */
 	//@@author A0135775W
+	/* -----------------|
+	 * Parser Component |
+	 * -----------------|
+	 */
 	// Extended commands for all the main commands.
 	public static final String STRING_NAME = "NAME";
 	public static final String STRING_DESC = "DESC";
