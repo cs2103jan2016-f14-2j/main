@@ -1,4 +1,4 @@
-package org.jimple.planner.storage;
+package org.jimple.planner.test.storage;
 
 import java.util.ArrayList;
 
