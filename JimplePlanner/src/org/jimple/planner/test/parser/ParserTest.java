@@ -1,11 +1,13 @@
 //@@author A0135775W
 
-package org.jimple.planner.parser;
+package org.jimple.planner.test.parser;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.Date;
 
+import org.jimple.planner.parser.InputStruct;
+import org.jimple.planner.parser.Parser;
 import org.junit.Test;
 
 public class ParserTest {
