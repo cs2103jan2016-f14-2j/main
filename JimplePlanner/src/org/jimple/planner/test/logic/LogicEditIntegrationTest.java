@@ -1,10 +1,11 @@
-package org.jimple.planner.logic;
+package org.jimple.planner.test.logic;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
 import org.jimple.planner.constants.Constants;
+import org.jimple.planner.logic.Logic;
 import org.junit.Test;
 
 //@@author A0124952E

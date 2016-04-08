@@ -1,4 +1,4 @@
-package org.jimple.planner.logic;
+package org.jimple.planner.test.logic;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,17 @@ import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
 import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
+import org.jimple.planner.logic.Logic;
+import org.jimple.planner.logic.LogicAdd;
+import org.jimple.planner.logic.LogicArchive;
+import org.jimple.planner.logic.LogicDelete;
+import org.jimple.planner.logic.LogicDirectory;
+import org.jimple.planner.logic.LogicEdit;
+import org.jimple.planner.logic.LogicLabel;
+import org.jimple.planner.logic.LogicPreviousTask;
+import org.jimple.planner.logic.LogicSearch;
+import org.jimple.planner.logic.LogicTaskModification;
+import org.jimple.planner.logic.LogicUndo;
 import org.junit.Test;
 import org.jimple.planner.storage.*;
 import org.jimple.planner.task.Formatter;
