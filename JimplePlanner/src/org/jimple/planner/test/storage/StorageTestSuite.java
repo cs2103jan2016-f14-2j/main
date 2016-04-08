@@ -1,4 +1,4 @@
-package org.jimple.planner.storage;
+package org.jimple.planner.test.storage;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
