@@ -166,7 +166,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			case Constants.STRING_CHECKCONFLICT:
 				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
 				feedback[0] = "";
-				feedback[1] = Constants.STRING_CHECKCONFLICT;
+				feedback[1] = Constants.TYPE_CONFLICTED;
 				break;
 			default:
 				feedback[0] = Constants.ERROR_WRONG_COMMAND_FEEDBACK;
@@ -314,6 +314,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	 */
 	private String helpCommand() {
 		String listOfCommands = new String();
+		listOfCommands += Constants.NEWLINE;
 		listOfCommands += Constants.TIME_FORMAT_HELP_HEADER;
 		listOfCommands += Constants.TIME_FORMAT;
 

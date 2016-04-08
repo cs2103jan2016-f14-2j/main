@@ -50,6 +50,7 @@ public class UiController extends myObserver implements Initializable {
 	private LinkedList<String> cmdHistory;
 	private int cmdHistoryPointer;	
 	public static boolean isSearch = false;
+	public static boolean isConflictedShown = false;
 	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
 	Logic logic;
 	UiFormatter listFormatter = new UiFormatter();
@@ -67,7 +68,7 @@ public class UiController extends myObserver implements Initializable {
 	
 	@FXML
 	VBox todayEmpty, ongoingEmpty, upcomingEmpty,
-	agendaEmpty, todoEmpty, archiveEmpty;
+	agendaEmpty, todoEmpty, archiveEmpty, searchEmpty, conflictedEmpty;
 
 	@FXML
 	Tab mainTab, agendaTab, todoTab, archiveTab;
@@ -79,16 +80,13 @@ public class UiController extends myObserver implements Initializable {
 	AnchorPane mainController, mainContainer,
 	todayPane, nowPane, upcomingPane,
 	mainContent, agendaContent, todoContent, archiveContent,
-	popupLayer, searchBox, searchContent, helpBox;
+	popupLayer, searchBox, searchContent, helpBox, conflictedBox, searchList, conflictedList;
 
 	@FXML
 	StackPane stackPane;
 
 	@FXML
 	ListView<String> list;
-	
-	@FXML
-	ListView<Task> searchList;
 
 	@FXML
 	VBox overlay;
@@ -160,12 +158,12 @@ public class UiController extends myObserver implements Initializable {
 
 	private String getCurrentTime(){
 		String currentTime = "";
-		currentTime += LocalDateTime.now().getDayOfWeek() + ", " +
+		currentTime +=  LocalDateTime.now().getHour() + ":" +
+		String.format("%02d", LocalDateTime.now().getMinute())  + " " + 
+		LocalDateTime.now().getDayOfWeek() + ", " +
 		LocalDateTime.now().getDayOfMonth() + " " +
 		LocalDateTime.now().getMonth() + " " +
-		LocalDateTime.now().getYear() + " " +
-		LocalDateTime.now().getHour() + ":" +
-		String.format("%02d", LocalDateTime.now().getMinute());
+		LocalDateTime.now().getYear();
 		return currentTime;
 	}
 	private void loadClock() {
@@ -212,9 +210,15 @@ public class UiController extends myObserver implements Initializable {
 		loadTodoList();
 		loadArchiveList();
 		prompt = new UiPrompt(this);
+		
 		if(isSearch){
 			prompt.searchPrompt();
 		}
+		
+		if(isConflictedShown){
+			prompt.conflictedPrompt();
+		}
+		
 		listViewControl.selectIndex(i);
 		listViewControl.getActiveListView().scrollTo(i);
 		taskSelectionListener();
@@ -344,6 +348,7 @@ public class UiController extends myObserver implements Initializable {
 					if(overlay.isVisible()){
 						overlay.setVisible(false);
 						isSearch = false;
+						isConflictedShown = false;
 						commandBox.requestFocus();
 						commandBox.positionCaret(commandBox.getLength());
 					}
@@ -476,6 +481,7 @@ public class UiController extends myObserver implements Initializable {
 	private void searchCloseButtonAction(){
 		popupLayer.getChildren().clear();
 		isSearch = false;
+		isConflictedShown = false;
 		overlay.setVisible(false);
 	}
 
@@ -545,16 +551,20 @@ public class UiController extends myObserver implements Initializable {
 		switch (tab) {
 		case Constants.TYPE_EVENT:
 		case Constants.TYPE_DEADLINE:
-			listViewControl.addAndReload(agendaTab,index);
+			listViewControl.updateAndReload(agendaTab,index);
 			break;
 		case Constants.TYPE_TODO:
-			listViewControl.addAndReload(todoTab,index);
+			listViewControl.updateAndReload(todoTab,index);
 			break;
 		case Constants.TYPE_ARCHIVE:
-			listViewControl.addAndReload(archiveTab,index);
+//			listViewControl.updateAndReload(archiveTab,index);
+			loadDisplay();
 			break;
 		case Constants.TYPE_SEARCH:
 			prompt.searchPrompt();
+			break;
+		case Constants.TYPE_CONFLICTED:
+			prompt.conflictedPrompt();
 			break;
 		case Constants.TYPE_HELP:
 			prompt.helpPrompt(feedback[0]);
