@@ -44,13 +44,27 @@ public class Parser {
 	private final int OFFSET_CALENDAR_MONTH = 1;
 	private final int OFFSET_CALENDAR_YEAR = 1900;
 	private final String EMPTY_STRING = "";
+	
+	private final int INCREMENT_BY_1 = 1;
+	
 	private final String DATE_TIME_STRING_FORMAT = "%02d-%02d-%02dT%02d:%02d";
+	
+	private final int HOUR_MAX = 23;
+	private final int MINUTE_MAX = 59;
 	
 	/* -------------------|
 	 * EXCEPTION MESSAGES |
 	 * -------------------|
 	 * Messages which are feedbacked to the user when exceptions are thrown, personalized to the exception it is referencing.
 	 */
+	private final String ERROR_MESSAGE_NO_TASK_NAME = "Command: \"%s\" requires a Task Name.";
+	private final String ERROR_MESSAGE_NO_TASK_ID = "Command: \"%s\" requires a TaskID number.";
+	private final String ERROR_MESSAGE_NO_SEARCH_STRING = "Command: \"%s\" requires a search string.";
+	private final String ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR = "Command: \"%s\" requires a label name or colour.";
+	private final String ERROR_MESSAGE_NO_DIRECTORY_PATH = "Command: \"%s\" requires a directory path.";
+	private final String ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND = "Command: \"%s\" should not be followed by any parameters.";
+	private final String ERROR_MESSAGE_COMMAND_NOT_RECOGNISED = "Command: \"%s\" not recognised.";
+	private final String ERROR_MESSAGE_DATE_TIME_NOT_RECOGNISED = "Date/Time input: \"%s\" not recognised.";
 	
 	/*
 	 * -----------------|
@@ -86,69 +100,69 @@ public class Parser {
 						addStruct.checkAndSetTaskType();
 						return addStruct;
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a Task Name. \"");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_NAME, mainCommand));
 				case Constants.STRING_EDIT :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
 				case Constants.STRING_DELETE :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID number. \"");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
 				case Constants.STRING_SEARCH :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a search string.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_SEARCH_STRING, mainCommand));
 				case Constants.STRING_DONE :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
 				case Constants.STRING_RETURN :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
 				case Constants.STRING_EDITLABEL :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR, mainCommand));
 				case Constants.STRING_DELETELABEL :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a label name or colour.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR, mainCommand));
 				case Constants.STRING_CHECKCONFLICT :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a TaskID.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
 				case Constants.STRING_CHANGEDIR :
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" requires a directory path.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_DIRECTORY_PATH, mainCommand));
 				case Constants.STRING_CHECKDIR :
 					if (isCommandOnly(splitUserInput)) {
 						return new InputStruct(Constants.STRING_CHECKDIR);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand));
 				case Constants.STRING_UNDOTASK :
 					if (isCommandOnly(splitUserInput)) {
 						return new InputStruct(Constants.STRING_UNDOTASK);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand));
 				case Constants.STRING_HELP :
 					if (isCommandOnly(splitUserInput)) {
 						return new InputStruct(Constants.STRING_HELP);
 					}
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" should not be followed by any parameters.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand));
 				default :
-					throw new InvalidCommandException("Command: \"" + mainCommand + "\" not recognised.");
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_COMMAND_NOT_RECOGNISED, mainCommand));
 			}
 		} catch (InvalidCommandException ice) {
 			throw ice;
@@ -338,7 +352,7 @@ public class Parser {
 				parseBy(userInput, inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException("Date/Time input: \"" + extendedCommand + "\" not recognised.");
+				throw new InvalidCommandException(String.format(ERROR_MESSAGE_DATE_TIME_NOT_RECOGNISED, extendedCommand));
 		}
 	}
 	
@@ -362,8 +376,8 @@ public class Parser {
 	void parseOn(String userInput, InputStruct inputStruct) throws Exception {
 		Calendar parsedCalendar = timeParser.parseTime(Constants.STRING_ON, userInput);
 		inputStruct.setAtIndex(Constants.INDEX_FROM, calendarToStringFormat(parsedCalendar));
-		parsedCalendar.set(Calendar.HOUR_OF_DAY, 23);
-		parsedCalendar.set(Calendar.MINUTE, 59);
+		parsedCalendar.set(Calendar.HOUR_OF_DAY, HOUR_MAX);
+		parsedCalendar.set(Calendar.MINUTE, MINUTE_MAX);
 		inputStruct.setAtIndex(Constants.INDEX_TO, calendarToStringFormat(parsedCalendar));
 	}
 	
@@ -381,7 +395,7 @@ public class Parser {
 			inputStruct.setAtIndex(Constants.INDEX_FROM, calendarToStringFormat(timeParser.parseTime(Constants.STRING_FROM, splitFromTo[0])));
 			Calendar to = timeParser.parseTime(Constants.STRING_TO, splitFromTo[1]);
 			while (!isAfterFromDate(from, to)) {
-				to.add(Calendar.DATE, 1);
+				to.add(Calendar.DATE, INCREMENT_BY_1);
 			}
 			inputStruct.setAtIndex(Constants.INDEX_TO, calendarToStringFormat(to));
 		}
