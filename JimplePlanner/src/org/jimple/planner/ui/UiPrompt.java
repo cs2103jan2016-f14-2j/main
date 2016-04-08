@@ -82,19 +82,10 @@ public class UiPrompt extends UiController{
 		UiController.isSearch = true;
 		controller.listFormatter.formatList(controller.logic.getSearchList(),Constants.TYPE_SEARCH);
 		ListView<Task> listView = controller.listFormatter.getFormattedList();
-//		listView.setPrefSize(controller.stackPane.getWidth()/2, controller.stackPane.getHeight()/2);
-
-//		controller.searchContent.getChildren().clear();
-//		controller.searchContent.getChildren().add(listView);
-		controller.searchList.getItems().clear();
-		if(listView != null){
-			controller.searchList.getItems().addAll(listView.getItems());
-		}
-		else {
-//			controller.searchList.getItems().addAll(listView.getItems());
-		}
-		if (controller.searchList != null) {
-			controller.searchList.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+		
+		controller.searchList.getChildren().clear();
+		if (listView != null) {
+			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 				@Override
 				public ListCell<Task> call(ListView<Task> arg0) {
 					return new UiListCellDefault();
@@ -102,9 +93,42 @@ public class UiPrompt extends UiController{
 
 			});
 		}
+
+		if(listView != null){
+			controller.searchList.getChildren().add(listView);
+		}
+		else {
+			controller.searchList.getChildren().add(controller.searchEmpty);
+		}
 		controller.popupLayer.getChildren().clear();
-//		controller.popupLayer.getChildren().add(makeDraggable(controller.searchBox));
 		controller.popupLayer.getChildren().add(controller.searchBox);
+		controller.overlay.setVisible(true);
+	}
+	
+	protected void conflictedPrompt() {
+		UiController.isConflictedShown = true;
+		controller.listFormatter.formatList(controller.logic.getConflictedTasks(),Constants.TYPE_SEARCH);
+		ListView<Task> listView = controller.listFormatter.getFormattedList();
+		
+		controller.conflictedList.getChildren().clear();
+		if (listView != null) {
+			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+				@Override
+				public ListCell<Task> call(ListView<Task> arg0) {
+					return new UiListCellDefault();
+				}
+
+			});
+		}
+
+		if(listView != null){
+			controller.conflictedList.getChildren().add(listView);
+		}
+		else {
+			controller.conflictedList.getChildren().add(controller.conflictedList);
+		}
+		controller.popupLayer.getChildren().clear();
+		controller.popupLayer.getChildren().add(controller.conflictedBox);
 		controller.overlay.setVisible(true);
 	}	
 }

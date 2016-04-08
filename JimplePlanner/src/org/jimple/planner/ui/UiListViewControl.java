@@ -85,7 +85,7 @@ public class UiListViewControl extends UiController{
 		return getActiveListView().getSelectionModel().getSelectedItem();
 	}
 	
-	protected void addAndReload(Tab tab, int index) {
+	protected void updateAndReload(Tab tab, int index) {
 		if(controller.overlay.isVisible()){
 			controller.overlay.setVisible(false);
 		}
