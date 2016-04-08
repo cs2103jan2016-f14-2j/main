@@ -87,12 +87,17 @@ public class UiPrompt extends UiController{
 //		controller.searchContent.getChildren().clear();
 //		controller.searchContent.getChildren().add(listView);
 		controller.searchList.getItems().clear();
-		controller.searchList.getItems().addAll(listView.getItems());
+		if(listView != null){
+			controller.searchList.getItems().addAll(listView.getItems());
+		}
+		else {
+//			controller.searchList.getItems().addAll(listView.getItems());
+		}
 		if (controller.searchList != null) {
 			controller.searchList.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 				@Override
 				public ListCell<Task> call(ListView<Task> arg0) {
-					return new UiListCellAgenda();
+					return new UiListCellDefault();
 				}
 
 			});
