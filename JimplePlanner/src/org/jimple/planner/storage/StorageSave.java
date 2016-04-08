@@ -22,12 +22,18 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.jimple.planner.exceptions.InvalidTaskException;
+import org.jimple.planner.logfilehandler.LogFileHandler;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
 public class StorageSave implements StorageSaveInterface{
+	private final static Logger LOGGER = Logger.getLogger(StorageSave.class.getName());
 	//@@author A0135808B
 	private BufferedWriter createFileWriter(String fileName){
 		BufferedWriter writer = null;
@@ -37,6 +43,7 @@ public class StorageSave implements StorageSaveInterface{
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
 			writer = new BufferedWriter(outputStreamWriter);
 		} catch (FileNotFoundException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 		return writer;
@@ -62,22 +69,34 @@ public class StorageSave implements StorageSaveInterface{
 			}
 			tempWriter.close();
 		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		} catch (NullPointerException e){
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 	}
 	//@@author A0135808B
 	private void writeArrayOfTasksUsingWriters(ArrayList<Task> taskList, BufferedWriter tempWriter){
-		try {
 			for(Task task: taskList){
-				checkTaskValidity(task);
+				try {
+					checkTaskValidity(task);
+				} catch (InvalidTaskException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					LOGGER.severe(e.getMessage());
+					LOGGER.severe("task title:" + task.getTitle());
+					LOGGER.severe("task's fromTime is: "+task.getFromTime());
+					LOGGER.severe("task's toTime is: "+task.getToTime());
+					e.printStackTrace();
+				}
 				String lineString = extractTaskToString(task);
-				tempWriter.write(lineString);
-				tempWriter.newLine();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+				try {
+					tempWriter.write(lineString);
+					tempWriter.newLine();
+				} catch (IOException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					e.printStackTrace();
+				}
 		}
 	}
 	//@@author A0135808B
@@ -151,6 +170,7 @@ public class StorageSave implements StorageSaveInterface{
 			property.store(configFileWriter, PROPERTIES_COMMENT_HEADER);
 			configFileWriter.close();
 		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 	}

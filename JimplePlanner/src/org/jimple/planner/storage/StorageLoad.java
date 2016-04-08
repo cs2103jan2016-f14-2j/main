@@ -28,13 +28,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.jimple.planner.exceptions.InvalidTaskException;
+import org.jimple.planner.logfilehandler.LogFileHandler;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
 public class StorageLoad implements StorageLoadInterface{
+	private final static Logger LOGGER = Logger.getLogger(StorageLoad.class.getName());
+	
 	//@@author A0135808B
 	private BufferedReader createFileReader(String fileName){
 		BufferedReader reader = null;
@@ -44,6 +51,7 @@ public class StorageLoad implements StorageLoadInterface{
 			InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
 			reader = new BufferedReader(inputStreamReader);
 		} catch (FileNotFoundException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 		return reader;
@@ -61,7 +69,16 @@ public class StorageLoad implements StorageLoadInterface{
 			while ((fileLineContent = defaultFileReader.readLine()) != null) {
 				if(!fileLineContent.equals(EMPTY_STRING)){
 					Task task = getTaskFromLine(fileLineContent);
-					checkTaskValidity(task);
+					try {
+						checkTaskValidity(task);
+					} catch (InvalidTaskException e) {
+						LOGGER.log(Level.SEVERE, e.toString(), e);
+						LOGGER.severe(e.getMessage());
+						LOGGER.severe("task title:" + task.getTitle());
+						LOGGER.severe("task's fromTime is: "+task.getFromTime());
+						LOGGER.severe("task's toTime is: "+task.getToTime());
+						e.printStackTrace();
+					}
 					allocateTaskToArrayList(task, allTasksLists);
 				}
 			}
@@ -216,6 +233,7 @@ public class StorageLoad implements StorageLoadInterface{
 				}
 				configFileReader.close();
 		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 		return property;

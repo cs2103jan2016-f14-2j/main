@@ -28,7 +28,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.jimple.planner.logfilehandler.LogFileHandler;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
@@ -36,6 +40,7 @@ import org.jimple.planner.task.TaskLabel;
 public class StorageProperties implements StorageTools{
 	private StorageSave storageSave;
 	private StorageLoad storageLoad;
+	private final static Logger LOGGER = Logger.getLogger(StorageProperties.class.getName());
 	private static HashMap<String, Integer> colourToId = new HashMap<String, Integer>();
 	//@@author A0135808B
 	public StorageProperties(){
@@ -261,7 +266,9 @@ public class StorageProperties implements StorageTools{
 				labelColourString = PROPERTIES_VALUE_COLOUR_PURPLE_6;
 				break;
 			default:
-				System.out.println("Error, no label should be null here");
+				LOGGER.warning("Error, no label should have its colour id be invalid");
+				LOGGER.warning("label name: "+taskLabel.getLabelName());
+				LOGGER.warning("label colourId: "+taskLabel.getColourId());
 				return false;
 			}
 			newStorageProperties.setProperty(labelName, labelColourString);
