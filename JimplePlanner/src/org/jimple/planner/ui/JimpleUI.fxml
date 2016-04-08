@@ -85,7 +85,7 @@
                                                             <HBox>
                                                                <children>
                                                                   <Region HBox.hgrow="ALWAYS" />
-                                                                  <Label alignment="CENTER" text="you have no events today!" textFill="#b9a1a1" />
+                                                                  <Label fx:id="todayLabel" alignment="CENTER" text="you have no events today!" textFill="#b9a1a1" />
                                                                   <Region HBox.hgrow="ALWAYS" />
                                                                </children>
                                                             </HBox>
@@ -114,7 +114,7 @@
                                                             <HBox>
                                                                <children>
                                                                   <Region HBox.hgrow="ALWAYS" />
-                                                                  <Label alignment="CENTER" text="nothing going on now!" textFill="#b9a1a1" />
+                                                                  <Label fx:id="ongoingLabel" alignment="CENTER" text="nothing going on now!" textFill="#b9a1a1" />
                                                                   <Region HBox.hgrow="ALWAYS" />
                                                                </children>
                                                             </HBox>
@@ -135,7 +135,7 @@
                                                             <HBox>
                                                                <children>
                                                                   <Region HBox.hgrow="ALWAYS" />
-                                                                  <Label alignment="CENTER" text="no more deadlines!" textFill="#b9a1a1" />
+                                                                  <Label fx:id="upcomingLabel" alignment="CENTER" text="no more deadlines!" textFill="#b9a1a1" />
                                                                   <Region HBox.hgrow="ALWAYS" />
                                                                </children>
                                                             </HBox>
@@ -167,7 +167,7 @@
                                           <HBox>
                                              <children>
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Label alignment="CENTER" text="no more events and deadlines! time to grab a pizza" textFill="#b9a1a1" />
+                                                <Label fx:id="agendaLabel" alignment="CENTER" text="no more events and deadlines! time to grab a pizza" textFill="#b9a1a1" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
@@ -191,7 +191,7 @@
                                           <HBox>
                                              <children>
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Label alignment="CENTER" text="you have nothing left on your todo list! time for a cup of coffee" textFill="#b9a1a1" />
+                                                <Label fx:id="todoLabel" alignment="CENTER" text="you have nothing left on your todo list! time for a cup of coffee" textFill="#b9a1a1" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
@@ -215,7 +215,7 @@
                                           <HBox>
                                              <children>
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Label alignment="CENTER" text="oh look a tumble weed! your archive is empty" textFill="#b9a1a1" />
+                                                <Label fx:id="archiveLabel" alignment="CENTER" text="oh look a tumble weed! your archive is empty" textFill="#b9a1a1" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
@@ -330,7 +330,7 @@
                                                 <HBox>
                                                    <children>
                                                       <Region HBox.hgrow="ALWAYS" />
-                                                      <Label alignment="CENTER" text="no results to show. do you want to try that again?" textFill="#b9a1a1" />
+                                                      <Label fx:id="searchLabel" alignment="CENTER" text="no results to show. do you want to try that again?" textFill="#b9a1a1" />
                                                       <Region HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
@@ -376,7 +376,7 @@
                                                 <HBox>
                                                    <children>
                                                       <Region HBox.hgrow="ALWAYS" />
-                                                      <Label alignment="CENTER" text="no results to show. do you want to try that again?" textFill="#b9a1a1" />
+                                                      <Label fx:id="conflictedLabel" alignment="CENTER" text="no results to show. do you want to try that again?" textFill="#b9a1a1" />
                                                       <Region HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
