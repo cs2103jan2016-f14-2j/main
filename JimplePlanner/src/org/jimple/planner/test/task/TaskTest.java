@@ -1,7 +1,8 @@
-package org.jimple.planner.task;
+package org.jimple.planner.test.task;
 
 import static org.junit.Assert.*;
 
+import org.jimple.planner.task.Task;
 import org.junit.Test;
 
 public class TaskTest {

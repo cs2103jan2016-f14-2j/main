@@ -1,4 +1,4 @@
-package org.jimple.planner.storage;
+package org.jimple.planner.test.storage;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.jimple.planner.storage.StorageLoad;
+import org.jimple.planner.storage.StorageSave;
 import org.jimple.planner.task.Task;
 import org.junit.After;
 import org.junit.Test;

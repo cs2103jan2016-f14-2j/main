@@ -16,7 +16,8 @@
 
 .tab-pane .tab-header-area .tab{
 	-fx-background-color: #F5F3F0;	
-	-fx-focus-color: none;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
 	-fx-padding: 5 20;	
 	-fx-background-radius: 20 20 0 0;	
 	-fx-border-radius: 20 20 0 0;

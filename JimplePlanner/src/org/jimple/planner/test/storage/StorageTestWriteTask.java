@@ -1,4 +1,4 @@
-package org.jimple.planner.storage;
+package org.jimple.planner.test.storage;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
+import org.jimple.planner.storage.StorageSave;
 import org.jimple.planner.task.Task;
 import org.junit.Test;
 //@@author A0135808B

@@ -64,7 +64,10 @@ public class UiController extends myObserver implements Initializable {
 	Text textArea, helpContent;
 
 	@FXML
-	Label messagePrompt, clock;
+	Label messagePrompt, clock,
+	todayLabel, ongoingLabel, upcomingLabel,
+	agendaLabel, todoLabel,
+	searchLabel, conflictedLabel;
 	
 	@FXML
 	VBox todayEmpty, ongoingEmpty, upcomingEmpty,
@@ -104,6 +107,8 @@ public class UiController extends myObserver implements Initializable {
 		loadClock();
 		cmdHistory = new LinkedList<String>();
 		cmdHistory.add("");
+		
+		setEmptyListStrings();
 		
 		ImageView icon;
 		int iconheight = 20;
@@ -155,6 +160,11 @@ public class UiController extends myObserver implements Initializable {
 		tabPanesListener();
 		update();
 	 }
+
+	private void setEmptyListStrings() {
+		searchLabel.setText("Um, we found nothing. Sorry.");
+//		searchLabel.setText("nothing here");
+	}
 
 	private String getCurrentTime(){
 		String currentTime = "";
