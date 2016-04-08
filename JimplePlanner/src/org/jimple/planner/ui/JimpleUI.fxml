@@ -22,11 +22,86 @@
 
 <StackPane fx:id="stackPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jimple.planner.ui.UiController">
    <children>
+      <VBox fx:id="overlay">
+         <children>
+            <Region VBox.vgrow="ALWAYS" />
+            <HBox>
+               <children>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <AnchorPane fx:id="popupLayer">
+                     <children>
+                        <AnchorPane fx:id="helpBox" layoutX="10.0" layoutY="10.0" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
+                           <children>
+                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <Label text="Help Sheet" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <ImageView id="closebtn" fx:id="helpCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../closeBtn.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                    <ScrollPane hbarPolicy="NEVER">
+                                       <content>
+                                          <AnchorPane prefHeight="310.0" prefWidth="584.0">
+                                             <children>
+                                                <Text fx:id="helpContent" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </AnchorPane>
+                        <AnchorPane fx:id="searchBox" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
+                           <children>
+                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <Label text="Search Results" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <ImageView id="closebtn" fx:id="searchCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../closeBtn.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                    <ListView fx:id="searchList" editable="true" prefHeight="400.0" prefWidth="600.0" style="-fx-background-radius: 10;" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </AnchorPane>
+                     </children></AnchorPane>
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Region VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
       <AnchorPane fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 15;">
          <children>
             <VBox prefHeight="600.0" prefWidth="800.0" style="-fx-background-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox style="-fx-background-radius: 10;">
+                  <HBox id="topBar">
                      <children>
                         <ImageView fitHeight="48.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -62,7 +137,7 @@
                   </HBox>
                   <TabPane fx:id="tabPanes" prefHeight="525.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                     <tabs>
-                        <Tab fx:id="mainTab" closable="false" text="Jimple">
+                        <Tab fx:id="mainTab" closable="false" text="Main">
                           <content>
                             <AnchorPane fx:id="mainContent" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <padding>
@@ -161,6 +236,21 @@
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
+                                 <children>
+                                    <VBox fx:id="agendaEmpty" prefHeight="450.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                          <HBox>
+                                             <children>
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label alignment="CENTER" text="no more events and deadlines! time to grab a pizza" textFill="#b9a1a1" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                       </children>
+                                    </VBox>
+                                 </children>
                               </AnchorPane>
                         </content>
                       </Tab>
@@ -170,6 +260,21 @@
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
+                                 <children>
+                                    <VBox fx:id="todoEmpty" prefHeight="450.0" prefWidth="800.0">
+                                       <children>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                          <HBox>
+                                             <children>
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label alignment="CENTER" text="you have nothing left on your todo list!! time for a cup of coffee" textFill="#b9a1a1" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                       </children>
+                                    </VBox>
+                                 </children>
                               </AnchorPane>
                            </content>
                         </Tab>
@@ -179,6 +284,21 @@
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
+                                 <children>
+                                    <VBox fx:id="archiveEmpty" prefHeight="450.0" prefWidth="800.0">
+                                       <children>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                          <HBox>
+                                             <children>
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label alignment="CENTER" text="oh look a tumble weed! your archive is empty" textFill="#b9a1a1" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                       </children>
+                                    </VBox>
+                                 </children>
                               </AnchorPane>
                            </content>
                         </Tab>
@@ -211,81 +331,6 @@
             <DropShadow blurType="GAUSSIAN" color="#00000080" height="50.0" radius="24.5" width="50.0" />
          </effect>
       </AnchorPane>
-      <VBox fx:id="overlay">
-         <children>
-            <Region VBox.vgrow="ALWAYS" />
-            <HBox>
-               <children>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <AnchorPane fx:id="popupLayer">
-                     <children>
-                        <AnchorPane fx:id="helpBox" layoutX="10.0" layoutY="10.0" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
-                           <children>
-                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
-                                 <children>
-                                    <HBox>
-                                       <children>
-                                          <Label text="Help Sheet" />
-                                          <Region HBox.hgrow="ALWAYS" />
-                                          <ImageView id="closebtn" fx:id="helpCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../../closeBtn.png" />
-                                             </image>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </ImageView>
-                                       </children>
-                                    </HBox>
-                                    <ScrollPane hbarPolicy="NEVER">
-                                       <content>
-                                          <AnchorPane prefHeight="310.0" prefWidth="584.0">
-                                             <children>
-                                                <Text fx:id="helpContent" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                                             </children>
-                                          </AnchorPane>
-                                       </content>
-                                    </ScrollPane>
-                                 </children>
-                              </VBox>
-                           </children>
-                           <effect>
-                              <DropShadow />
-                           </effect>
-                        </AnchorPane>
-                        <AnchorPane fx:id="searchBox" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
-                           <children>
-                              <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
-                                 <children>
-                                    <HBox>
-                                       <children>
-                                          <Label text="Search Results" />
-                                          <Region HBox.hgrow="ALWAYS" />
-                                          <ImageView id="closebtn" fx:id="searchCloseButton" fitHeight="17.0" fitWidth="17.0" onMouseClicked="#searchCloseButtonAction" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../../closeBtn.png" />
-                                             </image>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </ImageView>
-                                       </children>
-                                    </HBox>
-                                    <ListView fx:id="searchList" editable="true" prefHeight="400.0" prefWidth="600.0" style="-fx-background-radius: 10;" VBox.vgrow="ALWAYS" />
-                                 </children>
-                              </VBox>
-                           </children>
-                           <effect>
-                              <DropShadow />
-                           </effect>
-                        </AnchorPane>
-                     </children></AnchorPane>
-                  <Region HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <Region VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
    </children>
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

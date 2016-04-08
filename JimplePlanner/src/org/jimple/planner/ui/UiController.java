@@ -66,7 +66,8 @@ public class UiController extends myObserver implements Initializable {
 	Label messagePrompt, clock;
 	
 	@FXML
-	VBox todayEmpty, ongoingEmpty, upcomingEmpty;
+	VBox todayEmpty, ongoingEmpty, upcomingEmpty,
+	agendaEmpty, todoEmpty, archiveEmpty;
 
 	@FXML
 	Tab mainTab, agendaTab, todoTab, archiveTab;
@@ -106,14 +107,29 @@ public class UiController extends myObserver implements Initializable {
 		cmdHistory = new LinkedList<String>();
 		cmdHistory.add("");
 		
-		mainTab.setGraphic(new ImageView(new Image("jimpleTabIcon.png")));
-		mainTab.setText("");
-		agendaTab.setGraphic(new ImageView(new Image("agendaTabIcon.png")));
-		agendaTab.setText("");
-		todoTab.setGraphic(new ImageView(new Image("todoTabIcon.png")));
-		todoTab.setText("");
-		archiveTab.setGraphic(new ImageView(new Image("archiveTabIcon.png")));
-		archiveTab.setText("");
+		ImageView icon;
+		int iconheight = 20;
+
+		icon = new ImageView(new Image("jimpleTabIcon.png"));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		mainTab.setGraphic(icon);
+//		mainTab.setText("");
+		icon = new ImageView(new Image("agendaTabIcon.png"));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		agendaTab.setGraphic(icon);
+//		agendaTab.setText("");
+		icon = new ImageView(new Image("todoTabIcon.png"));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		todoTab.setGraphic(icon);
+//		todoTab.setText("");
+		icon = new ImageView(new Image("archiveTabIcon.png"));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		archiveTab.setGraphic(icon);
+//		archiveTab.setText("");
 		
 		prompt = new UiPrompt(this);
 		listViewControl = new UiListViewControl(this);
@@ -252,7 +268,13 @@ public class UiController extends myObserver implements Initializable {
 	public void loadArchiveList() {
 		listFormatter.formatList(logic.getArchivedList(),Constants.TYPE_ARCHIVE);
 		archiveContent.getChildren().clear();
-		archiveContent.getChildren().add(listFormatter.getFormattedList());
+		ListView<Task> list = listFormatter.getFormattedList();
+		if(list != null){
+			archiveContent.getChildren().add(list);
+		}
+		else {
+			archiveContent.getChildren().add(archiveEmpty);
+		}
 	}
 
 
