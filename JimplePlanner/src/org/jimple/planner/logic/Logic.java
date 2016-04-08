@@ -314,6 +314,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	 */
 	private String helpCommand() {
 		String listOfCommands = new String();
+		listOfCommands += Constants.NEWLINE;
 		listOfCommands += Constants.TIME_FORMAT_HELP_HEADER;
 		listOfCommands += Constants.TIME_FORMAT;
 

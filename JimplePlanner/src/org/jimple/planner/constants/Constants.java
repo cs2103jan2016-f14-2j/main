@@ -16,6 +16,7 @@ public final class Constants {
 	public static final String TYPE_UPCOMING = "upcoming";
 	public static final String TYPE_ARCHIVE = "archive";
 	public static final String EMPTY_STRING = "";
+	public static final String NEWLINE = "\n";
 	
 	/*
 	 * Task Label Class
