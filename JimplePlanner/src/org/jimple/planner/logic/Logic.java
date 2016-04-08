@@ -154,17 +154,17 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DONE:
-				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo, deadlines,
-						events, archivedTasks, taskLabels);
+				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, tempHistory,
+						todo, deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = getTaskID() + Constants.TYPE_ARCHIVE;
 				break;
 			case Constants.STRING_RETURN:
-				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, tempHistory, todo,
-						deadlines, events, archivedTasks, taskLabels);
+				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, tempHistory,
+						todo, deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_CHECKCONFLICT:
-				conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events, conflictedTasks);
+				conflictedTasks = conflictChecker.getConflictedTasks(parsedInput.getVariableArray(), deadlines, events);
 				feedback[0] = "";
 				feedback[1] = Constants.TYPE_CONFLICTED;
 				break;
@@ -241,9 +241,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	}
 
 	public ArrayList<Task> getConflictedTasks() {
-		conflictedTasks.clear();
-		conflictChecker.getConflictedTasks(LogicConflict.mostRecentlyCheckedConflict, deadlines, events,
-				conflictedTasks);
+		conflictedTasks = conflictChecker.getConflictedTasks(LogicConflict.mostRecentlyCheckedConflict, deadlines,
+				events);
 		return conflictedTasks;
 	}
 
@@ -266,7 +265,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			return "";
 		}
 	}
-	
+
 	private String getTaskID() {
 		if (!tempHistory.isEmpty()) {
 			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId());
@@ -358,6 +357,5 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		listOfCommands += Constants.UNARCHIVE_COMMAND;
 		return listOfCommands;
 	}
-
 
 }

@@ -22,21 +22,24 @@ public class LogicConflict {
 	}
 
 	protected ArrayList<Task> getConflictedTasks(String[] parsedInput, ArrayList<Task> deadlines,
-			ArrayList<Task> events, ArrayList<Task> conflictedTasks) {
+			ArrayList<Task> events) {
+		ArrayList<Task> conflicts = new ArrayList<Task>();
 		if (!deadlines.isEmpty() || !events.isEmpty()) {
 			mostRecentlyCheckedConflict = parsedInput;
 			for (Task aDeadline : deadlines) {
 				if (aDeadline.getTaskId() == Integer.parseInt(parsedInput[0])) {
-					conflictedTasks = aDeadline.getConflictedTasks();
+					conflicts = aDeadline.getConflictedTasks();
+					break;
 				}
 			}
 			for (Task anEvent : events) {
 				if (anEvent.getTaskId() == Integer.parseInt(parsedInput[0])) {
-					conflictedTasks = anEvent.getConflictedTasks();
+					conflicts = anEvent.getConflictedTasks();
+					break;
 				}
 			}
 		}
-		return conflictedTasks;
+		return conflicts;
 	}
 
 	private void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
@@ -47,8 +50,7 @@ public class LogicConflict {
 					if (newTask.getFromTime().equals(deadlines.get(i).getFromTime())
 							&& newTask.getTaskId() != deadlines.get(i).getTaskId()) {
 						newTask.getConflictedTasks().add(deadlines.get(i));
-						deadlines.get(i).getConflictedTasks().add(newTask);
-						break;
+//						deadlines.get(i).getConflictedTasks().add(newTask);
 					}
 				}
 			}
@@ -61,12 +63,10 @@ public class LogicConflict {
 							|| isFromAndToTimeEncompassTimeRange(newTask, events.get(i)))
 							&& newTask.getTaskId() != events.get(i).getTaskId()) {
 						newTask.getConflictedTasks().add(events.get(i));
-						events.get(i).getConflictedTasks().add(newTask);
-						break;
+//						events.get(i).getConflictedTasks().add(newTask);
 					}
 				}
 			}
-			System.out.println("working");
 			break;
 		}
 	}

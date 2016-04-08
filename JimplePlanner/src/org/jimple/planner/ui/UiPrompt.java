@@ -69,7 +69,6 @@ public class UiPrompt extends UiController{
 		controller.overlay.setVisible(true);
 		deletebtn.requestFocus();
 	}
-	
 
 	protected void helpPrompt(String helpStrings) {
 		controller.helpContent.setText(helpStrings);		
