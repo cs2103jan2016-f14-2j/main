@@ -125,7 +125,7 @@ public class UiPrompt extends UiController{
 			controller.conflictedList.getChildren().add(listView);
 		}
 		else {
-			controller.conflictedList.getChildren().add(controller.conflictedList);
+			controller.conflictedList.getChildren().add(controller.conflictedEmpty);
 		}
 		controller.popupLayer.getChildren().clear();
 		controller.popupLayer.getChildren().add(controller.conflictedBox);
