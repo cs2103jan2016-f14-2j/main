@@ -162,6 +162,7 @@ public class UiController extends myObserver implements Initializable {
 	 }
 
 	private void setEmptyListStrings() {
+		searchLabel.setText("Um, we found nothing. Sorry.");
 //		searchLabel.setText("nothing here");
 	}
 
