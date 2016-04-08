@@ -141,7 +141,7 @@ public class TimeParser {
 	private final String ERROR_MESSAGE_YEAR_PAST = "Invalid input: Year \"%s\" of \"%s\" is before the current year.";
 	private final String ERROR_MESSAGE_PARSE_HOUR = "Invalid input: Day \"%s\" of \"%s\". Please input a valid time for day.";
 	private final String ERROR_MESSAGE_PARSE_MINUTE = "Invalid input: Day \"%s\" of \"%s\". Please input a valid time for day.";
-	//private final String ERROR_MESSAGE_DATE_PAST = "Invalid input: Date \"%s\" is before the current date.";
+	private final String ERROR_MESSAGE_DATE_PAST = "Invalid input: Date \"%s\" is before the current date.";
 	
 	/* ----------------------------|
 	 * TIMEPARSER DATE/TIME FIELDS |

@@ -30,6 +30,9 @@ public class ParserTest {
 		test12();
 		test13();
 		test14();
+		test15();
+		test16();
+		test17();
 	}
 	
 	// Miscellaneous test - for my usage.
@@ -79,7 +82,7 @@ public class ParserTest {
 		try {
 			testStruct = testParser.parseInput("ADD");
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Command: \"ADD\" requires a Task Name. \"");
+			assertEquals(e.getMessage(), "Command: \"ADD\" requires a Task Name.");
 		}
 	}
 	
@@ -216,6 +219,42 @@ public class ParserTest {
 			assertEquals(e.getMessage(), "Label Colour: \"notacolour\" invalid.");
 			
 		}
+	}
+	
+	/* Command: DELETE LABEL
+	 * Input: Name
+	 * Expected: Name
+	 */
+	private void test15() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("DELETELABEL zxc");
+			assertEquals(assertArray(testStruct, "zxc"), true);
+		} catch (Exception e) {}
+	}
+	
+	/* Command: CHECKCONFLICT
+	 * Input: Index
+	 * Expected: Index
+	 */
+	private void test16() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("CHECKCONFLICT 123");
+			assertEquals(assertArray(testStruct, "123"), true);
+		} catch (Exception e) {}
+	}
+	
+	/* Command: DONE
+	 * Input: Index
+	 * Expected: Index
+	 */
+	private void test17() {
+		InputStruct testStruct = null;
+		try {
+			testStruct = testParser.parseInput("DONE 123654789");
+			assertEquals(assertArray(testStruct, "123654789"), true);
+		} catch (Exception e) {}
 	}
 	
 	private boolean assertArray(InputStruct inputStruct, String... args) {

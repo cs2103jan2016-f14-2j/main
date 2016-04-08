@@ -61,6 +61,7 @@ public class Parser {
 	private final String ERROR_MESSAGE_NO_TASK_ID = "Command: \"%s\" requires a TaskID number.";
 	private final String ERROR_MESSAGE_NO_SEARCH_STRING = "Command: \"%s\" requires a search string.";
 	private final String ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR = "Command: \"%s\" requires a label name or colour.";
+	private final String ERROR_MESSAGE_NO_LABEL_NAME = "Command: \"%s\" requires a label name.";
 	private final String ERROR_MESSAGE_NO_DIRECTORY_PATH = "Command: \"%s\" requires a directory path.";
 	private final String ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND = "Command: \"%s\" should not be followed by any parameters.";
 	private final String ERROR_MESSAGE_COMMAND_NOT_RECOGNISED = "Command: \"%s\" not recognised.";
@@ -136,7 +137,7 @@ public class Parser {
 					if (!isCommandOnly(splitUserInput)) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
 					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR, mainCommand));
+					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME, mainCommand));
 				case Constants.STRING_CHECKCONFLICT :
 					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
 						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
