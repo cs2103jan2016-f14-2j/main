@@ -166,6 +166,8 @@ public class UiFormatter {
 		}
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
+		if (formattedList.isEmpty())
+			listView = null;
 	}
 
 	private void addTasksToFormattedList() {
@@ -174,6 +176,8 @@ public class UiFormatter {
 		}
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
+		if (formattedList.isEmpty())
+			listView = null;
 	}
 
 	private void defaultCellFormat() {

@@ -70,7 +70,7 @@ public class UiListCellDefault extends ListCell<Task> {
 				icon.setImage(new Image("deadlineIconGrey.png"));
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
-				fromdate.setText(item.getPrettyFromTime());
+				fromdate.setText(item.getPrettyFromDate() + " " + item.getPrettyFromTime());
 				setDeadlineColors(item);	
 				break;
 			

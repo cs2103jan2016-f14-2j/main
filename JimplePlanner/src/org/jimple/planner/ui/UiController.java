@@ -262,7 +262,13 @@ public class UiController extends myObserver implements Initializable {
 	public void loadAgendaList() {
 		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_AGENDA);
 		agendaContent.getChildren().clear();
-		agendaContent.getChildren().add(listFormatter.getFormattedList());
+		ListView<Task> list = listFormatter.getFormattedList();
+		if(list != null){
+			agendaContent.getChildren().add(list);
+		}
+		else {
+			agendaContent.getChildren().add(agendaEmpty);
+		}
 	}
 	
 	public void loadArchiveList() {
@@ -281,7 +287,13 @@ public class UiController extends myObserver implements Initializable {
 	public void loadTodoList()  {
 		listFormatter.formatList(logic.getToDoList(),Constants.TYPE_TODO);
 		todoContent.getChildren().clear();
-		todoContent.getChildren().add(listFormatter.getFormattedList());
+		ListView<Task> list = listFormatter.getFormattedList();
+		if(list != null){
+			todoContent.getChildren().add(list);
+		}
+		else {
+			todoContent.getChildren().add(todoEmpty);
+		}
 	}
 	
 	/*======================================

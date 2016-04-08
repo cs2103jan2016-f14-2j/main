@@ -261,13 +261,13 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
                                  <children>
-                                    <VBox fx:id="todoEmpty" prefHeight="450.0" prefWidth="800.0">
+                                    <VBox fx:id="todoEmpty" prefHeight="450.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <Region VBox.vgrow="ALWAYS" />
                                           <HBox>
                                              <children>
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Label alignment="CENTER" text="you have nothing left on your todo list!! time for a cup of coffee" textFill="#b9a1a1" />
+                                                <Label alignment="CENTER" text="you have nothing left on your todo list! time for a cup of coffee" textFill="#b9a1a1" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                              </children>
                                           </HBox>
@@ -285,7 +285,7 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
                                  <children>
-                                    <VBox fx:id="archiveEmpty" prefHeight="450.0" prefWidth="800.0">
+                                    <VBox fx:id="archiveEmpty" prefHeight="450.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <Region VBox.vgrow="ALWAYS" />
                                           <HBox>
