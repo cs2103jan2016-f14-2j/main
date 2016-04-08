@@ -64,6 +64,7 @@ public class Parser {
 	private final String ERROR_MESSAGE_NO_DIRECTORY_PATH = "Command: \"%s\" requires a directory path.";
 	private final String ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND = "Command: \"%s\" should not be followed by any parameters.";
 	private final String ERROR_MESSAGE_COMMAND_NOT_RECOGNISED = "Command: \"%s\" not recognised.";
+	private final String ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED = "Extended Command: \"%s\" not recognised.";
 	private final String ERROR_MESSAGE_DATE_TIME_NOT_RECOGNISED = "Date/Time input: \"%s\" not recognised.";
 	
 	/*
@@ -284,6 +285,8 @@ public class Parser {
 			case Constants.STRING_EDITLABEL :
 				parseExtendedCommandEditLabel(extendedCommand, inputString, inputStruct);
 				break;
+			default:
+				break;
 		}
 	}
 	
@@ -303,7 +306,7 @@ public class Parser {
 				setCategory(inputString, inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+				throw new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand));
 		}
 	}
 	
@@ -324,7 +327,7 @@ public class Parser {
 				setCategory(inputString, inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+				throw new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand));
 		}
 	}
 	
