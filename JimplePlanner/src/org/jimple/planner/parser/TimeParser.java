@@ -231,9 +231,9 @@ public class TimeParser {
 		c = Calendar.getInstance(); // Initialises the Calendar.
 		initSecondaryAndPresetFields(extendedCommand);
 		// Set up fields in calendar according to parsed inputs.
-		if (!isAfterCurrentDateAndTime()) {
+		/*if (!isAfterCurrentDateAndTime()) {
 			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_DATE_PAST, userInput));
-		}
+		}*/
 		if (setCalendarField(FIELD_HOUR, getField(FIELD_HOUR))) {
 			if (setCalendarField(FIELD_MINUTE, getField(FIELD_MINUTE))) {
 				if (setCalendarField(FIELD_YEAR, getField(FIELD_YEAR))) {
