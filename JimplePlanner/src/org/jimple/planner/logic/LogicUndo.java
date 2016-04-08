@@ -29,7 +29,11 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 			deletionForUndo(variableArray, todo, deadlines, events, archivedTasks, idHash);
 			break;
 		case Constants.STRING_DELETE:
-			allocateCorrectTimeArray(aTask.getPreviousTask(), todo, deadlines, events);
+			if (aTask.getPreviousTask().getIsDone() == false) {
+				allocateCorrectTimeArray(aTask.getPreviousTask(), todo, deadlines, events);
+			} else	{
+				archivedTasks.add(aTask.getPreviousTask());
+			}
 			break;
 		case Constants.STRING_EDIT:
 			variableArray[0] = Integer.toString(aTask.getPreviousTask().getTaskId());
