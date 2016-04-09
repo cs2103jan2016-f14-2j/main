@@ -54,6 +54,9 @@ public class Task {
 		if(fromDateTime.getDayOfYear() == LocalDateTime.now().getDayOfYear()){
 			prettierFromDate += "TODAY, ";
 		}
+		else{
+			prettierFromDate += fromDateTime.getDayOfWeek() + ", ";
+		}
 		prettierFromDate += fromDateTime.getDayOfMonth() + " " + fromDateTime.getMonth() + " " + fromDateTime.getYear();
 		return prettierFromDate;
 	}
