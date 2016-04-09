@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.jimple.planner.task.Task;
 
 //@@author A0135808B
-public interface StorageSaveInterface extends StorageTools{
+public interface StorageSaveInterface extends StorageToolsInterface{
 	//@@author A0135808B
 	public boolean isSavedTasksSelect(ArrayList<ArrayList<Task>> allTasksList, String filePath, String tempFilePath);
 }

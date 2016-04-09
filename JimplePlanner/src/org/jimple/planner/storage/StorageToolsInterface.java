@@ -13,7 +13,7 @@ import org.jimple.planner.exceptions.InvalidTaskException;
 import org.jimple.planner.task.Task;
 
 //@@author A0135808B
-public interface StorageTools {
+public interface StorageToolsInterface {
 	//@@author A0135808B
 	default File createFile(String fileName) {
 		File file = new File(fileName);

@@ -37,7 +37,7 @@ import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
-public class StorageProperties implements StorageTools{
+public class StorageProperties implements StorageToolsInterface{
 	private StorageSave storageSave;
 	private StorageLoad storageLoad;
 	private final static Logger LOGGER = Logger.getLogger(StorageProperties.class.getName());
