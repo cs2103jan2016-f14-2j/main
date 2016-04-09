@@ -31,7 +31,7 @@ import org.jimple.planner.task.TaskLabel;
 public class LogicTest {
 	Formatter testformatter = new Formatter();
 	Logic testLogic = new Logic();
-	Storage testStore = new StorageComponent();
+	StorageInterface testStore = new Storage();
 	LogicAdd testAdder = new LogicAdd();
 	LogicEdit testEditer = new LogicEdit();
 	LogicDelete testDeleter = new LogicDelete();

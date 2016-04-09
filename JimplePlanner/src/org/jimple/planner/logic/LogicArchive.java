@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.StorageInterface;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0124952E
 public class LogicArchive implements LogicMasterListModification, LogicTaskModification {
 
-	protected String markTaskAsDone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
+	protected String markTaskAsDone(StorageInterface store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels) throws IOException {
 
@@ -52,7 +52,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 		return false;
 	}
 
-	protected String markTaskAsUndone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
+	protected String markTaskAsUndone(StorageInterface store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels) throws IOException {
 		if (!archivedTasks.isEmpty()) {

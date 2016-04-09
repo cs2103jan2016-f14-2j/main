@@ -13,7 +13,7 @@ import org.jimple.planner.task.TaskLabel;
 //@@author A0124952E
 public class LogicUndo implements LogicTaskModification, LogicMasterListModification {
 
-	protected String undoPreviousChange(Storage store, LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
+	protected String undoPreviousChange(StorageInterface store, LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash)
 					throws IOException {

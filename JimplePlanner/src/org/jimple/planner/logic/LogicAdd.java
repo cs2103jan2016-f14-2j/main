@@ -13,7 +13,7 @@ import java.util.LinkedList;
 //@@author A0124952E
 public class LogicAdd implements LogicTaskModification, LogicMasterListModification {
 
-	protected String addToTaskList(Storage store, String[] parsedInput, ArrayList<Task> tempHistory,
+	protected String addToTaskList(StorageInterface store, String[] parsedInput, ArrayList<Task> tempHistory,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
 		assert parsedInput.length == 6;

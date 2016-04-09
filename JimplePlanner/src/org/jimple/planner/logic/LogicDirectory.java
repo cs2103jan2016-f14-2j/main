@@ -11,7 +11,7 @@ import java.util.HashMap;
 //@@author A0124952E
 public class LogicDirectory implements LogicMasterListModification, LogicTaskModification {
 
-	protected String changeSaveDirectory(Storage store, LogicConflict conflictChecker, String[] variableArray,
+	protected String changeSaveDirectory(StorageInterface store, LogicConflict conflictChecker, String[] variableArray,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash) {
 		if (!isValidPath(store, variableArray)) {
@@ -35,11 +35,11 @@ public class LogicDirectory implements LogicMasterListModification, LogicTaskMod
 		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] + "\"";
 	}
 
-	protected String checkPath(Storage store) {
+	protected String checkPath(StorageInterface store) {
 		return store.checkPath();
 	}
 
-	private boolean isValidPath(Storage store, String[] variableArray) {
+	private boolean isValidPath(StorageInterface store, String[] variableArray) {
 		if (store.setPath(variableArray[0])) {
 			return true;
 		}

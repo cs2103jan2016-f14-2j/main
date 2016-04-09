@@ -15,7 +15,7 @@ import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
 //@@author A0124952E
 public class LogicEdit implements LogicTaskModification, LogicMasterListModification {
 
-	protected String editTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
+	protected String editTask(StorageInterface store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException, InvalidFromAndToTimeException {
@@ -66,7 +66,7 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 	}
 
-	public String testEditTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
+	public String testEditTask(StorageInterface store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException, InvalidFromAndToTimeException {

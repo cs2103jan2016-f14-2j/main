@@ -13,7 +13,7 @@ import java.util.LinkedList;
 //@@author A0124952E
 public class LogicDelete implements LogicTaskModification, LogicMasterListModification {
 
-	protected String deleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
+	protected String deleteTask(StorageInterface store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException {
 		boolean isFloatDeleted = false;
@@ -52,7 +52,7 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 		return false;
 	}
 
-	public String testDeleteTask(Storage store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
+	public String testDeleteTask(StorageInterface store, String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
 		return deleteTask(store, variableArray, todo, deadlines, events, archivedTasks, undoTasks, idHash);
 	}

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.StorageInterface;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 import org.jimple.planner.task.TaskSorter;
@@ -27,7 +27,7 @@ public interface LogicMasterListModification {
 		}
 	}
 
-	public default void packageForSavingMasterLists(Storage store, ArrayList<Task> todo, ArrayList<Task> deadlines,
+	public default void packageForSavingMasterLists(StorageInterface store, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
 		allTasksArray.add(todo);
@@ -37,7 +37,7 @@ public interface LogicMasterListModification {
 		store.isSavedTasks(allTasksArray);
 	}
 
-	public default void packageForSavingLabelLists(Storage store, ArrayList<TaskLabel> taskLabels) {
+	public default void packageForSavingLabelLists(StorageInterface store, ArrayList<TaskLabel> taskLabels) {
 		store.isSavedLabels(taskLabels);
 	}
 	
