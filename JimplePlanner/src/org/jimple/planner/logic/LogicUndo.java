@@ -13,7 +13,7 @@ import org.jimple.planner.task.TaskLabel;
 //@@author A0124952E
 public class LogicUndo implements LogicTaskModification, LogicMasterListModification {
 
-	protected String undoPreviousChange(Storage store, LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
+	protected String undoPreviousChange(LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash)
 					throws IOException {
@@ -31,7 +31,7 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 		case Constants.STRING_DELETE:
 			if (aTask.getPreviousTask().getIsDone() == false) {
 				allocateCorrectTimeArray(aTask.getPreviousTask(), todo, deadlines, events);
-			} else	{
+			} else {
 				archivedTasks.add(aTask.getPreviousTask());
 			}
 			break;
@@ -87,5 +87,12 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 			}
 		}
 		return false;
+	}
+
+	public String testUndoPreviousChange(LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
+			ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash) throws IOException {
+		return undoPreviousChange(undoTasks, todo, deadlines, events, archivedTasks, tempHistory, taskLabels,
+				idHash);
 	}
 }

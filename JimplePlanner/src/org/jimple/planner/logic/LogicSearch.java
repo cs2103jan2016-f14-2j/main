@@ -9,7 +9,7 @@ public class LogicSearch {
 	protected static String mostRecentlySearchedWord = new String("");
 
 	protected ArrayList<Task> searchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events) {
+			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
 		searchWordResults.clear();
 		mostRecentlySearchedWord = wordToBeSearched;
@@ -19,6 +19,7 @@ public class LogicSearch {
 			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, todo));
 			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, deadlines));
 			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, events));
+			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, archivedTasks));
 		}
 		return searchWordResults;
 	}
@@ -84,8 +85,8 @@ public class LogicSearch {
 	}
 
 	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events) {
-		return searchWord(wordToBeSearched, todo, deadlines, events);
+			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
+		return searchWord(wordToBeSearched, todo, deadlines, events, archivedTasks);
 	}
 
 	public ArrayList<Task> testgetSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {

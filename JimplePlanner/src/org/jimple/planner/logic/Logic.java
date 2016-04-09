@@ -105,23 +105,23 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			InputStruct parsedInput = parser.parseInput(inputString);
 			switch (parsedInput.getCommand()) {
 			case Constants.STRING_DELETE:
-				feedback[0] = deleter.deleteTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
+				feedback[0] = deleter.deleteTask(parsedInput.getVariableArray(), todo, deadlines, events,
 						archivedTasks, undoTasks, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_ADD:
-				feedback[0] = adder.addToTaskList(store, parsedInput.getVariableArray(), tempHistory, todo, deadlines,
+				feedback[0] = adder.addToTaskList(parsedInput.getVariableArray(), tempHistory, todo, deadlines,
 						events, taskLabels, undoTasks, idHash);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_EDIT:
-				feedback[0] = editer.editTask(store, parsedInput.getVariableArray(), todo, deadlines, events,
+				feedback[0] = editer.editTask(parsedInput.getVariableArray(), todo, deadlines, events,
 						tempHistory, taskLabels, undoTasks, idHash);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_SEARCH:
 				searchResults.clear();
-				searchResults = searcher.searchWord(parsedInput.getVariableArray()[0], todo, deadlines, events);
+				searchResults = searcher.searchWord(parsedInput.getVariableArray()[0], todo, deadlines, events, archivedTasks);
 				feedback[0] = "";
 				feedback[1] = Constants.TYPE_SEARCH;
 				break;
@@ -131,8 +131,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_UNDOTASK:
-				feedback[0] = undoer.undoPreviousChange(store, undoTasks, todo, deadlines, events, archivedTasks,
-						tempHistory, taskLabels, idHash);
+				feedback[0] = undoer.undoPreviousChange(undoTasks, todo, deadlines, events, archivedTasks, tempHistory,
+						taskLabels, idHash);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_HELP:
@@ -144,22 +144,22 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_EDITLABEL:
-				feedback[0] = labeler.changeLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines,
+				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels, todo, deadlines,
 						events);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DELETELABEL:
-				feedback[0] = labeler.deleteLabel(store, parsedInput.getVariableArray(), taskLabels, todo, deadlines,
+				feedback[0] = labeler.deleteLabel(parsedInput.getVariableArray(), taskLabels, todo, deadlines,
 						events, archivedTasks);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DONE:
-				feedback[0] = archiver.markTaskAsDone(store, parsedInput.getVariableArray(), undoTasks, tempHistory,
+				feedback[0] = archiver.markTaskAsDone(parsedInput.getVariableArray(), undoTasks, tempHistory,
 						todo, deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = getTaskID() + Constants.TYPE_ARCHIVE;
 				break;
 			case Constants.STRING_RETURN:
-				feedback[0] = archiver.markTaskAsUndone(store, parsedInput.getVariableArray(), undoTasks, tempHistory,
+				feedback[0] = archiver.markTaskAsUndone(parsedInput.getVariableArray(), undoTasks, tempHistory,
 						todo, deadlines, events, archivedTasks, taskLabels);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
@@ -217,12 +217,13 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	}
 
 	public ArrayList<Task> getEventsList() {
+		checkOverCurrentTime(deadlines, events);
 		return events;
 	}
 
 	public ArrayList<Task> getSearchList() {
 		searchResults.clear();
-		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events);
+		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events, archivedTasks);
 		return searchResults;
 	}
 

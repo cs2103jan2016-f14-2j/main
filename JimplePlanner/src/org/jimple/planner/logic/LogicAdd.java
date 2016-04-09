@@ -13,8 +13,8 @@ import java.util.LinkedList;
 //@@author A0124952E
 public class LogicAdd implements LogicTaskModification, LogicMasterListModification {
 
-	protected String addToTaskList(Storage store, String[] parsedInput, ArrayList<Task> tempHistory,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
+	protected String addToTaskList(String[] parsedInput, ArrayList<Task> tempHistory, ArrayList<Task> todo,
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
 		assert parsedInput.length == 6;
 		Task newTask = new Task("");
@@ -27,5 +27,11 @@ public class LogicAdd implements LogicTaskModification, LogicMasterListModificat
 		tempHistory.add(newTask);
 		undoTasks.add(setNewPreviousTask(Constants.STRING_ADD, newTask));
 		return "\"" + parsedInput[1] + "\"" + Constants.ADDED_FEEDBACK;
+	}
+
+	public String testAddToTaskList(String[] parsedInput, ArrayList<Task> tempHistory, ArrayList<Task> todo,
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
+			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
+		return addToTaskList(parsedInput, tempHistory, todo, deadlines, events, taskLabels, undoTasks, idHash);
 	}
 }

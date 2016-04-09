@@ -12,9 +12,9 @@ import org.jimple.planner.task.TaskLabel;
 //@@author A0124952E
 public class LogicArchive implements LogicMasterListModification, LogicTaskModification {
 
-	protected String markTaskAsDone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
-			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
-			ArrayList<TaskLabel> taskLabels) throws IOException {
+	protected String markTaskAsDone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
+			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
+			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
 
 		boolean isTodoMarked = false;
 		boolean isDeadlinesMarked = false;
@@ -23,11 +23,11 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 		isTodoMarked = findTaskToMark(parsedInput, undoTasks, todo, archivedTasks, tempHistory);
 		if (!isTodoMarked) {
 			isDeadlinesMarked = findTaskToMark(parsedInput, undoTasks, deadlines, archivedTasks, tempHistory);
-		} 
+		}
 		if (!isTodoMarked && !isDeadlinesMarked) {
 			isEventsMarked = findTaskToMark(parsedInput, undoTasks, events, archivedTasks, tempHistory);
 		}
-		
+
 		if (isTodoMarked || isDeadlinesMarked || isEventsMarked) {
 			return "task " + parsedInput[0] + Constants.DONE_FEEDBACK;
 		}
@@ -52,9 +52,9 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 		return false;
 	}
 
-	protected String markTaskAsUndone(Storage store, String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
-			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
-			ArrayList<TaskLabel> taskLabels) throws IOException {
+	protected String markTaskAsUndone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
+			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
+			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
 		if (!archivedTasks.isEmpty()) {
 			for (int i = 0; i < archivedTasks.size(); i++) {
 				if (archivedTasks.get(i).getTaskId() == Integer.parseInt(parsedInput[0])) {
@@ -68,6 +68,18 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 			}
 		}
 		return "task " + parsedInput[0] + Constants.ERROR_UNDONE_FEEDBACK;
+	}
+
+	public String testMarkTaskAsDone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
+			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
+			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
+		return markTaskAsDone(parsedInput, undoTasks, tempHistory, todo, deadlines, events, archivedTasks, taskLabels);
+	}
+	
+	public String testMarkTaskAsUndone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
+			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
+			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
+		return markTaskAsUndone(parsedInput, undoTasks, tempHistory, todo, deadlines, events, archivedTasks, taskLabels);
 	}
 
 }
