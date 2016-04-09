@@ -57,14 +57,14 @@ public class TaskSorter {
 		}
 	}
 	//@@author A0135808B
-	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
+	public void sortTasks(ArrayList<ArrayList<Task>> allTaskLists){
 		assert allTaskLists.size() == 4;
 		sortById(allTaskLists);
 		sortDeadlines(allTaskLists.get(1));
 		sortEvents(allTaskLists.get(2));
 	}
 	//@@author A0135808B
-	public static void sortTasksByTime(ArrayList<Task> list){
+	public void sortTasksByTime(ArrayList<Task> list){
 		Collections.sort(list, getFromDateComparator());
 	}
 }

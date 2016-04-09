@@ -16,7 +16,7 @@ public class Formatter {
 		listOfMonths = new ListOfMonths();
 	}
 
-	public static String formatPrettyDate(LocalDateTime dateTime) {
+	public String formatPrettyDate(LocalDateTime dateTime) {
 		String prettyDate = new String("");
 		assert dateTime != null;
 		prettyDate += dateTime.getDayOfMonth();
@@ -28,7 +28,7 @@ public class Formatter {
 		return prettyDate;
 	}
 	
-	public static String formatPrettyTime(LocalDateTime dateTime)	{
+	public String formatPrettyTime(LocalDateTime dateTime)	{
 		String prettyTime = new String("");
 		prettyTime += dateTime.getHour();
 		prettyTime += ":";

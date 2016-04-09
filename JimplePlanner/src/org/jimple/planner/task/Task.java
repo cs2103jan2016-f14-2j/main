@@ -18,6 +18,8 @@ public class Task {
 	private int taskId;
 	private ArrayList<Task> conflictedTasks;
 	private TaskLabel taskLabel;
+	private static Formatter formatter = new Formatter();
+	private static TaskSorter taskSorter = new TaskSorter();
 
 	// Default Constructor
 	public Task(String aTitle) {
@@ -61,25 +63,25 @@ public class Task {
 
 	public String getPrettyFromDate() {
 		String prettyFromDate = new String("");
-		prettyFromDate = Formatter.formatPrettyDate(fromDateTime);
+		prettyFromDate = formatter.formatPrettyDate(fromDateTime);
 		return prettyFromDate;
 	}
 
 	public String getPrettyToDate() {
 		String prettyToDate = new String("");
-		prettyToDate = Formatter.formatPrettyDate(toDateTime);
+		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
 	}
 
 	public String getPrettyFromTime() {
 		String prettyFromTime = new String("");
-		prettyFromTime = Formatter.formatPrettyTime(fromDateTime);
+		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
 		return prettyFromTime;
 	}
 
 	public String getPrettyToTime() {
 		String prettyToTime = new String("");
-		prettyToTime = Formatter.formatPrettyTime(toDateTime);
+		prettyToTime = formatter.formatPrettyTime(toDateTime);
 		return prettyToTime;
 	}
 
@@ -225,11 +227,11 @@ public class Task {
 	}
 	//@@author A0135808B
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {
-		TaskSorter.sortTasks(allTaskLists);
+		taskSorter.sortTasks(allTaskLists);
 	}
 	//@@author A0135808B
 	public static void sortTasksByTime(ArrayList<Task> list) {
-		TaskSorter.sortTasksByTime(list);
+		taskSorter.sortTasksByTime(list);
 	}
 	//@@author generated
 	@Override
