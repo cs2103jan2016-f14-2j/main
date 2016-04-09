@@ -31,7 +31,7 @@ public class Task {
 		this.isOverDue = false;
 		this.isDone = false;
 		this.taskId = 1000;
-		this.taskLabel = TaskLabel.getDefaultLabel();
+		this.taskLabel = TaskLabel.createDefaultLabel();
 		this.conflictedTasks = new ArrayList<Task>();
 	}
 

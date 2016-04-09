@@ -11,12 +11,12 @@ class LogicLinkLabelsToTasks {
 		for(ArrayList<Task> taskList: allTasks){
 			for(Task task: taskList){
 				TaskLabel currentTaskLabel = task.getTaskLabel();
-				if(currentTaskLabel.equals(TaskLabel.getDefaultLabel())){
+				if(currentTaskLabel.equals(TaskLabel.createDefaultLabel())){
 					break;
 				}
 				for(TaskLabel masterLabel: labelList){
 					if(isSameLabel(currentTaskLabel, masterLabel)){
-						currentTaskLabel = TaskLabel.duplicateTaskLabel(masterLabel);
+						currentTaskLabel = TaskLabel.createDuplicateTaskLabel(masterLabel);
 						task.setTaskLabel(currentTaskLabel);
 					}
 				}

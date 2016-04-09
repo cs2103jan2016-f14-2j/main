@@ -66,17 +66,17 @@ public class LogicLabel implements LogicMasterListModification {
 			TaskLabel removedTask) {
 		for (int j = 0; j < todo.size(); j++) {
 			if (todo.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				todo.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				todo.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 		for (int j = 0; j < deadlines.size(); j++) {
 			if (deadlines.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				deadlines.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				deadlines.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 		for (int j = 0; j < events.size(); j++) {
 			if (events.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				events.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				events.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 	}

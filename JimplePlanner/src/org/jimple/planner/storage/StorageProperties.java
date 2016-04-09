@@ -235,7 +235,7 @@ public class StorageProperties implements StorageToolsInterface{
 	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
 		Properties newStorageProperties = getPathProperties();
 		for(TaskLabel taskLabel: labelLists){
-			if(taskLabel.equals(TaskLabel.getDefaultLabel())){
+			if(taskLabel.equals(TaskLabel.createDefaultLabel())){
 				continue;
 			}
 			String labelName = taskLabel.getLabelName();
@@ -290,7 +290,7 @@ public class StorageProperties implements StorageToolsInterface{
 	public ArrayList<TaskLabel> getLabels(){
 		Properties storageProperties = storageLoad.loadProperties();
 		ArrayList<TaskLabel> labelList = new ArrayList<TaskLabel>();
-		labelList.add(TaskLabel.getDefaultLabel()); //1st element of labelList is always default label
+		labelList.add(TaskLabel.createDefaultLabel()); //1st element of labelList is always default label
 		
 		Set<Object> propertiesKeys = storageProperties.keySet();
 		boolean removed_savepath_key = propertiesKeys.remove((Object)PROPERTIES_KEY_CURRENT_SAVEPATH);
@@ -301,7 +301,7 @@ public class StorageProperties implements StorageToolsInterface{
 			String labelNamesString = (String) labelNames;
 			String labelColourString = storageProperties.getProperty(labelNamesString);
 			int labelColourId = colourToId.get(labelColourString);
-			TaskLabel taskLabel = TaskLabel.getNewLabel(labelNamesString, labelColourId);
+			TaskLabel taskLabel = TaskLabel.createNewLabel(labelNamesString, labelColourId);
 			labelList.add(taskLabel);
 		}
 		return labelList;

@@ -16,23 +16,23 @@ public class TaskLabel {
 		this.labelId = labelId;
 	}
 	//@@author A0135808B
-	public static TaskLabel getDefaultLabel(){
+	public static TaskLabel createDefaultLabel(){
 		return new TaskLabel(TASK_LABEL_NAME_DEFAULT, TASK_LABEL_COLOUR_DEFAULT_0, 0);
 	}
 	//@@author A0135808B
-	public static TaskLabel getNewLabel(String name){
+	public static TaskLabel createNewLabel(String name){
 		int colourId = getNextLabelColourId();
-		TaskLabel newLabel = getNewLabel(name, colourId);
+		TaskLabel newLabel = createNewLabel(name, colourId);
 		return newLabel;
 	}
 	//@@author A0135808B
-	public static TaskLabel getNewLabel(String name, int colourId){
+	public static TaskLabel createNewLabel(String name, int colourId){
 		int id = getNextLabelId();
 		TaskLabel newLabel = new TaskLabel(name, colourId, id);
 		return newLabel;
 	}
 	//@@author A0135808B
-	public static TaskLabel duplicateTaskLabel(TaskLabel taskLabel){
+	public static TaskLabel createDuplicateTaskLabel(TaskLabel taskLabel){
 		String aName = taskLabel.getLabelName();
 		int aColourId = taskLabel.getColourId();
 		int alabelId = taskLabel.getLabelId();
@@ -40,7 +40,7 @@ public class TaskLabel {
 		return duplicatedTaskLabel;
 	}
 	//@@author A0135808B
-	public static TaskLabel getDummyLabel(String name, int colourId){
+	public static TaskLabel createDummyLabel(String name, int colourId){
 		return new TaskLabel(name, colourId, 0);
 	}
 	//@@author A0135808B

@@ -121,7 +121,7 @@ public class StorageLoad implements StorageLoadInterface{
 			task.setTitle(titleString);
 		} else if(isLabel(field)){
 			ArrayList<String> labelStringArray = getRemovedLabelTagStringArray(field);
-			TaskLabel taskLabel = TaskLabel.getDummyLabel(labelStringArray.get(0), Integer.parseInt(labelStringArray.get(1)));
+			TaskLabel taskLabel = TaskLabel.createDummyLabel(labelStringArray.get(0), Integer.parseInt(labelStringArray.get(1)));
 			task.setTaskLabel(taskLabel);
 		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);

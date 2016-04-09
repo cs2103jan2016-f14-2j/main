@@ -128,7 +128,7 @@ public class StorageSave implements StorageSaveInterface{
 			lineString = lineString + fromToString;
 		}
 		TaskLabel taskLabel = task.getTaskLabel();
-		if(!taskLabel.equals(TaskLabel.getDefaultLabel())){
+		if(!taskLabel.equals(TaskLabel.createDefaultLabel())){
 			String taskLabelToString = formatToTaskLabel(taskLabel);
 			lineString = lineString + taskLabelToString;
 		}
