@@ -32,7 +32,7 @@ import org.jimple.planner.task.TaskLabel;
 //@@author A0135808B
 public class StorageSave implements StorageSaveInterface{
 	private final static Logger LOGGER = Logger.getLogger(StorageSave.class.getName());
-	//@@author A0135808B
+
 	private BufferedWriter createFileWriter(String fileName){
 		BufferedWriter writer = null;
 		try {
@@ -46,7 +46,7 @@ public class StorageSave implements StorageSaveInterface{
 		}
 		return writer;
 	}
-	//@@author A0135808B
+
 	public boolean isSavedTasksSelect(ArrayList<ArrayList<Task>> allTaskLists, String filePath, String tempFilePath){
 		assert allTaskLists.size() == 4;
 		Task.sortTasks(allTaskLists);
@@ -54,12 +54,12 @@ public class StorageSave implements StorageSaveInterface{
 		boolean saveStatus = isSaveToFile(filePath, tempFilePath);
 		return saveStatus;
 	}
-	//@@author A0135808B
+
 	private void writeTasksToFile(ArrayList<ArrayList<Task>> allTaskLists, String tempFilePath){
 		BufferedWriter tempWriter = createFileWriter(tempFilePath);
 		writeTasksUsingWriter(allTaskLists, tempWriter);
 	}
-	//@@author A0135808B
+
 	private void writeTasksUsingWriter(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
 		try {
 			for(ArrayList<Task> taskList: allTaskLists){
@@ -74,7 +74,7 @@ public class StorageSave implements StorageSaveInterface{
 			e.printStackTrace();
 		}
 	}
-	//@@author A0135808B
+
 	private void writeArrayOfTasksUsingWriters(ArrayList<Task> taskList, BufferedWriter tempWriter){
 			for(Task task: taskList){
 				try {
@@ -97,7 +97,7 @@ public class StorageSave implements StorageSaveInterface{
 				}
 		}
 	}
-	//@@author A0135808B
+
 	private boolean isSaveToFile(String filePath, String tempFilePath){
 		File file = createFile(filePath);
 		File tempFile = createFile(tempFilePath);
@@ -107,7 +107,7 @@ public class StorageSave implements StorageSaveInterface{
 			return true;
 		}
 	}
-	//@@author A0135808B
+
 	private String extractTaskToString(Task task){
 		System.out.println(task.getIsDone());
 		String lineString = formatToSaveString(TAGS_ISDONE + Boolean.toString(task.getIsDone()));
@@ -132,36 +132,35 @@ public class StorageSave implements StorageSaveInterface{
 		}
 		return lineString;
 	}
-	//@@author A0135808B
+
 	private boolean isDescriptionExist(Task task){
 		return !(task.getDescription().length()==0);
 	}
-	//@@author A0135808B
+
 	private boolean isFromTimeExist(Task task){
 		return !(task.getFromTimeString().length()==0);
 	}
-	//@@author A0135808B
+
 	private boolean isToTimeExist(Task task){
 		return !(task.getToTimeString().length()==0);
 	}
 	
 	//Minor formatting of string such that each "field" is enclosed with a "/s/"
-	//@@author A0135808B
 	private String formatToSaveString(String string){
 		return TAGS_LINE_FIELD_SEPARATOR + string + TAGS_LINE_FIELD_SEPARATOR;
 	}
-	//@@author A0135808B
+
 	private String formatToTaskLabel(TaskLabel taskLabel){
 		String labelName = formatLabelFields(taskLabel.getLabelName());
 		String labelColourIdString = formatLabelFields(String.valueOf(taskLabel.getColourId()));
 		String formattedString = TAGS_LABEL + labelName + labelColourIdString;
 		return formattedString;
 	}
-	//@@author A0135808B
+
 	private String formatLabelFields(String string){
 		return TAGS_LABEL_FIELD_SEPARATOR + string + TAGS_LABEL_FIELD_SEPARATOR;
 	}
-	//@@author A0135808B
+
 	public void saveProperties(Properties property){
 		BufferedWriter configFileWriter = createFileWriter(FILEPATH_CONFIG);
 		try {
@@ -176,11 +175,10 @@ public class StorageSave implements StorageSaveInterface{
 	/*
 	 * ALL TEST METHODS ARE HERE
 	 */
-	//@@author A0135808B
 	public boolean isSavedTasksTest(ArrayList<ArrayList<Task>> allTaskLists){
 		return isSavedTasksSelect(allTaskLists, FILEPATH_TEST, FILEPATH_TEST_TEMP);
 	}
-	//@@author A0135808B
+
 	public void testWriteTasks(ArrayList<ArrayList<Task>> allTaskLists, BufferedWriter tempWriter) {
 		Task.sortTasks(allTaskLists);
 		writeTasksUsingWriter(allTaskLists, tempWriter);

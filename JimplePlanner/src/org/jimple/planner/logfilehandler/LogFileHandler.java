@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 //@@author A0135808B
 public class LogFileHandler {
-	//@@author A0135808B
+
 	public static void setFileHandler(){
 		try {
 			String fileName = getLogFileName();
@@ -24,7 +24,7 @@ public class LogFileHandler {
 			e.printStackTrace();
 		}
 	}
-	//@@author A0135808B
+
 	private static String getLogFileName() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -32,7 +32,7 @@ public class LogFileHandler {
 		String fileName = "jimpleLogs"+File.separator+"jimpleLog_"+dateStr+".log";
 		return fileName;
 	}
-	//@@author A0135808B
+
 	public static void createDirectoryToLogFile(){
 		String fileName = getLogFileName();
 		File file = new File(fileName);

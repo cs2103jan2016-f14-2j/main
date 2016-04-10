@@ -3,9 +3,11 @@ package org.jimple.planner.constants;
 import java.io.File;
 
 public final class Constants {
+	//@@author A0135808B
 	public static final String TYPE_EVENT = "event";
 	public static final String TYPE_TODO = "floating";
 	public static final String TYPE_DEADLINE = "deadline";
+	//@@author A0122498
 	public static final String TYPE_AGENDA = "agenda";
 	public static final String TYPE_STATIC = "static";
 	public static final String TYPE_SEARCH = "search";
@@ -16,12 +18,15 @@ public final class Constants {
 	public static final String TYPE_UPCOMING = "upcoming";
 	public static final String TYPE_ARCHIVE = "archive";
 	public static final String TYPE_CONFLICTED = "conflicted";
+	//@@author A0135808B
 	public static final String EMPTY_STRING = "";
+	//@@author A0122498
 	public static final String NEWLINE = "\n";
 	
 	/*
 	 * Task Label Class
 	 */
+	//@@author A0135808B
 	public static final String STRING_LABELNAME = "LABEL";
 	public static final String STRING_LABELCOLOUR = "COLOUR";
 	public static final int TASK_LABEL_COLOUR_DEFAULT_0 = 0;

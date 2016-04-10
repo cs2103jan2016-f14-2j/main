@@ -11,7 +11,7 @@ import org.jimple.planner.task.Task;
 
 //@@author A0135808B
 public interface StorageToolsInterface {
-	//@@author A0135808B
+
 	default File createFile(String fileName) {
 		File file = new File(fileName);
 		
@@ -27,7 +27,7 @@ public interface StorageToolsInterface {
 		}
 		return file;
 	}
-	//@@author A0135808B
+
 	default void assignTaskIds(ArrayList<ArrayList<Task>> allTasksArray) {
 		int taskId = 1;
 		for (ArrayList<Task> taskList : allTasksArray) {
@@ -37,7 +37,7 @@ public interface StorageToolsInterface {
 			}
 		}
 	}
-	//@@author A0135808B
+
 	default void checkTaskValidity(Task task) throws InvalidTaskException {
 		if(!task.isValidType()){
 			InvalidTaskException invalidTaskException = new InvalidTaskException(ERROR_INVALID_TASK);

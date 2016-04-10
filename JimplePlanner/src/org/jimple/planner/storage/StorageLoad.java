@@ -40,7 +40,6 @@ import org.jimple.planner.task.TaskLabel;
 public class StorageLoad implements StorageLoadInterface{
 	private final static Logger LOGGER = Logger.getLogger(StorageLoad.class.getName());
 	
-	//@@author A0135808B
 	private BufferedReader createFileReader(String fileName){
 		BufferedReader reader = null;
 		try {

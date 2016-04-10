@@ -1,12 +1,12 @@
 # generated
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<Task> getToDoList() {
 		return todo;
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<Task> getDeadlinesList() {
 		checkOverCurrentTime(deadlines, events);
@@ -14,7 +14,7 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<Task> getEventsDividedList() {
 		checkOverCurrentTime(deadlines, events);
@@ -23,7 +23,7 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<Task> getEventsList() {
 		checkOverCurrentTime(deadlines, events);
@@ -31,14 +31,14 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<Task> getArchivedList() {
 		return archivedTasks;
 	}
 	
 ```
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<Task> getConflictedTasks() {
 		conflictedTasks = conflictChecker.getConflictedTasks(LogicConflict.mostRecentlyCheckedConflict, deadlines,
@@ -47,14 +47,14 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/Logic.java
+###### \src\org\jimple\planner\logic\Logic.java
 ``` java
 	public ArrayList<TaskLabel> getTaskLabels() {
 		return taskLabels;
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/LogicAdd.java
+###### \src\org\jimple\planner\logic\LogicAdd.java
 ``` java
 	public String testAddToTaskList(String[] parsedInput, ArrayList<Task> tempHistory, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
@@ -64,7 +64,7 @@
 	}
 }
 ```
-###### ./src/org/jimple/planner/logic/LogicArchive.java
+###### \src\org\jimple\planner\logic\LogicArchive.java
 ``` java
 	public String testMarkTaskAsDone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
@@ -73,7 +73,7 @@
 	}
 	
 ```
-###### ./src/org/jimple/planner/logic/LogicArchive.java
+###### \src\org\jimple\planner\logic\LogicArchive.java
 ``` java
 	public String testMarkTaskAsUndone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
@@ -84,7 +84,7 @@
 
 }
 ```
-###### ./src/org/jimple/planner/logic/LogicDelete.java
+###### \src\org\jimple\planner\logic\LogicDelete.java
 ``` java
 	public String testDeleteTask(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks, LinkedList<LogicPreviousTask> undoTasks,
@@ -93,7 +93,7 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/LogicDelete.java
+###### \src\org\jimple\planner\logic\LogicDelete.java
 ``` java
 	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
@@ -102,7 +102,7 @@
 
 }
 ```
-###### ./src/org/jimple/planner/logic/LogicEdit.java
+###### \src\org\jimple\planner\logic\LogicEdit.java
 ``` java
 	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
@@ -112,7 +112,7 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/LogicEdit.java
+###### \src\org\jimple\planner\logic\LogicEdit.java
 ``` java
 	public String testEditTask(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
@@ -123,7 +123,7 @@
 
 }
 ```
-###### ./src/org/jimple/planner/logic/LogicLabel.java
+###### \src\org\jimple\planner\logic\LogicLabel.java
 ``` java
 	public String testChangeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
@@ -131,14 +131,14 @@
 	}
 }
 ```
-###### ./src/org/jimple/planner/logic/LogicSearch.java
+###### \src\org\jimple\planner\logic\LogicSearch.java
 ``` java
 	public boolean testIsContainKeyword(Task event, String keyword) {
 		return isContainKeyword(event, keyword);
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/LogicSearch.java
+###### \src\org\jimple\planner\logic\LogicSearch.java
 ``` java
 	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
@@ -146,14 +146,14 @@
 	}
 
 ```
-###### ./src/org/jimple/planner/logic/LogicSearch.java
+###### \src\org\jimple\planner\logic\LogicSearch.java
 ``` java
 	public ArrayList<Task> testgetSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
 		return getSearchedTasks(wordToBeSearched, list);
 	}
 }
 ```
-###### ./src/org/jimple/planner/logic/LogicUndo.java
+###### \src\org\jimple\planner\logic\LogicUndo.java
 ``` java
 	public String testUndoPreviousChange(LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
@@ -163,7 +163,7 @@
 	}
 }
 ```
-###### ./src/org/jimple/planner/task/Task.java
+###### \src\org\jimple\planner\task\Task.java
 ``` java
 	@Override
 	public int hashCode() {
@@ -179,9 +179,7 @@
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-```
-###### ./src/org/jimple/planner/task/Task.java
-``` java
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -229,7 +227,7 @@
 	}
 }
 ```
-###### ./src/org/jimple/planner/task/TaskLabel.java
+###### \src\org\jimple\planner\task\TaskLabel.java
 ``` java
 	@Override
 	public int hashCode() {
@@ -240,9 +238,7 @@
 		result = prime * result + ((labelName == null) ? 0 : labelName.hashCode());
 		return result;
 	}
-```
-###### ./src/org/jimple/planner/task/TaskLabel.java
-``` java
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
