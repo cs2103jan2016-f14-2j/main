@@ -40,6 +40,17 @@ public final class Constants {
 	
 	public static final String ERROR_INVALID_TASK = "Task is invalid";
 	
+	//@@author A0122498Y
+	/*
+	 * UI Component
+	 */
+	public static final String ERROR_FXML_INITIALIZE = "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
+	public static final String MESSAGE_INITIALIZE = "initializing Jimple UI";
+	public static final String ICON_TAB_JIMPLE = "jimpleTabIcon.png";
+	public static final String ICON_TAB_AGENDA = "agendaTabIcon.png";
+	public static final String ICON_TAB_TODO = "todoTabIcon.png";
+	public static final String ICON_TAB_ARCHIVE = "archiveTabIcon.png";
+	
 	/*
 	 * Storage Component
 	 */
