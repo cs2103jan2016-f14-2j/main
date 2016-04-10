@@ -38,11 +38,11 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private ArrayList<Task> conflictedTasks;
 	private ArrayList<String> pastUserInputs;
 	private ArrayList<myObserver> observers;
+	private ArrayList<TaskLabel> taskLabels;
 	private LinkedList<LogicPreviousTask> undoTasks;
 	private HashMap<Integer, Boolean> idHash;
 	private Parser parser;
 	private Storage store;
-	private ArrayList<TaskLabel> taskLabels;
 	private LogicAdd adder;
 	private LogicEdit editer;
 	private LogicDelete deleter;
