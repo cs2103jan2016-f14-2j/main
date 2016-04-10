@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.StorageInterface;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
@@ -15,7 +15,6 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 	protected String markTaskAsDone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
 			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
-
 		boolean isTodoMarked = false;
 		boolean isDeadlinesMarked = false;
 		boolean isEventsMarked = false;
@@ -52,6 +51,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 		return false;
 	}
 
+
 	protected String markTaskAsUndone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
 			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
@@ -75,11 +75,12 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
 		return markTaskAsDone(parsedInput, undoTasks, tempHistory, todo, deadlines, events, archivedTasks, taskLabels);
 	}
-	
+
 	public String testMarkTaskAsUndone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
 			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
-		return markTaskAsUndone(parsedInput, undoTasks, tempHistory, todo, deadlines, events, archivedTasks, taskLabels);
+		return markTaskAsUndone(parsedInput, undoTasks, tempHistory, todo, deadlines, events, archivedTasks,
+				taskLabels);
 	}
 
 }

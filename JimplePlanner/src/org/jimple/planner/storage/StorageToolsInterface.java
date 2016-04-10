@@ -6,12 +6,14 @@ import static org.jimple.planner.constants.Constants.ERROR_INVALID_TASK;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jimple.planner.exceptions.InvalidTaskException;
 import org.jimple.planner.task.Task;
 
 //@@author A0135808B
-public interface StorageTools {
+public interface StorageToolsInterface {
 	//@@author A0135808B
 	default File createFile(String fileName) {
 		File file = new File(fileName);
@@ -39,18 +41,10 @@ public interface StorageTools {
 		}
 	}
 	//@@author A0135808B
-	default void checkTaskValidity(Task task) {
+	default void checkTaskValidity(Task task) throws InvalidTaskException {
 		if(!task.isValidType()){
 			InvalidTaskException invalidTaskException = new InvalidTaskException(ERROR_INVALID_TASK);
-			try {
 				throw invalidTaskException;
-			} catch (InvalidTaskException e) {
-				System.out.println(e.getMessage());
-				System.out.println("task title:" + task.getTitle());
-				System.out.println("task's fromTime is: "+task.getFromTime());
-				System.out.println("task's toTime is: "+task.getToTime());
-				e.printStackTrace();
-			}
 		}
 	}
 }

@@ -13,8 +13,8 @@ import org.jimple.planner.observers.myObserver;
 
 import org.jimple.planner.parser.InputStruct;
 import org.jimple.planner.parser.Parser;
+import org.jimple.planner.storage.StorageInterface;
 import org.jimple.planner.storage.Storage;
-import org.jimple.planner.storage.StorageComponent;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
@@ -42,7 +42,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private LinkedList<LogicPreviousTask> undoTasks;
 	private HashMap<Integer, Boolean> idHash;
 	private Parser parser;
-	private Storage store;
+	private StorageInterface store;
 	private LogicAdd adder;
 	private LogicEdit editer;
 	private LogicDelete deleter;
@@ -65,7 +65,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		taskLabels = new ArrayList<TaskLabel>();
 		idHash = new HashMap<Integer, Boolean>();
 		parser = new Parser();
-		store = new StorageComponent();
+		store = new Storage();
 		adder = new LogicAdd();
 		editer = new LogicEdit();
 		deleter = new LogicDelete();

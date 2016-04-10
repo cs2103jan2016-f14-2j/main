@@ -64,13 +64,13 @@ public interface LogicTaskModification {
 		if (!taskLabels.isEmpty()) {
 			for (TaskLabel aLabel : taskLabels) {
 				if (aLabel.getLabelName().equals(name)) {
-					return TaskLabel.duplicateTaskLabel(aLabel);
+					return TaskLabel.createDuplicateTaskLabel(aLabel);
 				} else if (name.equals("DEFAULT")) {
-					return TaskLabel.getDefaultLabel();
+					return TaskLabel.createDefaultLabel();
 				}
 			}
 		}
-		TaskLabel newLabel = TaskLabel.getNewLabel(name);
+		TaskLabel newLabel = TaskLabel.createNewLabel(name);
 		taskLabels.add(newLabel);
 		return newLabel;
 	}

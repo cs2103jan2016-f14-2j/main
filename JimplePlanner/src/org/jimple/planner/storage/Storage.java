@@ -5,17 +5,49 @@ import java.util.ArrayList;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 //@@author A0135808B
-public interface Storage{
+public class Storage implements StorageInterface{
+	private StorageSave storageSave;
+	private StorageLoad storageLoad;
+	private StorageProperties storageProperties;
 	//@@author A0135808B
-	public boolean isSavedTasks(ArrayList<ArrayList<Task>> allTaskLists);
+	public Storage() {
+		storageSave = new StorageSave();
+		storageLoad = new StorageLoad();
+		storageProperties = new StorageProperties();
+	}
 	//@@author A0135808B
-	public boolean isSavedLabels(ArrayList<TaskLabel> labelList);
+	@Override
+	public boolean isSavedTasks(ArrayList<ArrayList<Task>> allTaskLists) {
+		String fileName = storageProperties.getCurrentSaveFilePath();
+		String tempFileName = storageProperties.getCurrentTempSaveFilePath();
+		return storageSave.isSavedTasksSelect(allTaskLists, fileName, tempFileName);
+	}
 	//@@author A0135808B
-	public ArrayList<ArrayList<Task>> getTasks();
+	@Override
+	public boolean isSavedLabels(ArrayList<TaskLabel> labelList) {
+		return storageProperties.isSavedLabels(labelList);
+	}
 	//@@author A0135808B
-	public ArrayList<TaskLabel> getLabels();
+	@Override	
+	public ArrayList<ArrayList<Task>> getTasks(){
+		String fileName = storageProperties.getCurrentSaveFilePath();
+		return storageLoad.getTaskSelect(fileName);
+	}
 	//@@author A0135808B
-	public boolean setPath(String pathName);
+	@Override
+	public ArrayList<TaskLabel> getLabels() {
+		ArrayList<TaskLabel> labelList = null;
+		labelList = storageProperties.getLabels();
+		return labelList;
+	}
 	//@@author A0135808B
-	public String checkPath();
+	@Override
+	public boolean setPath(String pathName) {
+		return storageProperties.setPath(pathName);
+	}
+	//@@author A0135808B
+	@Override
+	public String checkPath(){
+		return storageProperties.checkPath();
+	}
 }

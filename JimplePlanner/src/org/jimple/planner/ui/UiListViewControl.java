@@ -43,7 +43,6 @@ public class UiListViewControl extends UiController{
 	}
 
 	public void updatePointer(int num) {
-		System.out.println(getActiveListView().getItems().size());
 		if (num >= getActiveListView().getItems().size())
 			num -= 1;
 		getActiveListView().requestFocus();

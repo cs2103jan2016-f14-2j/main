@@ -28,14 +28,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.jimple.planner.logfilehandler.LogFileHandler;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
-public class StorageProperties implements StorageTools{
+public class StorageProperties implements StorageToolsInterface{
 	private StorageSave storageSave;
 	private StorageLoad storageLoad;
+	private final static Logger LOGGER = Logger.getLogger(StorageProperties.class.getName());
 	private static HashMap<String, Integer> colourToId = new HashMap<String, Integer>();
 	//@@author A0135808B
 	public StorageProperties(){
@@ -230,7 +235,7 @@ public class StorageProperties implements StorageTools{
 	public boolean isSavedLabels(ArrayList<TaskLabel> labelLists){
 		Properties newStorageProperties = getPathProperties();
 		for(TaskLabel taskLabel: labelLists){
-			if(taskLabel.equals(TaskLabel.getDefaultLabel())){
+			if(taskLabel.equals(TaskLabel.createDefaultLabel())){
 				continue;
 			}
 			String labelName = taskLabel.getLabelName();
@@ -261,7 +266,9 @@ public class StorageProperties implements StorageTools{
 				labelColourString = PROPERTIES_VALUE_COLOUR_PURPLE_6;
 				break;
 			default:
-				System.out.println("Error, no label should be null here");
+				LOGGER.warning("Error, no label should have its colour id be invalid");
+				LOGGER.warning("label name: "+taskLabel.getLabelName());
+				LOGGER.warning("label colourId: "+taskLabel.getColourId());
 				return false;
 			}
 			newStorageProperties.setProperty(labelName, labelColourString);
@@ -283,7 +290,7 @@ public class StorageProperties implements StorageTools{
 	public ArrayList<TaskLabel> getLabels(){
 		Properties storageProperties = storageLoad.loadProperties();
 		ArrayList<TaskLabel> labelList = new ArrayList<TaskLabel>();
-		labelList.add(TaskLabel.getDefaultLabel()); //1st element of labelList is always default label
+		labelList.add(TaskLabel.createDefaultLabel()); //1st element of labelList is always default label
 		
 		Set<Object> propertiesKeys = storageProperties.keySet();
 		boolean removed_savepath_key = propertiesKeys.remove((Object)PROPERTIES_KEY_CURRENT_SAVEPATH);
@@ -294,7 +301,7 @@ public class StorageProperties implements StorageTools{
 			String labelNamesString = (String) labelNames;
 			String labelColourString = storageProperties.getProperty(labelNamesString);
 			int labelColourId = colourToId.get(labelColourString);
-			TaskLabel taskLabel = TaskLabel.getNewLabel(labelNamesString, labelColourId);
+			TaskLabel taskLabel = TaskLabel.createNewLabel(labelNamesString, labelColourId);
 			labelList.add(taskLabel);
 		}
 		return labelList;

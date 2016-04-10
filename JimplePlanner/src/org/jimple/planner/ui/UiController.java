@@ -557,7 +557,6 @@ public class UiController extends myObserver implements Initializable {
 		if(feedback[1].matches(".*\\d+.*")) //if string contains digits
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
-		System.out.println("feedback[1] = "+feedback[1]);
 		switch (tab) {
 		case Constants.TYPE_EVENT:
 		case Constants.TYPE_DEADLINE:

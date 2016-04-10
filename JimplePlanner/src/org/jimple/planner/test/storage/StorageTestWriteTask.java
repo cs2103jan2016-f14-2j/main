@@ -12,7 +12,6 @@ import org.junit.Test;
 //@@author A0135808B
 public class StorageTestWriteTask {
 	private StorageSave storageSave = new StorageSave();
-	private StorageGetExampleTasks exampleTasksGenerator = new StorageGetExampleTasks();
 	
 	/*
 	 * The purpose of this test is to see how tasks are written in an environment that does not save to a file directly

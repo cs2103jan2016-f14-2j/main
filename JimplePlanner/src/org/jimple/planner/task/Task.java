@@ -31,7 +31,7 @@ public class Task {
 		this.isOverDue = false;
 		this.isDone = false;
 		this.taskId = 1000;
-		this.taskLabel = TaskLabel.getDefaultLabel();
+		this.taskLabel = TaskLabel.createDefaultLabel();
 		this.conflictedTasks = new ArrayList<Task>();
 	}
 
@@ -53,6 +53,9 @@ public class Task {
 		String prettierFromDate = new String("");
 		if(fromDateTime.getDayOfYear() == LocalDateTime.now().getDayOfYear()){
 			prettierFromDate += "TODAY, ";
+		}
+		else{
+			prettierFromDate += fromDateTime.getDayOfWeek() + ", ";
 		}
 		prettierFromDate += fromDateTime.getDayOfMonth() + " " + fromDateTime.getMonth() + " " + fromDateTime.getYear();
 		return prettierFromDate;

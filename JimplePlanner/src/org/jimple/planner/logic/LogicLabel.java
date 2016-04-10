@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.storage.Storage;
+import org.jimple.planner.storage.StorageInterface;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
@@ -63,22 +63,22 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 			ArrayList<Task> archivedTasks, TaskLabel removedTask) {
 		for (int j = 0; j < todo.size(); j++) {
 			if (todo.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				todo.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				todo.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 		for (int j = 0; j < deadlines.size(); j++) {
 			if (deadlines.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				deadlines.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				deadlines.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 		for (int j = 0; j < events.size(); j++) {
 			if (events.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				events.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				events.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 		for (int j = 0; j < archivedTasks.size(); j++) {
 			if (archivedTasks.get(j).getTaskLabel().getLabelName().equals(removedTask.getLabelName())) {
-				archivedTasks.get(j).setTaskLabel(TaskLabel.getDefaultLabel());
+				archivedTasks.get(j).setTaskLabel(TaskLabel.createDefaultLabel());
 			}
 		}
 	}
@@ -163,6 +163,7 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 		changeMasterListLabels(newName, labelPosition, todo, deadlines, events, taskLabels, "name");
 		return true;
 	}
+
 
 	private boolean changeLabelColour(String newColour, ArrayList<TaskLabel> taskLabels, int labelPosition,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {

@@ -346,7 +346,7 @@
                               <DropShadow />
                            </effect>
                         </AnchorPane>
-                        <AnchorPane fx:id="conflictedBox" layoutX="10.0" layoutY="10.0" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
+                        <AnchorPane fx:id="conflictedBox" style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 10;">
                            <children>
                               <VBox layoutX="10.0" layoutY="15.0" spacing="10.0">
                                  <children>

@@ -31,7 +31,7 @@ import org.jimple.planner.task.TaskLabel;
 public class LogicTest {
 	Formatter testformatter = new Formatter();
 	Logic testLogic = new Logic();
-	Storage testStore = new StorageComponent();
+	StorageInterface testStore = new Storage();
 	LogicAdd testAdder = new LogicAdd();
 	LogicEdit testEditer = new LogicEdit();
 	LogicDelete testDeleter = new LogicDelete();
@@ -144,8 +144,8 @@ public class LogicTest {
 	 */
 	@Test
 	public void ShouldReturnChangedLabel() throws IOException	{
-		taskLabels.add(TaskLabel.getNewLabel("food"));
-		taskLabels.add(TaskLabel.getNewLabel("work"));
+		taskLabels.add(TaskLabel.createNewLabel("food"));
+		taskLabels.add(TaskLabel.createNewLabel("work"));
 		String[] variableArray1 = {"food", null, "red"};
 		String[] variableArray2 = {"work", "exercise", null};
 		String[] variableArray3 = {"stuff", "wrong", "wrong"};
@@ -286,7 +286,7 @@ public class LogicTest {
 		testAdder.testAddToTaskList(parsedInput4, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("work", taskLabels.get(0).getLabelName());
 		
-		taskLabels.add(TaskLabel.getNewLabel("food"));
+		taskLabels.add(TaskLabel.createNewLabel("food"));
 		String[] parsedInput5 = { "todo", "buy hotpot ingredients", null, null, null, "food" };
 		testAdder.testAddToTaskList(parsedInput5, tempHistory, floating, deadlines, events, taskLabels, undoTasks, idHash);
 		assertEquals("food", floating.get(2).getTaskLabel().getLabelName());
