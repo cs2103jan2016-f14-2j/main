@@ -365,11 +365,16 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		listOfCommands += Constants.ADD_COMMAND_AT;
 		listOfCommands += Constants.ADD_COMMAND_ON;
 		listOfCommands += Constants.ADD_COMMAND_FROMTO;
+		listOfCommands += Constants.ADD_COMMAND_DESC;
+		listOfCommands += Constants.ADD_COMMAND_LABEL;
 
 		listOfCommands += Constants.EDIT_HELP_HEADER;
 		listOfCommands += Constants.EDIT_COMMAND_NAME;
+		listOfCommands += Constants.EDIT_COMMAND_DESC;
 		listOfCommands += Constants.EDIT_COMMAND_BY_TIME;
 		listOfCommands += Constants.EDIT_COMMAND_FROMTO_TIME;
+		listOfCommands += Constants.EDIT_COMMAND_ON_TIME;
+		listOfCommands += Constants.EDIT_COMMAND_AT_TIME;
 		listOfCommands += Constants.EDIT_COMMAND_LABEL;
 
 		listOfCommands += Constants.DELETE_HELP_HEADER;
@@ -398,6 +403,10 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 
 		listOfCommands += Constants.UNARCHIVE_HELP_HEADER;
 		listOfCommands += Constants.UNARCHIVE_COMMAND;
+		
+		listOfCommands += Constants.CHECKCONFLICT_HELP_HEADER;
+		listOfCommands += Constants.CHECKCONFLICT_COMMAND;
+
 		return listOfCommands;
 	}
 
