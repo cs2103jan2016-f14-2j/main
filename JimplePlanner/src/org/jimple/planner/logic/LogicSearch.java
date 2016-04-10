@@ -85,18 +85,18 @@ public class LogicSearch {
 		return (isTitleSearched || isDescSearched || isLabelSearched);
 	}
 
-	//@@author A0124952E
+	//@@author generated
 	public boolean testIsContainKeyword(Task event, String keyword) {
 		return isContainKeyword(event, keyword);
 	}
 
-	//@@author A0124952E
+	//@@author generated
 	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
 		return searchWord(wordToBeSearched, todo, deadlines, events, archivedTasks);
 	}
 
-	//@@author A0124952E
+	//@@author generated
 	public ArrayList<Task> testgetSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
 		return getSearchedTasks(wordToBeSearched, list);
 	}

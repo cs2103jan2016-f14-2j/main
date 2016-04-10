@@ -18,7 +18,6 @@ public class LogicDirectory implements LogicMasterListModification, LogicTaskMod
 		if (!isValidPath(store, variableArray)) {
 			return Constants.ERROR_DIRECTORY_PATH_FEEDBACK;
 		}
-		// store = new StorageComponent();
 		ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 		taskLabels = store.getLabels();
 		assignTaskIds(allTasks, idHash);

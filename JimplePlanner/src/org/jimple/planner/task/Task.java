@@ -7,6 +7,7 @@ import static org.jimple.planner.constants.Constants.TYPE_TODO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+//@@author A0135808B
 public class Task {
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
@@ -20,7 +21,8 @@ public class Task {
 	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
 	private static TaskSorter taskSorter = new TaskSorter();
-
+	
+	//@@author A0135808B
 	// Default Constructor
 	public Task(String aTitle) {
 		this.title = aTitle;
@@ -34,7 +36,7 @@ public class Task {
 		this.taskLabel = TaskLabel.createDefaultLabel();
 		this.conflictedTasks = new ArrayList<Task>();
 	}
-
+	//@@author A0135808B
 	// Constructor for creating a duplicate
 	public Task(Task taskToBeDuplicated) {
 		this.title = taskToBeDuplicated.getTitle();
@@ -49,6 +51,7 @@ public class Task {
 		this.conflictedTasks = taskToBeDuplicated.getConflictedTasks();
 	}
 	
+	//@@author A0135808B
 	public String getPrettierFromDate(){
 		String prettierFromDate = new String("");
 		if(fromDateTime.getDayOfYear() == LocalDateTime.now().getDayOfYear()){
@@ -61,28 +64,28 @@ public class Task {
 		return prettierFromDate;
 	}
 	
-	// @@author A0124952E
+	//@@author A0135808B
 	public String getPrettyFromDate() {
 		String prettyFromDate = new String("");
 		prettyFromDate = formatter.formatPrettyDate(fromDateTime);
 		return prettyFromDate;
 	}
 	
-	// @@author A0124952E
+	//@@author A0135808B
 	public String getPrettyToDate() {
 		String prettyToDate = new String("");
 		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
 	}
 	
-	// @@author A0124952E
+	//@@author A0135808B
 	public String getPrettyFromTime() {
 		String prettyFromTime = new String("");
 		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
 		return prettyFromTime;
 	}
 	
-	// @@author A0124952E
+	//@@author A0135808B
 	public String getPrettyToTime() {
 		String prettyToTime = new String("");
 		prettyToTime = formatter.formatPrettyTime(toDateTime);
@@ -239,7 +242,7 @@ public class Task {
 	public static void sortTasksByTime(ArrayList<Task> list) {
 		taskSorter.sortTasksByTime(list);
 	}
-	//@@author A0135808B
+	//@@author generated
 	@Override
 	public int hashCode() {
 		final int prime = 97;
@@ -254,7 +257,7 @@ public class Task {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-	//@@author A0135808B
+	//@@author generated
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

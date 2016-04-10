@@ -71,14 +71,14 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 		return "task " + parsedInput[0] + Constants.ERROR_UNDONE_FEEDBACK;
 	}
 	
-	//@@author A0124952E
+	//@@author generated
 	public String testMarkTaskAsDone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
 			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
 		return markTaskAsDone(parsedInput, undoTasks, tempHistory, todo, deadlines, events, archivedTasks, taskLabels);
 	}
 	
-	//@@author A0124952E
+	//@@author generated
 	public String testMarkTaskAsUndone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
 			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {

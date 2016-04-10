@@ -52,14 +52,14 @@ public class LogicDelete implements LogicTaskModification, LogicMasterListModifi
 		return false;
 	}
 	
-	//@@author A0124952E
+	//@@author generated
 	public String testDeleteTask(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks, LinkedList<LogicPreviousTask> undoTasks,
 			HashMap<Integer, Boolean> idHash) throws IOException {
 		return deleteTask(variableArray, todo, deadlines, events, archivedTasks, undoTasks, idHash);
 	}
 
-	//@@author A0124952E
+	//@@author generated
 	public boolean testFindTaskToDelete(String[] variableArray, ArrayList<Task> list,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash) throws IOException {
 		return findTaskToDelete(variableArray, list, undoTasks, idHash);

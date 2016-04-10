@@ -31,7 +31,7 @@ public class LogicAdd implements LogicTaskModification, LogicMasterListModificat
 		return "\"" + parsedInput[1] + "\"" + Constants.ADDED_FEEDBACK;
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public String testAddToTaskList(String[] parsedInput, ArrayList<Task> tempHistory, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)

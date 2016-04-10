@@ -230,7 +230,7 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 		}
 	}
 
-	//@@author A0124952E
+	//@@author generated
 	public String testChangeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
 		return changeLabel(variableArray, taskLabels, todo, deadlines, events);

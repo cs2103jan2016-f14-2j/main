@@ -225,25 +225,25 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		notifyAllObservers(feedback);
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public ArrayList<Task> getToDoList() {
 		return todo;
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public ArrayList<Task> getDeadlinesList() {
 		checkOverCurrentTime(deadlines, events);
 		return deadlines;
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public ArrayList<Task> getEventsDividedList() {
 		checkOverCurrentTime(deadlines, events);
 		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		return dividedTasks;
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public ArrayList<Task> getEventsList() {
 		checkOverCurrentTime(deadlines, events);
 		return events;
@@ -268,18 +268,19 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		return agenda;
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public ArrayList<Task> getArchivedList() {
 		return archivedTasks;
 	}
-
+	
+	//@@author generated
 	public ArrayList<Task> getConflictedTasks() {
 		conflictedTasks = conflictChecker.getConflictedTasks(LogicConflict.mostRecentlyCheckedConflict, deadlines,
 				events);
 		return conflictedTasks;
 	}
 
-	// @@author A0124952E
+	//@@author generated
 	public ArrayList<TaskLabel> getTaskLabels() {
 		return taskLabels;
 	}
