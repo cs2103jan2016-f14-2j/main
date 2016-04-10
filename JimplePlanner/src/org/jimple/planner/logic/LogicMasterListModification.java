@@ -9,10 +9,11 @@ import org.jimple.planner.constants.Constants;
 import org.jimple.planner.storage.StorageInterface;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
-import org.jimple.planner.task.TaskSorter;
 
 //@@author A0124952E
 public interface LogicMasterListModification {
+	
+	//@@author A0124952E
 	public default void allocateCorrectTimeArray(Task newTask, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events) throws IOException {
 		// check if null
@@ -27,6 +28,7 @@ public interface LogicMasterListModification {
 		}
 	}
 
+	//@@author A0124952E
 	public default void packageForSavingMasterLists(StorageInterface store, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		ArrayList<ArrayList<Task>> allTasksArray = new ArrayList<ArrayList<Task>>();
@@ -37,10 +39,12 @@ public interface LogicMasterListModification {
 		store.isSavedTasks(allTasksArray);
 	}
 
+	//@@author A0124952E
 	public default void packageForSavingLabelLists(StorageInterface store, ArrayList<TaskLabel> taskLabels) {
 		store.isSavedLabels(taskLabels);
 	}
 	
+	//@@author A0124952E
 	public default void assignTaskIds(ArrayList<ArrayList<Task>> allTasks, HashMap<Integer, Boolean> idHash)	{
 		for (int i=0;i<allTasks.size();i++)	{
 			for (Task aTask : allTasks.get(i))	{
@@ -49,6 +53,7 @@ public interface LogicMasterListModification {
 		}
 	}
 
+	//@@author A0124952E
 	public default void checkOverCurrentTime(ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (Task aTask : deadlines) {
 			if (aTask.getFromTime() != null) {
@@ -70,6 +75,7 @@ public interface LogicMasterListModification {
 		}
 	}
 
+	//@@author A0124952E
 	public default ArrayList<Task> getDividedTasks(ArrayList<Task> events) {
 		ArrayList<Task> dividedTasks = new ArrayList<Task>();
 		for (Task anEvent : events) {

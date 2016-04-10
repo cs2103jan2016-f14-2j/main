@@ -2,8 +2,6 @@ package org.jimple.planner.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -52,7 +50,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 	private LogicLabel labeler;
 	private LogicArchive archiver;
 	private LogicConflict conflictChecker;
-
+	
+	//@@author A0124952E
 	public Logic() {
 		agenda = new ArrayList<Task>();
 		tempHistory = new ArrayList<Task>();
@@ -93,7 +92,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			events = new ArrayList<Task>();
 		}
 	}
-
+	
+	//@@author A0124952E
 	/**
 	 * function is for the UI to call when a user inputs a string
 	 *
@@ -200,33 +200,39 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		packageForSavingLabelLists(store, taskLabels);
 		notifyAllObservers(feedback);
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getToDoList() {
 		return todo;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getDeadlinesList() {
 		checkOverCurrentTime(deadlines, events);
 		return deadlines;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getEventsDividedList() {
 		checkOverCurrentTime(deadlines, events);
 		ArrayList<Task> dividedTasks = getDividedTasks(events);
 		return dividedTasks;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getEventsList() {
 		checkOverCurrentTime(deadlines, events);
 		return events;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getSearchList() {
 		searchResults.clear();
 		searchResults = searcher.searchWord(LogicSearch.mostRecentlySearchedWord, todo, deadlines, events, archivedTasks);
 		return searchResults;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getAgendaList() {
 		agenda.clear();
 		checkOverCurrentTime(deadlines, events);
@@ -236,7 +242,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		Task.sortTasksByTime(agenda);
 		return agenda;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<Task> getArchivedList() {
 		return archivedTasks;
 	}
@@ -246,18 +253,21 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				events);
 		return conflictedTasks;
 	}
-
+	
+	//@@author A0124952E
 	public ArrayList<TaskLabel> getTaskLabels() {
 		return taskLabels;
 	}
-
+	
+	//@@author A0124952E
 	public String getPastInputs(int cmdHistoryPointer) {
 		if (!pastUserInputs.isEmpty()) {
 			return pastUserInputs.get(cmdHistoryPointer);
 		}
 		return "";
 	}
-
+	
+	//@@author A0124952E
 	private String getTaskTypeAndTaskID() {
 		if (!tempHistory.isEmpty()) {
 			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId())
@@ -266,7 +276,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			return "";
 		}
 	}
-
+	
+	//@@author A0124952E
 	private String getTaskID() {
 		if (!tempHistory.isEmpty()) {
 			return Integer.toString(tempHistory.get(tempHistory.size() - 1).getTaskId());
@@ -274,29 +285,34 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 			return "";
 		}
 	}
-
+	
+	//@@author A0124952E
 	private void initializeIDMap() {
 		for (int i = 0; i < Constants.MAX_ID; i++) {
 			idHash.put(i + 1, false);
 		}
 	}
-
+	
+	//@@author A0124952E
 	public void attach(myObserver observer) {
 		observers.add(observer);
 	}
-
+	
+	//@@author A0124952E
 	public void notifyAllObservers() {
 		for (myObserver observer : observers) {
 			observer.update();
 		}
 	}
-
+	
+	//@@author A0124952E
 	public void notifyAllObservers(String[] displayType) {
 		for (myObserver observer : observers) {
 			observer.update(displayType);
 		}
 	}
-
+	
+	//@@author A0124952E
 	public void refreshLists() {
 		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(60), new EventHandler<ActionEvent>() {
 			@Override
@@ -307,7 +323,8 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 	}
-
+	
+	//@@author A0124952E
 	/**
 	 * gets a list of help commands for user to refer to
 	 *

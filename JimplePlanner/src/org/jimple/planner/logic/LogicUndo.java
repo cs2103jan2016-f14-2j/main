@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.storage.*;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0124952E
 public class LogicUndo implements LogicTaskModification, LogicMasterListModification {
-
+	
+	//@@author A0124952E
 	protected String undoPreviousChange(LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash)
@@ -59,6 +59,7 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 		return "task \"" + aTask.getPreviousTask().getTitle() + "\"" + Constants.UNDO_FEEDBACK;
 	}
 
+	//@@author A0124952E
 	private void deletionForUndo(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks, HashMap<Integer, Boolean> idHash) {
 		boolean isFloatDeleted = false;
@@ -77,6 +78,7 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 		}
 	}
 
+	//@@author A0124952E
 	private boolean findTaskToDeleteForUndo(String[] variableArray, ArrayList<Task> list,
 			HashMap<Integer, Boolean> idHash) {
 		for (int i = 0; i < list.size(); i++) {
@@ -89,6 +91,7 @@ public class LogicUndo implements LogicTaskModification, LogicMasterListModifica
 		return false;
 	}
 
+	//@@author A0124952E
 	public String testUndoPreviousChange(LinkedList<LogicPreviousTask> undoTasks, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash) throws IOException {

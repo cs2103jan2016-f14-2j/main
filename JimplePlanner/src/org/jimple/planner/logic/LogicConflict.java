@@ -3,13 +3,13 @@ package org.jimple.planner.logic;
 import java.util.ArrayList;
 
 import org.jimple.planner.constants.Constants;
-import org.jimple.planner.exceptions.NoSuchTaskWithConflictException;
 import org.jimple.planner.task.Task;
 
 //@@author A0124952E
 public class LogicConflict {
 	public static String[] mostRecentlyCheckedConflict = new String[1];
-
+	
+	//@@author A0124952E
 	protected void checkForAllTasksIfConflictWithCurrentTasks(ArrayList<Task> deadlines, ArrayList<Task> events) {
 		for (Task aDeadline : deadlines) {
 			aDeadline.getConflictedTasks().clear();
@@ -20,7 +20,8 @@ public class LogicConflict {
 			checkIsConflictWithCurrentTasks(anEvent, deadlines, events);
 		}
 	}
-
+	
+	//@@author A0124952E
 	protected ArrayList<Task> getConflictedTasks(String[] parsedInput, ArrayList<Task> deadlines,
 			ArrayList<Task> events) {
 		ArrayList<Task> conflicts = new ArrayList<Task>();
@@ -41,7 +42,8 @@ public class LogicConflict {
 		}
 		return conflicts;
 	}
-
+	
+	//@@author A0124952E
 	private void checkIsConflictWithCurrentTasks(Task newTask, ArrayList<Task> deadlines, ArrayList<Task> events) {
 		switch (newTask.getType()) {
 		case Constants.TYPE_DEADLINE:
@@ -70,7 +72,8 @@ public class LogicConflict {
 			break;
 		}
 	}
-
+	
+	//@@author A0124952E
 	private boolean isToTimeExceedTimeRange(Task newTask, Task event) {
 		if (newTask.getToTime().compareTo(event.getFromTime()) > 0
 				&& newTask.getToTime().compareTo(event.getToTime()) < 0) {
@@ -79,6 +82,7 @@ public class LogicConflict {
 		return false;
 	}
 
+	//@@author A0124952E
 	private boolean isFromTimeExceedTimeRange(Task newTask, Task event) {
 		if (newTask.getFromTime().compareTo(event.getFromTime()) > 0
 				&& newTask.getFromTime().compareTo(event.getToTime()) < 0) {
@@ -86,7 +90,8 @@ public class LogicConflict {
 		}
 		return false;
 	}
-
+	
+	//@@author A0124952E
 	private boolean isFromAndToTimeEncompassTimeRange(Task newTask, Task event) {
 		if (newTask.getFromTime().compareTo(event.getFromTime()) <= 0
 				&& newTask.getToTime().compareTo(event.getToTime()) >= 0) {

@@ -7,7 +7,8 @@ import org.jimple.planner.task.Task;
 //@@author A0124952E
 public class LogicSearch {
 	protected static String mostRecentlySearchedWord = new String("");
-
+	
+	//@@author A0124952E
 	protected ArrayList<Task> searchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
@@ -24,6 +25,7 @@ public class LogicSearch {
 		return searchWordResults;
 	}
 
+	//@@author A0124952E
 	private ArrayList<Task> getSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
 		ArrayList<Task> objectOfTaskInstanceFound = new ArrayList<Task>();
 		if (list != null) {
@@ -36,7 +38,8 @@ public class LogicSearch {
 		}
 		return objectOfTaskInstanceFound;
 	}
-
+	
+	//@@author A0124952E-unused
 	private boolean isContainSubstring(String sourceString, String substring) {
 		int substringLength = substring.length();
 		if (substringLength == 0) {
@@ -56,6 +59,7 @@ public class LogicSearch {
 		return false;
 	}
 
+	//@@author A0124952E
 	private boolean isContainSearchedWord(String sourceString, String searchedPhrase) {
 		String[] dividedSearchWords = searchedPhrase.split(" ");
 		String[] dividedSourceWords = sourceString.split(" ");
@@ -73,6 +77,7 @@ public class LogicSearch {
 		return false;
 	}
 
+	//@@author A0124952E
 	private boolean isContainKeyword(Task event, String keyword) {
 		boolean isTitleSearched = isContainSearchedWord(event.getTitle(), keyword);
 		boolean isDescSearched = isContainSearchedWord(event.getDescription(), keyword);
@@ -80,15 +85,18 @@ public class LogicSearch {
 		return (isTitleSearched || isDescSearched || isLabelSearched);
 	}
 
+	//@@author A0124952E
 	public boolean testIsContainKeyword(Task event, String keyword) {
 		return isContainKeyword(event, keyword);
 	}
 
+	//@@author A0124952E
 	public ArrayList<Task> testSearchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
 		return searchWord(wordToBeSearched, todo, deadlines, events, archivedTasks);
 	}
 
+	//@@author A0124952E
 	public ArrayList<Task> testgetSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
 		return getSearchedTasks(wordToBeSearched, list);
 	}

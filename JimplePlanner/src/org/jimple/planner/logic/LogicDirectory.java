@@ -10,7 +10,8 @@ import java.util.HashMap;
 
 //@@author A0124952E
 public class LogicDirectory implements LogicMasterListModification, LogicTaskModification {
-
+	
+	//@@author A0124952E
 	protected String changeSaveDirectory(StorageInterface store, LogicConflict conflictChecker, String[] variableArray,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash) {
@@ -34,11 +35,13 @@ public class LogicDirectory implements LogicMasterListModification, LogicTaskMod
 		conflictChecker.checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] + "\"";
 	}
-
+	
+	//@@author A0124952E
 	protected String checkPath(StorageInterface store) {
 		return store.checkPath();
 	}
-
+	
+	//@@author A0124952E
 	private boolean isValidPath(StorageInterface store, String[] variableArray) {
 		if (store.setPath(variableArray[0])) {
 			return true;
