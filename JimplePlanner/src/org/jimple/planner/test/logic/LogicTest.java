@@ -49,12 +49,6 @@ public class LogicTest {
 	LinkedList<LogicPreviousTask> undoTasks = new LinkedList<LogicPreviousTask>();
 	HashMap<Integer, Boolean> idHash = new HashMap<Integer, Boolean>();
 
-	/*
-	 * @Test public void EditShouldReturnFeedback() throws IOException {
-	 * String[] parsedInput = {"1", "go school", "that means NUS",
-	 * "29 february 12pm", "", ""}; assertEquals("task is edited",
-	 * "task edited in planner\n", testLogic.editTask(parsedInput)); }
-	 */
 
 	private void initializeThreeArrays() {
 		Task todo1 = new Task("a test only one");
@@ -156,6 +150,9 @@ public class LogicTest {
 		taskLabels.clear();
 	}
 	
+	/**
+	 * test case checks if dates are divided when spanning multiple days
+	 */
 	@Test
 	public void ShouldReturnMultipleTaskOfDifferentDays()	{
 		Task aTask = new Task("test Task");
@@ -265,9 +262,10 @@ public class LogicTest {
 	 * 4. add a label when does not exist
 	 * 5. add a label when exist
 	 * 6. add a label with "default" if null
+	 * @throws InvalidFromAndToTimeException 
 	 */
 	@Test
-	public void ShouldReturnFeedbackAfterAdding() throws IOException {
+	public void ShouldReturnFeedbackAfterAdding() throws IOException, InvalidFromAndToTimeException {
 		initializeIDMap();
 		String[] parsedInput1 = { "deadlines", "finish 2103 homework", null, "2016-03-28T13:00", null, null };
 		assertEquals("task is added to file", "\"finish 2103 homework\" added to planner", testAdder
@@ -349,9 +347,9 @@ public class LogicTest {
 	@Test
 	public void ShouldReturnCorrectFormatMessage() {
 		assertEquals("return formated date", "2016-05-12T16:00", testformatter.testFormatTime("12 May 4pm"));
-		assertEquals("return formated date", "2016-04-09T14:30", testformatter.testFormatTime("today 2.30pm"));
+		assertEquals("return formated date", LocalDateTime.now().toLocalDate() + "T14:30", testformatter.testFormatTime("today 2.30pm"));
 		assertEquals("return formated date", "2018-12-18T00:00", testformatter.testFormatTime("2018 12am 18 december"));
-		assertEquals("return formated date", "2016-04-09T23:00", testformatter.testFormatTime("11pm"));
+		assertEquals("return formated date", LocalDateTime.now().toLocalDate() + "T23:00", testformatter.testFormatTime("11pm"));
 	}
 
 	@Test

@@ -48,7 +48,7 @@ public class Task {
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 		this.conflictedTasks = taskToBeDuplicated.getConflictedTasks();
 	}
-
+	
 	public String getPrettierFromDate(){
 		String prettierFromDate = new String("");
 		if(fromDateTime.getDayOfYear() == LocalDateTime.now().getDayOfYear()){
@@ -60,38 +60,44 @@ public class Task {
 		prettierFromDate += fromDateTime.getDayOfMonth() + " " + fromDateTime.getMonth() + " " + fromDateTime.getYear();
 		return prettierFromDate;
 	}
-
+	
+	// @@author A0124952E
 	public String getPrettyFromDate() {
 		String prettyFromDate = new String("");
 		prettyFromDate = formatter.formatPrettyDate(fromDateTime);
 		return prettyFromDate;
 	}
-
+	
+	// @@author A0124952E
 	public String getPrettyToDate() {
 		String prettyToDate = new String("");
 		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
 	}
-
+	
+	// @@author A0124952E
 	public String getPrettyFromTime() {
 		String prettyFromTime = new String("");
 		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
 		return prettyFromTime;
 	}
-
+	
+	// @@author A0124952E
 	public String getPrettyToTime() {
 		String prettyToTime = new String("");
 		prettyToTime = formatter.formatPrettyTime(toDateTime);
 		return prettyToTime;
 	}
-
+	
+	//@@author A0135808B
 	public String getFromTimeString() {
 		if (fromDateTime == null) {
 			return "";
 		}
 		return fromDateTime.toString();
 	}
-
+	
+	//@@author A0135808B
 	public LocalDateTime getFromTime() {
 		return fromDateTime;
 	}
@@ -102,14 +108,14 @@ public class Task {
 		}
 		checkAndSetType();
 	}
-
+	//@@author A0135808B
 	public String getToTimeString() {
 		if (toDateTime == null) {
 			return "";
 		}
 		return toDateTime.toString();
 	}
-
+	//@@author A0135808B
 	public LocalDateTime getToTime() {
 		return toDateTime;
 	}
@@ -165,22 +171,22 @@ public class Task {
 			return false;
 		}
 	}
-
+	//@@author A0135808B
 	public String getTitle() {
 		return title;
 	}
-
+	//@@author A0135808B
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	//@@author A0135808B
 	public String getDescription() {
 		if (description == null) {
 			return "";
 		}
 		return description;
 	}
-
+	//@@author A0135808B
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -188,11 +194,11 @@ public class Task {
 	public TaskLabel getTaskLabel() {
 		return taskLabel;
 	}
-
+	//@@author A0135808B
 	public void setIsOverDue(boolean overDueStatus) {
 		isOverDue = overDueStatus;
 	}
-
+	//@@author A0135808B
 	public boolean getIsOverDue() {
 		return isOverDue;
 	}
@@ -221,7 +227,7 @@ public class Task {
 	public void setIsDone(boolean isDone){
 		this.isDone = isDone;
 	}
-	
+	// @@author A0124952E
 	public ArrayList<Task> getConflictedTasks()	{
 		return conflictedTasks;
 	}
@@ -233,7 +239,7 @@ public class Task {
 	public static void sortTasksByTime(ArrayList<Task> list) {
 		taskSorter.sortTasksByTime(list);
 	}
-	//@@author generated
+	//@@author A0135808B
 	@Override
 	public int hashCode() {
 		final int prime = 97;
@@ -248,7 +254,7 @@ public class Task {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-	//@@author generated
+	//@@author A0135808B
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

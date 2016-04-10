@@ -13,8 +13,8 @@ import org.jimple.planner.exceptions.InvalidFromAndToTimeException;
 
 //@@author A0124952E
 public class LogicEdit implements LogicTaskModification, LogicMasterListModification {
-	
-	//@@author A0124952E
+
+	// @@author A0124952E
 	protected String editTask(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
@@ -37,8 +37,8 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 		}
 		return "task " + variableArray[0] + Constants.ERROR_EDIT_FEEDBACK;
 	}
-	
-	//@@author A0124952E
+
+	// @@author A0124952E
 	protected boolean findTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
 			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
@@ -59,21 +59,21 @@ public class LogicEdit implements LogicTaskModification, LogicMasterListModifica
 		}
 		return false;
 	}
-	
-	//@@author A0124952E
+
+	// @@author A0124952E
 	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
 			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
 			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException, InvalidFromAndToTimeException {
 		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 	}
-	
-	//@@author A0124952E
+
+	// @@author A0124952E
 	public String testEditTask(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException, InvalidFromAndToTimeException {
 		return editTask(variableArray, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
 	}
-	
+
 }

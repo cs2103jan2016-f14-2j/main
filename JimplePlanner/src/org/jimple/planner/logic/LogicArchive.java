@@ -14,7 +14,7 @@ public class LogicArchive implements LogicMasterListModification, LogicTaskModif
 	//@@author A0124952E
 	protected String markTaskAsDone(String[] parsedInput, LinkedList<LogicPreviousTask> undoTasks,
 			ArrayList<Task> tempHistory, ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events,
-			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) throws IOException {
+			ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels) {
 		boolean isTodoMarked = false;
 		boolean isDeadlinesMarked = false;
 		boolean isEventsMarked = false;

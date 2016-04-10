@@ -8,7 +8,7 @@ import org.jimple.planner.task.Task;
 public class LogicSearch {
 	protected static String mostRecentlySearchedWord = new String("");
 	
-	//@@author A0124952E
+	//@@author A0135808B
 	protected ArrayList<Task> searchWord(String wordToBeSearched, ArrayList<Task> todo, ArrayList<Task> deadlines,
 			ArrayList<Task> events, ArrayList<Task> archivedTasks) {
 		ArrayList<Task> searchWordResults = new ArrayList<Task>();
@@ -25,7 +25,7 @@ public class LogicSearch {
 		return searchWordResults;
 	}
 
-	//@@author A0124952E
+	//@@author A0135808B
 	private ArrayList<Task> getSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
 		ArrayList<Task> objectOfTaskInstanceFound = new ArrayList<Task>();
 		if (list != null) {
@@ -39,7 +39,7 @@ public class LogicSearch {
 		return objectOfTaskInstanceFound;
 	}
 	
-	//@@author A0124952E-unused
+	//@@author A0135808B-unused
 	private boolean isContainSubstring(String sourceString, String substring) {
 		int substringLength = substring.length();
 		if (substringLength == 0) {
@@ -77,7 +77,7 @@ public class LogicSearch {
 		return false;
 	}
 
-	//@@author A0124952E
+	//@@author A0135808B
 	private boolean isContainKeyword(Task event, String keyword) {
 		boolean isTitleSearched = isContainSearchedWord(event.getTitle(), keyword);
 		boolean isDescSearched = isContainSearchedWord(event.getDescription(), keyword);
