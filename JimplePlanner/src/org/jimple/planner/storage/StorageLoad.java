@@ -28,13 +28,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.jimple.planner.exceptions.InvalidTaskException;
-import org.jimple.planner.logfilehandler.LogFileHandler;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 

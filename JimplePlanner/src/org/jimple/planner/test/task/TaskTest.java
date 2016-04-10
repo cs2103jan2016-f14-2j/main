@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.jimple.planner.task.Task;
 import org.junit.Test;
-
+//@@author A0122498
 public class TaskTest {
 	private static final String FIELD_TO_EVENT = "2016-05-10T23:59";
 	private static final String FIELD_FROM_EVENT = "2016-08-10T00:00";
@@ -21,15 +21,6 @@ public class TaskTest {
 	private Task todoTask;
 	private Task eventTask;
 	private Task deadlineTask;
-	private Task genericTask;
-	
-	private String title;
-	private String description;
-	private String category;
-	private String type;
-	private boolean isOverDue;
-	private int taskId;
-	
 	private void createAllTaskTypes(){
 		createTodoTask();
 		createEventTask();

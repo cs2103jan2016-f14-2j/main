@@ -95,7 +95,7 @@ public class Formatter {
 		for (Task aTask : list) {
 			formattedTasks += aTask.getTitle().concat("\n");
 		}
-		return null;
+		return formattedTasks;
 	}
 	
 	@Deprecated

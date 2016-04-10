@@ -3,7 +3,6 @@ package org.jimple.planner.test.storage;
 import java.util.ArrayList;
 
 import org.jimple.planner.task.Task;
-import org.jimple.planner.task.TaskLabel;
 
 public class StorageGetExampleTasks {
 	public static ArrayList<Task> getExampleTodos(){

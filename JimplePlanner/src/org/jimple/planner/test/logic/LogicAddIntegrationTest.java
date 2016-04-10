@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import org.jimple.planner.constants.Constants;
 import org.jimple.planner.logic.Logic;
 import org.junit.Test;
 

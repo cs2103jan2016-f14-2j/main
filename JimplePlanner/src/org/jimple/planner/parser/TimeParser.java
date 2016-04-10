@@ -4,11 +4,6 @@ package org.jimple.planner.parser;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
 import org.jimple.planner.constants.Constants;
 
 import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;

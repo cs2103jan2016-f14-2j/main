@@ -6,9 +6,6 @@ import static org.jimple.planner.constants.Constants.ERROR_INVALID_TASK;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.jimple.planner.exceptions.InvalidTaskException;
 import org.jimple.planner.task.Task;
 
