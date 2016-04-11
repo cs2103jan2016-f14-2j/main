@@ -1,3 +1,4 @@
+//@@author A0122498Y
 package org.jimple.planner.ui;
 
 import org.jimple.planner.constants.Constants;
@@ -17,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-//@@author A0122498Y
 public class UiPrompt extends UiController{
 	@FXML
 	AnchorPane searchBox, searchContent;	
