@@ -157,6 +157,7 @@ public class UiController extends myObserver implements Initializable {
 	}
 
 	private void setFlavourText() {
+		//@@author A0135775W
 		searchLabel.setText("Um, we found nothing.");
 		conflictedLabel.setText("Zero conflicts!");
 		todayLabel.setText("A free day for you!");
@@ -167,6 +168,7 @@ public class UiController extends myObserver implements Initializable {
 	    archiveLabel.setText("Your archive is empty! Oh look, tumbleweed!");
 	}
 
+	//@@author A0122498Y
 	private String getCurrentTime(){
 		String currentTime = "";
 		currentTime +=  LocalDateTime.now().getHour() + ":" +
