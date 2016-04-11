@@ -19,30 +19,33 @@ public class LogicEditIntegrationTest {
 	
 	/**
 	 * test cases are time sensitive
-	 * task 1: works only after 1pm
-	 * task 2: works only after 1pm
+	 * task 1: works only before 1pm
+	 * task 2: works only before 1pm
 	 * @throws IOException
 	 */
 	@Test
 	public void ShouldTestEditFromToTime() throws IOException	{
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
+		testLogic.getDeadlinesList().clear();
 		
 		testLogic.execute("ADD task 1 FROM 1pm TO 3pm");
 		testLogic.execute("EDIT 2 TIME FROM 1pm TO 2pm");
 		assertEquals("task 1", testLogic.getEventsDividedList().get(0).getTitle());
-		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
-		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T14:00", testLogic.getEventsDividedList().get(0).getToTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T14:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
+		testLogic.getDeadlinesList().clear();
 		
 		testLogic.execute("ADD task 2 FROM 1pm TO 3pm");
 		testLogic.execute("EDIT 3 TIME FROM 1400 TO 1500");
 		assertEquals("task 2", testLogic.getEventsDividedList().get(0).getTitle());
-		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T14:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
-		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T15:00", testLogic.getEventsDividedList().get(0).getToTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T14:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T15:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
+		testLogic.getDeadlinesList().clear();
 		
 	}
 	
@@ -54,9 +57,12 @@ public class LogicEditIntegrationTest {
 	 */
 	@Test
 	public void ShouldTestEditByTime() throws IOException	{
+		testLogic.execute("DELETE 1");
+		testLogic.execute("DELETE 2");
 		testLogic.getDeadlinesList().clear();
 		
 		testLogic.execute("ADD task 3 BY 3pm");
+		System.out.println(testLogic.getDeadlinesList().get(0).getTaskId());
 		testLogic.execute("EDIT 1 TIME BY 4pm");
 		assertEquals("task 3", testLogic.getDeadlinesList().get(0).getTitle());
 		assertEquals(LocalDateTime.now().toLocalDate() + "T16:00", testLogic.getDeadlinesList().get(0).getFromTimeString());
