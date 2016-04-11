@@ -65,7 +65,6 @@ public class UiListViewControl extends UiController{
 
 	protected void deleteSelectedTask() {
 		try {
-			log.log(Level.INFO, "attempting to delete selected task");
 			int selectedIndex = getCurrentTabItemIndex();
 			if (selectedIndex == -1)
 				return;
@@ -74,7 +73,7 @@ public class UiListViewControl extends UiController{
 			controller.logic.execute("DELETE " + getSelectedListItem().getTaskId());
 			updatePointer(selectedIndex);
 		} catch (IOException e) {
-			log.log(Level.WARNING, "IO exception. delete not successful", e);
+			log.log(Level.WARNING, "IO exception. deleting of task not successful", e);
 		}
 	}
 

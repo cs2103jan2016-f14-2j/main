@@ -78,6 +78,7 @@ public class TaskLabel {
 	}
 
 	public void setColourId(int labelColourId) {
+		assert labelColourId <= 6 && labelColourId >=0;
 		this.colourId = labelColourId;
 	}
 

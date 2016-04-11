@@ -27,14 +27,14 @@ public class UiFormatter {
 		formattedList = new ArrayList<Task>();
 	}
 
-	public void formatList(ArrayList<Task> newList, String listType) {
+	protected void formatList(ArrayList<Task> newList, String listType) {
 		this.arrList = newList;
 		formattedList.clear();
 
 		formatType(listType);
 	}
 
-	public void formatType(String listType) {
+	protected void formatType(String listType) {
 		switch (listType) {
 		case Constants.TYPE_TODAY:
 			addTodayTasksToFormattedDateList();
@@ -70,26 +70,26 @@ public class UiFormatter {
 		}
 	}
 
-	private void formatEmptyList() {
+	protected void formatEmptyList() {
 		data = FXCollections.observableArrayList(formattedList);
 		listView = new ListView<Task>(data);
 	}
 
-	public ListView<Task> getFormattedList() {
+	protected ListView<Task> getFormattedList() {
 		if (listView == null)
 			return null;
 		fitToAnchorPane(listView);
 		return listView;
 	}
 
-	public void fitToAnchorPane(Node node) {
+	protected void fitToAnchorPane(Node node) {
 		AnchorPane.setTopAnchor(node, 0.0);
 		AnchorPane.setLeftAnchor(node, 0.0);
 		AnchorPane.setRightAnchor(node, 0.0);
 		AnchorPane.setBottomAnchor(node, 0.0);
 	}
 
-	private Task staticTask(String title, LocalDateTime fromtime) {
+	protected Task staticTask(String title, LocalDateTime fromtime) {
 		Task task = new Task(title);
 		task.setType(Constants.TYPE_STATIC);
 		task.setIsOverDue(false);
@@ -97,7 +97,7 @@ public class UiFormatter {
 		return task;
 	}
 
-	private void addTodayTasksToFormattedDateList() {
+	protected void addTodayTasksToFormattedDateList() {
 		for (Task task : arrList) {
 			if(task.getType().equals(Constants.TYPE_EVENT)
 					&& timeDifference(task.getFromTime()) < 0
@@ -116,7 +116,7 @@ public class UiFormatter {
 			listView = null;
 	}
 
-	private void addNowTasksToFormattedDateList() {
+	protected void addNowTasksToFormattedDateList() {
 		for (Task task : arrList) {
 			if(timeDifference(task.getFromTime()) < 0
 					&& timeDifference(task.getToTime()) > 0){
@@ -133,7 +133,7 @@ public class UiFormatter {
 			listView = null;
 	}
 
-	private void addUpcomingTasksToFormattedDateList() {
+	protected void addUpcomingTasksToFormattedDateList() {
 		for (Task task : arrList) {
 			if (timeDifference(task.getFromTime()) > 0) {
 				formattedList.add(task);
@@ -146,7 +146,7 @@ public class UiFormatter {
 			listView = null;
 	}
 
-	private void addTasksToFormattedDateList() {
+	protected void addTasksToFormattedDateList() {
 		String dateCounter = "";
 
 		for (Task task : arrList) {
@@ -163,7 +163,7 @@ public class UiFormatter {
 			listView = null;
 	}
 
-	private void addTasksToFormattedList() {
+	protected void addTasksToFormattedList() {
 		for (Task task : arrList) {
 			formattedList.add(task);
 		}
@@ -173,7 +173,7 @@ public class UiFormatter {
 			listView = null;
 	}
 
-	private void defaultCellFormat() {
+	protected void defaultCellFormat() {
 		if (listView != null) {
 			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 				@Override
@@ -185,7 +185,7 @@ public class UiFormatter {
 		}
 	}
 
-	private void agendaCellFormat() {
+	protected void agendaCellFormat() {
 		if (listView != null) {
 			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 				@Override
@@ -197,7 +197,7 @@ public class UiFormatter {
 		}
 	}
 
-	private void upcomingCellFormat() {
+	protected void upcomingCellFormat() {
 		if (listView != null) {
 			listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 	
@@ -210,7 +210,7 @@ public class UiFormatter {
 		}
 	}
 
-	private void ongoingCellFormat() {
+	protected void ongoingCellFormat() {
 		if (listView != null) {		
 		listView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override

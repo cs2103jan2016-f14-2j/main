@@ -109,7 +109,6 @@ public class StorageSave implements StorageSaveInterface{
 	}
 
 	private String extractTaskToString(Task task){
-		System.out.println(task.getIsDone());
 		String lineString = formatToSaveString(TAGS_ISDONE + Boolean.toString(task.getIsDone()));
 		String titleString = formatToSaveString(TAGS_TITLE + task.getTitle());
 		lineString = lineString + titleString;
