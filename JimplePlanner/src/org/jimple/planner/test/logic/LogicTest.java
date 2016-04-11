@@ -143,9 +143,9 @@ public class LogicTest {
 		String[] variableArray1 = {"food", null, "red"};
 		String[] variableArray2 = {"work", "exercise", null};
 		String[] variableArray3 = {"stuff", "wrong", "wrong"};
-		assertEquals("food label changed", testLabeler.testChangeLabel(variableArray1, taskLabels, floating, deadlines, events));
-		assertEquals("work label changed", testLabeler.testChangeLabel(variableArray2, taskLabels, floating, deadlines, events));
-		assertEquals("label could not be changed", testLabeler.testChangeLabel(variableArray3, taskLabels, floating, deadlines, events));
+		assertEquals("food label changed", testLabeler.testChangeLabel(variableArray1, taskLabels, floating, deadlines, events, archivedTasks));
+		assertEquals("work label changed", testLabeler.testChangeLabel(variableArray2, taskLabels, floating, deadlines, events, archivedTasks));
+		assertEquals("label could not be changed", testLabeler.testChangeLabel(variableArray3, taskLabels, floating, deadlines, events, archivedTasks));
 		
 		taskLabels.clear();
 	}
@@ -198,7 +198,7 @@ public class LogicTest {
 		assertEquals("task \"" + "task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.testUndoPreviousChange(undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 		// test for edit
-		testEditer.testEditTask(variableArray3, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
+		testEditer.testEditTask(variableArray3, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash);
 		assertEquals("task \"" + "edit task to be undone" + "\"" + Constants.UNDO_FEEDBACK,
 				testUndoer.testUndoPreviousChange(undoTasks, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, idHash));
 
@@ -233,10 +233,10 @@ public class LogicTest {
 		String[] variableArray = { "1", "task one", null, "2016-03-12T14:00", null, null };
 		initializeThreeArrays();
 		assertTrue("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
-				deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
+				deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash));
 		variableArray[0] = "6";
 		assertFalse("return true after editting", testEditer.testFindTaskToEdit(variableArray, floating, floating,
-				deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
+				deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash));
 	}
 
 	/*
@@ -248,10 +248,10 @@ public class LogicTest {
 		String[] variableArray = { "1", "task one", null, "2016-03-30T05:00", null, null };
 		initializeThreeArrays();
 		assertEquals("return same string", "task 1 edited in planner",
-				testEditer.testEditTask(variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
+				testEditer.testEditTask(variableArray, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash));
 		variableArray[0] = "10";
 		assertEquals("return same string", "task 10 could not be edited",
-				testEditer.testEditTask(variableArray, floating, deadlines, events, tempHistory, taskLabels, undoTasks, idHash));
+				testEditer.testEditTask(variableArray, floating, deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash));
 	}
 
 	/**

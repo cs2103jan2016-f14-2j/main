@@ -15,7 +15,7 @@ public class LogicSearch {
 		searchWordResults.clear();
 		mostRecentlySearchedWord = wordToBeSearched;
 
-		if (todo.isEmpty() && deadlines.isEmpty() && events.isEmpty()) {
+		if (todo.isEmpty() && deadlines.isEmpty() && events.isEmpty() && archivedTasks.isEmpty()) {
 		} else {
 			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, todo));
 			searchWordResults.addAll(getSearchedTasks(wordToBeSearched, deadlines));
