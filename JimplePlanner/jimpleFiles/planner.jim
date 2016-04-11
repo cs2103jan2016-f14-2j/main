@@ -1,1 +1,25 @@
-/s/:isDone:false/s//s/:title:submit progress report/s//s/:from:2016-04-11T23:59/s/
+/s/:isDone:false/s//s/:title:go through CS188x AI by Berkeley/s//s/:desc:go through CS188x AI by Berkeley/s/:label:/tl/self-learning/tl//tl/3/tl/
+/s/:isDone:false/s//s/:title:start an exercise regimen/s/
+/s/:isDone:false/s//s/:title:cs2103 project manual v0.5/s//s/:from:2016-04-11T23:59/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:false/s//s/:title:cs2101 manual/s//s/:from:2016-04-11T23:59/s/:label:/tl/cs2101/tl//tl/1/tl/
+/s/:isDone:false/s//s/:title:cs2103 final submission/s//s/:from:2016-04-11T23:59/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:false/s//s/:title:cs2100 assignment 4/s//s/:from:2016-04-15T17:00/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:do project manual apppendix and general formatting/s//s/:from:2016-04-10T15:00/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:true/s//s/:title:go through CS2100  tutorials 7-10 again/s//s/:from:2016-04-10T23:59/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:ger1000 project submission/s//s/:from:2016-04-10T23:59/s/:label:/tl/ger1000/tl//tl/3/tl/
+/s/:isDone:true/s//s/:title:cs2100 tutorial 11/s//s/:from:2016-04-09T13:00/s//s/:to:2016-04-09T14:00/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:cs2100 assignment 4/s//s/:from:2016-04-09T14:00/s//s/:to:2016-04-09T16:00/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:cs2100 revision/s//s/:from:2016-04-09T16:00/s//s/:to:2016-04-09T17:00/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:do project manual appendix and glossary/s//s/:desc:add to the section under future implementation "tasks can have more than 1 label"/s//s/:from:2016-04-09T18:00/s//s/:to:2016-04-09T23:59/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:true/s//s/:title:do みんなの日本語第九課 lesson 9/s//s/:from:2016-04-09T15:00/s//s/:to:2016-04-09T16:00/s/:label:/tl/japanese/tl//tl/4/tl/
+/s/:isDone:true/s//s/:title:lsm1301 assignment 4/s//s/:desc:finish up on Q1/s//s/:from:2016-04-08T23:59/s/:label:/tl/lsm1301/tl//tl/2/tl/
+/s/:isDone:true/s//s/:title:add a filehandler class for logging/s//s/:from:2016-04-08T20:00/s//s/:to:2016-04-08T21:00/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:true/s//s/:title:do up storage component for project manual v0.5/s//s/:from:2016-04-06T20:00/s//s/:to:2016-04-06T22:00/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:true/s//s/:title:fix bug relating to storing labels of same name but different colours/s//s/:from:2016-04-06T22:00/s//s/:to:2016-04-06T23:00/s/:label:/tl/cs2103/tl//tl/2/tl/
+/s/:isDone:true/s//s/:title:do ger1000 exec summary/poster/s//s/:from:2016-04-06T23:00/s//s/:to:2016-04-07T01:00/s/:label:/tl/ger1000/tl//tl/3/tl/
+/s/:isDone:true/s//s/:title:do ger1000 summary/s//s/:from:2016-04-02T14:00/s/
+/s/:isDone:true/s//s/:title:celebrate uncle Patrick's birthday/s//s/:from:2016-04-03T12:30/s//s/:to:2016-04-03T14:30/s/:label:/tl/family/tl//tl/3/tl/
+/s/:isDone:true/s//s/:title:cs2101 OP2/s//s/:from:2016-04-05T10:00/s//s/:to:2016-04-05T12:00/s/:label:/tl/cs2101/tl//tl/6/tl/
+/s/:isDone:true/s//s/:title:cs2100 tutorial 10/s//s/:from:2016-04-03T12:00/s//s/:to:2016-04-03T13:00/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:cs2100 lab 9/s//s/:from:2016-04-03T13:00/s//s/:to:2016-04-03T14:00/s/:label:/tl/cs2100/tl//tl/5/tl/
+/s/:isDone:true/s//s/:title:cs2100 assignment 3/s//s/:from:2016-04-04T23:59/s/:label:/tl/cs2100/tl//tl/5/tl/
