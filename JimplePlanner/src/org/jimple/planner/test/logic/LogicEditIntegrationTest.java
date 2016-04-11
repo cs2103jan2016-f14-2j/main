@@ -17,6 +17,12 @@ import org.junit.Test;
 public class LogicEditIntegrationTest {
 	Logic testLogic = new Logic();
 	
+	/**
+	 * test cases are time sensitive
+	 * task 1: works only after 1pm
+	 * task 2: works only after 1pm
+	 * @throws IOException
+	 */
 	@Test
 	public void ShouldTestEditFromToTime() throws IOException	{
 		testLogic.getEventsDividedList().clear();
@@ -25,16 +31,16 @@ public class LogicEditIntegrationTest {
 		testLogic.execute("ADD task 1 FROM 1pm TO 3pm");
 		testLogic.execute("EDIT 2 TIME FROM 1pm TO 2pm");
 		assertEquals("task 1", testLogic.getEventsDividedList().get(0).getTitle());
-		assertEquals("2016-04-11T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
-		assertEquals("2016-04-11T14:00", testLogic.getEventsDividedList().get(0).getToTimeString());
+		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T14:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
 		
 		testLogic.execute("ADD task 2 FROM 1pm TO 3pm");
 		testLogic.execute("EDIT 3 TIME FROM 1400 TO 1500");
 		assertEquals("task 2", testLogic.getEventsDividedList().get(0).getTitle());
-		assertEquals("2016-04-11T14:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
-		assertEquals("2016-04-11T15:00", testLogic.getEventsDividedList().get(0).getToTimeString());
+		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T14:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().plusDays(1).toLocalDate() + "T15:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
 		
