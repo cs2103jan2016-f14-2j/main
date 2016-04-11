@@ -43,8 +43,8 @@ public class UiController extends myObserver implements Initializable {
 	
 	protected UiPrompt prompt;
 	protected UiListViewControl listViewControl;
-	private LinkedList<String> cmdHistory;
-	private int cmdHistoryPointer;	
+	protected LinkedList<String> cmdHistory;
+	protected int cmdHistoryPointer;	
 	public static boolean isSearch = false;
 	public static boolean isConflictedShown = false;
 	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
@@ -131,7 +131,7 @@ public class UiController extends myObserver implements Initializable {
 		update();
 	 }
 
-	private void setTabIcons() {
+	protected void setTabIcons() {
 		ImageView icon;
 		int iconheight = 20;
 
@@ -156,7 +156,7 @@ public class UiController extends myObserver implements Initializable {
 		archiveTab.setGraphic(icon);
 	}
 
-	private void setFlavourText() {
+	protected void setFlavourText() {
 		//@@author A0135775W
 		searchLabel.setText("Um, we found nothing.");
 		conflictedLabel.setText("Zero conflicts!");
@@ -169,7 +169,7 @@ public class UiController extends myObserver implements Initializable {
 	}
 
 	//@@author A0122498Y
-	private String getCurrentTime(){
+	protected String getCurrentTime(){
 		String currentTime = "";
 		currentTime +=  LocalDateTime.now().getHour() + ":" +
 		String.format("%02d", LocalDateTime.now().getMinute())  + " " + 
@@ -180,7 +180,7 @@ public class UiController extends myObserver implements Initializable {
 		return currentTime;
 	}
 	
-	private void loadClock() {
+	protected void loadClock() {
 		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {  
 		     @Override  
 		     public void handle(ActionEvent event) {  
@@ -203,7 +203,7 @@ public class UiController extends myObserver implements Initializable {
 		}
 	}	
 
-	private void updateMessagePrompt(String output){
+	protected void updateMessagePrompt(String output){
 		messagePrompt.setText(output);
 		fadeOut(5, messagePrompt);
 	}
@@ -242,7 +242,7 @@ public class UiController extends myObserver implements Initializable {
 		}
 	}
 	
-	public void loadMainTab(){
+	protected void loadMainTab(){
 		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_TODAY);
 		ListView<Task> list = listFormatter.getFormattedList();
 		todayPane.getChildren().clear();
@@ -277,7 +277,7 @@ public class UiController extends myObserver implements Initializable {
 		}
 	}
 	
-	public void loadAgendaList() {
+	protected void loadAgendaList() {
 		listFormatter.formatList(logic.getAgendaList(),Constants.TYPE_AGENDA);
 		agendaContent.getChildren().clear();
 		ListView<Task> list = listFormatter.getFormattedList();
@@ -289,7 +289,7 @@ public class UiController extends myObserver implements Initializable {
 		}
 	}
 	
-	public void loadArchiveList() {
+	protected void loadArchiveList() {
 		listFormatter.formatList(logic.getArchivedList(),Constants.TYPE_ARCHIVE);
 		archiveContent.getChildren().clear();
 		ListView<Task> list = listFormatter.getFormattedList();
@@ -301,7 +301,7 @@ public class UiController extends myObserver implements Initializable {
 		}
 	}
 
-	public void loadTodoList()  {
+	protected void loadTodoList()  {
 		listFormatter.formatList(logic.getToDoList(),Constants.TYPE_TODO);
 		todoContent.getChildren().clear();
 		ListView<Task> list = listFormatter.getFormattedList();
@@ -319,7 +319,7 @@ public class UiController extends myObserver implements Initializable {
 	 * 
 	========================================*/
 	
-	private void fadeOut(float sec, Node item){
+	protected void fadeOut(float sec, Node item){
 		FadeTransition ft = new FadeTransition(Duration.millis(sec*500), item);
 		FadeTransition ft2 = new FadeTransition(Duration.millis(sec*1000), item);
 		ft.setFromValue(1.0);
@@ -351,7 +351,7 @@ public class UiController extends myObserver implements Initializable {
 	 * 
 	========================================*/
 	
-	public void commandBoxListener() {
+	protected void commandBoxListener() {
 		commandBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent t) {
@@ -387,7 +387,7 @@ public class UiController extends myObserver implements Initializable {
 		});
 	}
 
-	public void taskSelectionListener(){
+	protected void taskSelectionListener(){
 		listViewControl.getList(listViewControl.getCurrentTab()).setOnKeyPressed(new EventHandler<KeyEvent>() {
 			
 			@Override
@@ -418,7 +418,7 @@ public class UiController extends myObserver implements Initializable {
 		});
 	}
 
-	public void tabPanesListener() {
+	protected void tabPanesListener() {
 		tabPanes.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			
 			@Override
@@ -463,18 +463,18 @@ public class UiController extends myObserver implements Initializable {
 	 * 
 	========================================*/
 	
-	public String getInputCommand() {
+	protected String getInputCommand() {
 		if (commandBox == null || isEmpty(commandBox.getText())) {
 			return "";
 		}
 		return commandBox.getText();
 	}
 
-	private boolean isEmpty(String s) {
+	protected boolean isEmpty(String s) {
 		return s == null || s.trim().isEmpty();
 	}
 
-	private void clearCommandBox() {
+	protected void clearCommandBox() {
 		commandBox.setText(null);
 	}
 	
@@ -485,7 +485,7 @@ public class UiController extends myObserver implements Initializable {
 	========================================*/
 	
 	@FXML
-	private void closeButtonAction(){
+	protected void closeButtonAction(){
 	    // get a handle to the stage
 	    Stage stage = (Stage) closeButton.getScene().getWindow();
 	    // do what you have to do
@@ -493,7 +493,7 @@ public class UiController extends myObserver implements Initializable {
 	}
 
 	@FXML
-	private void popupCloseButtonAction(){
+	protected void popupCloseButtonAction(){
 		popupLayer.getChildren().clear();
 		isSearch = false;
 		isConflictedShown = false;
