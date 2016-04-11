@@ -251,7 +251,7 @@ public class TimeParser {
 		return true;
 	}
 	
-	//@@ author A0135775W
+	//@@author A0135775W
 	/* -----------------------------------|
 	 * DATE/TIME INPUT FLEXIBILITY METHOD |
 	 * -----------------------------------|
