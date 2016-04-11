@@ -19,10 +19,10 @@ public class LogicAddIntegrationTest {
 	
 	/**
 	 * Test cases are time sensitive. 
-	 * task 1: pass only if after 1pm
+	 * task 1: pass only if before 1pm
 	 * task 2: pass only if before 9 december 2016
 	 * task 4: pass only if after 12am
-	 * task 5: pass only if after 11am
+	 * task 5: pass only if before 1pm
 	 * @throws IOException
 	 */
 	@Test
@@ -32,8 +32,8 @@ public class LogicAddIntegrationTest {
 		
 		testLogic.execute("ADD task 1 FROM 1pm TO 3pm");
 		assertEquals("task 1", testLogic.getEventsDividedList().get(0).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T15:00", testLogic.getEventsDividedList().get(0).getToTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T15:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
 		
@@ -58,10 +58,10 @@ public class LogicAddIntegrationTest {
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
 		
-		testLogic.execute("ADD task 5 FROM 1100 TO 1800");
+		testLogic.execute("ADD task 5 FROM 1300 TO 1800");
 		assertEquals("task 5", testLogic.getEventsDividedList().get(0).getTitle());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T11:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
-		assertEquals(LocalDateTime.now().toLocalDate().plusDays(1) + "T18:00", testLogic.getEventsDividedList().get(0).getToTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T13:00", testLogic.getEventsDividedList().get(0).getFromTimeString());
+		assertEquals(LocalDateTime.now().toLocalDate() + "T18:00", testLogic.getEventsDividedList().get(0).getToTimeString());
 		testLogic.getEventsDividedList().clear();
 		testLogic.getEventsList().clear();
 	}
@@ -77,7 +77,7 @@ public class LogicAddIntegrationTest {
 		
 		testLogic.execute("ADD task 9 BY monday");
 		assertEquals("task 9", testLogic.getDeadlinesList().get(0).getTitle());
-		assertEquals("2016-04-11T23:59", testLogic.getDeadlinesList().get(0).getFromTimeString());
+		assertEquals("2016-04-18T23:59", testLogic.getDeadlinesList().get(0).getFromTimeString());
 		testLogic.getDeadlinesList().clear();
 		
 		testLogic.execute("ADD task 10 BY today");
