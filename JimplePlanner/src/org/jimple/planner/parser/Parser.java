@@ -4,6 +4,9 @@ package org.jimple.planner.parser;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jimple.planner.constants.Constants;
 
 import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;
@@ -44,6 +47,7 @@ public class Parser {
 	private final int OFFSET_CALENDAR_MONTH = 1;
 	private final int OFFSET_CALENDAR_YEAR = 1900;
 	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
 	
 	private final int INCREMENT_BY_1 = 1;
 	
@@ -66,7 +70,15 @@ public class Parser {
 	private final String ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND = "Command: \"%s\" should not be followed by any parameters.";
 	private final String ERROR_MESSAGE_COMMAND_NOT_RECOGNISED = "Command: \"%s\" not recognised.";
 	private final String ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED = "Extended Command: \"%s\" not recognised.";
+	private final String ERROR_MESSAGE_FROM_WITHOUT_TO = "\"FROM\" must be accompanied with \"TO\".";
 	private final String ERROR_MESSAGE_DATE_TIME_NOT_RECOGNISED = "Date/Time input: \"%s\" not recognised.";
+	private final String ERROR_MESSAGE_COLOUR_NOT_RECOGNISED = "Label Colour: \"%s\" invalid.";
+	
+	/* -------|
+	 * LOGGER |
+	 * -------|
+	 */
+	private static final Logger LOGGER = Logger.getLogger(Parser.class.getName());
 	
 	/*
 	 * -----------------|
@@ -85,94 +97,98 @@ public class Parser {
 	 */
 	public InputStruct parseInput(String userInput) throws Exception {
 		
-		// Not null string.
-		assert(userInput != null);
+		assert(userInput != null); // Not null string.
+		assert(userInput.trim() != ""); // Not whitespace String.
 		
-		// Not whitespace String.
-		assert(userInput.trim() != "");
-		
-		String[] splitUserInput = userInput.split(" ");
+		String[] splitUserInput = userInput.split(SPACE_STRING);
 		String mainCommand = getCommandString(splitUserInput);
-		try {
-			switch (mainCommand) {
-				case Constants.STRING_ADD :
-					if (!isCommandOnly(splitUserInput)) {
-						InputStruct addStruct = getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
-						// Initialises the field in InputStruct which specifies which task type the added task is.
-						addStruct.checkAndSetTaskType();
-						return addStruct;
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_NAME, mainCommand));
-				case Constants.STRING_EDIT :
-					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
-				case Constants.STRING_DELETE :
-					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
-				case Constants.STRING_SEARCH :
-					if (!isCommandOnly(splitUserInput)) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_SEARCH_STRING, mainCommand));
-				case Constants.STRING_DONE :
-					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
-				case Constants.STRING_RETURN :
-					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
-				case Constants.STRING_EDITLABEL :
-					if (!isCommandOnly(splitUserInput)) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR, mainCommand));
-				case Constants.STRING_DELETELABEL :
-					if (!isCommandOnly(splitUserInput)) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME, mainCommand));
-				case Constants.STRING_CHECKCONFLICT :
-					if (isNumber(getMainCommandUserInputString(splitUserInput))) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand));
-				case Constants.STRING_CHANGEDIR :
-					if (!isCommandOnly(splitUserInput)) {
-						return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NO_DIRECTORY_PATH, mainCommand));
-				case Constants.STRING_CHECKDIR :
-					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(Constants.STRING_CHECKDIR);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand));
-				case Constants.STRING_UNDOTASK :
-					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(Constants.STRING_UNDOTASK);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand));
-				case Constants.STRING_HELP :
-					if (isCommandOnly(splitUserInput)) {
-						return new InputStruct(Constants.STRING_HELP);
-					}
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand));
-				default :
-					throw new InvalidCommandException(String.format(ERROR_MESSAGE_COMMAND_NOT_RECOGNISED, mainCommand));
-			}
-		} catch (InvalidCommandException ice) {
-			throw ice;
-		} catch (DuplicateDateTimeFieldException dfe) {
-			throw dfe;
-		} catch (MissingDateTimeFieldException mfe) {
-			throw mfe;
+		switch (mainCommand) {
+			case Constants.STRING_ADD :
+				if (!isCommandOnly(splitUserInput)) {
+					InputStruct addStruct = getStruct(splitUserInput, EXTENDED_COMMANDS_ADD);
+					// Initialises the field in InputStruct which specifies which task type the added task is.
+					addStruct.checkAndSetTaskType();
+					return addStruct;
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_NAME, mainCommand)));
+				break;
+			case Constants.STRING_EDIT :
+				if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDIT);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand)));
+				break;
+			case Constants.STRING_DELETE :
+				if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand)));
+				break;
+			case Constants.STRING_SEARCH :
+				if (!isCommandOnly(splitUserInput)) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_SEARCH_STRING, mainCommand)));
+				break;
+			case Constants.STRING_DONE :
+				if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand)));
+				break;
+			case Constants.STRING_RETURN :
+				if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand)));
+				break;
+			case Constants.STRING_EDITLABEL :
+				if (!isCommandOnly(splitUserInput)) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_EDITLABEL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME_OR_COLOUR, mainCommand)));
+				break;
+			case Constants.STRING_DELETELABEL :
+				if (!isCommandOnly(splitUserInput)) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_LABEL_NAME, mainCommand)));
+				break;
+			case Constants.STRING_CHECKCONFLICT :
+				if (isNumber(getMainCommandUserInputString(splitUserInput))) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_TASK_ID, mainCommand)));
+				break;
+			case Constants.STRING_CHANGEDIR :
+				if (!isCommandOnly(splitUserInput)) {
+					return getStruct(splitUserInput, EXTENDED_COMMANDS_NIL);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NO_DIRECTORY_PATH, mainCommand)));
+				break;
+			case Constants.STRING_CHECKDIR :
+				if (isCommandOnly(splitUserInput)) {
+					return new InputStruct(Constants.STRING_CHECKDIR);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand)));
+				break;
+			case Constants.STRING_UNDOTASK :
+				if (isCommandOnly(splitUserInput)) {
+					return new InputStruct(Constants.STRING_UNDOTASK);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand)));
+				break;
+			case Constants.STRING_HELP :
+				if (isCommandOnly(splitUserInput)) {
+					return new InputStruct(Constants.STRING_HELP);
+				}
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_NEEDS_ONLY_MAIN_COMMAND, mainCommand)));
+				break;
+			default :
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_COMMAND_NOT_RECOGNISED, mainCommand)));
+				break;
 		}
+		return null;
 	}
 	
 	/* ---------------------------|
@@ -237,7 +253,7 @@ public class Parser {
 				currCommand = currString; // Updates the current command.
 				currInputString = EMPTY_STRING; // Resets "userInputString" as it is already parsed.
 			} else { // Updates the current input string if word being read is not an extended command.
-				currInputString += currString + " ";
+				currInputString += currString + SPACE_STRING;
 			} 
 		}
 		//Parses the last user input string which is not covered in the while loop above.
@@ -307,7 +323,7 @@ public class Parser {
 				setCategory(inputString, inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand));
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand)));
 		}
 	}
 	
@@ -321,14 +337,14 @@ public class Parser {
 				setDescription(inputString, inputStruct);
 				break;
 			case Constants.STRING_TIME :
-				String dateTimeExtendedCommand = getCommandString(inputString.split(" "));
-				setTime(dateTimeExtendedCommand, inputString.substring(dateTimeExtendedCommand.length()+1), inputStruct);
+				String dateTimeExtendedCommand = getCommandString(inputString.split(SPACE_STRING));
+				setTime(dateTimeExtendedCommand, inputString.substring(dateTimeExtendedCommand.length() + INCREMENT_BY_1), inputStruct);
 				break;
 			case Constants.STRING_LABEL :
 				setCategory(inputString, inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand));
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand)));
 		}
 	}
 	
@@ -356,7 +372,7 @@ public class Parser {
 				parseBy(userInput, inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException(String.format(ERROR_MESSAGE_DATE_TIME_NOT_RECOGNISED, extendedCommand));
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_DATE_TIME_NOT_RECOGNISED, extendedCommand)));
 		}
 	}
 	
@@ -392,7 +408,7 @@ public class Parser {
 	 */
 	private void parseFrom(String userInput, InputStruct inputStruct) throws Exception {
 		if (!userInput.contains(" TO ")) {
-			throw new MissingDateTimeFieldException("\"FROM\" must be accompanied by \"TO\".");
+			logAndThrow(new MissingDateTimeFieldException(ERROR_MESSAGE_FROM_WITHOUT_TO));
 		} else {
 			String[] splitFromTo = userInput.split(" TO ");
 			Date from = timeParser.parseTime(Constants.STRING_FROM, splitFromTo[0]).getTime();
@@ -428,7 +444,7 @@ public class Parser {
 				setLabelColour(inputString.toLowerCase(), inputStruct);
 				break;
 			default :
-				throw new InvalidCommandException("\"" + extendedCommand + "\" not recognised.");
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand)));
 		}
 	}
 	
@@ -436,11 +452,11 @@ public class Parser {
 		inputStruct.setAtIndex(Constants.INDEX_EDITLABEL_NAME, userInput);
 	}
 	
-	private void setLabelColour(String userInput, InputStruct inputStruct) throws InvalidCommandException {
+	private void setLabelColour(String userInput, InputStruct inputStruct) throws Exception {
 		if (isValidColour(userInput)) {
 			inputStruct.setAtIndex(Constants.INDEX_EDITLABEL_COLOUR, userInput);
 		} else {
-			throw new InvalidCommandException("Label Colour: \"" + userInput + "\" invalid.");
+			logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_COLOUR_NOT_RECOGNISED, userInput)));
 		}
 	}
 	
@@ -476,5 +492,10 @@ public class Parser {
 		}
 		return case1 || case2;
 	}
+	
+	public void logAndThrow(Exception e) throws Exception {
+        LOGGER.log(Level.WARNING, e.getMessage());
+        throw e;
+    }
 
 }
