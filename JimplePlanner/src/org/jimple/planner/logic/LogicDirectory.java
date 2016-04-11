@@ -10,14 +10,14 @@ import java.util.HashMap;
 
 //@@author A0124952E
 public class LogicDirectory implements LogicMasterListModification, LogicTaskModification {
-
-	protected String changeSaveDirectory(Storage store, LogicConflict conflictChecker, String[] variableArray,
+	
+	//@@author A0124952E
+	protected String changeSaveDirectory(StorageInterface store, LogicConflict conflictChecker, String[] variableArray,
 			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks,
 			ArrayList<TaskLabel> taskLabels, HashMap<Integer, Boolean> idHash) {
 		if (!isValidPath(store, variableArray)) {
 			return Constants.ERROR_DIRECTORY_PATH_FEEDBACK;
 		}
-		// store = new StorageComponent();
 		ArrayList<ArrayList<Task>> allTasks = store.getTasks();
 		taskLabels = store.getLabels();
 		assignTaskIds(allTasks, idHash);
@@ -34,12 +34,14 @@ public class LogicDirectory implements LogicMasterListModification, LogicTaskMod
 		conflictChecker.checkForAllTasksIfConflictWithCurrentTasks(deadlines, events);
 		return Constants.DIRECTORY_PATH_CHANGED_FEEDBACK + "\"" + variableArray[0] + "\"";
 	}
-
-	protected String checkPath(Storage store) {
+	
+	//@@author A0124952E
+	protected String checkPath(StorageInterface store) {
 		return store.checkPath();
 	}
-
-	private boolean isValidPath(Storage store, String[] variableArray) {
+	
+	//@@author A0124952E
+	private boolean isValidPath(StorageInterface store, String[] variableArray) {
 		if (store.setPath(variableArray[0])) {
 			return true;
 		}

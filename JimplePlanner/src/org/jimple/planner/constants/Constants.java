@@ -3,9 +3,11 @@ package org.jimple.planner.constants;
 import java.io.File;
 
 public final class Constants {
+	//@@author A0135808B
 	public static final String TYPE_EVENT = "event";
 	public static final String TYPE_TODO = "floating";
 	public static final String TYPE_DEADLINE = "deadline";
+	//@@author A0122498
 	public static final String TYPE_AGENDA = "agenda";
 	public static final String TYPE_STATIC = "static";
 	public static final String TYPE_SEARCH = "search";
@@ -16,12 +18,15 @@ public final class Constants {
 	public static final String TYPE_UPCOMING = "upcoming";
 	public static final String TYPE_ARCHIVE = "archive";
 	public static final String TYPE_CONFLICTED = "conflicted";
+	//@@author A0135808B
 	public static final String EMPTY_STRING = "";
+	//@@author A0122498
 	public static final String NEWLINE = "\n";
 	
 	/*
 	 * Task Label Class
 	 */
+	//@@author A0135808B
 	public static final String STRING_LABELNAME = "LABEL";
 	public static final String STRING_LABELCOLOUR = "COLOUR";
 	public static final int TASK_LABEL_COLOUR_DEFAULT_0 = 0;
@@ -34,6 +39,17 @@ public final class Constants {
 	public static final String TASK_LABEL_NAME_DEFAULT = "default";
 	
 	public static final String ERROR_INVALID_TASK = "Task is invalid";
+	
+	//@@author A0122498Y
+	/*
+	 * UI Component
+	 */
+	public static final String ERROR_FXML_INITIALIZE = "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
+	public static final String MESSAGE_INITIALIZE = "initializing Jimple UI";
+	public static final String ICON_TAB_JIMPLE = "jimpleTabIcon.png";
+	public static final String ICON_TAB_AGENDA = "agendaTabIcon.png";
+	public static final String ICON_TAB_TODO = "todoTabIcon.png";
+	public static final String ICON_TAB_ARCHIVE = "archiveTabIcon.png";
 	
 	/*
 	 * Storage Component
@@ -153,20 +169,26 @@ public final class Constants {
 	public static final String CHECKDIR_HELP_HEADER = "Check Jimple File Directory:\n";
 	public static final String EDITLABEL_HELP_HEADER = "Edit a label:\n";
 	public static final String DELETELABEL_HELP_HEADER = "Delete a label:\n";
-	public static final String ARCHIVE_HELP_HEADER = "Archive completed tasks\n";
-	public static final String UNARCHIVE_HELP_HEADER = "Return completed tasks\n";
+	public static final String ARCHIVE_HELP_HEADER = "Archive completed tasks:\n";
+	public static final String UNARCHIVE_HELP_HEADER = "Return completed tasks:\n";
+	public static final String CHECKCONFLICT_HELP_HEADER = "Check tasks in conflict:\n";
 	
 	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
 	
 	public static final String ADD_COMMAND_BY = "type \"ADD\" <your event name> BY <time>\n";
 	public static final String ADD_COMMAND_AT = "type \"ADD\" <your event name> AT <time>\n";
 	public static final String ADD_COMMAND_ON = "type \"ADD\" <your event name> ON <time>\n";
-	public static final String ADD_COMMAND_FROMTO = "type \"ADD\" <your event> FROM <time> TO <time>\n\n";
+	public static final String ADD_COMMAND_FROMTO = "type \"ADD\" <your event> FROM <time> TO <time>\n";
+	public static final String ADD_COMMAND_DESC = "type \"ADD\" <your event name> \"DESC\" <your event description>\n";
+	public static final String ADD_COMMAND_LABEL = "type \"ADD\" <your event name> \"LABEL\" <label name>\n\n";
 	
 	public static final String EDIT_COMMAND_NAME = "type \"EDIT\" <taskID> \"NAME\" <your event title>\n";
+	public static final String EDIT_COMMAND_DESC = "type \"EDIT\" <taskID> \"DESC\" <your event description>\n";
 	public static final String EDIT_COMMAND_BY_TIME = "type \"EDIT\" <taskID> \"TIME\" BY <date/time>\n";
 	public static final String EDIT_COMMAND_FROMTO_TIME = "type \"EDIT\" <taskID> \"TIME\" FROM <date/time> TO <date/time>\n";
-	public static final String EDIT_COMMAND_LABEL = "type \"EDIT\" <taskID> \"LABEL\" <new name/\"default\" to remove label>\n\n";
+	public static final String EDIT_COMMAND_ON_TIME = "type \"EDIT\" <taskID> \"TIME\" ON <date/time>\n";
+	public static final String EDIT_COMMAND_AT_TIME = "type \"EDIT\" <taskID> \"TIME\" AT <date/time>\n";
+	public static final String EDIT_COMMAND_LABEL = "type \"EDIT\" <taskID> \"LABEL\" <new label name/\"default\" to remove label>\n\n";
 	
 	public static final String DELETE_COMMAND = "type \"DELETE\" <taskID>\n\n";
 	
@@ -181,7 +203,9 @@ public final class Constants {
 	public static final String DELETELABEL_COMMAND = "type \"DELETELABEL\" <label name>\n\n";
 	
 	public static final String ARCHIVE_COMMAND = "type \"DONE\" <taskID>\n\n";
-	public static final String UNARCHIVE_COMMAND = "type \"RETURN\" <taskID>\n";
+	public static final String UNARCHIVE_COMMAND = "type \"RETURN\" <taskID>\n\n";
+	
+	public static final String CHECKCONFLICT_COMMAND = "type \"CHECKCONFLICT\" <taskID>\n";
 	
 	public static final String ERROR_WRONG_INPUT_FEEDBACK = "wrong input format";
 	public static final String ERROR_WRONG_COMMAND_FEEDBACK = "unknown command";

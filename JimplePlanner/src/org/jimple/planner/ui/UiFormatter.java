@@ -55,14 +55,6 @@ public class UiFormatter {
 			addTasksToFormattedList();
 			defaultCellFormat();
 			break;
-		case Constants.TYPE_DEADLINE:
-			addTasksToFormattedDateList();
-			agendaCellFormat();
-			break;
-		case Constants.TYPE_EVENT:
-			addTasksToFormattedDateList();
-			agendaCellFormat();
-			break;
 		case Constants.TYPE_TODO:
 			addTasksToFormattedList();
 			agendaCellFormat();

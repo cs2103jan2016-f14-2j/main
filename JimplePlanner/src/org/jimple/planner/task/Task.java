@@ -7,6 +7,7 @@ import static org.jimple.planner.constants.Constants.TYPE_TODO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+//@@author A0135808B
 public class Task {
 	private LocalDateTime fromDateTime;
 	private LocalDateTime toDateTime;
@@ -20,6 +21,7 @@ public class Task {
 	private TaskLabel taskLabel;
 	private static Formatter formatter = new Formatter();
 	private static TaskSorter taskSorter = new TaskSorter();
+	
 
 	// Default Constructor
 	public Task(String aTitle) {
@@ -31,7 +33,7 @@ public class Task {
 		this.isOverDue = false;
 		this.isDone = false;
 		this.taskId = 1000;
-		this.taskLabel = TaskLabel.getDefaultLabel();
+		this.taskLabel = TaskLabel.createDefaultLabel();
 		this.conflictedTasks = new ArrayList<Task>();
 	}
 
@@ -48,51 +50,58 @@ public class Task {
 		this.taskLabel = taskToBeDuplicated.getTaskLabel();
 		this.conflictedTasks = taskToBeDuplicated.getConflictedTasks();
 	}
+	
 
 	public String getPrettierFromDate(){
 		String prettierFromDate = new String("");
 		if(fromDateTime.getDayOfYear() == LocalDateTime.now().getDayOfYear()){
 			prettierFromDate += "TODAY, ";
 		}
+		else{
+			prettierFromDate += fromDateTime.getDayOfWeek() + ", ";
+		}
 		prettierFromDate += fromDateTime.getDayOfMonth() + " " + fromDateTime.getMonth() + " " + fromDateTime.getYear();
 		return prettierFromDate;
 	}
+	
 
 	public String getPrettyFromDate() {
 		String prettyFromDate = new String("");
 		prettyFromDate = formatter.formatPrettyDate(fromDateTime);
 		return prettyFromDate;
 	}
+	
 
 	public String getPrettyToDate() {
 		String prettyToDate = new String("");
 		prettyToDate = formatter.formatPrettyDate(toDateTime);
 		return prettyToDate;
 	}
+	
 
 	public String getPrettyFromTime() {
 		String prettyFromTime = new String("");
 		prettyFromTime = formatter.formatPrettyTime(fromDateTime);
 		return prettyFromTime;
 	}
-
+	
 	public String getPrettyToTime() {
 		String prettyToTime = new String("");
 		prettyToTime = formatter.formatPrettyTime(toDateTime);
 		return prettyToTime;
 	}
-
+	
 	public String getFromTimeString() {
 		if (fromDateTime == null) {
 			return "";
 		}
 		return fromDateTime.toString();
 	}
-
+	
 	public LocalDateTime getFromTime() {
 		return fromDateTime;
 	}
-	//@@author A0135808B
+
 	public void setFromDate(String dateTime) {
 		if (dateTime != null) {
 			this.fromDateTime = LocalDateTime.parse(dateTime);
@@ -110,7 +119,7 @@ public class Task {
 	public LocalDateTime getToTime() {
 		return toDateTime;
 	}
-	//@@author A0135808B
+
 	public void setToDate(String dateTime) {
 		if (dateTime != null) {
 			this.toDateTime = LocalDateTime.parse(dateTime);
@@ -119,7 +128,7 @@ public class Task {
 		}
 		checkAndSetType();
 	}
-	//@@author A0135808B
+
 	public String getType() {
 		return type;
 	}
@@ -128,7 +137,7 @@ public class Task {
 	public void setType(String type) {
 		this.type = type;
 	}
-	//@@author A0135808B
+
 	private void checkAndSetType() {
 		if (isTodo()) {
 			this.type = TYPE_TODO;
@@ -138,19 +147,19 @@ public class Task {
 			this.type = TYPE_EVENT;
 		}
 	}
-	//@@author A0135808B
+
 	private boolean isTodo() {
 		return (getToTime() == null && getFromTime() == null);
 	}
-	//@@author A0135808B
+
 	private boolean isDeadline() {
 		return (getFromTime() != null && getToTime() == null);
 	}
-	//@@author A0135808B
+
 	private boolean isEvent() {
 		return (getFromTime() != null && getToTime() != null);
 	}
-	//@@author A0135808B
+
 	public boolean isValidType() {
 		if (isTodo()) {
 			return true;
@@ -181,7 +190,7 @@ public class Task {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	//@@author A0135808B
+
 	public TaskLabel getTaskLabel() {
 		return taskLabel;
 	}
@@ -198,27 +207,27 @@ public class Task {
 	 * labels: 0 - default 1 - blue 2 - green 3 - yellow 4 - orange 5 - red 6 -
 	 * dark red
 	 */
-	//@@author A0135808B
+
 	public void setTaskLabel(TaskLabel label) {
 		this.taskLabel = label;
 	}
-	//@@author A0135808B
+
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
 	}
-	//@@author A0135808B
+
 	public int getTaskId() {
 		return taskId;
 	}
-	//@@author A0135808B
+
 	public boolean getIsDone(){
 		return isDone;
 	}
-	//@@author A0135808B
+
 	public void setIsDone(boolean isDone){
 		this.isDone = isDone;
 	}
-	
+	// @@author A0124952E
 	public ArrayList<Task> getConflictedTasks()	{
 		return conflictedTasks;
 	}
@@ -226,7 +235,7 @@ public class Task {
 	public static void sortTasks(ArrayList<ArrayList<Task>> allTaskLists) {
 		taskSorter.sortTasks(allTaskLists);
 	}
-	//@@author A0135808B
+
 	public static void sortTasksByTime(ArrayList<Task> list) {
 		taskSorter.sortTasksByTime(list);
 	}
@@ -245,7 +254,7 @@ public class Task {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-	//@@author generated
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

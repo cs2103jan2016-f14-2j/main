@@ -28,14 +28,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.jimple.planner.exceptions.InvalidTaskException;
 import org.jimple.planner.task.Task;
 import org.jimple.planner.task.TaskLabel;
 
 //@@author A0135808B
 public class StorageLoad implements StorageLoadInterface{
-	//@@author A0135808B
+	private final static Logger LOGGER = Logger.getLogger(StorageLoad.class.getName());
+	
 	private BufferedReader createFileReader(String fileName){
 		BufferedReader reader = null;
 		try {
@@ -44,6 +48,7 @@ public class StorageLoad implements StorageLoadInterface{
 			InputStreamReader inputStreamReader = new InputStreamReader(fileIn, StandardCharsets.UTF_8);
 			reader = new BufferedReader(inputStreamReader);
 		} catch (FileNotFoundException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 		return reader;
@@ -61,7 +66,16 @@ public class StorageLoad implements StorageLoadInterface{
 			while ((fileLineContent = defaultFileReader.readLine()) != null) {
 				if(!fileLineContent.equals(EMPTY_STRING)){
 					Task task = getTaskFromLine(fileLineContent);
-					checkTaskValidity(task);
+					try {
+						checkTaskValidity(task);
+					} catch (InvalidTaskException e) {
+						LOGGER.log(Level.SEVERE, e.toString(), e);
+						LOGGER.severe(e.getMessage());
+						LOGGER.severe("task title:" + task.getTitle());
+						LOGGER.severe("task's fromTime is: "+task.getFromTime());
+						LOGGER.severe("task's toTime is: "+task.getToTime());
+						e.printStackTrace();
+					}
 					allocateTaskToArrayList(task, allTasksLists);
 				}
 			}
@@ -104,7 +118,7 @@ public class StorageLoad implements StorageLoadInterface{
 			task.setTitle(titleString);
 		} else if(isLabel(field)){
 			ArrayList<String> labelStringArray = getRemovedLabelTagStringArray(field);
-			TaskLabel taskLabel = TaskLabel.getDummyLabel(labelStringArray.get(0), Integer.parseInt(labelStringArray.get(1)));
+			TaskLabel taskLabel = TaskLabel.createDummyLabel(labelStringArray.get(0), Integer.parseInt(labelStringArray.get(1)));
 			task.setTaskLabel(taskLabel);
 		} else if(isDescription(field)){
 			String descField = getRemovedDescriptionTagString(field);
@@ -216,6 +230,7 @@ public class StorageLoad implements StorageLoadInterface{
 				}
 				configFileReader.close();
 		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
 		return property;

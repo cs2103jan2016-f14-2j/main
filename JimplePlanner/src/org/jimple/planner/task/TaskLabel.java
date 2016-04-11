@@ -9,53 +9,53 @@ public class TaskLabel {
 	private String labelName;
 	private int colourId;
 	private int labelId;
-	//@@author A0135808B
+
 	private TaskLabel(String name, int colourId, int labelId){
 		this.labelName = name;
 		this.colourId = colourId;
 		this.labelId = labelId;
 	}
-	//@@author A0135808B
-	public static TaskLabel getDefaultLabel(){
+
+	public static TaskLabel createDefaultLabel(){
 		return new TaskLabel(TASK_LABEL_NAME_DEFAULT, TASK_LABEL_COLOUR_DEFAULT_0, 0);
 	}
-	//@@author A0135808B
-	public static TaskLabel getNewLabel(String name){
+
+	public static TaskLabel createNewLabel(String name){
 		int colourId = getNextLabelColourId();
-		TaskLabel newLabel = getNewLabel(name, colourId);
+		TaskLabel newLabel = createNewLabel(name, colourId);
 		return newLabel;
 	}
-	//@@author A0135808B
-	public static TaskLabel getNewLabel(String name, int colourId){
+
+	public static TaskLabel createNewLabel(String name, int colourId){
 		int id = getNextLabelId();
 		TaskLabel newLabel = new TaskLabel(name, colourId, id);
 		return newLabel;
 	}
-	//@@author A0135808B
-	public static TaskLabel duplicateTaskLabel(TaskLabel taskLabel){
+
+	public static TaskLabel createDuplicateTaskLabel(TaskLabel taskLabel){
 		String aName = taskLabel.getLabelName();
 		int aColourId = taskLabel.getColourId();
 		int alabelId = taskLabel.getLabelId();
 		TaskLabel duplicatedTaskLabel = new TaskLabel(aName, aColourId, alabelId);
 		return duplicatedTaskLabel;
 	}
-	//@@author A0135808B
-	public static TaskLabel getDummyLabel(String name, int colourId){
+
+	public static TaskLabel createDummyLabel(String name, int colourId){
 		return new TaskLabel(name, colourId, 0);
 	}
-	//@@author A0135808B
+
 	private static int getNextLabelId() {
 		int id = generateRandomIntegers(Integer.MAX_VALUE);
 		return id;
 	}
-	//@@author A0135808B
+
 	private static int getNextLabelColourId(){
 		int colourId = generateRandomIntegers(7);
 		return colourId;
 	}
 	
 	//generates a number from [1, bound), bound exclusive
-	//@@author A0135808B
+
 	private static int generateRandomIntegers(int bound){
 		SecureRandom randomGen = new SecureRandom();
 		int id = randomGen.nextInt(bound);
@@ -64,23 +64,23 @@ public class TaskLabel {
 		}
 		return id;
 	}
-	//@@author A0135808B
+
 	public String getLabelName() {
 		return labelName;
 	}
-	//@@author A0135808B
+
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
 	}
-	//@@author A0135808B
+
 	public int getColourId() {
 		return colourId;
 	}
-	//@@author A0135808B
+
 	public void setColourId(int labelColourId) {
 		this.colourId = labelColourId;
 	}
-	//@@author A0135808B
+
 	public int getLabelId() {
 		return labelId;
 	}
@@ -95,7 +95,7 @@ public class TaskLabel {
 		result = prime * result + ((labelName == null) ? 0 : labelName.hashCode());
 		return result;
 	}
-	//@@author generated
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

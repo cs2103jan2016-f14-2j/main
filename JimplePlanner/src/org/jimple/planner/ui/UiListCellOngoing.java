@@ -34,11 +34,17 @@ public class UiListCellOngoing extends ListCell<Task>{
 		if (item != null) {
 			this.setId(Constants.TYPE_DEADLINE);
 			loadFXMLLayout("ongoingCellLayout.fxml");
-			
-			setDeadlineColors(item);	
+				
 			setLabel(item);
 			setDesc(item);
 			setStyles();
+			
+			if(item.getIsOverDue()){
+				this.setId("overdue");
+			}
+			else{
+				this.setId("");
+			}
 			
 			icon.setImage(new Image("eventIconGrey.png"));
 			title.setText(item.getTitle());
@@ -85,23 +91,5 @@ public class UiListCellOngoing extends ListCell<Task>{
 		title.getStyleClass().add("title");
 		fromdate.getStyleClass().add("date");
 		todate.getStyleClass().add("date");
-	}
-	
-	private void setDeadlineColors(Task item) {
-		// more than a day away
-		if (UiFormatter.timeDifference(item.getFromTime()) >= 1440)
-			this.setId("green");
-		// less than a day
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 180)
-			this.setId("yellow");
-		// less than an hour
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 60)
-			this.setId("orange");
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 30)
-			this.setId("red");
-		else if (UiFormatter.timeDifference(item.getFromTime()) >= 0)
-			this.setId("darkred");
-		else
-			this.setId("overdue");
 	}
 }

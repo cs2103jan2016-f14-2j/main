@@ -10,7 +10,8 @@ import java.util.LinkedList;
 
 //@@author A0124952E
 public interface LogicTaskModification {
-
+	
+	//@@author A0124952E
 	public default Task doEdit(String[] variableArray, Task aTask, ArrayList<TaskLabel> taskLabels) {
 		Task editedTask = new Task(aTask);
 		for (int i = 1; i < variableArray.length; i++) {
@@ -50,6 +51,7 @@ public interface LogicTaskModification {
 		return editedTask;
 	}
 
+	//@@author A0124952E
 	public default void checkIfConflictedTaskExistInList(ArrayList<Task> list, Task removedTask) {
 		for (int j = 0; j < list.size(); j++) {
 			for (int k = 0; k < list.get(j).getConflictedTasks().size(); k++) {
@@ -60,21 +62,23 @@ public interface LogicTaskModification {
 		}
 	}
 
+	//@@author A0124952E
 	public default TaskLabel checkNewTaskLabel(String name, ArrayList<TaskLabel> taskLabels) {
 		if (!taskLabels.isEmpty()) {
 			for (TaskLabel aLabel : taskLabels) {
 				if (aLabel.getLabelName().equals(name)) {
-					return TaskLabel.duplicateTaskLabel(aLabel);
+					return TaskLabel.createDuplicateTaskLabel(aLabel);
 				} else if (name.equals("DEFAULT")) {
-					return TaskLabel.getDefaultLabel();
+					return TaskLabel.createDefaultLabel();
 				}
 			}
 		}
-		TaskLabel newLabel = TaskLabel.getNewLabel(name);
+		TaskLabel newLabel = TaskLabel.createNewLabel(name);
 		taskLabels.add(newLabel);
 		return newLabel;
 	}
 
+	//@@author A0124952E
 	public default boolean isFromAndToTimeCorrect(Task task) {
 		if (task.getFromTime() == null && task.getToTime() == null) {
 			return true;
@@ -86,17 +90,20 @@ public interface LogicTaskModification {
 		return false;
 	}
 
+	//@@author A0124952E
 	public default LogicPreviousTask setNewPreviousTask(String command, Task previousTask) {
 		LogicPreviousTask aPreviousTask = new LogicPreviousTask(command, previousTask);
 		return aPreviousTask;
 	}
 
+	//@@author A0124952E
 	public default void checkOverCacheLimit(LinkedList<LogicPreviousTask> undoTasks) {
 		while (undoTasks.size() > Constants.DELETE_CACHE_LIMIT) {
 			undoTasks.removeFirst();
 		}
 	}
 
+	//@@author A0124952E
 	public static Task divideMultipleDays(Task aTask) {
 		Task newTask = new Task(aTask);
 		newTask.setToDate(newTask.getFromTime().toLocalDate().toString() + "T23:59");
@@ -104,10 +111,12 @@ public interface LogicTaskModification {
 		return newTask;
 	}
 
+	//@@author A0124952E
 	public static boolean isFromDateEqualToDate(Task aTask) {
 		return aTask.getFromTime().toLocalDate().equals(aTask.getToTime().toLocalDate());
 	}
 	
+	//@@author A0124952E
 	public static void assignOneTaskId(Task newTask, HashMap<Integer, Boolean> idHash) {
 		for (int i = 0; i < Constants.MAX_ID; i++) {
 			if (idHash.get(i+1).booleanValue() == false) {
@@ -118,8 +127,8 @@ public interface LogicTaskModification {
 		}
 	}
 	
+	//@@author A0124952E
 	public default void removeTaskId(Task removedTask, HashMap<Integer, Boolean> idHash)	{
 		idHash.put(removedTask.getTaskId(), false);
 	}
-
 }

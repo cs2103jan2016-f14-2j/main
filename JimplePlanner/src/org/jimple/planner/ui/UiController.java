@@ -19,13 +19,10 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -35,7 +32,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -52,116 +48,115 @@ public class UiController extends myObserver implements Initializable {
 	public static boolean isSearch = false;
 	public static boolean isConflictedShown = false;
 	protected static final Logger log= Logger.getLogger( UiController.class.getName() );
+	
 	Logic logic;
 	UiFormatter listFormatter = new UiFormatter();
-	private final BooleanProperty dragModeActiveProperty =
-            new SimpleBooleanProperty(this, "dragModeActive", true);
 
-	@FXML
-	TextField commandBox;
-
-	@FXML
-	Text textArea, helpContent;
-
-	@FXML
-	Label messagePrompt, clock,
-	todayLabel, ongoingLabel, upcomingLabel,
-	agendaLabel, todoLabel,
-	searchLabel, conflictedLabel;
-	
-	@FXML
-	VBox todayEmpty, ongoingEmpty, upcomingEmpty,
-	agendaEmpty, todoEmpty, archiveEmpty, searchEmpty, conflictedEmpty;
-
-	@FXML
-	Tab mainTab, agendaTab, todoTab, archiveTab;
-
-	@FXML
-	TabPane tabPanes;
-	
 	@FXML
 	AnchorPane mainController, mainContainer,
 	todayPane, nowPane, upcomingPane,
 	mainContent, agendaContent, todoContent, archiveContent,
 	popupLayer, searchBox, searchContent, helpBox, conflictedBox, searchList, conflictedList;
-
-	@FXML
-	StackPane stackPane;
-
-	@FXML
-	ListView<String> list;
-
-	@FXML
-	VBox overlay;
-	
 	@FXML
 	ImageView closeButton, searchCloseButton, helpCloseButton;
+	@FXML
+	Label messagePrompt, clock,
+	todayLabel, ongoingLabel, upcomingLabel,
+	agendaLabel, todoLabel,
+	searchLabel, conflictedLabel;
+	@FXML
+	StackPane stackPane;
+	@FXML
+	Tab mainTab, agendaTab, todoTab, archiveTab;
+	@FXML
+	TabPane tabPanes;
+	@FXML
+	Text textArea, helpContent;
+	@FXML
+	TextField commandBox;
+
+	@FXML
+	VBox overlay, todayEmpty, ongoingEmpty, upcomingEmpty,
+	agendaEmpty, todoEmpty, archiveEmpty, searchEmpty, conflictedEmpty;
 
 
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		System.out.println(Constants.MESSAGE_INITIALIZE);
 		logic = new Logic();
-		//asserts that FXML files initialises objects
-		assert commandBox != null : "fx:id=\"commandBox\" was not injected: check your FXML file 'JimplUI.fxml'.";
+		
+		//asserts that FXML files initialises JavaFX objects
+		assert commandBox != null : Constants.ERROR_FXML_INITIALIZE;
 		loadClock();
+		
+		//initialise command history
 		cmdHistory = new LinkedList<String>();
 		cmdHistory.add("");
+		cmdHistoryPointer = 0;
 		
-		setEmptyListStrings();
-		
-		ImageView icon;
-		int iconheight = 20;
-
-		icon = new ImageView(new Image("jimpleTabIcon.png"));
-		icon.setFitHeight(iconheight);
-		icon.setPreserveRatio(true);
-		mainTab.setGraphic(icon);
-//		mainTab.setText("");
-		icon = new ImageView(new Image("agendaTabIcon.png"));
-		icon.setFitHeight(iconheight);
-		icon.setPreserveRatio(true);
-		agendaTab.setGraphic(icon);
-//		agendaTab.setText("");
-		icon = new ImageView(new Image("todoTabIcon.png"));
-		icon.setFitHeight(iconheight);
-		icon.setPreserveRatio(true);
-		todoTab.setGraphic(icon);
-//		todoTab.setText("");
-		icon = new ImageView(new Image("archiveTabIcon.png"));
-		icon.setFitHeight(iconheight);
-		icon.setPreserveRatio(true);
-		archiveTab.setGraphic(icon);
-//		archiveTab.setText("");
+		setFlavourText();		
+		setTabIcons();
 		
 		prompt = new UiPrompt(this);
 		listViewControl = new UiListViewControl(this);
-		cmdHistoryPointer = 0;
-		System.out.println("initializing Jimple UI");
 		logic.attach(this);
 		
+		//Auto-complete strings for command box
 		TextFields.bindAutoCompletion(
                 commandBox,
                 Constants.STRING_ADD, Constants.STRING_EDIT,
                 Constants.STRING_DELETE, Constants.STRING_SEARCH,
                 Constants.STRING_UNDOTASK, Constants.STRING_HELP,
-                Constants.STRING_CHANGEDIR, Constants.STRING_CHECKDIR);
+                Constants.STRING_CHANGEDIR, Constants.STRING_CHECKDIR,
+                Constants.STRING_CHECKCONFLICT, Constants.STRING_EDITLABEL);
 		
+		//Set focus to command box on start up
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				commandBox.requestFocus();
 			}
 		});
+		
 		overlay.setVisible(false);
 		assert !overlay.isVisible();
 		log.log(Level.INFO,"initialising event listeners");
+		
+		//initialise listeners
 		commandBoxListener();
 		tabPanesListener();
+		
+		//load content
 		update();
 	 }
 
-	private void setEmptyListStrings() {
+	private void setTabIcons() {
+		ImageView icon;
+		int iconheight = 20;
+
+		icon = new ImageView(new Image(Constants.ICON_TAB_JIMPLE));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		mainTab.setGraphic(icon);
+
+		icon = new ImageView(new Image(Constants.ICON_TAB_AGENDA));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		agendaTab.setGraphic(icon);
+
+		icon = new ImageView(new Image(Constants.ICON_TAB_TODO));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		todoTab.setGraphic(icon);
+
+		icon = new ImageView(new Image(Constants.ICON_TAB_ARCHIVE));
+		icon.setFitHeight(iconheight);
+		icon.setPreserveRatio(true);
+		archiveTab.setGraphic(icon);
+	}
+
+	private void setFlavourText() {
 		searchLabel.setText("Um, we found nothing. Sorry.");
 //		searchLabel.setText("nothing here");
 	}
@@ -176,6 +171,7 @@ public class UiController extends myObserver implements Initializable {
 		LocalDateTime.now().getYear();
 		return currentTime;
 	}
+	
 	private void loadClock() {
 		final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {  
 		     @Override  
@@ -297,7 +293,6 @@ public class UiController extends myObserver implements Initializable {
 		}
 	}
 
-
 	public void loadTodoList()  {
 		listFormatter.formatList(logic.getToDoList(),Constants.TYPE_TODO);
 		todoContent.getChildren().clear();
@@ -315,6 +310,7 @@ public class UiController extends myObserver implements Initializable {
 	 * FXML LAYOUT RELATED:
 	 * 
 	========================================*/
+	
 	private void fadeOut(float sec, Node item){
 		FadeTransition ft = new FadeTransition(Duration.millis(sec*500), item);
 		FadeTransition ft2 = new FadeTransition(Duration.millis(sec*1000), item);
@@ -452,6 +448,7 @@ public class UiController extends myObserver implements Initializable {
 			}
 		});
 	}
+	
 	/*======================================
 	 * 
 	 * COMMAND BOX RELATED:
@@ -478,6 +475,7 @@ public class UiController extends myObserver implements Initializable {
 	 * UI INTERACTION:
 	 * 
 	========================================*/
+	
 	@FXML
 	private void closeButtonAction(){
 	    // get a handle to the stage
@@ -486,78 +484,24 @@ public class UiController extends myObserver implements Initializable {
 	    stage.close();
 	}
 
-	
 	@FXML
-	private void searchCloseButtonAction(){
+	private void popupCloseButtonAction(){
 		popupLayer.getChildren().clear();
 		isSearch = false;
 		isConflictedShown = false;
 		overlay.setVisible(false);
 	}
-
-	
-	private static final class DragContext {
-        public double mouseAnchorX;
-        public double mouseAnchorY;
-        public double initialTranslateX;
-        public double initialTranslateY;
-    }
-	
-	protected Node makeDraggable(final Node node) {
-        final DragContext dragContext = new DragContext();
-        final Group wrapGroup = new Group(node);
-        
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_PRESSED,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // remember initial mouse cursor coordinates
-                            // and node position
-                            dragContext.mouseAnchorX = mouseEvent.getX();
-                            dragContext.mouseAnchorY = mouseEvent.getY();
-                            dragContext.initialTranslateX =
-                                    node.getTranslateX();
-                            dragContext.initialTranslateY =
-                                    node.getTranslateY();
-                        }
-                    }
-                });
-
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_DRAGGED,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // shift node from its initial position by delta
-                            // calculated from mouse cursor movement
-                            node.setTranslateX(
-                                    dragContext.initialTranslateX
-                                        + mouseEvent.getX()
-                                        - dragContext.mouseAnchorX);
-                            node.setTranslateY(
-                                    dragContext.initialTranslateY
-                                        + mouseEvent.getY()
-                                        - dragContext.mouseAnchorY);
-                        }
-                    }
-                });
-                
-        return wrapGroup;
-    }
 	
 	@Override
 	public void update() {
 		loadDisplay();
-	}	
-
+	}
 	@Override
 	public void update(String[] feedback) {
 		int index = 0;
 		if(feedback[1].matches(".*\\d+.*")) //if string contains digits
 		 index = Integer.parseInt(feedback[1].replaceAll("[^\\d.]", ""));
 		String tab = feedback[1].replaceAll("[0-9]","");
-		System.out.println("feedback[1] = "+feedback[1]);
 		switch (tab) {
 		case Constants.TYPE_EVENT:
 		case Constants.TYPE_DEADLINE:
