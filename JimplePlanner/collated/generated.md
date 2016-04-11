@@ -105,20 +105,20 @@
 ###### \src\org\jimple\planner\logic\LogicEdit.java
 ``` java
 	public boolean testFindTaskToEdit(String[] variableArray, ArrayList<Task> list, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> tempHistory,
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks, ArrayList<Task> tempHistory,
 			ArrayList<TaskLabel> taskLabels, LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException, InvalidFromAndToTimeException {
-		return findTaskToEdit(variableArray, list, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
+		return findTaskToEdit(variableArray, list, todo, deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash);
 	}
 
 ```
 ###### \src\org\jimple\planner\logic\LogicEdit.java
 ``` java
 	public String testEditTask(String[] variableArray, ArrayList<Task> todo, ArrayList<Task> deadlines,
-			ArrayList<Task> events, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
+			ArrayList<Task> events, ArrayList<Task> archivedTasks, ArrayList<Task> tempHistory, ArrayList<TaskLabel> taskLabels,
 			LinkedList<LogicPreviousTask> undoTasks, HashMap<Integer, Boolean> idHash)
 					throws IOException, InvalidFromAndToTimeException {
-		return editTask(variableArray, todo, deadlines, events, tempHistory, taskLabels, undoTasks, idHash);
+		return editTask(variableArray, todo, deadlines, events, archivedTasks, tempHistory, taskLabels, undoTasks, idHash);
 	}
 
 }
@@ -126,8 +126,8 @@
 ###### \src\org\jimple\planner\logic\LogicLabel.java
 ``` java
 	public String testChangeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
-		return changeLabel(variableArray, taskLabels, todo, deadlines, events);
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
+		return changeLabel(variableArray, taskLabels, todo, deadlines, events, archivedTasks);
 	}
 }
 ```

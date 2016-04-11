@@ -7,7 +7,7 @@ public final class Constants {
 	public static final String TYPE_EVENT = "event";
 	public static final String TYPE_TODO = "floating";
 	public static final String TYPE_DEADLINE = "deadline";
-	//@@author A0122498
+	//@@author A0122498Y
 	public static final String TYPE_AGENDA = "agenda";
 	public static final String TYPE_STATIC = "static";
 	public static final String TYPE_SEARCH = "search";
@@ -20,7 +20,7 @@ public final class Constants {
 	public static final String TYPE_CONFLICTED = "conflicted";
 	//@@author A0135808B
 	public static final String EMPTY_STRING = "";
-	//@@author A0122498
+	//@@author A0122498Y
 	public static final String NEWLINE = "\n";
 	
 	/*
@@ -54,7 +54,7 @@ public final class Constants {
 	/*
 	 * Storage Component
 	 */
-	
+	//@@author A0135808B
 	public static final String DEFAULT_FILE_DIRECTORY = "jimpleFiles"+File.separator;
 	public static final String DEFAULT_FILE_NAME = "planner.jim";
 	public static final String DEFAULT_TEMP_FILE_NAME = "templanner.jim";
