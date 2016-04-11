@@ -464,10 +464,11 @@ public class TimeParser {
 	 * Parses days. E.g Monday, Wednesday, Sunday
 	 */
 	private boolean parseIfIsDay(String input) throws Exception{
-		if (calendarDays.containsKey(input)) {
+		String lowerCaseInput = input.toLowerCase();
+		if (calendarDays.containsKey(lowerCaseInput)) {
 			c = Calendar.getInstance();
 			c.setTimeInMillis(System.currentTimeMillis());
-			int inputDayNo = calendarDays.get(input);
+			int inputDayNo = calendarDays.get(lowerCaseInput);
 			while (c.get(Calendar.DAY_OF_WEEK) != inputDayNo) {
 				c.add(Calendar.DATE, INCREMENT_BY_1);
 			}
