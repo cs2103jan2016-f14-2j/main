@@ -1,5 +1,8 @@
 //@@author A0122498Y
 package org.jimple.planner.ui;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +17,8 @@ import javafx.stage.StageStyle;
 public class UiComponent extends Application {
 	double xOffset;
 	double yOffset;
+	protected static final Logger log= Logger.getLogger( UiComponent.class.getName() );
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -43,7 +48,7 @@ public class UiComponent extends Application {
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.show();
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.log(Level.WARNING,"Error setting UI stage");
 		}
 	}
 	

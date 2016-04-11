@@ -2,6 +2,8 @@ package org.jimple.planner.ui;
 
 //@@author A0122498Y
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jimple.planner.constants.Constants;
 import org.jimple.planner.task.Task;
@@ -18,7 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class UiListCellAgenda extends ListCell<Task> {
-	
+	protected static final Logger log= Logger.getLogger( UiComponent.class.getName() );
 	@FXML
 	Label title, fromdate, todate, id, label, desc, conflict;
 	@FXML
@@ -160,7 +162,7 @@ public class UiListCellAgenda extends ListCell<Task> {
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			log.log(Level.WARNING,"Error loading FXML layout");
 		}
 	}
 

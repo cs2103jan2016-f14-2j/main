@@ -358,7 +358,6 @@ public class UiController extends myObserver implements Initializable {
 				switch(t.getCode()){
 			    case ESCAPE:
 					tabPanes.requestFocus();
-//					listViewControl.getActiveListView().requestFocus();
 					if(overlay.isVisible()){
 						overlay.setVisible(false);
 						isSearch = false;
@@ -400,9 +399,6 @@ public class UiController extends myObserver implements Initializable {
 						listViewControl.deselectTaskItem();
 						}
 					break;
-//				case LEFT:
-//				case RIGHT:
-//					break;
 				case SPACE:
 					if(agendaTab.isSelected())
 						listViewControl.selectFirstIncompleteTask();
@@ -444,7 +440,6 @@ public class UiController extends myObserver implements Initializable {
 					break;
 				case BACK_SPACE:
 				case DELETE:
-//					prompt.deletePrompt();
 					listViewControl.deleteSelectedTask();
 					break;
 				default:
@@ -486,9 +481,7 @@ public class UiController extends myObserver implements Initializable {
 	
 	@FXML
 	protected void closeButtonAction(){
-	    // get a handle to the stage
 	    Stage stage = (Stage) closeButton.getScene().getWindow();
-	    // do what you have to do
 	    stage.close();
 	}
 
@@ -519,7 +512,6 @@ public class UiController extends myObserver implements Initializable {
 			listViewControl.updateAndReload(todoTab,index);
 			break;
 		case Constants.TYPE_ARCHIVE:
-//			listViewControl.updateAndReload(archiveTab,index);
 			loadDisplay();
 			break;
 		case Constants.TYPE_SEARCH:
