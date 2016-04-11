@@ -1,5 +1,5 @@
-package org.jimple.planner.ui;
 //@@author A0122498Y
+package org.jimple.planner.ui;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -63,7 +63,7 @@ public class UiController extends myObserver implements Initializable {
 	Label messagePrompt, clock,
 	todayLabel, ongoingLabel, upcomingLabel,
 	agendaLabel, todoLabel,
-	searchLabel, conflictedLabel;
+	searchLabel, conflictedLabel, archiveLabel;
 	@FXML
 	StackPane stackPane;
 	@FXML
