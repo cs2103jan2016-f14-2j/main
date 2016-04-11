@@ -25,7 +25,6 @@ public class LogicSearch {
 		return searchWordResults;
 	}
 
-	//@@author A0135808B
 	private ArrayList<Task> getSearchedTasks(String wordToBeSearched, ArrayList<Task> list) {
 		ArrayList<Task> objectOfTaskInstanceFound = new ArrayList<Task>();
 		if (list != null) {
