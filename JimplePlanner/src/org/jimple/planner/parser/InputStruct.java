@@ -35,32 +35,12 @@ public class InputStruct {
 	// The string array being used, according to commandString.
 	private String[] variableArray;
 
-	public void setCommand(String inputCommand) {
-		commandString = inputCommand;
-	}
-
-	public String getCommand() {
-		return commandString;
-	}
-
-	public void setVariableArraySize(int inputSize) {
-		variableArray = new String[inputSize];
-	}
-
-	public String[] getVariableArray(){
-		if (variableArray != null) {
-			return variableArray;
-		} else {
-			throw new NullPointerException("No variable array found.");
-		}
-	}
-
 	/* ------------|
 	 * CONSTRUCTOR |
 	 * ------------|
 	 * */
 	public InputStruct(String inputCommandString) {
-		commandString = inputCommandString;
+		setCommand(inputCommandString);
 		// Initializes the size of the variable array according to the commandString.
 		switch (commandString) {
 		case Constants.STRING_ADD :
@@ -98,7 +78,41 @@ public class InputStruct {
 		}
 	}
 	
-	/* Set the task type based on which date/time fields ("from" and "to") are available.
+	/* --------------------|
+	 * SETTERS AND GETTERS |
+	 * --------------------|
+	 */
+	private void setCommand(String inputCommand) {
+		commandString = inputCommand;
+	}
+	
+	private void setVariableArraySize(int inputSize) {
+		variableArray = new String[inputSize];
+	}
+	
+	public String getCommand() {
+		return commandString;
+	}
+
+	public String[] getVariableArray(){
+		if (variableArray != null) {
+			return variableArray;
+		}
+		return null;
+	}
+	
+	public void setAtIndex(int inputIndex, String inputString) {
+		variableArray[inputIndex] = inputString;
+	}
+
+	public String getAtIndex(int inputIndex) {
+		return variableArray[inputIndex];
+	}
+	
+	/* ----------------------|
+	 * SET TASK TYPE METHODS |
+	 * ----------------------|
+	 * Set the task type based on which date/time fields ("from" and "to") are available.
 	 * EVENT: "from" & "to" set.
 	 * DEADLINE: Only "from" set.
 	 * TODO: None set.
@@ -205,14 +219,6 @@ public class InputStruct {
 	 * -----------------------------|
 	 * N/A
 	 */
-
-	public void setAtIndex(int inputIndex, String inputString) {
-		variableArray[inputIndex] = inputString;
-	}
-
-	public String getAtIndex(int inputIndex) {
-		return variableArray[inputIndex];
-	}
 	
 }
 
