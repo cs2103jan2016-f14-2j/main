@@ -8,6 +8,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * READ THIS BEFORE YOU RUN THIS!
+ * Please read and check LogicAddIntegrationTest and 
+ * LogicEditIntegrationTest to make sure that the time
+ * sensitive requirements are met!!
+ */
 //@@author A0135808B
 @RunWith(Suite.class)
 @SuiteClasses({ 

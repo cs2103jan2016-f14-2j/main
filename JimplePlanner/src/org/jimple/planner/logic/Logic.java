@@ -190,7 +190,6 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		} catch (InvalidFromAndToTimeException ift) {
 			feedback[0] = ift.getMessage();
 			feedback[1] = "";
-			logger.log(Level.WARNING, ift.toString(), ift);
 			logger.log(Level.WARNING, ift.getMessage());
 			logger.log(Level.WARNING, inputString + "\n");
 		} catch (MissingDateTimeFieldException mfe) {

@@ -11,6 +11,7 @@ import org.junit.Test;
 /**
  * All test cases in integration tests are time sensitive.
  * Planner.jim file must be empty before starting test cases
+ * To test, ensure time requirements are mets
  * @author Brandon
  *
  */

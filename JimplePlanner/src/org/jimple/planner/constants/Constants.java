@@ -173,7 +173,7 @@ public final class Constants {
 	public static final String UNARCHIVE_HELP_HEADER = "Return completed tasks:\n";
 	public static final String CHECKCONFLICT_HELP_HEADER = "Check tasks in conflict:\n";
 	
-	public static final String TIME_FORMAT = "<date in DAY MONTH> / <time in day of week> / <time in AM/PM> / <time in 24HR>\n\n";
+	public static final String TIME_FORMAT = "<date in DAY MONTH>\n<time in day of week>\n<time in AM/PM>\n<time in 24HR>\n<dd/mm/yyyy>\n\n";
 	
 	public static final String ADD_COMMAND_BY = "type \"ADD\" <your event name> BY <time>\n";
 	public static final String ADD_COMMAND_AT = "type \"ADD\" <your event name> AT <time>\n";
