@@ -73,7 +73,7 @@ public class UiListCellDefault extends ListCell<Task> {
 				title.setText(item.getTitle());
 				id.setText(""+item.getTaskId());
 				fromdate.setText(item.getPrettyFromDate() + " " + item.getPrettyFromTime());
-				setDeadlineColors(item);	
+//				setDeadlineColors(item);	
 				break;
 			
 			//EVENT
@@ -85,12 +85,12 @@ public class UiListCellDefault extends ListCell<Task> {
 				setDesc(item);
 				setStyles();
 				
-				if(item.getIsOverDue()){
-					this.setId("overdue");
-				}
-				else{
-					this.setId("");
-				}
+//				if(item.getIsOverDue()){
+//					this.setId("overdue");
+//				}
+//				else{
+//					this.setId("");
+//				}
 				
 				if(hBox.getChildren().contains(checkbox))
 					hBox.getChildren().remove(checkbox);
