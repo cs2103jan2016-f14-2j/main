@@ -1,5 +1,5 @@
+//@@author A0122498Y
 package org.jimple.planner.ui;
-//@@author A0122498
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -63,7 +63,7 @@ public class UiController extends myObserver implements Initializable {
 	Label messagePrompt, clock,
 	todayLabel, ongoingLabel, upcomingLabel,
 	agendaLabel, todoLabel,
-	searchLabel, conflictedLabel;
+	searchLabel, conflictedLabel, archiveLabel;
 	@FXML
 	StackPane stackPane;
 	@FXML
@@ -157,10 +157,18 @@ public class UiController extends myObserver implements Initializable {
 	}
 
 	private void setFlavourText() {
-		searchLabel.setText("Um, we found nothing. Sorry.");
-//		searchLabel.setText("nothing here");
+		//@@author A0135775W
+		searchLabel.setText("Um, we found nothing.");
+		conflictedLabel.setText("Zero conflicts!");
+		todayLabel.setText("A free day for you!");
+		ongoingLabel.setText("Nothing happening right now.");
+		upcomingLabel.setText("No deadlines to worry about!");
+	    agendaLabel.setText("No more events and deadlines! Time to relax.");
+	    todoLabel.setText("Nothing left on your to-do list! Grab yourself a drink.");
+	    archiveLabel.setText("Your archive is empty! Oh look, tumbleweed!");
 	}
 
+	//@@author A0122498Y
 	private String getCurrentTime(){
 		String currentTime = "";
 		currentTime +=  LocalDateTime.now().getHour() + ":" +

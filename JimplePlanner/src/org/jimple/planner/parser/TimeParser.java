@@ -4,6 +4,9 @@ package org.jimple.planner.parser;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jimple.planner.constants.Constants;
 
 import org.jimple.planner.exceptions.DuplicateDateTimeFieldException;
@@ -66,6 +69,7 @@ public class TimeParser {
 	private final int START_INDEX = 0;
 	private final int INCREMENT_BY_1 = 1;
 	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
 	
 	/* ----------------------------|
 	 * TIMEPARSER PARSER CONSTANTS |
@@ -124,6 +128,10 @@ public class TimeParser {
 	private final int FIELD_NOT_SET_VALUE = -1;
 	private final int FIELD_INVALID_VALUE = -2;
 	
+	private final String ERROR_MESSAGE_UNRECOGNISED_DATE_TIME = "Date/Time: \"%s\" not recognised.";
+	private final String ERROR_MESSAGE_FIELD_NOT_SET = "Field: %s not set.";
+	private final String ERROR_MESSAGE_FIELD_ALREADY_SET = "%s cannot be set to %s. %s already set to %s.";
+	private final String ERROR_MESSAGE_INVAID_AMPM_FORMAT = "Invalid time AM/PM format: \"%s\".";
 	private final String ERROR_MESSAGE_AMPM_DOT_FORMAT = "Invalid input: \"%s\". Time should be formated to hh.mm before am/pm.";
 	private final String ERROR_MESSAGE_AMPM_COLON_FORMAT = "Invalid input: \"%s\". Time should be formated to hh:mm before am/pm.";
 	private final String ERROR_MESSAGE_PARSE_AMPM_HOUR = "Invalid input: Hour \"%s\" of \"%s\". Please input a valid AM/PM time for hour.";
@@ -136,7 +144,7 @@ public class TimeParser {
 	private final String ERROR_MESSAGE_YEAR_PAST = "Invalid input: Year \"%s\" of \"%s\" is before the current year.";
 	private final String ERROR_MESSAGE_PARSE_HOUR = "Invalid input: Day \"%s\" of \"%s\". Please input a valid time for day.";
 	private final String ERROR_MESSAGE_PARSE_MINUTE = "Invalid input: Day \"%s\" of \"%s\". Please input a valid time for day.";
-	private final String ERROR_MESSAGE_DATE_PAST = "Invalid input: Date \"%s\" is before the current date.";
+	//private final String ERROR_MESSAGE_DATE_PAST = "Invalid input: Date \"%s\" is before the current date.";
 	
 	/* ----------------------------|
 	 * TIMEPARSER DATE/TIME FIELDS |
@@ -162,8 +170,11 @@ public class TimeParser {
 	 */
 	private Calendar c = null;
 	
-	//private static Logger LOGGER = Logger.getLogger("TimeParser");
-	//FileHandler fh;
+	/* -------|
+	 * LOGGER |
+	 * -------|
+	 */
+	private static final Logger LOGGER = Logger.getLogger(TimeParser.class.getName());
 	
 	/* -----------------------|
 	 * TIMEPARSER CONSTRUCTOR |
@@ -177,16 +188,6 @@ public class TimeParser {
 		for (int i = 0; i < STRINGS_DAY.length; i++) {
 			calendarDays.put(STRINGS_DAY[i], VALUES_DAY[i]);
 		}
-		/*try {
-			//fh = new FileHandler("C:/Users/user/git/main/JimplePlanner/LogFile.log");
-			//LOGGER.addHandler(fh);
-			//SimpleFormatter formatter = new SimpleFormatter();
-			//fh.setFormatter(formatter);
-		} catch (SecurityException e) {
-			//LOGGER.log(Level.WARNING, "No permission to edit or create the log file.", e);
-		} catch (IOException e) {
-			//LOGGER.log(Level.WARNING, "Log file cannot be found.", e);
-		}*/
 	}
 	
 	/* -------------------|
@@ -196,7 +197,7 @@ public class TimeParser {
 	 */
 	public Calendar parseTime(String extendedCommand, String input) throws Exception {
 		resetTimeAndDate();
-		String[] splitInput = input.split(" ");
+		String[] splitInput = input.split(SPACE_STRING);
 		for (String i: splitInput) { // For each word being read, goes through a list of parsers which is then converted to the appropriate date/time to be stored in calendar.
 			if (parseIfIsDay(i)) {
 			} else if (parseIfIsMonth(i)) {
@@ -207,8 +208,8 @@ public class TimeParser {
 			} else if (parseIfIsForwardSlashDateFormat(i)) {
 			} else if (parseIfIs4DigitFloatingNumber(i)) {
 			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
-			} else {  // All parsers failed, word being read not supported.
-				throw new InvalidDateTimeFieldException("Date/Time: \"" + i + "\" not recognised.");
+			} else {  // All parsers failed, word being read not recognised.
+				logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_UNRECOGNISED_DATE_TIME, i)));
 			}
 		}
 		if (!formatCalendarIfValid(extendedCommand, input)) {
@@ -222,13 +223,10 @@ public class TimeParser {
 	 * -------------------------|
 	 * After parsing through the entire input string, checks if all the required fields are specified.
 	 */
-	private boolean formatCalendarIfValid(String extendedCommand, String userInput) throws DuplicateDateTimeFieldException, MissingDateTimeFieldException, InvalidDateTimeFieldException {
+	private boolean formatCalendarIfValid(String extendedCommand, String userInput) throws Exception {
 		c = Calendar.getInstance(); // Initialises the Calendar.
 		initSecondaryAndPresetFields(extendedCommand);
 		// Set up fields in calendar according to parsed inputs.
-		/*if (!isAfterCurrentDateAndTime()) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_DATE_PAST, userInput));
-		}*/
 		if (setCalendarField(FIELD_HOUR, getField(FIELD_HOUR))) {
 			if (setCalendarField(FIELD_MINUTE, getField(FIELD_MINUTE))) {
 				if (setCalendarField(FIELD_YEAR, getField(FIELD_YEAR))) {
@@ -243,17 +241,17 @@ public class TimeParser {
 		return false; // If any fields are missing, parsing has failed, return false.
 	}
 
+	//@@author A0135775Wunused
 	private boolean isAfterCurrentDateAndTime() throws InvalidDateTimeFieldException {
 		if (!isToday(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isAfterCurrentDate(getField(FIELD_DAY), getField(FIELD_MONTH))) {
-			//System.out.println("A");
 			return false;
 		} else if (isToday(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isAfterCurrentTime(getField(FIELD_HOUR), getField(FIELD_MINUTE))) {
-			//System.out.println("B");
 			return false;
 		}
 		return true;
 	}
 	
+	//@@author A0135775W
 	/* -----------------------------------|
 	 * DATE/TIME INPUT FLEXIBILITY METHOD |
 	 * -----------------------------------|
@@ -263,7 +261,7 @@ public class TimeParser {
 	 * - Time only
 	 * This method detects which of the above the current user input is, then fills in certain empty fields (if applicable) according to the extended command used.
 	 */
-	private boolean initSecondaryAndPresetFields(String extendedCommand) throws DuplicateDateTimeFieldException {
+	private boolean initSecondaryAndPresetFields(String extendedCommand) throws Exception {
 		if (isTimeOnly()) {
 			setDateToNextInstanceOfSpecifiedTime();
 		}
@@ -278,7 +276,7 @@ public class TimeParser {
 	}
 
 	// Increments year by 1 if specified date is before current date.
-	private void setYearToNextInstanceOfSpecifiedDateTime() throws DuplicateDateTimeFieldException {
+	private void setYearToNextInstanceOfSpecifiedDateTime() throws Exception {
 		c.setTimeInMillis(System.currentTimeMillis());
 		if (!isAfterCurrentDate(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isToday(getField(FIELD_DAY), getField(FIELD_MONTH))) {
 			c.add(Calendar.YEAR, INCREMENT_BY_1);
@@ -292,7 +290,7 @@ public class TimeParser {
 	 * ON/AT/FROM: 00:00
 	 * TO/BY: 23:59
 	 */
-	private void setTimeAccordingToExtendedCommand(String extendedCommand) throws DuplicateDateTimeFieldException {
+	private void setTimeAccordingToExtendedCommand(String extendedCommand) throws Exception {
 		switch (extendedCommand) {
 			case Constants.STRING_ON :
 			case Constants.STRING_AT :
@@ -311,7 +309,7 @@ public class TimeParser {
 	}
 
 	// Increments date by 1 if specified time is before current time.
-	private void setDateToNextInstanceOfSpecifiedTime() throws DuplicateDateTimeFieldException {
+	private void setDateToNextInstanceOfSpecifiedTime() throws Exception {
 		c.setTimeInMillis(System.currentTimeMillis());
 		if (!isAfterCurrentTime(getField(FIELD_HOUR), getField(FIELD_MINUTE))) {
 			c.add(Calendar.DATE, INCREMENT_BY_1);
@@ -364,9 +362,9 @@ public class TimeParser {
 	 * ------------------------------|
 	 */
 	// Fields set here are the output Calendar fields.
-	private boolean setCalendarField(String inputField, int inputValue) throws MissingDateTimeFieldException {
+	private boolean setCalendarField(String inputField, int inputValue) throws Exception {
 		if (!isFieldSet(inputField)) {
-			throw new MissingDateTimeFieldException(inputField + " not set.");
+			logAndThrow(new MissingDateTimeFieldException(String.format(ERROR_MESSAGE_FIELD_NOT_SET, inputField)));
 		} else {
 			switch (inputField) {
 				case FIELD_DAY :
@@ -392,9 +390,9 @@ public class TimeParser {
 	}
 	
 	// Fields being set here are the temporary fields, not the output Calendar fields.
-	private boolean setField(String inputField, int inputValue) throws DuplicateDateTimeFieldException {
+	private boolean setField(String inputField, int inputValue) throws Exception {
 		if (isFieldSet(inputField)) {
-			throw new DuplicateDateTimeFieldException(inputField + " cannot be set to " + inputValue + ". " + inputField + " already set to " + getField(inputField));
+			logAndThrow(new DuplicateDateTimeFieldException(String.format(ERROR_MESSAGE_FIELD_ALREADY_SET, inputField, inputValue, inputField, getField(inputField))));
 		} else {
 			switch (inputField) {
 				case FIELD_DAY :
@@ -413,7 +411,6 @@ public class TimeParser {
 					minute = inputValue;
 					return true;
 				default :
-					System.out.println("Invalid field for setting Date/Time");
 					break;
 			}
 		}
@@ -466,7 +463,7 @@ public class TimeParser {
 	 * DAY PARSER
 	 * Parses days. E.g Monday, Wednesday, Sunday
 	 */
-	private boolean parseIfIsDay(String input) throws DuplicateDateTimeFieldException{
+	private boolean parseIfIsDay(String input) throws Exception{
 		if (calendarDays.containsKey(input)) {
 			c = Calendar.getInstance();
 			c.setTimeInMillis(System.currentTimeMillis());
@@ -485,7 +482,7 @@ public class TimeParser {
 	 * AMPM PARSER
 	 * Parses am and pm. E.g 12am, 5.30pm, 10:25pm.
 	 */
-	private boolean parseIfIsAMPMFormat(String input) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
+	private boolean parseIfIsAMPMFormat(String input) throws NumberFormatException, Exception {
 		if (input.length() < AMPM_INPUT_MIN_LENGTH) {
 			return false;
 		}
@@ -499,14 +496,14 @@ public class TimeParser {
 			} else if (isANumber(beforeLast2Characters)){
 				return parseFloatingNumberAMPM(beforeLast2Characters, last2Characters, input);
 			} else {
-				throw new InvalidDateTimeFieldException("Invalid time AM/PM format: \"" + input + "\".");
+				logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_INVAID_AMPM_FORMAT, input)));
 			}
 		}
 		return false;
 	}
 	
 	// E.g 1.30pm, E.g 6.10am, 11.03pm
-	private boolean parseDotAMPM(String inputTime, String inputAMPM, String userInput) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseDotAMPM(String inputTime, String inputAMPM, String userInput) throws NumberFormatException, Exception {
 		String[] splitTime = inputTime.split(STRING_DOT_FOR_SPLIT);
 		if (splitTime.length == TIME_FIELDS_SIZE) {
 			String inputHour = splitTime[INDEX_HOUR];
@@ -515,11 +512,12 @@ public class TimeParser {
 			parseMinute(inputMinute, userInput);
 			return true;
 		}
-		throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_AMPM_DOT_FORMAT, inputTime));
+		logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_AMPM_DOT_FORMAT, inputTime)));
+		return false;
 	}
 	
 	// E.g 1:30pm, E.g 6:10am, 6:03pm
-	private boolean parseColonAMPM(String inputTime, String inputAMPM, String userInput) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseColonAMPM(String inputTime, String inputAMPM, String userInput) throws NumberFormatException, Exception {
 		String[] splitTime = inputTime.split(STRING_COLON);
 		if (splitTime.length == TIME_FIELDS_SIZE) {
 			String inputHour = splitTime[INDEX_HOUR];
@@ -528,18 +526,19 @@ public class TimeParser {
 			parseMinute(inputMinute, userInput);
 			return true;
 		}
-		throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_AMPM_COLON_FORMAT, inputTime));
+		logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_AMPM_COLON_FORMAT, inputTime)));
+		return false;
 	}
 	
-	private boolean parseFloatingNumberAMPM(String inputTime, String inputAMPM, String userInput) throws DuplicateDateTimeFieldException, InvalidDateTimeFieldException {
+	private boolean parseFloatingNumberAMPM(String inputTime, String inputAMPM, String userInput) throws NumberFormatException, Exception {
 		setAMPMHour(inputTime, inputAMPM, userInput);
 		parseMinute(AMPM_FLOATING_NUMBER_MINUTE, userInput);
 		return true;
 	}
 
-	private void setAMPMHour(String inputHour, String inputAMPM, String userInput) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private void setAMPMHour(String inputHour, String inputAMPM, String userInput) throws NumberFormatException, Exception {
 		if (!isANumber(inputHour) || !isValidAMPMHour(inputHour)) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_AMPM_HOUR, inputHour, userInput));
+			logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_AMPM_HOUR, inputHour, userInput)));
 		} else {
 			switch (inputAMPM) {
 				case STRING_AM :
@@ -558,7 +557,7 @@ public class TimeParser {
 	}
 	
 	// Parses the words "today" and "tomorrow".
-	private boolean parseIfIsTodayOrTomorrow(String input) throws DuplicateDateTimeFieldException{
+	private boolean parseIfIsTodayOrTomorrow(String input) throws Exception{
 		c = Calendar.getInstance();
 		switch (input.toLowerCase()) {
 		case STRING_TODAY :
@@ -577,7 +576,7 @@ public class TimeParser {
 	}
 
 	// Parses months. E.g February, May, December.
-	private boolean parseIfIsMonth(String input) throws DuplicateDateTimeFieldException {
+	private boolean parseIfIsMonth(String input) throws Exception {
 		String inputLowerCase = input.toLowerCase();
 		if (calendarMonths.containsKey(inputLowerCase)) {
 			setField(FIELD_MONTH, calendarMonths.get(inputLowerCase));
@@ -587,7 +586,7 @@ public class TimeParser {
 	}
 
 	// Parses time in hh:mm format. E.g 00:00, 12:34, 23:59.
-	private boolean parseIfIsColonTimeFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseIfIsColonTimeFormat(String input) throws NumberFormatException, Exception {
 		if (input.contains(STRING_COLON)) {
 			String[] splitTime = input.split(STRING_COLON);
 			if (splitTime.length == TIME_FIELDS_SIZE) {
@@ -597,13 +596,13 @@ public class TimeParser {
 				parseMinute(inputMinute, input);
 				return true;
 			} else {
-				throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_COLON_FORMAT, input));
+				logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_COLON_FORMAT, input)));
 			}
 		}
 		return false;
 	}
 	
-	private boolean parseIfIsDotTimeFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseIfIsDotTimeFormat(String input) throws NumberFormatException, Exception {
 		if (input.contains(STRING_DOT_FOR_SPLIT)) {
 			String[] splitTime = input.split(STRING_DOT_FOR_SPLIT);
 			if (splitTime.length == TIME_FIELDS_SIZE) {
@@ -613,30 +612,30 @@ public class TimeParser {
 				parseMinute(inputMinute, input);
 				return true;
 			} else {
-				throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_DOT_FORMAT, input));
+				logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_DOT_FORMAT, input)));
 			}
 		}
 		return false;
 	}
 
-	private void parseMinute(String inputMinute, String userInput) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private void parseMinute(String inputMinute, String userInput) throws NumberFormatException, Exception {
 		if (!isANumber(inputMinute) || !isValidMinute(inputMinute)) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_MINUTE, inputMinute, userInput));
+			logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_MINUTE, inputMinute, userInput)));
 		} else {
 			setField(FIELD_MINUTE, Integer.parseInt(inputMinute));
 		}
 	}
 
-	private void parseHour(String inputHour, String userInput) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private void parseHour(String inputHour, String userInput) throws NumberFormatException, Exception {
 		if (!isANumber(inputHour) || !isValidHour(inputHour)) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_HOUR, inputHour, userInput));
+			logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_HOUR, inputHour, userInput)));
 		} else {
 			setField(FIELD_HOUR, Integer.parseInt(inputHour));
 		}
 	}
 	
 	// Parses dates in dd/mm, dd/mm/yy, dd/mm/yyy, dd/mm/yyyy format. E.g 12/5/16, 12/05/2016, 12/05.
-	private boolean parseIfIsForwardSlashDateFormat(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseIfIsForwardSlashDateFormat(String input) throws Exception {
 		if (input.contains(STRING_FORWARD_SLASH)) {
 			String[] splitDate = input.split(STRING_FORWARD_SLASH);
 			if (splitDate.length == DAY_MONTH_FORMAT_LENGTH) {
@@ -651,7 +650,7 @@ public class TimeParser {
 	}
 	
 	// E.g 12/5, 31/10
-	private boolean parseDayAndMonth(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseDayAndMonth(String input) throws NumberFormatException, Exception {
 		String[] splitDate = input.split(STRING_FORWARD_SLASH);
 		String inputDay = splitDate[INDEX_DAY];
 		String inputMonth = splitDate[INDEX_MONTH];
@@ -661,7 +660,7 @@ public class TimeParser {
 	}
 	
 	// E.g 12/5/16, 31/10/2017
-	private boolean parseDayMonthAndYear(String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private boolean parseDayMonthAndYear(String input) throws Exception {
 		String[] splitDate = input.split(STRING_FORWARD_SLASH);
 		String inputDay = splitDate[INDEX_DAY];
 		String inputMonth = splitDate[INDEX_MONTH];
@@ -672,9 +671,9 @@ public class TimeParser {
 		return true;
 	}
 
-	private void parseYear(String inputYear, String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private void parseYear(String inputYear, String input) throws Exception {
 		if (!isANumber(inputYear)) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_YEAR, inputYear, input));
+			logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_YEAR, inputYear, input)));
 		} else {
 			int intYear = Integer.parseInt(inputYear);
 			if (intYear < MIN_4_DIGIT_YEAR) {
@@ -683,7 +682,7 @@ public class TimeParser {
 			if (isAfterCurrentYear(intYear)) {
 				setField(FIELD_YEAR, intYear);
 			} else {
-				throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_YEAR_PAST, inputYear, input));
+				logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_YEAR_PAST, inputYear, input)));
 			}
 		}
 	}
@@ -693,24 +692,24 @@ public class TimeParser {
 		return inputYear >= c.get(Calendar.YEAR);
 	}
 
-	private void parseMonth(String inputMonth, String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private void parseMonth(String inputMonth, String input) throws NumberFormatException, Exception {
 		if (!isANumber(inputMonth) || !isValidMonth(inputMonth)) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_MONTH, inputMonth, input));
+			logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_MONTH, inputMonth, input)));
 		} else {
 			setField(FIELD_MONTH, Integer.parseInt(inputMonth));
 		}
 	}
 
-	private void parseDay(String inputDay, String input) throws InvalidDateTimeFieldException, DuplicateDateTimeFieldException {
+	private void parseDay(String inputDay, String input) throws NumberFormatException, Exception {
 		if (!isANumber(inputDay)) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_DAY, inputDay, input));
+			logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_PARSE_DAY, inputDay, input)));
 		} else {
 			setField(FIELD_DAY, Integer.parseInt(inputDay));
 		}
 	}
 	
 	// Parses numbers with 2 or less digits. E.g "12" may, "7" april.
-	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) throws DuplicateDateTimeFieldException {
+	private boolean parseIfIs2OrLessDigitFloatingNumber(String input) throws NumberFormatException, Exception {
 		if (isANumber(input) && input.length() <= 2) {
 			setField(FIELD_DAY, Integer.parseInt(input));
 			return true;
@@ -719,7 +718,7 @@ public class TimeParser {
 	}
 	
 	// Parses numbers with 4 digits. E.g (time) 1200, (time) 2359, (year) 2500. 
-	private boolean parseIfIs4DigitFloatingNumber(String input) throws DuplicateDateTimeFieldException{
+	private boolean parseIfIs4DigitFloatingNumber(String input) throws NumberFormatException, Exception{
 		if (input.length() == FORMAT_LENGTH_4_DIGIT && isANumber(input)) {
 			String inputHour = input.substring(START_INDEX, INDEX_SEPARATE_4_DIGIT_HOUR_MINUTE); // Gets first 2 digits.
 			String inputMinute = input.substring(INDEX_SEPARATE_4_DIGIT_HOUR_MINUTE, FORMAT_LENGTH_4_DIGIT); // Gets last 2 digits.
@@ -763,4 +762,9 @@ public class TimeParser {
 		}
 		return isNumber;
 	}
+	
+	public void logAndThrow(Exception e) throws Exception {
+        LOGGER.log(Level.WARNING, e.getMessage());
+        throw e;
+    }
 }

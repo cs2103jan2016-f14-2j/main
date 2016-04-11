@@ -1,5 +1,6 @@
 package org.jimple.planner.ui;
 
+//@@author A0122498Y
 import java.io.IOException;
 
 import org.jimple.planner.constants.Constants;
@@ -16,7 +17,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-//@@author A0122498
 public class UiListCellAgenda extends ListCell<Task> {
 	
 	@FXML
