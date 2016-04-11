@@ -63,7 +63,7 @@ public class UiController extends myObserver implements Initializable {
 	Label messagePrompt, clock,
 	todayLabel, ongoingLabel, upcomingLabel,
 	agendaLabel, todoLabel,
-	searchLabel, conflictedLabel;
+	searchLabel, conflictedLabel, archiveLabel;
 	@FXML
 	StackPane stackPane;
 	@FXML
@@ -164,6 +164,7 @@ public class UiController extends myObserver implements Initializable {
 		upcomingLabel.setText("No deadlines to worry about!");
 	    agendaLabel.setText("No more events and deadlines! Time to relax.");
 	    todoLabel.setText("Nothing left on your to-do list! Grab yourself a drink.");
+	    archiveLabel.setText("Your archive is empty! Oh look, tumbleweed!");
 	}
 
 	private String getCurrentTime(){
