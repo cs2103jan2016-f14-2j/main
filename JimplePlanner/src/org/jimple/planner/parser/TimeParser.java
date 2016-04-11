@@ -69,6 +69,7 @@ public class TimeParser {
 	private final int START_INDEX = 0;
 	private final int INCREMENT_BY_1 = 1;
 	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
 	
 	/* ----------------------------|
 	 * TIMEPARSER PARSER CONSTANTS |
@@ -143,7 +144,7 @@ public class TimeParser {
 	private final String ERROR_MESSAGE_YEAR_PAST = "Invalid input: Year \"%s\" of \"%s\" is before the current year.";
 	private final String ERROR_MESSAGE_PARSE_HOUR = "Invalid input: Day \"%s\" of \"%s\". Please input a valid time for day.";
 	private final String ERROR_MESSAGE_PARSE_MINUTE = "Invalid input: Day \"%s\" of \"%s\". Please input a valid time for day.";
-	private final String ERROR_MESSAGE_DATE_PAST = "Invalid input: Date \"%s\" is before the current date.";
+	//private final String ERROR_MESSAGE_DATE_PAST = "Invalid input: Date \"%s\" is before the current date.";
 	
 	/* ----------------------------|
 	 * TIMEPARSER DATE/TIME FIELDS |
@@ -196,7 +197,7 @@ public class TimeParser {
 	 */
 	public Calendar parseTime(String extendedCommand, String input) throws Exception {
 		resetTimeAndDate();
-		String[] splitInput = input.split(" ");
+		String[] splitInput = input.split(SPACE_STRING);
 		for (String i: splitInput) { // For each word being read, goes through a list of parsers which is then converted to the appropriate date/time to be stored in calendar.
 			if (parseIfIsDay(i)) {
 			} else if (parseIfIsMonth(i)) {
@@ -207,7 +208,7 @@ public class TimeParser {
 			} else if (parseIfIsForwardSlashDateFormat(i)) {
 			} else if (parseIfIs4DigitFloatingNumber(i)) {
 			} else if (parseIfIs2OrLessDigitFloatingNumber(i)) {
-			} else {  // All parsers failed, word being read not supported.
+			} else {  // All parsers failed, word being read not recognised.
 				logAndThrow(new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_UNRECOGNISED_DATE_TIME, i)));
 			}
 		}
@@ -226,9 +227,6 @@ public class TimeParser {
 		c = Calendar.getInstance(); // Initialises the Calendar.
 		initSecondaryAndPresetFields(extendedCommand);
 		// Set up fields in calendar according to parsed inputs.
-		/*if (!isAfterCurrentDateAndTime()) {
-			throw new InvalidDateTimeFieldException(String.format(ERROR_MESSAGE_DATE_PAST, userInput));
-		}*/
 		if (setCalendarField(FIELD_HOUR, getField(FIELD_HOUR))) {
 			if (setCalendarField(FIELD_MINUTE, getField(FIELD_MINUTE))) {
 				if (setCalendarField(FIELD_YEAR, getField(FIELD_YEAR))) {
@@ -243,6 +241,7 @@ public class TimeParser {
 		return false; // If any fields are missing, parsing has failed, return false.
 	}
 
+	//@@author A0135775Wunused
 	private boolean isAfterCurrentDateAndTime() throws InvalidDateTimeFieldException {
 		if (!isToday(getField(FIELD_DAY), getField(FIELD_MONTH)) && !isAfterCurrentDate(getField(FIELD_DAY), getField(FIELD_MONTH))) {
 			return false;
@@ -252,6 +251,7 @@ public class TimeParser {
 		return true;
 	}
 	
+	//@@ author A0135775W
 	/* -----------------------------------|
 	 * DATE/TIME INPUT FLEXIBILITY METHOD |
 	 * -----------------------------------|

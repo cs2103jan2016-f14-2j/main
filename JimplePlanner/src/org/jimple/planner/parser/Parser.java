@@ -303,6 +303,7 @@ public class Parser {
 				parseExtendedCommandEditLabel(extendedCommand, inputString, inputStruct);
 				break;
 			default:
+				logAndThrow(new InvalidCommandException(String.format(ERROR_MESSAGE_EXTENDED_COMMAND_NOT_RECOGNISED, extendedCommand)));
 				break;
 		}
 	}

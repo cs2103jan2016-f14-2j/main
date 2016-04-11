@@ -181,21 +181,21 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		} catch (DuplicateDateTimeFieldException dfe) {
 			feedback[0] = dfe.getMessage();
 			feedback[1] = "";
-			logger.log(Level.WARNING, dfe.toString(), dfe);
+			/*logger.log(Level.WARNING, dfe.toString(), dfe);
 			logger.log(Level.WARNING, dfe.getMessage());
-			logger.log(Level.WARNING, "User input: " + inputString + "\n");
+			logger.log(Level.WARNING, "User input: " + inputString + "\n");*/
 		} catch (InvalidCommandException ice) {
 			feedback[0] = ice.getMessage();
 			feedback[1] = "";
-			logger.log(Level.WARNING, ice.toString(), ice);
+			/*logger.log(Level.WARNING, ice.toString(), ice);
 			logger.log(Level.WARNING, ice.getMessage());
-			logger.log(Level.WARNING, "User input: "+ inputString + "\n");
+			logger.log(Level.WARNING, "User input: "+ inputString + "\n");*/
 		} catch (InvalidDateTimeFieldException ife) {
 			feedback[0] = ife.getMessage();
 			feedback[1] = "";
-			logger.log(Level.WARNING, ife.toString(), ife);
+			/*logger.log(Level.WARNING, ife.toString(), ife);
 			logger.log(Level.WARNING, ife.getMessage());
-			logger.log(Level.WARNING, "User input: "+ inputString + "\n");
+			logger.log(Level.WARNING, "User input: "+ inputString + "\n");*/
 		} catch (InvalidFromAndToTimeException ift) {
 			feedback[0] = ift.getMessage();
 			feedback[1] = "";
@@ -205,9 +205,9 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 		} catch (MissingDateTimeFieldException mfe) {
 			feedback[0] = mfe.getMessage();
 			feedback[1] = "";
-			logger.log(Level.WARNING, mfe.toString(), mfe);
+			/*logger.log(Level.WARNING, mfe.toString(), mfe);
 			logger.log(Level.WARNING, mfe.getMessage());
-			logger.log(Level.WARNING, "User input: " + inputString + "\n");
+			logger.log(Level.WARNING, "User input: " + inputString + "\n");*/
 		} catch (IOException io) {
 			logger.log(Level.SEVERE, io.toString(), io);
 			logger.log(Level.SEVERE, "Jimple files does not exist\n");
