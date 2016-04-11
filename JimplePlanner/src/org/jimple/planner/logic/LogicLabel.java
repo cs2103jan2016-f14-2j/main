@@ -31,16 +31,16 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 	
 	//@@author A0124952E
 	protected String changeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		if (isName(variableArray[0], taskLabels)) {
 			int labelPosition = getLabelPosition(variableArray, taskLabels, "name");
-			boolean isLabelChanged = isChangeLabel(variableArray, taskLabels, labelPosition, todo, deadlines, events);
+			boolean isLabelChanged = isChangeLabel(variableArray, taskLabels, labelPosition, todo, deadlines, events, archivedTasks);
 			if (isLabelChanged) {
 				return variableArray[0] + Constants.LABEL_FEEDBACK;
 			}
 		} else if (isColour(variableArray[0], taskLabels)) {
 			int labelPosition = getLabelPosition(variableArray, taskLabels, "colour");
-			boolean isLabelChanged = isChangeLabel(variableArray, taskLabels, labelPosition, todo, deadlines, events);
+			boolean isLabelChanged = isChangeLabel(variableArray, taskLabels, labelPosition, todo, deadlines, events, archivedTasks);
 			if (isLabelChanged) {
 				return variableArray[0] + Constants.LABEL_FEEDBACK;
 			}
@@ -130,18 +130,18 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 
 	//@@author A0124952E
 	private boolean isChangeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, int labelPosition,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		boolean isLabelChanged = false;
 		for (int i = 1; i < variableArray.length; i++) {
 			if (variableArray[i] != null) {
 				switch (i) {
 				case 1:
 					isLabelChanged = changeLabelName(variableArray[i], taskLabels, labelPosition, todo, deadlines,
-							events);
+							events, archivedTasks);
 					break;
 				case 2:
 					isLabelChanged = changeLabelColour(variableArray[i], taskLabels, labelPosition, todo, deadlines,
-							events);
+							events, archivedTasks);
 					break;
 				}
 			}
@@ -161,7 +161,7 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 
 	//@@author A0124952E
 	private boolean changeLabelName(String newName, ArrayList<TaskLabel> taskLabels, int labelPosition,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		for (int i = 0; i < taskLabels.size(); i++) {
 			if (taskLabels.get(i).getLabelId() == labelPosition) {
 				if (!isTaskLabelExist(newName, taskLabels)) {
@@ -169,25 +169,25 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 				}
 			}
 		}
-		changeMasterListLabels(newName, labelPosition, todo, deadlines, events, taskLabels, "name");
+		changeMasterListLabels(newName, labelPosition, todo, deadlines, events, archivedTasks, taskLabels, "name");
 		return true;
 	}
 
 	//@@author A0124952E
 	private boolean changeLabelColour(String newColour, ArrayList<TaskLabel> taskLabels, int labelPosition,
-			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
+			ArrayList<Task> todo, ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
 		for (int i = 0; i < taskLabels.size(); i++) {
 			if (taskLabels.get(i).getLabelId() == labelPosition) {
 				taskLabels.get(i).setColourId(colourToIDMap.get(newColour));
 			}
 		}
-		changeMasterListLabels(newColour, labelPosition, todo, deadlines, events, taskLabels, "colour");
+		changeMasterListLabels(newColour, labelPosition, todo, deadlines, events, archivedTasks, taskLabels, "colour");
 		return true;
 	}
 
 	//@@author A0124952E
 	private void changeMasterListLabels(String newString, int labelPosition, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<TaskLabel> taskLabels, String type)
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks, ArrayList<TaskLabel> taskLabels, String type)
 					throws IOException {
 		for (int i = 0; i < todo.size(); i++) {
 			if (todo.get(i).getTaskLabel().getLabelId() == labelPosition) {
@@ -228,11 +228,24 @@ public class LogicLabel implements LogicMasterListModification, LogicTaskModific
 				}
 			}
 		}
+		for (int i = 0; i < archivedTasks.size(); i++) {
+			if (archivedTasks.get(i).getTaskLabel().getLabelId() == labelPosition) {
+				if (!isTaskLabelExist(newString, taskLabels)) {
+					if (type.equals("name")) {
+						archivedTasks.get(i).getTaskLabel().setLabelName(newString);
+					} else if (type.equals("colour")) {
+						archivedTasks.get(i).getTaskLabel().setColourId(colourToIDMap.get(newString));
+					}
+				} else {
+					archivedTasks.get(i).setTaskLabel(checkNewTaskLabel(newString, taskLabels));
+				}
+			}
+		}
 	}
 
 	//@@author generated
 	public String testChangeLabel(String[] variableArray, ArrayList<TaskLabel> taskLabels, ArrayList<Task> todo,
-			ArrayList<Task> deadlines, ArrayList<Task> events) throws IOException {
-		return changeLabel(variableArray, taskLabels, todo, deadlines, events);
+			ArrayList<Task> deadlines, ArrayList<Task> events, ArrayList<Task> archivedTasks) throws IOException {
+		return changeLabel(variableArray, taskLabels, todo, deadlines, events, archivedTasks);
 	}
 }

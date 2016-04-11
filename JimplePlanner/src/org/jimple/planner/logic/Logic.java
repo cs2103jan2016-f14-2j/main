@@ -120,7 +120,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
 			case Constants.STRING_EDIT:
-				feedback[0] = editer.editTask(parsedInput.getVariableArray(), todo, deadlines, events, tempHistory,
+				feedback[0] = editer.editTask(parsedInput.getVariableArray(), todo, deadlines, events, archivedTasks, tempHistory,
 						taskLabels, undoTasks, idHash);
 				feedback[1] = getTaskTypeAndTaskID();
 				break;
@@ -150,7 +150,7 @@ public class Logic implements LogicMasterListModification, LogicTaskModification
 				feedback[1] = "";
 				break;
 			case Constants.STRING_EDITLABEL:
-				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels, todo, deadlines, events);
+				feedback[0] = labeler.changeLabel(parsedInput.getVariableArray(), taskLabels, todo, deadlines, events, archivedTasks);
 				feedback[1] = "";
 				break;
 			case Constants.STRING_DELETELABEL:
