@@ -85,7 +85,7 @@ public class UiListCellDefault extends ListCell<Task> {
 				setDesc(item);
 				setStyles();
 				
-				if(item.getIsOverDue()){
+				if(UiFormatter.timeDifference(item.getToTime()) < 0){
 					this.setId("overdue");
 				}
 				else{
